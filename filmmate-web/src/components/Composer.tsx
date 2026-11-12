@@ -1,6 +1,8 @@
 import { forwardRef, useImperativeHandle, useRef, type KeyboardEvent, type FormEvent } from 'react'
 import { ArrowUp, Square } from 'lucide-react'
 import { cn } from '../lib/utils'
+import { mergeTranscript } from '../lib/voiceInputMerge'
+import { useVoiceInput } from '../hooks/useVoiceInput'
 import { MicButton } from './MicButton'
 
 export interface ComposerHandle {
@@ -29,6 +31,12 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const composing = useRef(false)
   const taRef = useRef<HTMLTextAreaElement>(null)
 
+  // Phase 2 语音输入（voice input）：录音状态机放在输入区本地，
+  // 转写结果只并入草稿，永不自动发送。
+  const voiceInput = useVoiceInput({
+    onTranscript: (text) => onChange(mergeTranscript(value, text)),
+  })
+
   const autoGrow = () => {
     const ta = taRef.current
     if (!ta) return
@@ -49,7 +57,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
   const submit = () => {
     const t = value.trim()
-    if (!t || streaming) return
+    if (!t || streaming || voiceInput.status === 'recording') return
     onSend(t)
     onChange('')
     const ta = taRef.current
@@ -59,6 +67,11 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !composing.current) {
       e.preventDefault()
+      // 录音时 Enter = 停止并转写，避免把半句话发出去。
+      if (voiceInput.status === 'recording') {
+        void voiceInput.stop()
+        return
+      }
       submit()
     }
   }
@@ -78,7 +91,14 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         ))}
       </div>
       <form className="composer" onSubmit={onSubmit}>
-        <MicButton />
+        <MicButton
+          status={voiceInput.status}
+          elapsedMs={voiceInput.elapsedMs}
+          supported={voiceInput.supported}
+          disabled={streaming}
+          onStart={() => void voiceInput.start()}
+          onStop={() => void voiceInput.stop()}
+        />
         <textarea
           ref={taRef}
           value={value}
@@ -108,7 +128,14 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           </button>
         )}
       </form>
-      <div className="composer-hint">Enter 发送 · Shift+Enter 换行 · 语音输入 Phase 2 接入 whisper-1</div>
+      {voiceInput.error && (
+        <div className="composer-error" role="alert">
+          {voiceInput.error}
+        </div>
+      )}
+      <div className="composer-hint">
+        Enter 发送 · Shift+Enter 换行 · 麦克风：点一下开始，再点停止（Esc 取消），文字只进输入框
+      </div>
     </div>
   )
 })

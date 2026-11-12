@@ -3,6 +3,8 @@ fastapi>=0.110
 uvicorn>=0.29
 httpx>=0.27
 jieba>=0.42
+# Phase 2 语音输入:POST /api/transcribe 的 multipart 上传需要
+python-multipart>=0.0.9
 
 # 可选:开启"向量检索模式"(RAG 升级为 dense embedding + 余弦相似度)
 # 安装后重命名 knowledge/vectors 缓存会自动重建;未安装则自动用 BM25 检索,不影响运行

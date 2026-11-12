@@ -1156,6 +1156,14 @@ button {
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
 }
+.mic-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.mic-btn:disabled:hover {
+  background: transparent;
+  color: var(--text-dim);
+}
 .mic-btn.active {
   color: var(--amber);
   background: var(--amber-soft);
@@ -1220,6 +1228,14 @@ button {
   font-size: 10.5px;
   color: var(--text-faint);
   margin-top: 7px;
+}
+
+/* Phase 2：录音 / 转写错误直接显示在输入框下方 */
+.composer-error {
+  text-align: center;
+  font-size: 11px;
+  color: var(--red);
+  margin-top: 6px;
 }
 
 /* ═══════════ 错误横幅 ═══════════ */

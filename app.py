@@ -15,6 +15,7 @@ import logging
 import re
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -24,12 +25,30 @@ import llm
 import prompts
 import rag
 import tools
+import voice_input_api
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger("app")
 
 app = FastAPI(title="Filmmate 影视创作助理")
 STATIC_DIR = config.BASE_DIR / "static"
+
+# 前端跑在 Vite(5173) 或 Tauri WebView(tauri://localhost),都算跨源。
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "tauri://localhost",
+        "http://tauri.localhost",
+        "https://tauri.localhost",
+    ],
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(voice_input_api.router)
 
 
 def sse(event: str, data) -> str:

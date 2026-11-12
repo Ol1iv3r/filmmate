@@ -21,6 +21,21 @@ DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 
+# 语音转写配置(Phase 2):whisper-1,走 Vercel AI Gateway 或直连 OpenAI
+AI_GATEWAY_API_KEY = os.environ.get("AI_GATEWAY_API_KEY", "").strip()
+AI_GATEWAY_BASE_URL = os.environ.get(
+    "AI_GATEWAY_BASE_URL", "https://ai-gateway.vercel.sh/v1"
+).rstrip("/")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
+OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+# 留空则按上面的 provider 自动选:Gateway = openai/whisper-1,直连 = whisper-1
+TRANSCRIBE_MODEL = os.environ.get("TRANSCRIBE_MODEL", "").strip()
+TRANSCRIBE_LANGUAGE = os.environ.get("TRANSCRIBE_LANGUAGE", "").strip()
+TRANSCRIBE_PROMPT = os.environ.get(
+    "TRANSCRIBE_PROMPT",
+    "以下是影视制作相关的内容,术语包括:分镜、场次、机位、景别、画面、rundown、剧本、后期、调色、收音、打灯。",
+).strip()
+
 # RAG 配置
 KNOWLEDGE_FILE = BASE_DIR / "knowledge" / "knowledge.json"
 TOP_K = int(os.environ.get("RAG_TOP_K", "3"))
