@@ -23,3 +23,5 @@ Filmmate_GroupProject.zip
 
 # Tauri 构建产物
 src-tauri/target/
+# 个人任务笔记（本地保留，不进仓库）
+团队项目说明与我的任务.md
