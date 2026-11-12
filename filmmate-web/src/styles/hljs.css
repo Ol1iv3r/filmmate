@@ -1,0 +1,64 @@
+/* Filmmate 定制的 highlight.js 深色主题（与琥珀/青绿设计语言一致） */
+
+.hljs {
+  color: #c9d1e3;
+  background: transparent;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6b7288;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-meta {
+  color: #e8a33d;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #7fceb4;
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+  color: #c58af9;
+}
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-section {
+  color: #6cb6ff;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params {
+  color: #e8c77e;
+}
+
+.hljs-built_in,
+.hljs-type,
+.hljs-class .hljs-title,
+.hljs-title.class_ {
+  color: #4fd1c5;
+}
+
+.hljs-deletion {
+  color: #f87171;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}

@@ -1,0 +1,134 @@
+{
+    "youtube_video_id": "d_FEaFgJyfA",
+    "title": "Experiment! How Does An Owl Fly So Silently? | Super Powered Owls | BBC",
+    "video_keywords": [
+        "animal",
+        "documentary",
+        "nature",
+        "bbc earth",
+        "wildlife",
+        "photography"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:04",
+            "description": "Medium shot of a trainer holding a pigeon on a stool in a dark studio setting, establishing the flight sound experiment.",
+            "keywords": [
+                "medium shot",
+                "nature",
+                "animal"
+            ]
+        },
+        {
+            "time_start": "00:04",
+            "time_end": "00:12",
+            "description": "Medium tracking shot of the pigeon flying across an array of sensitive studio microphones, capturing the sound of its wingbeats.",
+            "keywords": [
+                "tracking shot",
+                "animal",
+                "wildlife"
+            ]
+        },
+        {
+            "time_start": "00:12",
+            "time_end": "00:20",
+            "description": "Medium shot of a barn owl standing on a covered pedestal in the dark studio, preparing for its silent flight test.",
+            "keywords": [
+                "medium shot",
+                "animal",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "00:20",
+            "time_end": "00:30",
+            "description": "Medium tracking shot of the barn owl taking flight silently past the microphone array, contrasting with the pigeon.",
+            "keywords": [
+                "tracking shot",
+                "animal",
+                "wildlife"
+            ]
+        },
+        {
+            "time_start": "00:30",
+            "time_end": "00:57",
+            "description": "Close-up shot of audio editing software showing visual decibel waveforms of the bird's flight sound data.",
+            "keywords": [
+                "close-up",
+                "documentary",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "00:57",
+            "time_end": "01:12",
+            "description": "Medium shot of a peregrine falcon launching from its perch toward the microphone array during the comparative experiment.",
+            "keywords": [
+                "medium shot",
+                "animal",
+                "wildlife"
+            ]
+        },
+        {
+            "time_start": "01:12",
+            "time_end": "01:25",
+            "description": "Medium close-up of the barn owl launching into flight with soft, broad wing movements in the studio.",
+            "keywords": [
+                "medium close-up",
+                "animal",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "01:25",
+            "time_end": "01:57",
+            "description": "Medium shot of researchers reviewing the silent audio waveforms on a laptop and expressing amazement.",
+            "keywords": [
+                "medium shot",
+                "documentary",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "01:57",
+            "time_end": "02:08",
+            "description": "Macro close-up shot of the barn owl's face and specialized soft feathers, highlighting its unique physical adaptations.",
+            "keywords": [
+                "close-up",
+                "animal",
+                "wildlife"
+            ]
+        },
+        {
+            "time_start": "02:08",
+            "time_end": "02:46",
+            "description": "High-speed slow-motion shot of a pigeon flying over a bed of white feathers, scattering them with turbulent airflow.",
+            "keywords": [
+                "slow motion",
+                "nature",
+                "animal"
+            ]
+        },
+        {
+            "time_start": "02:46",
+            "time_end": "03:18",
+            "description": "High-speed slow-motion shot of a falcon flying over feathers, demonstrating heavier wing turbulence and speed.",
+            "keywords": [
+                "slow motion",
+                "wildlife",
+                "animal"
+            ]
+        },
+        {
+            "time_start": "03:18",
+            "time_end": "03:58",
+            "description": "High-speed slow-motion shot of the barn owl gliding effortlessly over feathers with virtually no disturbance, revealing the secret of silent flight.",
+            "keywords": [
+                "slow motion",
+                "nature",
+                "documentary"
+            ]
+        }
+    ]
+}

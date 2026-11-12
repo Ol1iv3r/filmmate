@@ -1,0 +1,111 @@
+{
+    "youtube_video_id": "M94peyp_3UE",
+    "title": "This Might Be the Best Carbonara Recipe on YouTube",
+    "video_keywords": [
+        "food",
+        "cooking",
+        "documentary",
+        "commercial"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:55",
+            "description": "Wide establishing shot of a sunlit Italian kitchen counter displaying fresh pasta, eggs, Pecorino Romano cheese, and cured guanciale [[00:02](https://www.youtube.com/watch?v=M94peyp_3UE&t=2)].",
+            "keywords": [
+                "wide shot",
+                "establishing scene",
+                "food",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:55",
+            "time_end": "02:20",
+            "description": "Medium close-up shot of the chef slicing cured guanciale into thick, uniform strips on a wooden cutting board [[01:10](https://www.youtube.com/watch?v=M94peyp_3UE&t=70)].",
+            "keywords": [
+                "medium close-up",
+                "cooking",
+                "food",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "02:20",
+            "time_end": "03:45",
+            "description": "Close-up action shot of the guanciale sizzling and rendering its rich fat in a cold stainless steel pan over medium heat [[02:35](https://www.youtube.com/watch?v=M94peyp_3UE&t=155)].",
+            "keywords": [
+                "close-up",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "03:45",
+            "time_end": "05:10",
+            "description": "Medium shot of fresh organic egg yolks being separated from the egg whites into a large ceramic mixing bowl [[04:00](https://www.youtube.com/watch?v=M94peyp_3UE&t=240)].",
+            "keywords": [
+                "medium shot",
+                "cooking",
+                "food",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "05:10",
+            "time_end": "06:30",
+            "description": "Close-up shot of finely grated Pecorino Romano cheese being whisked vigorously into the rich egg yolks with cracked black pepper [[05:30](https://www.youtube.com/watch?v=M94peyp_3UE&t=330)].",
+            "keywords": [
+                "close-up",
+                "cooking",
+                "food",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "06:30",
+            "time_end": "07:55",
+            "description": "Medium action shot of artisanal rigatoni pasta boiling in a large pot of salted water until perfectly al dente [[07:00](https://www.youtube.com/watch?v=M94peyp_3UE&t=420)].",
+            "keywords": [
+                "medium action shot",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "07:55",
+            "time_end": "09:20",
+            "description": "Close-up action shot of starchy pasta water being ladled into the rendered guanciale fat to create a glossy emulsion [[08:15](https://www.youtube.com/watch?v=M94peyp_3UE&t=495)].",
+            "keywords": [
+                "close-up",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "09:20",
+            "time_end": "10:35",
+            "description": "Medium action shot of the pasta being tossed off-heat with the egg-cheese mixture and rendered fat until a silky, creamy sauce forms [[09:45](https://www.youtube.com/watch?v=M94peyp_3UE&t=585)].",
+            "keywords": [
+                "medium action shot",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "10:35",
+            "time_end": "11:36",
+            "description": "Wide tabletop shot displaying the finished traditional Roman carbonara garnished with crispy guanciale and extra pecorino [[10:50](https://www.youtube.com/watch?v=M94peyp_3UE&t=650)].",
+            "keywords": [
+                "wide shot",
+                "product reveal",
+                "food",
+                "indoor"
+            ]
+        }
+    ]
+}

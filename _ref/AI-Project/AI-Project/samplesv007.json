@@ -1,0 +1,138 @@
+{
+    "youtube_video_id": "fvyBCesuxMM",
+    "title": "The New Kid | Doritos Commercial",
+    "video_keywords": [
+        "commercial",
+        "doritos",
+        "comedy",
+        "school bus",
+        "snacks",
+        "advertising",
+        "funny",
+        "slapstick",
+        "product reveal"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:02",
+            "description": "Medium shot of a mother handing a bag of Doritos to her young curly-haired son outside a school bus, establishing the everyday school setting.",
+            "keywords": [
+                "medium shot",
+                "mother",
+                "boy",
+                "doritos",
+                "school bus",
+                "establishing scene"
+            ]
+        },
+        {
+            "time_start": "00:02",
+            "time_end": "00:05",
+            "description": "Medium shot inside a moving yellow school bus as children chatter, showing the new boy sitting down and opening his bag of chips.",
+            "keywords": [
+                "medium shot",
+                "school bus interior",
+                "children",
+                "boy",
+                "opening chips"
+            ]
+        },
+        {
+            "time_start": "00:05",
+            "time_end": "00:08",
+            "description": "Close-up shot of a young girl looking over at the boy as he pulls out a single Dorito chip, building comedic anticipation.",
+            "keywords": [
+                "close-up",
+                "young girl",
+                "boy",
+                "dorito chip",
+                "anticipation"
+            ]
+        },
+        {
+            "time_start": "00:08",
+            "time_end": "00:11",
+            "description": "Medium shot of kids reacting excitedly across the bus pews as word spreads that the new kid has Doritos.",
+            "keywords": [
+                "medium shot",
+                "excited kids",
+                "school bus",
+                "reaction",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "00:11",
+            "time_end": "00:14",
+            "description": "Medium close-up of the bus driver turning around in alarm as chaos erupts in the passenger cabin behind him.",
+            "keywords": [
+                "medium close-up",
+                "bus driver",
+                "alarm",
+                "steering wheel",
+                "building suspense"
+            ]
+        },
+        {
+            "time_start": "00:14",
+            "time_end": "00:19",
+            "description": "High-angle close-up of the terrified boy surrounded by dozens of children frantically grabbing for his single chip.",
+            "keywords": [
+                "high-angle close-up",
+                "scared boy",
+                "hands grabbing",
+                "dorito chip",
+                "chaos"
+            ]
+        },
+        {
+            "time_start": "00:19",
+            "time_end": "00:23",
+            "description": "Medium action shot of the entire bus lurching wildly and spinning out of control as children mob the front cabin.",
+            "keywords": [
+                "medium action shot",
+                "out of control bus",
+                "mobbing kids",
+                "driver",
+                "slapstick comedy"
+            ]
+        },
+        {
+            "time_start": "00:23",
+            "time_end": "00:26",
+            "description": "Wide exterior shot of the yellow school bus screeching past an elementary school sign in a blur of motion.",
+            "keywords": [
+                "wide shot",
+                "school bus",
+                "school exterior",
+                "motion blur",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:26",
+            "time_end": "00:28",
+            "description": "Wide graphic screen displaying the flaming Doritos brand logo and tagline, concluding the commercial.",
+            "keywords": [
+                "wide shot",
+                "doritos logo",
+                "tagline",
+                "product reveal",
+                "commercial outro"
+            ]
+        },
+        {
+            "time_start": "00:28",
+            "time_end": "00:31",
+            "description": "Medium shot of the mother greeting her son as he steps off the bus wearing a neck brace and arm cast, delivering the punchline.",
+            "keywords": [
+                "medium shot",
+                "mother",
+                "injured boy",
+                "neck brace",
+                "punchline"
+            ]
+        }
+    ]
+}

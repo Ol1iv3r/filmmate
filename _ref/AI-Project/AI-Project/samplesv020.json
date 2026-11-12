@@ -1,0 +1,86 @@
+{
+    "youtube_video_id": "9-GRzu6zbS0",
+    "title": "Town Hall Audience Member - Key & Peele",
+    "video_keywords": [
+        "comedy",
+        "interview"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:11",
+            "description": "Medium shot of a congressman speaking passionately about working for everyone during a town hall meeting.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "establishing scene"
+            ]
+        },
+        {
+            "time_start": "00:11",
+            "time_end": "00:29",
+            "description": "Medium close-up of audience members listening attentively as the politician lists various demographic groups.",
+            "keywords": [
+                "close-up",
+                "comedy",
+                "interview"
+            ]
+        },
+        {
+            "time_start": "00:29",
+            "time_end": "00:46",
+            "description": "Medium close-up shot of Jordan Peele as an audience member listening with a deadpan, increasingly uncomfortable expression.",
+            "keywords": [
+                "close-up",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "00:46",
+            "time_end": "01:02",
+            "description": "Medium shot of the congressman gesturing broadly while advocating for marriage equality and LGBTQ+ rights.",
+            "keywords": [
+                "medium shot",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "01:02",
+            "time_end": "01:17",
+            "description": "Close-up shot of Jordan Peele looking around nervously and deciding to slide off his chair onto the floor.",
+            "keywords": [
+                "close-up",
+                "comedy",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "01:17",
+            "time_end": "01:34",
+            "description": "Medium shot of Jordan Peele hiding under the chairs while fellow audience members glance down in confusion.",
+            "keywords": [
+                "medium shot",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "01:34",
+            "time_end": "01:52",
+            "description": "Medium tracking shot of the politician asking everyone to turn and look at the gay person next to them.",
+            "keywords": [
+                "tracking shot",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "01:52",
+            "time_end": "02:20",
+            "description": "Wide shot of the audience turning to look at Jordan Peele hiding on the floor, ending in comedic applause.",
+            "keywords": [
+                "wide shot",
+                "comedy",
+                "slapstick"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,90 @@
+{
+    "youtube_video_id": "MjEMfqgrdHY",
+    "title": "猫たちと小豆炊い草餅作り",
+    "video_keywords": [
+        "animal",
+        "pet",
+        "cute",
+        "cooking",
+        "home video"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:30",
+            "description": "Wide establishing shot of a traditional Japanese kitchen interior with several fluffy cats resting calmly around the room.",
+            "keywords": [
+                "wide shot",
+                "establishing scene",
+                "animal",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:30",
+            "time_end": "01:15",
+            "description": "Medium close-up shot of hands measuring out red adzuki beans into a ceramic bowl while a curious cat watches closely.",
+            "keywords": [
+                "medium close-up",
+                "cooking",
+                "food",
+                "pet"
+            ]
+        },
+        {
+            "time_start": "01:15",
+            "time_end": "02:00",
+            "description": "Close-up action shot of adzuki beans simmering in a pot on a traditional stove.",
+            "keywords": [
+                "close-up",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "02:00",
+            "time_end": "02:45",
+            "description": "Medium shot of a contented white cat dozing peacefully on a tatami mat near the kitchen workspace.",
+            "keywords": [
+                "medium shot",
+                "animal",
+                "pet",
+                "cute"
+            ]
+        },
+        {
+            "time_start": "02:45",
+            "time_end": "03:30",
+            "description": "Close-up action shot of sweet red bean paste being mashed and mixed in a pan.",
+            "keywords": [
+                "close-up",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "03:30",
+            "time_end": "04:15",
+            "description": "Medium action shot of mochi dough being kneaded and prepared on a wooden cutting board.",
+            "keywords": [
+                "medium action shot",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "04:15",
+            "time_end": "05:00",
+            "description": "Wide tabletop shot displaying the finished homemade sweet treats alongside resting pets.",
+            "keywords": [
+                "wide shot",
+                "product reveal",
+                "food",
+                "pet"
+            ]
+        }
+    ]
+}

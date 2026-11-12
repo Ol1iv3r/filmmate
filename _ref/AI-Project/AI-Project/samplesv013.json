@@ -1,0 +1,161 @@
+{
+    "youtube_video_id": "qIVDxL2lgN4",
+    "title": "Snickers Mr Bean TV advert - Subtitled",
+    "video_keywords": [
+        "commercial",
+        "comedy",
+        "insurance",
+        "snacks",
+        "advertising",
+        "mascot"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:02",
+            "description": "Wide aerial shot of a traditional ancient Chinese village at night under moonlight, establishing the dramatic martial arts setting.",
+            "keywords": [
+                "wide shot",
+                "outdoor",
+                "establishing scene",
+                "night"
+            ]
+        },
+        {
+            "time_start": "00:02",
+            "time_end": "00:05",
+            "description": "Medium tracking shot of a guard carrying a paper lantern through a narrow stone alleyway at night.",
+            "keywords": [
+                "tracking shot",
+                "outdoor",
+                "night",
+                "walk"
+            ]
+        },
+        {
+            "time_start": "00:05",
+            "time_end": "00:08",
+            "description": "Wide shot of martial artists leaping dynamically across traditional tiled rooftops in the dark.",
+            "keywords": [
+                "wide shot",
+                "outdoor",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:08",
+            "time_end": "00:11",
+            "description": "Close-up shot of Mr. Bean struggling to climb over a tiled rooftop edge, looking out of place in his tweed suit.",
+            "keywords": [
+                "close-up",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:11",
+            "time_end": "00:15",
+            "description": "Medium shot of a martial arts master turning back to scold Mr. Bean for losing focus during the rooftop battle.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:15",
+            "time_end": "00:22",
+            "description": "Wide action shot of kung fu warriors performing gravity-defying leaps across rooftops while Mr. Bean awkwardly scrambles behind.",
+            "keywords": [
+                "wide shot",
+                "comedy",
+                "action",
+                "outdoor"
+            ]
+        },
+        {
+            "time_start": "00:22",
+            "time_end": "00:27",
+            "description": "Medium tracking shot of Mr. Bean precariously balancing and wobbling on a rooftop ridge.",
+            "keywords": [
+                "tracking shot",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:27",
+            "time_end": "00:29",
+            "description": "Low-angle medium shot of the guard below reacting as Mr. Bean's shoe falls clattering onto the stone pavement.",
+            "keywords": [
+                "low angle",
+                "comedy",
+                "prop"
+            ]
+        },
+        {
+            "time_start": "00:29",
+            "time_end": "00:35",
+            "description": "Medium shot of the kung fu master urging Mr. Bean to concentrate while practicing martial arts stances.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:35",
+            "time_end": "00:40",
+            "description": "Medium action shot of Mr. Bean tripping and crashing straight through a tiled rooftop, sending debris flying.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "action",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "00:40",
+            "time_end": "00:45",
+            "description": "Medium shot of Mr. Bean landing heavily on the indoor floor surrounded by startled guards holding torches.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:45",
+            "time_end": "00:51",
+            "description": "Medium close-up shot of the kung fu master handing Mr. Bean a Snickers bar to cure his hunger and restore his alter ego.",
+            "keywords": [
+                "medium close-up",
+                "comedy",
+                "product reveal",
+                "snacks"
+            ]
+        },
+        {
+            "time_start": "00:51",
+            "time_end": "00:56",
+            "description": "Medium action shot of Mr. Bean taking a bite and instantly transforming back into a fierce kung fu warrior who defeats the guards.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "action",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "00:56",
+            "time_end": "01:10",
+            "description": "Close-up product shot of a Snickers bar splitting in half to reveal caramel, nougat, and peanuts alongside the tagline.",
+            "keywords": [
+                "close-up",
+                "commercial",
+                "product reveal",
+                "snacks"
+            ]
+        }
+    ]
+}

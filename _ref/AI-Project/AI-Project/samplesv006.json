@@ -1,0 +1,111 @@
+{
+    "youtube_video_id": "91UunU4W_I8",
+    "title": "The QPC Meal | McDonald’s",
+    "video_keywords": [
+        "commercial",
+        "mcdonald's",
+        "fast food",
+        "quarter pounder",
+        "meal deal",
+        "food advertising",
+        "product reveal"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:02",
+            "description": "Close-up shot of a freshly prepared Quarter Pounder burger resting in its carton, highlighting the melted cheese, onions, and beef patty to build appetite appeal.",
+            "keywords": [
+                "close-up",
+                "quarter pounder",
+                "burger",
+                "cheese",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "00:02",
+            "time_end": "00:04",
+            "description": "Medium close-up shot of golden French fries frying in bubbling hot oil inside a restaurant kitchen fryer.",
+            "keywords": [
+                "medium close-up",
+                "french fries",
+                "deep fryer",
+                "cooking",
+                "fast food"
+            ]
+        },
+        {
+            "time_start": "00:04",
+            "time_end": "00:05",
+            "description": "Close-up macro shot of carbonated Coca-Cola being poured into a cup with ice, creating refreshing fizz and bubbles.",
+            "keywords": [
+                "close-up",
+                "coca-cola",
+                "pouring soda",
+                "ice",
+                "refreshment"
+            ]
+        },
+        {
+            "time_start": "00:05",
+            "time_end": "00:06",
+            "description": "Medium action shot of a kitchen worker salting freshly cooked French fries under warm overhead lighting.",
+            "keywords": [
+                "medium shot",
+                "kitchen",
+                "salting fries",
+                "food prep",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:06",
+            "time_end": "00:07",
+            "description": "Fast-paced close-up shot of a gloved hand wrapping a burger in paper on a stainless steel prep counter.",
+            "keywords": [
+                "close-up",
+                "gloved hand",
+                "wrapping burger",
+                "prep counter",
+                "kitchen work"
+            ]
+        },
+        {
+            "time_start": "00:07",
+            "time_end": "00:09",
+            "description": "Low-angle medium shot looking up from inside a brown paper bag as a crew member packs food boxes into the order.",
+            "keywords": [
+                "low-angle shot",
+                "paper bag",
+                "packing food",
+                "crew member",
+                "restaurant service"
+            ]
+        },
+        {
+            "time_start": "00:09",
+            "time_end": "00:11",
+            "description": "Medium shot of a customer in a car receiving a McDonald's paper bag at a drive-thru window during golden hour.",
+            "keywords": [
+                "medium shot",
+                "drive-thru",
+                "customer",
+                "car",
+                "food handoff"
+            ]
+        },
+        {
+            "time_start": "00:11",
+            "time_end": "00:16",
+            "description": "Wide graphic screen displaying promotional pricing text for the Quarter Pounder with Cheese meal alongside the McDonald's logo.",
+            "keywords": [
+                "wide shot",
+                "promotional text",
+                "pricing",
+                "mcdonald's logo",
+                "commercial outro"
+            ]
+        }
+    ]
+}

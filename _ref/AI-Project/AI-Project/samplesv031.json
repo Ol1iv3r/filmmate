@@ -1,0 +1,123 @@
+{
+    "youtube_video_id": "HiFvNi_gzso",
+    "title": "Zoodystopia",
+    "video_keywords": [
+        "animation",
+        "comedy",
+        "horror",
+        "parody",
+        "cartoons"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:07",
+            "description": "Medium tracking shot of a grand ballroom party where an animated fox and a mutant rabbit examine a wanted poster in confusion.",
+            "keywords": [
+                "tracking shot",
+                "animation",
+                "comedy",
+                "establishing scene"
+            ]
+        },
+        {
+            "time_start": "00:07",
+            "time_end": "00:15",
+            "description": "Medium close-up shot of the tall animated snake character slithering and dancing across the brightly lit celebration floor.",
+            "keywords": [
+                "medium close-up",
+                "animation",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:15",
+            "time_end": "00:25",
+            "description": "Medium action shot of the fox and rabbit characters interacting near the stage while background dancers move to the rhythm.",
+            "keywords": [
+                "medium shot",
+                "animation",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:25",
+            "time_end": "00:34",
+            "description": "Medium tracking shot of the fox grabbing a frying pan and lunging forward into a chaotic comedic brawl.",
+            "keywords": [
+                "tracking shot",
+                "animation",
+                "comedy",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "00:34",
+            "time_end": "00:43",
+            "description": "Medium action shot of the characters trading blows and tossing magical books across the grand hall platform.",
+            "keywords": [
+                "medium shot",
+                "animation",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:43",
+            "time_end": "00:53",
+            "description": "Close-up shot of the fox character getting startled and reacting with exaggerated comedic facial expressions.",
+            "keywords": [
+                "close-up",
+                "animation",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:53",
+            "time_end": "01:03",
+            "description": "Medium action shot of the mutant rabbit landing heavy punches and wrestling the fox to the ground in slapstick fashion.",
+            "keywords": [
+                "medium shot",
+                "animation",
+                "comedy",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "01:03",
+            "time_end": "01:14",
+            "description": "Medium close-up shot of a character morphing into Nick Fury, establishing a bizarre parodic crossover twist.",
+            "keywords": [
+                "medium close-up",
+                "animation",
+                "comedy",
+                "parody"
+            ]
+        },
+        {
+            "time_start": "01:14",
+            "time_end": "01:25",
+            "description": "Medium action shot of the characters engaging in an intense, chaotic wrestling match on the stage as the music swells.",
+            "keywords": [
+                "medium shot",
+                "animation",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "01:25",
+            "time_end": "01:49",
+            "description": "Wide closing shot fading to black, followed by credits featuring the dancing snake character and attribution to Kotte Animation.",
+            "keywords": [
+                "wide shot",
+                "animation",
+                "comedy",
+                "establishing scene"
+            ]
+        }
+    ]
+}

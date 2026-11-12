@@ -1,0 +1,75 @@
+{
+    "youtube_video_id": "79phlhutGLg",
+    "title": "Self Control Who I McDonald's",
+    "video_keywords": [
+        "commercial",
+        "mcdonald's",
+        "fast food",
+        "french fries",
+        "food advertising",
+        "app promotion",
+        "product reveal"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:03",
+            "description": "Extreme close-up shot of hot golden French fries tumbling into a red carton, highlighting the crispy texture and savory appeal of the food.",
+            "keywords": [
+                "extreme close-up",
+                "french fries",
+                "red carton",
+                "crispy",
+                "food styling"
+            ]
+        },
+        {
+            "time_start": "00:03",
+            "time_end": "00:07",
+            "description": "Close-up macro shot showcasing golden salted French fries filling the iconic McDonald's carton under warm lighting, establishing appetite appeal.",
+            "keywords": [
+                "close-up macro",
+                "mcdonald's fries",
+                "golden",
+                "salted",
+                "appetite appeal"
+            ]
+        },
+        {
+            "time_start": "00:07",
+            "time_end": "00:10",
+            "description": "Medium close-up shot of a hand picking up just one single French fry from the full carton, emphasizing remarkable self-control.",
+            "keywords": [
+                "medium close-up",
+                "hand",
+                "french fry",
+                "carton",
+                "narrative tension"
+            ]
+        },
+        {
+            "time_start": "00:10",
+            "time_end": "00:12",
+            "description": "Close-up shot of the single French fry being dipped into a dollop of bright red ketchup on a paper wrapper, highlighting the classic pairing.",
+            "keywords": [
+                "close-up",
+                "french fry",
+                "ketchup",
+                "dipping",
+                "food commercial"
+            ]
+        },
+        {
+            "time_start": "00:12",
+            "time_end": "00:16",
+            "description": "Wide graphic screen displaying a smartphone with the McDonald's app interface and text promoting mobile ordering, concluding the commercial.",
+            "keywords": [
+                "wide shot",
+                "smartphone",
+                "mcdonald's app",
+                "product reveal",
+                "commercial outro"
+            ]
+        }
+    ]
+}

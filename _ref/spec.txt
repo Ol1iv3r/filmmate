@@ -1,0 +1,99 @@
+pages 4
+===== PAGE 1 =====
+. 
+COMP4431 Artificial Intelligence (2026/27)  
+ 
+Group Project Specification (10% in Overall Marks) 
+Title: Domain-specific Chatbot Development  
+Submission Deadlines:     18 Nov 2026, 23:59 (Thu Class) 
+                                              19 Nov 2026, 23:59 (Fri Class)  
+A. Requirements 
+In this project, you will work in groups to design, implement, and evaluate an AI-powered chatbot 
+tailored for a specific application domain (e.g., healthcare, education, customer service, finance, 
+travel, etc.). The requirements for your chatbot are outlined below: 
+Basic Features (3 marks out of 10 marks in Final Demo)  
+Your chatbot should be capable of understanding user queries, providing relevant 
+information, and performing essential tasks within the selected domain. Specifically: 
+• The chatbot must be able to communicate effectively within the defined domain of 
+application. 
+• It should handle typical user queries and provide relevant responses in a ch osen 
+language (e.g. English or Chinese).  
+Additional Features (7 out of 10 marks in Final Demo) 
+Beyond the basic requirements, you are expected to incorporate additional features to 
+enhance your chatbot. You have the flexibility to select any features you prefer, such as (but 
+not limited to): 
+• Voice recognition and synthesis 
+• 2D/3D avatar integration 
+• Fine-tuned large language model (LLM) 
+• User-friendly interface 
+Innovation and technical complexity in your chosen features will be considered in the 
+evaluation and may positively impact your marks. 
+===== PAGE 2 =====
+. 
+B. Group Formation 
+You are required to form groups of 2-4 students. The workload should be equally shared among all 
+group members, and as such, each student in the group will receive the same project mark. 
+C. Project Development  
+       Final Demo and Presentation  [10 marks] 
+Presentation 
+ 
+Clearly state all the features you have implemented, including both the basic and additional 
+features.  
+Additionally, provide a detailed description of how the additional features were implemented 
+or integrated into your chatbot. Highlight any technical challenges  you encountered and how 
+you addressed them. Explain their capabilities as well as any limitations or challenges 
+encountered during development. 
+ 
+Live Demonstration 
+You are required to conduct a live demonstration of your developed chatbot. Please design a 
+scenario or specific use case that effectively showcases the capabilities of your chatbot within 
+the chosen domain.  
+For example, you may interact with your chatbot using domain-specific queries to demonstrate 
+its ability to provide accurate responses based on your knowledge base or vector database. If 
+you have implemented features such as speech recognition, consider including a verbal 
+conversation to highlight this functionality.  
+If applicable, please also summarize any evaluation results and user feedback during your 
+demonstration. 
+===== PAGE 3 =====
+. 
+Grading Criteria: 
+Your final demo and presentation will be evaluated based on the following aspects: 
+• Technical contributions  
+o complexity and difficulty of implementation, effectiveness and performance of 
+the developed features  
+• User interface design  
+o visual appeal, usability, intuitiveness, int egration of features such as speech 
+recognition 
+• Creativity and innovation in features  
+o originality of features, how well they enhance user experience or address the 
+specific needs of the chosen domain  
+• Quality of the final presentation and demonstration 
+o clarity, organization, engagement, and effectiveness in showcasing the 
+chatbot’s capabilities  
+             
+===== PAGE 4 =====
+. 
+Important Dates and Submission of Assessments: 
+• Group Forming (25 Sep 2026, Friday):  
+Submit your group’s member list via the online form below:   
+  Thu Class :  https://forms.cloud.microsoft/r/kmk8egxVE9 
+  Fri Class :  https://forms.cloud.microsoft/r/2n0cQJ6dcz 
+Please input BOTH the student ID and English names of your members. Each group needs ONLY 
+to submit ONCE! 
+• Demo and Presentation Submission  
+(18 Nov 2026, Wednesday, 23:59 for Thu Class) 
+(19 Nov 2026, Thursday, 23:59 for Fri Class): 
+Submit the source file package (in zip file) and presentation slide (in pptx) via Canvas.  
+For your source code, Include a readme file to include all the student IDs and names of all 
+group members in it. Then describe the additional feature you had implemented and the way 
+you run your source code. If you are using an online platform to develop your chatbot, submit 
+your prompt, related knowledge base files in your source file package. 
+Each group ONLY needs to submit one copy of the item by one group member via Canvas. 
+• Live Demo and Presentation  
+(19 or 26 Nov 2026, Thursday for Thu Class) 
+(20 or 27 Nov 2026, Friday for Fri Class): 
+Present and demonstrate your finished chatbot in English within 7 minutes (tentative) and 3 
+minus for Q&A. Arrange for at least one group member to present during the lecture session. 
+The exact time slot will be arranged randomly a week before the presentation. 
+ 
+ 

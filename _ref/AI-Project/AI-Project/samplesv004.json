@@ -1,0 +1,87 @@
+{
+    "youtube_video_id": "c5X7YYZmhS4",
+    "title": "Tell Everyone | Liberty Biberty | Liberty Mutual Insurance Commercial",
+    "video_keywords": [
+        "commercial",
+        "liberty mutual",
+        "comedy",
+        "advertising",
+        "mascot",
+        "insurance",
+        "funny"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:05",
+            "description": "Medium shot of a man opening his car door on a suburban street, startled to find a fluffy yellow creature wearing a Statue of Liberty crown sitting on the roof.",
+            "keywords": [
+                "medium shot",
+                "suburban street",
+                "car",
+                "fluffy mascot",
+                "establishing scene"
+            ]
+        },
+        {
+            "time_start": "00:05",
+            "time_end": "00:12",
+            "description": "Medium close-up shot as the fluffy yellow mascot introduces itself as 'Liberty Biberty' and talks about getting great car insurance coverage and savings.",
+            "keywords": [
+                "medium close-up",
+                "dialogue",
+                "mascot",
+                "character introduction",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "00:12",
+            "time_end": "00:16",
+            "description": "Medium shot showing the man reacting in utter confusion and backing away in alarm as the mascot pops up again, building comedic tension.",
+            "keywords": [
+                "medium shot",
+                "surprised man",
+                "mascot",
+                "comedy",
+                "reaction"
+            ]
+        },
+        {
+            "time_start": "00:16",
+            "time_end": "00:22",
+            "description": "Medium tracking shot of another man washing his car in a driveway with a hose, suddenly startled as the yellow mascot slides across the roof of his car.",
+            "keywords": [
+                "medium shot",
+                "driveway",
+                "car wash",
+                "mascot",
+                "slapstick comedy"
+            ]
+        },
+        {
+            "time_start": "00:22",
+            "time_end": "00:26",
+            "description": "Close-up shot of Liberty Biberty sitting on the car roof delivering the brand slogan about great coverage and savings.",
+            "keywords": [
+                "close-up",
+                "mascot",
+                "brand slogan",
+                "product reveal",
+                "advertising"
+            ]
+        },
+        {
+            "time_start": "00:26",
+            "time_end": "00:31",
+            "description": "Wide graphic screen showing the Liberty Mutual logo and company jingle, concluding the commercial with the mascot rolling across the bottom of the frame.",
+            "keywords": [
+                "wide shot",
+                "brand logo",
+                "jingle",
+                "conclusion",
+                "commercial outro"
+            ]
+        }
+    ]
+}

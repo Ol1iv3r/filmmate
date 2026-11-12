@@ -1,0 +1,89 @@
+{
+    "youtube_video_id": "1giQVuoTAFM",
+    "title": "Mariah Carey - IT'S TIME!!",
+    "video_keywords": [
+        "commercial",
+        "holiday",
+        "winter",
+        "comedy",
+        "advertising",
+        "music"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:03",
+            "description": "Wide establishing shot of a massive frozen ice vault door with a digital timer changing from October 31 to November 1.",
+            "keywords": [
+                "wide shot",
+                "holiday",
+                "winter",
+                "establishing scene"
+            ]
+        },
+        {
+            "time_start": "00:03",
+            "time_end": "00:06",
+            "description": "Medium action shot of the heavy vault door swinging open to reveal an icy chamber inside.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "winter"
+            ]
+        },
+        {
+            "time_start": "00:06",
+            "time_end": "00:10",
+            "description": "Medium tracking shot of backup dancers wearing Halloween pumpkin and skull masks using hair dryers to melt the ice around a trapped block.",
+            "keywords": [
+                "tracking shot",
+                "comedy",
+                "holiday",
+                "prop"
+            ]
+        },
+        {
+            "time_start": "00:10",
+            "time_end": "00:15",
+            "description": "Medium close-up shot of Mariah Carey frozen inside a block of ice wearing a red holiday outfit while singing.",
+            "keywords": [
+                "close-up",
+                "holiday",
+                "winter",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "00:15",
+            "time_end": "00:18",
+            "description": "Medium action shot of the ice shattering as Mariah Carey bursts out joyfully into a snowy winter wonderland.",
+            "keywords": [
+                "medium shot",
+                "holiday",
+                "winter",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "00:18",
+            "time_end": "00:32",
+            "description": "Wide celebratory tracking shot of Mariah Carey and dancers in holiday sweaters dancing amidst falling snow and wrapped gifts.",
+            "keywords": [
+                "wide shot",
+                "holiday",
+                "winter",
+                "commercial"
+            ]
+        },
+        {
+            "time_start": "00:32",
+            "time_end": "00:35",
+            "description": "Close-up product title card displaying the red text 'It's Time!!' against a white background.",
+            "keywords": [
+                "close-up",
+                "commercial",
+                "holiday"
+            ]
+        }
+    ]
+}

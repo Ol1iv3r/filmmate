@@ -1,0 +1,155 @@
+{
+    "youtube_video_id": "VGa1imApfdg",
+    "title": "Coca-Cola® Masterpiece",
+    "video_keywords": [
+        "commercial",
+        "advertising",
+        "animation",
+        "comedy",
+        "fantasy",
+        "mixed media",
+        "product reveal"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:05",
+            "description": "High-angle tracking shot descending through a museum glass skylight to establish the bustling art gallery setting filled with visitors.",
+            "keywords": [
+                "wide shot",
+                "establishing scene",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:05",
+            "time_end": "00:11",
+            "description": "Medium shot of a discouraged young art student sitting on a bench in front of a blank sketchpad inside the grand gallery.",
+            "keywords": [
+                "medium shot",
+                "indoor",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "00:11",
+            "time_end": "00:18",
+            "description": "Medium shot panning across students sketching while a stern museum supervisor walks past, building anticipation before the magic begins.",
+            "keywords": [
+                "medium shot",
+                "indoor",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "00:18",
+            "time_end": "00:27",
+            "description": "Medium tracking shot of an animated cubist figure stepping out of a painting and grabbing a Coca-Cola bottle from Andy Warhol's artwork.",
+            "keywords": [
+                "animation",
+                "product reveal",
+                "comedy",
+                "mixed media"
+            ]
+        },
+        {
+            "time_start": "00:27",
+            "time_end": "00:37",
+            "description": "Wide action shot of the animated character leaping into a stormy maritime painting and tossing the Coca-Cola bottle across canvases.",
+            "keywords": [
+                "wide shot",
+                "action",
+                "fantasy",
+                "mixed media"
+            ]
+        },
+        {
+            "time_start": "00:37",
+            "time_end": "00:45",
+            "description": "Medium tracking shot of the Coca-Cola bottle flying through various art styles as ballet dancers and historical figures catch and pass it.",
+            "keywords": [
+                "tracking shot",
+                "fantasy",
+                "animation",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "00:45",
+            "time_end": "00:53",
+            "description": "Medium shot of Edvard Munch's figure from The Scream grabbing the Coca-Cola bottle before another character leaps out of a dark painting.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "fantasy",
+                "animation"
+            ]
+        },
+        {
+            "time_start": "00:53",
+            "time_end": "01:02",
+            "description": "Medium tracking shot of the character rushing through Van Gogh's bedroom painting and passing the bottle through a mirror frame.",
+            "keywords": [
+                "tracking shot",
+                "fantasy",
+                "animation",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "01:02",
+            "time_end": "01:10",
+            "description": "Low-angle medium shot of a classical bronze statue springing to life and tossing the bottle upward toward the gallery ceiling.",
+            "keywords": [
+                "low angle",
+                "fantasy",
+                "animation",
+                "action"
+            ]
+        },
+        {
+            "time_start": "01:10",
+            "time_end": "01:18",
+            "description": "Medium shot of a jungle explorer painting character catching the falling bottle and launching herself across the gallery space.",
+            "keywords": [
+                "medium shot",
+                "action",
+                "fantasy",
+                "animation"
+            ]
+        },
+        {
+            "time_start": "01:18",
+            "time_end": "01:29",
+            "description": "Medium tracking shot of the bottle traveling through Japanese ink wash snow landscapes before being handed off to Vermeer's Girl with a Pearl Earring.",
+            "keywords": [
+                "tracking shot",
+                "fantasy",
+                "animation",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "01:29",
+            "time_end": "01:40",
+            "description": "Close-up shot of the chilled Coca-Cola bottle landing precisely on the student's bench, followed by him taking a refreshing sip.",
+            "keywords": [
+                "close-up",
+                "product reveal",
+                "commercial",
+                "comedy"
+            ]
+        },
+        {
+            "time_start": "01:40",
+            "time_end": "01:53",
+            "description": "Medium shot of the inspired student showing his completed masterpiece drawing to the impressed supervisor as gallery visitors admire the art.",
+            "keywords": [
+                "medium shot",
+                "commercial",
+                "comedy",
+                "indoor"
+            ]
+        }
+    ]
+}

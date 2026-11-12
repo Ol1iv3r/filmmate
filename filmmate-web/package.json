@@ -1,0 +1,36 @@
+{
+  "name": "filmmate-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Filmmate - film creation AI assistant. Phase 1 (chat UI) + Phase 4 (tool-call visualization). Compatible with Vercel AI SDK UIMessage protocol.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "samples:build": "node scripts/build-samples.mjs",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@ai-sdk/react": "^4.0.174",
+    "@tauri-apps/api": "^2.12.4",
+    "ai": "^7.0.170",
+    "highlight.js": "^11.11.1",
+    "lucide-react": "^1.72.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "playwright-core": "^1.65.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.8"
+  }
+}

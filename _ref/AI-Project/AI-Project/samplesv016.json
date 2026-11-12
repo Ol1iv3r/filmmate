@@ -1,0 +1,95 @@
+{
+    "youtube_video_id": "kLdaIxDM-_Y",
+    "title": "Introducing Base44’s Big Game Full Ad “It’s App to You”",
+    "video_keywords": [
+        "commercial",
+        "advertising",
+        "app promotion",
+        "product reveal",
+        "comedy"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:04",
+            "description": "Medium shot of an office worker looking shocked at her laptop while colleagues gather around, establishing the office setting and comedic premise.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "establishing scene",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:04",
+            "time_end": "00:08",
+            "description": "Close-up shot of the laptop screen displaying a newly built budgeting dashboard app, highlighting the product features.",
+            "keywords": [
+                "close-up",
+                "product reveal",
+                "app promotion"
+            ]
+        },
+        {
+            "time_start": "00:08",
+            "time_end": "00:15",
+            "description": "Medium shot of coworkers reacting in disbelief as the app generates automated financial reports on screen.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "00:15",
+            "time_end": "00:21",
+            "description": "Medium tracking shot of office workers walking through the workspace discussing their newly created apps during lunch.",
+            "keywords": [
+                "tracking shot",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:21",
+            "time_end": "00:26",
+            "description": "Medium shot of a worker showing off a snack inventory app on a tablet while another colleague works on a window.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "app promotion"
+            ]
+        },
+        {
+            "time_start": "00:26",
+            "time_end": "00:35",
+            "description": "Close-up shot of a smartphone screen displaying a goal-tracking app interface as coworkers compare notes.",
+            "keywords": [
+                "close-up",
+                "app promotion",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "00:35",
+            "time_end": "00:43",
+            "description": "Medium shot of various employees proudly showing off quirky custom apps including a Spanish tutor and a party planner.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "00:43",
+            "time_end": "00:56",
+            "description": "Wide establishing shot of the bustling office environment followed by the Base44 logo reveal and campaign tagline.",
+            "keywords": [
+                "wide shot",
+                "commercial",
+                "product reveal",
+                "advertising"
+            ]
+        }
+    ]
+}

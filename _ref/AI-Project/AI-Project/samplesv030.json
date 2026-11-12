@@ -1,0 +1,112 @@
+{
+    "youtube_video_id": "8zNLCVroj2A",
+    "title": "How to cook Ratatouille",
+    "video_keywords": [
+        "animation",
+        "comedy",
+        "horror",
+        "parody",
+        "cartoons"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:06",
+            "description": "Medium shot of a grotesque customer in a dim restaurant looking over a menu displaying a giant double burger.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "establishing scene",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:06",
+            "time_end": "00:11",
+            "description": "Medium action shot of the panicked human chef rushing into the kitchen after taking the bizarre order.",
+            "keywords": [
+                "medium shot",
+                "animation",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:11",
+            "time_end": "00:22",
+            "description": "Medium tracking shot of the chef washing an eggplant in the sink while a giant, creepy rat creature lurks behind him.",
+            "keywords": [
+                "tracking shot",
+                "animation",
+                "comedy",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "00:22",
+            "time_end": "00:33",
+            "description": "Medium close-up shot of the chef frantically chopping vegetables with a large knife while the demonic rat watches closely.",
+            "keywords": [
+                "medium close-up",
+                "animation",
+                "comedy",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:33",
+            "time_end": "00:43",
+            "description": "Close-up shot of the chef tasting a red sauce from a wooden spoon with wide, terrified eyes.",
+            "keywords": [
+                "close-up",
+                "animation",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:43",
+            "time_end": "00:52",
+            "description": "Medium action shot of the chef scrambling to season the food while dodging the towering rat assistant in the kitchen.",
+            "keywords": [
+                "medium shot",
+                "animation",
+                "comedy",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "00:52",
+            "time_end": "01:03",
+            "description": "Medium tracking shot of the chef meticulously plating the ratatouille while the rat measures the dish with a tape measure.",
+            "keywords": [
+                "tracking shot",
+                "animation",
+                "comedy",
+                "prop"
+            ]
+        },
+        {
+            "time_start": "01:03",
+            "time_end": "01:15",
+            "description": "Close-up shot of the finished ratatouille dish receiving an approving thumbs-up from the giant rat.",
+            "keywords": [
+                "close-up",
+                "animation",
+                "comedy",
+                "product reveal"
+            ]
+        },
+        {
+            "time_start": "01:15",
+            "time_end": "01:36",
+            "description": "Medium action shot of the chef getting rejected and fleeing frantically through a dark hallway, concluding the comedic animation.",
+            "keywords": [
+                "medium shot",
+                "animation",
+                "comedy",
+                "establishing scene"
+            ]
+        }
+    ]
+}

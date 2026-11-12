@@ -1,0 +1,90 @@
+{
+    "youtube_video_id": "_9bmrDZRsmo",
+    "title": "The Giant Fish That Rises From The Deep | Blue Planet III | 4k | BBC Earth",
+    "video_keywords": [
+        "animal",
+        "documentary",
+        "nature",
+        "bbc earth",
+        "wildlife"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:14",
+            "description": "Medium close-up shot of a giant mola mola swimming near the ocean surface [[00:01](https://www.youtube.com/watch?v=_9bmrDZRsmo&t=1)].",
+            "keywords": [
+                "medium close-up",
+                "animal",
+                "wildlife",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "00:14",
+            "time_end": "00:31",
+            "description": "Medium action shot of the mola mola rising from the deep blue waters to feed on jellyfish near the surface [[00:15](https://www.youtube.com/watch?v=_9bmrDZRsmo&t=15)].",
+            "keywords": [
+                "medium action shot",
+                "animal",
+                "action",
+                "wildlife"
+            ]
+        },
+        {
+            "time_start": "00:31",
+            "time_end": "00:48",
+            "description": "Close-up action shot of the giant sunfish devouring multiple jellyfish in open water [[00:32](https://www.youtube.com/watch?v=_9bmrDZRsmo&t=32)].",
+            "keywords": [
+                "close-up",
+                "animal",
+                "action",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "00:48",
+            "time_end": "01:15",
+            "description": "Wide establishing shot of a floating kelp forest oasis in the middle of the deep blue ocean [[00:49](https://www.youtube.com/watch?v=_9bmrDZRsmo&t=49)].",
+            "keywords": [
+                "wide shot",
+                "nature",
+                "establishing scene",
+                "outdoor"
+            ]
+        },
+        {
+            "time_start": "01:15",
+            "time_end": "01:55",
+            "description": "Medium close-up shot of half-moon fish gathering around the mola mola to feed on its parasites [[01:15](https://www.youtube.com/watch?v=_9bmrDZRsmo&t=75)].",
+            "keywords": [
+                "medium close-up",
+                "animal",
+                "wildlife",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "01:55",
+            "time_end": "02:27",
+            "description": "Close-up action shot of the mola mola being gently cleaned and pampered by smaller reef fish [[01:57](https://www.youtube.com/watch?v=_9bmrDZRsmo&t=117)].",
+            "keywords": [
+                "close-up",
+                "animal",
+                "action",
+                "nature"
+            ]
+        },
+        {
+            "time_start": "02:27",
+            "time_end": "03:12",
+            "description": "Wide aerial shot of the giant sunfish basking in the warm surface sunlight before returning to the cold depths [[02:27](https://www.youtube.com/watch?v=_9bmrDZRsmo&t=147)].",
+            "keywords": [
+                "wide shot",
+                "animal",
+                "documentary",
+                "nature"
+            ]
+        }
+    ]
+}

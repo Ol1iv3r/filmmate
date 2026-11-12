@@ -1,0 +1,128 @@
+{
+    "youtube_video_id": "zHhR3daI3bY",
+    "title": "Man Vs Baby | Official Trailer | Netflix",
+    "video_keywords": [
+        "commercial",
+        "comedy",
+        "holiday",
+        "winter",
+        "advertising",
+        "mascot"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:06",
+            "description": "Close-up shot of Rowan Atkinson as Trevor Bingley staring directly into the camera in confusion while talking to a police officer on a video tablet.",
+            "keywords": [
+                "close-up",
+                "comedy",
+                "establishing scene"
+            ]
+        },
+        {
+            "time_start": "00:06",
+            "time_end": "00:11",
+            "description": "Medium tracking shot of Rowan Atkinson talking on his phone while walking inside a home interior.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:11",
+            "time_end": "00:16",
+            "description": "Medium action shot of Trevor reacting in panic as a baby basket flies across a hallway and lands in an entryway.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "00:16",
+            "time_end": "00:24",
+            "description": "Medium tracking shot of Trevor driving a red car while feeding a baby with a bottle in the passenger seat.",
+            "keywords": [
+                "tracking shot",
+                "comedy",
+                "outdoor"
+            ]
+        },
+        {
+            "time_start": "00:24",
+            "time_end": "00:35",
+            "description": "Medium close-up of Trevor arguing with a police officer on the phone over mispronounced names, establishing comedic frustration.",
+            "keywords": [
+                "medium close-up",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:35",
+            "time_end": "00:41",
+            "description": "Close-up shot of Trevor peeking under a red hooded jacket to check on a baby before silencing a receptionist.",
+            "keywords": [
+                "close-up",
+                "comedy",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:41",
+            "time_end": "00:54",
+            "description": "Medium wide shot of Trevor wearing a Housesitters Deluxe jacket and talking awkwardly with a luxury mansion owner.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "indoor",
+                "luxury"
+            ]
+        },
+        {
+            "time_start": "00:54",
+            "time_end": "01:08",
+            "description": "Medium shot of Trevor preparing champagne and celebrating by the window while a baby sleeps peacefully in a basket nearby.",
+            "keywords": [
+                "medium shot",
+                "comedy",
+                "indoor",
+                "holiday"
+            ]
+        },
+        {
+            "time_start": "01:08",
+            "time_end": "01:16",
+            "description": "Medium tracking shot of Trevor pushing a baby in a shopping trolley along a festive winter street adorned with Christmas lights.",
+            "keywords": [
+                "tracking shot",
+                "comedy",
+                "winter",
+                "holiday"
+            ]
+        },
+        {
+            "time_start": "01:16",
+            "time_end": "01:26",
+            "description": "Medium close-up montage of comedic mishaps including Trevor wearing an apron, opening water faucets, and multitasking with babies on a sofa.",
+            "keywords": [
+                "medium close-up",
+                "comedy",
+                "slapstick"
+            ]
+        },
+        {
+            "time_start": "01:26",
+            "time_end": "02:04",
+            "description": "Wide shot of Trevor chatting with mothers in a park with his baby in a shopping cart, concluding with the Netflix release date title card.",
+            "keywords": [
+                "wide shot",
+                "comedy",
+                "outdoor",
+                "holiday"
+            ]
+        }
+    ]
+}

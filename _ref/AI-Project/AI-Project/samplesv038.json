@@ -1,0 +1,79 @@
+{
+    "youtube_video_id": "mEIMltirg7w",
+    "title": "How the Perfect American Hot Dog Is Made From Start to Finish!",
+    "video_keywords": [
+        "food",
+        "street food",
+        "cooking",
+        "commercial",
+        "documentary"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:08",
+            "description": "Medium establishing shot of a chef preparing hot dog buns, sausages, and condiment stations in a professional kitchen [[00:01](https://www.youtube.com/watch?v=mEIMltirg7w&t=1)].",
+            "keywords": [
+                "medium shot",
+                "establishing scene",
+                "food",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:08",
+            "time_end": "00:27",
+            "description": "Close-up action shot of sausages sizzling and getting perfect grill marks on a hot flat-top grill [[00:10](https://www.youtube.com/watch?v=mEIMltirg7w&t=10)].",
+            "keywords": [
+                "close-up",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:27",
+            "time_end": "00:38",
+            "description": "Medium action shot of the chef pressing open hot dog buns onto the hot grill to toast them [[00:28](https://www.youtube.com/watch?v=mEIMltirg7w&t=28)].",
+            "keywords": [
+                "medium action shot",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "00:38",
+            "time_end": "00:46",
+            "description": "Close-up shot of chopped onions and sweet relish being organized into prep containers [[00:39](https://www.youtube.com/watch?v=mEIMltirg7w&t=39)].",
+            "keywords": [
+                "close-up",
+                "cooking",
+                "food",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:46",
+            "time_end": "01:02",
+            "description": "Medium close-up shot of assembling the hot dog by placing the grilled sausage into the toasted bun and adding mustard, ketchup, onions, and relish [[00:50](https://www.youtube.com/watch?v=mEIMltirg7w&t=50)].",
+            "keywords": [
+                "medium close-up",
+                "cooking",
+                "food",
+                "action"
+            ]
+        },
+        {
+            "time_start": "01:02",
+            "time_end": "01:21",
+            "description": "Wide tabletop shot displaying the finished classic American hot dog served alongside crispy french fries on a red checkered tray [[01:10](https://www.youtube.com/watch?v=mEIMltirg7w&t=70)].",
+            "keywords": [
+                "wide shot",
+                "product reveal",
+                "food",
+                "indoor"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,73 @@
+{
+    "youtube_video_id": "oYmU8Av_e84",
+    "title": "Spec commercial - SONY",
+    "video_keywords": [
+        "commercial",
+        "electronics",
+        "product reveal",
+        "storytelling"
+    ],
+    "segments": [
+        {
+            "time_start": "00:00",
+            "time_end": "00:08",
+            "description": "Wide establishing shot of a quiet, dimly lit vintage library as a student walks down the stairs [[00:02](https://www.youtube.com/watch?v=oYmU8Av_e84&t=2)].",
+            "keywords": [
+                "wide shot",
+                "establishing scene",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:08",
+            "time_end": "00:19",
+            "description": "Medium tracking shot of the student entering the main study hall filled with distracted, noisy people [[00:10](https://www.youtube.com/watch?v=oYmU8Av_e84&t=10)].",
+            "keywords": [
+                "tracking shot",
+                "indoor",
+                "storytelling"
+            ]
+        },
+        {
+            "time_start": "00:19",
+            "time_end": "00:30",
+            "description": "Close-up action shot of students tapping pencils, chewing gum loudly, and rustling papers [[00:22](https://www.youtube.com/watch?v=oYmU8Av_e84&t=22)].",
+            "keywords": [
+                "close-up",
+                "action",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:30",
+            "time_end": "00:43",
+            "description": "Medium close-up shot of the frustrated student struggling to concentrate amidst the escalating background noise [[00:35](https://www.youtube.com/watch?v=oYmU8Av_e84&t=35)].",
+            "keywords": [
+                "medium close-up",
+                "storytelling",
+                "indoor"
+            ]
+        },
+        {
+            "time_start": "00:43",
+            "time_end": "00:54",
+            "description": "Medium action shot of the student pulling Sony noise-canceling headphones from a bag and putting them on [[00:46](https://www.youtube.com/watch?v=oYmU8Av_e84&t=46)].",
+            "keywords": [
+                "medium action shot",
+                "product reveal",
+                "electronics"
+            ]
+        },
+        {
+            "time_start": "00:54",
+            "time_end": "01:01",
+            "description": "Wide closing shot revealing the Sony product branding and tagline 'Find your focus' [[00:56](https://www.youtube.com/watch?v=oYmU8Av_e84&t=56)].",
+            "keywords": [
+                "wide shot",
+                "product reveal",
+                "commercial",
+                "indoor"
+            ]
+        }
+    ]
+}
