@@ -13,6 +13,9 @@ __pycache__/
 .venv/
 venv/
 
+# Phase 3 会话存储（chat storage）：会话 JSON 落盘目录（本机数据，不进仓库）
+data/
+
 # 系统文件
 .DS_Store
 Thumbs.db

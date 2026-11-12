@@ -20,6 +20,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 import case_store
+import chat_storage_api
 import config
 import llm
 import prompts
@@ -49,6 +50,7 @@ app.add_middleware(
 )
 
 app.include_router(voice_input_api.router)
+app.include_router(chat_storage_api.router)
 
 
 def sse(event: str, data) -> str:

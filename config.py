@@ -45,3 +45,8 @@ EMBEDDING_MODE = os.environ.get("EMBEDDING_MODE", "auto").strip().lower()
 
 HOST = os.environ.get("HOST", "127.0.0.1")
 PORT = int(os.environ.get("PORT", "8000"))
+
+# Phase 3 会话存储(chat storage):会话历史落盘目录(每个会话一个 JSON 文件)
+CONVERSATIONS_DIR = Path(
+    os.environ.get("CONVERSATIONS_DIR", str(BASE_DIR / "data" / "conversations"))
+).expanduser()
