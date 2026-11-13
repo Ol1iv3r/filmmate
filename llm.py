@@ -16,12 +16,12 @@ logger = logging.getLogger("llm")
 
 
 def available(api_key: str = None):
-    return bool((api_key or "").strip() or config.DEEPSEEK_API_KEY)
+    return bool(config.llm_settings(api_key)[0])
 
 
-def _payload(messages, temperature, json_mode, stream):
+def _payload(messages, temperature, json_mode, stream, model):
     payload = {
-        "model": config.DEEPSEEK_MODEL,
+        "model": model,
         "messages": messages,
         "temperature": temperature,
         "stream": stream,
@@ -33,11 +33,11 @@ def _payload(messages, temperature, json_mode, stream):
 
 async def stream_chat(messages, api_key: str = None, temperature: float = 0.7, timeout: float = 120.0):
     """逐段返回模型生成的增量文本。"""
-    key = api_key or config.DEEPSEEK_API_KEY
+    key, base, model, provider = config.llm_settings(api_key)
     headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
-    url = config.DEEPSEEK_BASE_URL.rstrip("/") + "/chat/completions"
+    url = base.rstrip("/") + "/chat/completions"
     async with httpx.AsyncClient(timeout=timeout) as client:
-        async with client.stream("POST", url, json=_payload(messages, temperature, False, True), headers=headers) as resp:
+        async with client.stream("POST", url, json=_payload(messages, temperature, False, True, model), headers=headers) as resp:
             if resp.status_code != 200:
                 body = (await resp.aread()).decode("utf-8", "ignore")
                 raise RuntimeError(f"DeepSeek API {resp.status_code}: {body[:300]}")
@@ -203,11 +203,11 @@ def execute_tool(name: str, query: str, limit: int = 3):
 
 async def complete_raw(messages, api_key: str = None, temperature: float = 0.7, tools=None, timeout: float = 120.0):
     """单次非流式请求,返回完整响应 JSON(支持 tools 参数)。"""
-    key = api_key or config.DEEPSEEK_API_KEY
+    key, base, model, provider = config.llm_settings(api_key)
     headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
-    url = config.DEEPSEEK_BASE_URL.rstrip("/") + "/chat/completions"
+    url = base.rstrip("/") + "/chat/completions"
     payload = {
-        "model": config.DEEPSEEK_MODEL,
+        "model": model,
         "messages": messages,
         "temperature": temperature,
         "stream": False,

@@ -21,6 +21,9 @@ DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 
+# 聊天模型统一入口：优先直连 DeepSeek；没有 DeepSeek key 时用 Vercel AI Gateway 上的 DeepSeek
+GATEWAY_CHAT_MODEL = os.environ.get("GATEWAY_CHAT_MODEL", "deepseek/deepseek-v3.2").strip()
+
 # 语音转写配置(Phase 2):whisper-1,走 Vercel AI Gateway 或直连 OpenAI
 AI_GATEWAY_API_KEY = os.environ.get("AI_GATEWAY_API_KEY", "").strip()
 AI_GATEWAY_BASE_URL = os.environ.get(
@@ -50,3 +53,18 @@ PORT = int(os.environ.get("PORT", "8000"))
 CONVERSATIONS_DIR = Path(
     os.environ.get("CONVERSATIONS_DIR", str(BASE_DIR / "data" / "conversations"))
 ).expanduser()
+
+
+def llm_settings(api_key: str = None):
+    """返回 (key, base_url, model, provider)。
+
+    优先级：调用方传入的 key > 直连 DeepSeek > Vercel AI Gateway（模型为 deepseek/*）。
+    """
+    key = (api_key or "").strip()
+    if key:
+        return key, DEEPSEEK_BASE_URL, DEEPSEEK_MODEL, "direct"
+    if DEEPSEEK_API_KEY:
+        return DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL, DEEPSEEK_MODEL, "deepseek"
+    if AI_GATEWAY_API_KEY:
+        return AI_GATEWAY_API_KEY, AI_GATEWAY_BASE_URL, GATEWAY_CHAT_MODEL, "gateway"
+    return "", DEEPSEEK_BASE_URL, DEEPSEEK_MODEL, "offline"

@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.2] — 2026-11-13
+
+### Added
+
+- **在线模式可直接用 Vercel AI Gateway**：无需单独的 DeepSeek key。
+  配置 `AI_GATEWAY_API_KEY` 后，聊天默认走 `deepseek/deepseek-v3.2`（可用 `GATEWAY_CHAT_MODEL` 覆盖）；
+  若填了 `DEEPSEEK_API_KEY` 则优先直连。
+- 同一把 Gateway key 同时用于语音转写（whisper-1）与聊天。
+
+### Verified
+
+- 问答：`香港哪里适合拍夜景` → 先调用 search_knowledge，再由模型输出（约 16s）。
+- 剧本检查：上传剧本后走在线 JSON，返回 4 条问题 + 制作风险。
+- 灵感：在线生成 3 个概念 + 情绪分组静帧（约 23s）。
+
+
 ## [0.4.1] — 2026-11-13
 
 ### Fixed
