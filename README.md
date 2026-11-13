@@ -1,9 +1,11 @@
 # 🎬 Filmmate · 影视创作 AI 助理
 
 > **📁 仓库导航**：本目录是 2026-11-05 的 Python 原型（FastAPI + 原生 HTML/JS）。
-> 团队正式栈（Tauri 2 + React + Vite + TS，Phase 1 聊天 UI + Phase 4 工具调用可视化）在
-> **[`filmmate-web/`](filmmate-web/README.md)**，前后端消息契约在
+> 团队正式栈（Tauri 2 + React + Vite + TS，Phase 1 聊天 UI + Phase 2 语音输入 + Phase 3 会话落盘 +
+> Phase 4 工具调用可视化）在 **[`filmmate-web/`](filmmate-web/README.md)**，前后端消息契约在
 > **[`filmmate-web/docs/CONTRACT.md`](filmmate-web/docs/CONTRACT.md)**。
+> Phase 2 / Phase 3 的 Python 后端模块（`voice_input_api.py`、`chat_storage*.py`）在本目录根部，
+> 由 `app.py` 一并注册。
 
 **COMP4431 Artificial Intelligence (2026/27) Group Project — Domain-specific Chatbot**
 
@@ -135,10 +137,15 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 ├── rag.py               # 专业知识库检索(BM25 / dense)
 ├── case_store.py        # 案例库检索 + 案例上下文构建
 ├── tools.py             # 意图识别 + 五个创作工具(在线/离线双实现)
+├── voice_input_api.py   # Phase 2:语音转写 /api/transcribe(whisper-1)
+├── chat_storage.py      # Phase 3:会话 JSON 存储(原子写/加锁/损坏隔离)
+├── chat_storage_api.py  # Phase 3:/api/conversations REST(5 个路由)
+├── chat_storage_langchain.py # Phase 3:LangChain 消息 ↔ dict(预留,未接线)
 ├── requirements.txt
 ├── .env.example
 ├── knowledge/knowledge.json   # 专业知识库(78 条)
 ├── cases/cases.json           # 作品案例库(10 部)
+├── data/conversations/        # Phase 3 运行后生成(已 .gitignore)
 └── static/
     ├── index.html       # 聊天界面
     ├── style.css        # 电影风深色主题
@@ -150,6 +157,7 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 ## ⚠️ 已知限制
 
 - 离线模式的剧本检查基于启发式规则(时间线/人物去向/对白长度/伏笔),无法做动机、潜台词层面的深度审阅;
+- 本 README 的语音输入指 `static/` 原型用的浏览器 Web Speech API;Tauri/React 版的语音输入是 whisper-1(经 `voice_input_api.py`),见 `filmmate-web/README.md`;
 - 语音识别依赖浏览器支持(推荐 Chrome),首次使用需授权麦克风;
 - BM25 检索对同义词不敏感,装了 sentence-transformers 的向量模式效果更好;
 - 聊天上下文保留最近 6 轮;案例库为示例数据(10 部),可按同样格式继续扩充;
