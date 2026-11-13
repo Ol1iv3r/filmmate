@@ -6,6 +6,7 @@
 两个模式的输出结构完全一致,前端无需区分。
 """
 import logging
+import math
 import random
 import re
 from collections import Counter
@@ -44,7 +45,7 @@ def detect_tool(message: str):
     if len(msg) > 150 and (re.search(r"第\s*\d+\s*[场幕景]", msg) or re.search(r"scene\s*\d+", low) or re.search(r"^\s*[^:]{1,8}[:：].+$", msg, re.M)):
         return "review"
     if _has_any(msg, _CASE_WORDS):
-        return "cases"
+        return "inspiration"
     if _has_any(msg, _STORY_WORDS):
         return "storyboard"
     if _has_any(msg, _SCHEDULE_WORDS) and "日程" in msg:
@@ -126,6 +127,8 @@ def _pick_topic(text: str):
         m = re.search(r"([^\s,。,:，;、]{2,12})", t)
         topic = m.group(1) if m else "我的短片"
     topic = re.sub(r"(的戏|的短片|的故事|的影片|的视频|的剧本)$", "", topic)
+    if re.match(r"^(第\s*\d+\s*[场幕景]|scene\s*\d+)", text.strip(), re.I):
+        topic = "我的短片"
     # 去掉开头多余的"拍摄"字样
     topic = re.sub(r"^(拍摄|拍)", "", topic)
     return topic or "我的短片"
@@ -240,6 +243,7 @@ def offline_review(text: str):
     return {
         "summary": summary, "score": round(score), "issues": issues[:8],
         "strengths": strengths[:3], "next_steps": next_steps,
+        "production_risks": [], "genre_benchmark": "",
         "mode": "offline",
     }
 
@@ -249,10 +253,10 @@ async def review(text: str, api_key: str = None, case_ctx: str = "", refs: list 
         try:
             user_content = text
             if case_ctx:
-                user_content += f"\n\n以下是案例库中与本题材相关的优秀案例(检索所得),审阅时可借鉴其中的经验教训:\n{case_ctx}"
+                user_content += f"\n\n以下是检索到的参考资料（案例 / 场面模式，审阅时可借鉴其中经验与常见问题）：\n{case_ctx}"
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_REVIEW},
-                 {"role": "user", "content": user_content[:6000]}], api_key=api_key)
+                 {"role": "user", "content": user_content[:9000]}], api_key=api_key)
             data = _normalize_review(data)
             data["mode"] = "online"
             if refs:
@@ -269,7 +273,7 @@ async def review(text: str, api_key: str = None, case_ctx: str = "", refs: list 
 def _normalize_review(data: dict):
     out = {
         "summary": str(data.get("summary", "")),
-        "score": int(data.get("score", 7)),
+        "score": max(0, min(10, int(data.get("score", 7) or 7))),
         "issues": [], "strengths": [], "next_steps": str(data.get("next_steps", "")),
     }
     for it in data.get("issues", []) or []:
@@ -285,6 +289,16 @@ def _normalize_review(data: dict):
         })
     for s in data.get("strengths", []) or []:
         out["strengths"].append(str(s))
+    risks = []
+    for r in data.get("production_risks", []) or []:
+        if isinstance(r, dict) and r.get("risk"):
+            risks.append({
+                "risk": str(r["risk"]),
+                "severity": str(r.get("severity", "中")),
+                "mitigation": str(r.get("mitigation", "")),
+            })
+    out["production_risks"] = risks[:4]
+    out["genre_benchmark"] = str(data.get("genre_benchmark", ""))
     return out
 
 
@@ -297,40 +311,93 @@ MOVES = ["固定", "推", "稳定器跟随", "摇"]
 
 
 def offline_storyboard(text: str, refs: list = None):
-    scenes = parse_scenes(text)
-    shots, sid = [], 0
-    for si, scene in enumerate(scenes[:4]):
-        sname = scene[0][:24] if scene else f"第{si + 1}场"
-        stext = "\n".join(scene)
-        dlg = extract_dialogues(stext)
-        first_dlg = dlg[0][1][:30] if dlg else ""
-        n = 3 if len(stext) > 80 else 2
-        for j in range(n):
-            shot_type = SHOT_TYPES[j % len(SHOT_TYPES)]
+    """离线分镜：按场次从镜头模式库挑镜头，组成 master + coverage 的 shot list。"""
+    import library
+
+    infos = analyze_script(text)
+    scene_lines_all = parse_scenes(text)
+    shots, sid, scene_plan = [], 0, []
+    role_queries = [
+        ("全景", "建立镜头 establishing 交代空间"),
+        ("过肩", "过肩 对话 双人 正反打"),
+        ("近景", "近景 反应 情绪"),
+        ("特写", "特写 细节 情绪 强调"),
+        ("大特写", "插入镜头 微距 细节"),
+    ]
+    for info in infos[:4]:
+        scene_text = f"{info['heading']} {info['synopsis']} {' '.join(info['cast'])}"
+        scene_label = f"第{info['scene_no']}场 {info['location']}"
+        scene_plan.append({
+            "scene_no": info["scene_no"],
+            "scene": scene_label,
+            "coverage": ["master 全景", "OTS 双人过肩", "single A", "insert 细节"],
+            "notes": "轴线保持在同一侧；先拍 master 再拍 singles",
+        })
+        idx = info["scene_no"] - 1
+        body = "\n".join(scene_lines_all[idx]) if 0 <= idx < len(scene_lines_all) else ""
+        dialogues = extract_dialogues(body)
+        first_dlg = dialogues[0][1][:30] if dialogues else ""
+        count = min(5, max(3, info["pages_eighths"] // 2 + 2))
+        used = set()
+        for j in range(count):
             sid += 1
-            shots.append({
-                "id": sid, "scene": f"第{si + 1}场 {sname}",
-                "shot_type": shot_type,
-                "angle": ANGLES[(si + j) % len(ANGLES)],
-                "movement": "固定" if j == 0 else MOVES[(si + j) % len(MOVES)],
-                "duration": f"{3 + (j % 3) * 2}s",
-                "description": f"以{shot_type}建立{'空间关系与人物位置' if j == 0 else '情绪与细节'},注意构图留白与视线方向。",
-                "dialogue": first_dlg if j == 1 else "",
-            })
+            role, role_q = role_queries[j % len(role_queries)]
+            pool = library.search_shots(f"{scene_text} {role_q}", k=8) or []
+            p = next((x for x in pool if x.get("id") not in used), None)
+            if p:
+                used.add(p.get("id"))
+            if p:
+                shot = {
+                    "id": sid, "scene_no": info["scene_no"], "scene": scene_label,
+                    "shot_type": p.get("size", "中景"), "angle": p.get("angle", "平视"),
+                    "movement": p.get("movement", "固定"), "lens": p.get("lens", "35mm"),
+                    "duration": (p.get("duration_range") or "3-5s").split("-")[0] + "s",
+                    "description": (p.get("example_use") or p.get("purpose", ""))[:90],
+                    "dialogue": first_dlg if j == 2 else "",
+                    "lighting": p.get("lighting", ""), "sound": p.get("sound", ""),
+                    "purpose": p.get("purpose", ""), "transition": "切",
+                }
+            else:
+                shot = {
+                    "id": sid, "scene_no": info["scene_no"], "scene": scene_label,
+                    "shot_type": SHOT_TYPES[j % len(SHOT_TYPES)], "angle": ANGLES[(info["scene_no"] + j) % len(ANGLES)],
+                    "movement": "固定" if j == 0 else MOVES[(info["scene_no"] + j) % len(MOVES)],
+                    "lens": "35mm", "duration": f"{3 + (j % 3) * 2}s",
+                    "description": "建立空间关系与人物位置，注意构图留白与视线方向。",
+                    "dialogue": first_dlg if j == 1 else "",
+                    "lighting": "", "sound": "", "purpose": "建立空间", "transition": "切",
+                }
+            shots.append(shot)
     if not shots:  # 没有可解析的剧本 → 给一个通用示例
         shots = [
-            {"id": 1, "scene": "示例:开场", "shot_type": "全景", "angle": "平视", "movement": "固定",
-             "duration": "5s", "description": "交代环境与人物位置,画面四边留呼吸空间。", "dialogue": ""},
-            {"id": 2, "scene": "示例:开场", "shot_type": "中景", "angle": "过肩", "movement": "固定",
-             "duration": "4s", "description": "对话正反打,过肩机位建立空间关系。", "dialogue": ""},
-            {"id": 3, "scene": "示例:开场", "shot_type": "特写", "angle": "平视", "movement": "推",
-             "duration": "3s", "description": "推向面部,强调情绪转折。", "dialogue": ""},
+            {"id": 1, "scene_no": 1, "scene": "示例：开场", "shot_type": "全景", "angle": "平视",
+             "movement": "固定", "lens": "24mm", "duration": "5s",
+             "description": "交代环境与人物位置，画面四边留呼吸空间。", "dialogue": "",
+             "lighting": "自然光为主，补一块反光板压暗背景", "sound": "环境声铺底",
+             "purpose": "建立场景", "transition": "切"},
+            {"id": 2, "scene_no": 1, "scene": "示例：开场", "shot_type": "中景", "angle": "过肩",
+             "movement": "固定", "lens": "50mm", "duration": "4s",
+             "description": "对话正反打，过肩机位建立空间关系。", "dialogue": "",
+             "lighting": "主光 45° 侧打，辅光补暗部", "sound": "对白清晰，压低环境",
+             "purpose": "建立人物关系", "transition": "切"},
+            {"id": 3, "scene_no": 1, "scene": "示例：开场", "shot_type": "特写", "angle": "平视",
+             "movement": "推", "lens": "85mm", "duration": "3s",
+             "description": "推向面部，强调情绪转折。", "dialogue": "",
+             "lighting": "眼神光 + 轮廓光分离背景", "sound": "音乐进入",
+             "purpose": "点出情绪", "transition": "切"},
         ]
-    note = "离线模式生成的分镜草稿示例;接入 API 后按剧本语义自动设计。"
+
+    note = "离线模式：镜头由镜头模式库按场次语义匹配；在线模式会逐场定制 coverage。"
     if refs:
         top = refs[0]
-        note = f"借鉴案例{top['title']}:{'、'.join(top.get('storyboard_highlights', [])[:2])}(接入 API 后按剧本语义定制)"
-    out = {"shots": shots, "mode": "offline", "note": note}
+        note = f"借鉴案例{top['title']}：{'、'.join(top.get('storyboard_highlights', [])[:2])}"
+    out = {
+        "shots": shots[:16],
+        "scene_plan": scene_plan,
+        "coverage_notes": "保持 180 度轴线与视线匹配；景别递进 全景→中景→特写；越轴必须用移动镜头交代。",
+        "mode": "offline",
+        "note": note,
+    }
     if refs:
         out["references"] = refs
     return out
@@ -341,63 +408,336 @@ async def storyboard(text: str, api_key: str = None, case_ctx: str = "", refs: l
         try:
             user_content = text[:4000]
             if case_ctx:
-                user_content += f"\n\n参考案例(检索自案例库,请借鉴其分镜设计与拍摄流程,但必须适配用户剧本):\n{case_ctx}"
+                user_content += f"\n\n参考资料（检索所得：案例 / 场面模式 / 镜头模式，请借鉴其分镜设计与拍摄流程，但必须适配用户剧本）：\n{case_ctx}"
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_STORYBOARD},
-                 {"role": "user", "content": user_content[:6000]}], api_key=api_key)
+                 {"role": "user", "content": user_content[:9000]}], api_key=api_key)
             shots = []
             for i, s in enumerate(data.get("shots", []) or []):
                 if not isinstance(s, dict):
                     continue
                 shots.append({
-                    "id": int(s.get("id", i + 1)),
+                    "id": int(s.get("id", i + 1) or i + 1),
+                    "scene_no": int(s.get("scene_no", 0) or 0),
                     "scene": str(s.get("scene", "")),
                     "shot_type": str(s.get("shot_type", "中景")),
                     "angle": str(s.get("angle", "平视")),
                     "movement": str(s.get("movement", "固定")),
+                    "lens": str(s.get("lens", "")),
                     "duration": str(s.get("duration", "4s")),
                     "description": str(s.get("description", "")),
                     "dialogue": str(s.get("dialogue", "")),
+                    "lighting": str(s.get("lighting", "")),
+                    "sound": str(s.get("sound", "")),
+                    "purpose": str(s.get("purpose", "")),
+                    "transition": str(s.get("transition", "")),
                 })
-            return {"shots": shots, "mode": "online", **({"references": refs} if refs else {})}
+            out = {
+                "shots": shots,
+                "scene_plan": data.get("scene_plan", []) or [],
+                "coverage_notes": str(data.get("coverage_notes", "")),
+                "mode": "online",
+            }
+            if refs:
+                out["references"] = refs
+            return out
         except Exception as e:  # noqa: BLE001
             logger.warning("在线分镜失败(%s),回退离线", e)
     return offline_storyboard(text, refs=refs)
 
 
 # --------------------------------------------------------------------------
-# 拍摄 Rundown
+# 拍摄 Rundown（专业 stripboard 结构）
 # --------------------------------------------------------------------------
-def offline_rundown(text: str, refs: list = None):
+INT_HINTS = ["内", "室", "屋内", "房间", "走廊", "电梯", "车内", "便利店", "咖啡", "办公室"]
+EXT_HINTS = ["外", "街", "天台", "公园", "海滩", "马路", "门口", "广场", "屋顶", "山", "海"]
+NIGHT_HINTS = ["夜", "晚", "凌晨", "深夜", "午夜"]
+DUSK_HINTS = ["黄昏", "傍晚", "日落"]
+DAWN_HINTS = ["清晨", "黎明", "日出"]
+HEAVY_HINTS = ["动作", "追", "打斗", "爆炸", "雨", "水", "火", "动物", "儿童", "孩子", "人群", "特技", "航拍", "飞车"]
+
+
+def _fmt_clock(minutes: int):
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
+def _scene_heading(lines, idx):
+    raw = (lines[0] if lines else "").strip()
+    raw = re.sub(r"^\s*(?:第\s*\d+\s*[场幕景]|scene\s*\d+)[\s:：\-—]*", "", raw, flags=re.I)
+    return (raw or f"场景 {idx}")[:40]
+
+
+def _scene_int_ext(heading, body):
+    blob = f"{heading} {body[:120]}"
+    if re.search(r"外景|EXT\b|室外|户外", blob, re.I):
+        return "EXT"
+    if re.search(r"内景|INT\b|室内|屋内", blob, re.I):
+        return "INT"
+    if any(k in heading for k in EXT_HINTS) and not any(k in heading for k in INT_HINTS):
+        return "EXT"
+    return "INT"
+
+
+def _scene_day_night(heading, body):
+    blob = f"{heading} {body[:120]}"
+    if any(k in blob for k in NIGHT_HINTS):
+        return "NIGHT"
+    if any(k in blob for k in DUSK_HINTS):
+        return "DUSK"
+    if any(k in blob for k in DAWN_HINTS):
+        return "DAWN"
+    return "DAY"
+
+
+def _scene_location(heading, int_ext):
+    loc = re.sub(r"\b(INT/EXT|INT|EXT)\b|内景|外景", "", heading, flags=re.I)
+    loc = re.sub(r"[（(]?\s*(日|夜|清晨|黄昏|傍晚|凌晨|深夜|白天|晚上|DAY|NIGHT|DUSK|DAWN)\s*[)）]?\s*$", "", loc, flags=re.I)
+    loc = re.sub(r"^[\s\-—–:：|/]+|[\s\-—–:：|/]+$", "", loc)
+    return loc[:24] or "待勘景"
+
+
+def analyze_script(text: str):
+    """把剧本拆成「可排期」的场次：页数（1/8）、预计拍摄分钟、内外景、日夜、演员。"""
     scenes = parse_scenes(text)
-    topic = _pick_topic(text)
-    ref_case = refs[0] if refs else None
-    case_equip = "、".join(ref_case["equipment"][:4]) if ref_case and ref_case.get("equipment") else "摄影机、指向性话筒、灯光"
-    case_loc = ref_case["locations"][0] if ref_case and ref_case.get("locations") else "内景/外景(待勘景确认)"
-    items = [
-        {"time": "08:00", "item": "集合与设备检查", "location": "集合点", "cast": "全员", "equipment": case_equip, "notes": "开拍前确认所有电池满电"},
-        {"time": "08:30", "item": "演员化妆与服装确认", "location": "化妆区", "cast": "演员", "equipment": "化妆包", "notes": "场记同步登记服装与道具"},
-    ]
-    t = 9 * 60 + 30
-    for i, scene in enumerate(scenes[:6]):
-        sname = scene[0][:20] if scene else f"场景 {i + 1}"
-        t += 40
-        items.append({
-            "time": f"{t // 60:02d}:{t % 60:02d}",
-            "item": f"拍摄:第{i + 1}场 {sname}",
-            "location": case_loc,
-            "cast": "该场演员",
-            "equipment": case_equip,
-            "notes": "按镜头清单同机位连拍,先全景后特写",
+    if not scenes:
+        scenes = [[text.strip()[:80] or "场景"]]
+    infos = []
+    for i, lines in enumerate(scenes, 1):
+        body = "\n".join(lines)
+        heading = _scene_heading(lines, i)
+        # 剧情摘要去掉场次标题行，避免「第1场 便利店 夜」在通告单里重复出现
+        body_lines = [l for l in lines if not SCENE_RE.match(l)]
+        synopsis_text = " ".join(l.strip() for l in body_lines[:3] if l.strip())
+        int_ext = _scene_int_ext(heading, body)
+        day_night = _scene_day_night(heading, body)
+        dialogues = extract_dialogues(body)
+        cast = []
+        for name, _, _ in dialogues:
+            if name not in cast and len(cast) < 5:
+                cast.append(name)
+        action_lines = [
+            l for l in lines
+            if l.strip() and not DIALOGUE_RE.match(l) and not SCENE_RE.match(l)
+        ]
+        # 时长估算：对白 4s/行 + 动作 2s/行 + 10s 基础；1 页 ≈ 60s 成片
+        duration = max(15, min(240, 10 + 4 * len(dialogues) + 2 * len(action_lines)))
+        pages = max(1, min(12, round(duration / 60 * 8)))
+        heavy = sum(1 for k in HEAVY_HINTS if k in body)
+        factor = 1 + min(0.6, heavy * 0.12) + (0.15 if day_night == "NIGHT" else 0)
+        minutes = max(30, min(240, round(pages / 8 * 75 * factor / 5) * 5))
+        clean_heading = re.sub(
+            r"[（(]?\s*(日|夜|清晨|黄昏|傍晚|凌晨|深夜|白天|晚上|DAY|NIGHT|DUSK|DAWN)\s*[)）]?\s*$",
+            "", heading, flags=re.I,
+        ).strip(" -—–:：|/")
+        label = {"NIGHT": "夜", "DAY": "日", "DUSK": "黄昏", "DAWN": "清晨"}.get(day_night, day_night)
+        infos.append({
+            "scene_no": i,
+            "int_ext": int_ext,
+            "heading": f"{int_ext} {clean_heading or heading} - {label}",
+            "synopsis": re.sub(r"\s+", " ", synopsis_text)[:60],
+            "cast": cast,
+            "day_night": day_night,
+            "pages_eighths": pages,
+            "est_minutes": minutes,
+            "location": _scene_location(heading, int_ext),
+            "heavy": heavy > 0,
         })
-        if i == 2:
-            items.append({"time": "12:30", "item": "午餐", "location": "", "cast": "全员", "equipment": "", "notes": "提前订餐,控制在 1 小时"})
-            t = 13 * 60 + 30
-    if len(scenes) > 6:
-        items.append({"time": "17:00", "item": f"拍摄:第7场及之后({len(scenes) - 6} 场)", "location": "待定", "cast": "", "equipment": "", "notes": "或移至第二天,避免超时"})
-    items.append({"time": "19:00", "item": "收工:备份素材、清点设备", "location": "", "cast": "全员", "equipment": "硬盘×2", "notes": "当日素材双备份后才可离开"})
-    return {"title": f"《{topic}》拍摄通告单", "date": "待定", "items": items, "mode": "offline",
-            **({"references": refs} if refs else {})}
+    return infos
+
+
+def _build_stripboard(infos, topic, start=7 * 60 + 30, equip="摄影机、指向性话筒、灯光", day_label="Day 1"):
+    """按真实通告单顺序排时间块：crew_call → setup → scene(s) → move/meal → wrap。"""
+    blocks = []
+    clock = start
+    moves = meals = 0
+
+    def add(kind, note, minutes, scene_no=None):
+        nonlocal clock
+        block = {"type": kind, "time": _fmt_clock(clock), "note": note, "est_minutes": minutes}
+        if scene_no is not None:
+            block["scene_no"] = scene_no
+        blocks.append(block)
+        clock += minutes
+        return block
+
+    add("crew_call", "集合、早餐、设备清点与电量检查", 30)
+    add("cast_call", "演员化妆、服装与连戏确认", 30)
+    add("setup", f"首个机位布光与测试（参考设备：{equip}）", 45)
+
+    current_loc = None
+    for info in infos:
+        if current_loc is not None and info["location"] != current_loc:
+            add("move", f"// COMPANY MOVE TO {info['location']} // 转场、停车与重新布线", 30)
+            moves += 1
+        current_loc = info["location"]
+        synopsis = info["synopsis"][:24] + "…" if len(info["synopsis"]) > 24 else info["synopsis"]
+        note = f"第{info['scene_no']}场 {info['heading']}" + (f"｜{synopsis}" if synopsis else "")
+        add("scene", note, info["est_minutes"], info["scene_no"])
+        elapsed = clock - start
+        if meals == 0 and elapsed >= 5 * 60 + 30:
+            add("meal", "// MEAL BREAK // 用餐与休息（不超过 1 小时）", 45)
+            meals += 1
+
+    add("wrap", "收工：素材双备份、清点设备、恢复场地", 30)
+
+    total_minutes = sum(b["est_minutes"] for b in blocks)
+    pages = sum(i["pages_eighths"] for i in infos)
+    overflow = total_minutes > 11 * 60
+    locations = []
+    for info in infos:
+        if not any(l["name"] == info["location"] for l in locations):
+            locations.append({"name": info["location"], "int_ext": info["int_ext"], "notes": ""})
+    cast_calls = []
+    for info in infos:
+        for name in info["cast"]:
+            if not any(c["name"] == name for c in cast_calls):
+                cast_calls.append({"name": name, "role": name, "call": _fmt_clock(start + 30), "notes": "化妆 30–45 分钟"})
+
+    safety = []
+    if any(i["day_night"] == "NIGHT" for i in infos):
+        safety.append("夜戏：检查照明电缆走线与反光背心，注意电压负载")
+    if any(i["heavy"] for i in infos):
+        safety.append("高风险场次：特技/追车/动物须提前排练并明确安全区")
+
+    notes = [
+        "场次按「同一地点再日夜」排序，减少 company move",
+        "每换机位预留 15–30 分钟布光；黄金时刻戏单独块",
+    ]
+    if overflow:
+        notes.append(f"当日预计 {total_minutes} 分钟（约 {total_minutes / 60:.1f} 小时），超出 11 小时安全线，建议拆成两天")
+    if sum(i["pages_eighths"] for i in infos) > 48:
+        notes.append("单日页数超过 6 页（48/8），剧情片建议控制在 4–6 页")
+
+    return {
+        "day": day_label,
+        "crew_call": _fmt_clock(start),
+        "cast_call": _fmt_clock(start + 30),
+        "wrap": _fmt_clock(clock),
+        "locations": locations,
+        "scenes": infos,
+        "blocks": blocks,
+        "totals": {
+            "pages_eighths": pages,
+            "shoot_minutes": total_minutes,
+            "company_moves": moves,
+            "meals": meals,
+        },
+        "cast_calls": cast_calls,
+        "safety": safety,
+        "notes": notes,
+    }
+
+
+def offline_rundown(text: str, refs: list = None):
+    topic = _pick_topic(text)
+    infos = analyze_script(text)
+    ref_case = refs[0] if refs else None
+    equip = "、".join(ref_case["equipment"][:4]) if ref_case and ref_case.get("equipment") else "摄影机、指向性话筒、灯光"
+    day = _build_stripboard(infos[:8], topic, equip=equip)
+    # 兼容旧前端：把 blocks 映射成「时间 / 项目」列表
+    items = [{
+        "time": b["time"], "item": b["note"], "location": "", "cast": "", "equipment": "",
+        "notes": f"{b['est_minutes']} 分钟",
+    } for b in day["blocks"]]
+    out = {
+        "title": f"《{topic}》拍摄通告单",
+        "date": "待定",
+        "mode": "offline",
+        "scenes": day["scenes"][:8],
+        **day,
+        "items": items,
+    }
+    if len(infos) > 8:
+        out["notes"].append(f"剧本共 {len(infos)} 场，本通告单只排前 8 场；其余请用「日程规划」拆天")
+    if refs:
+        out["references"] = refs
+    return out
+
+
+def _normalize_stripboard(data: dict, fallback_title="拍摄通告单"):
+    """把模型返回的 stripboard 归一化，并用 blocks/scenes 重算 totals，保证前后端一致。"""
+    def as_int(value, default=0, lo=0, hi=10_000):
+        try:
+            return max(lo, min(hi, int(round(float(value)))))
+        except (TypeError, ValueError):
+            return default
+
+    scenes = []
+    for i, s in enumerate(data.get("scenes", []) or []):
+        if not isinstance(s, dict):
+            continue
+        cast = s.get("cast") or []
+        if isinstance(cast, str):
+            cast = [c.strip() for c in re.split(r"[,，、/]", cast) if c.strip()]
+        scenes.append({
+            "scene_no": as_int(s.get("scene_no", i + 1), i + 1, 1, 999),
+            "int_ext": str(s.get("int_ext", "INT")),
+            "heading": str(s.get("heading", "")),
+            "synopsis": str(s.get("synopsis", "")),
+            "cast": [str(c) for c in cast][:6],
+            "day_night": str(s.get("day_night", "DAY")),
+            "pages_eighths": as_int(s.get("pages_eighths", 1), 1, 1, 12),
+            "est_minutes": as_int(s.get("est_minutes", 45), 45, 5, 480),
+            "location": str(s.get("location", "")),
+            "notes": str(s.get("notes", "")),
+        })
+
+    allowed = {"crew_call", "cast_call", "setup", "scene", "move", "meal", "wrap", "buffer"}
+    blocks = []
+    for b in data.get("blocks", []) or []:
+        if not isinstance(b, dict):
+            continue
+        kind = str(b.get("type", "scene"))
+        if kind not in allowed:
+            kind = "scene"
+        block = {
+            "type": kind,
+            "time": str(b.get("time", "")),
+            "note": str(b.get("note", "")),
+            "est_minutes": as_int(b.get("est_minutes", 0), 0, 0, 720),
+        }
+        if b.get("scene_no") is not None:
+            block["scene_no"] = as_int(b.get("scene_no"), 0, 0, 999)
+        blocks.append(block)
+
+    totals = {
+        "pages_eighths": sum(s["pages_eighths"] for s in scenes),
+        "shoot_minutes": sum(b["est_minutes"] for b in blocks),
+        "company_moves": sum(1 for b in blocks if b["type"] == "move"),
+        "meals": sum(1 for b in blocks if b["type"] == "meal"),
+    }
+    locations = []
+    for loc in data.get("locations", []) or []:
+        if isinstance(loc, dict) and loc.get("name"):
+            locations.append({"name": str(loc["name"]), "int_ext": str(loc.get("int_ext", "")),
+                              "notes": str(loc.get("notes", ""))})
+    if not locations:
+        for s in scenes:
+            if s["location"] and not any(l["name"] == s["location"] for l in locations):
+                locations.append({"name": s["location"], "int_ext": s["int_ext"], "notes": ""})
+
+    cast_calls = []
+    for c in data.get("cast_calls", []) or []:
+        if isinstance(c, dict) and c.get("name"):
+            cast_calls.append({"name": str(c["name"]), "role": str(c.get("role", "")),
+                               "call": str(c.get("call", "")), "notes": str(c.get("notes", ""))})
+
+    times = [b["time"] for b in blocks if re.fullmatch(r"\d{1,2}:\d{2}", b["time"])]
+    return {
+        "title": str(data.get("title", fallback_title)),
+        "date": str(data.get("date", "待定")),
+        "day": str(data.get("day", "Day 1")),
+        "crew_call": str(data.get("crew_call", times[0] if times else "07:30")),
+        "cast_call": str(data.get("cast_call", "08:30")),
+        "wrap": str(data.get("wrap", times[-1] if times else "19:30")),
+        "locations": locations,
+        "scenes": scenes,
+        "blocks": blocks,
+        "totals": totals,
+        "cast_calls": cast_calls,
+        "safety": [str(x) for x in (data.get("safety") or [])][:5],
+        "notes": [str(x) for x in (data.get("notes") or [])][:5],
+    }
 
 
 async def rundown(text: str, api_key: str = None, case_ctx: str = "", refs: list = None):
@@ -405,21 +745,15 @@ async def rundown(text: str, api_key: str = None, case_ctx: str = "", refs: list
         try:
             user_content = text[:4000]
             if case_ctx:
-                user_content += f"\n\n参考案例(检索自案例库,请借鉴其 Rundown 结构、设备与经验,但必须适配用户需求):\n{case_ctx}"
+                user_content += f"\n\n参考资料（检索所得：案例 / 场面模式 / 通告单模板，请借鉴结构但必须适配用户剧本）：\n{case_ctx}"
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_RUNDOWN},
-                 {"role": "user", "content": user_content[:6000]}], api_key=api_key)
-            items = []
-            for it in data.get("items", []) or []:
-                if not isinstance(it, dict):
-                    continue
-                items.append({
-                    "time": str(it.get("time", "")), "item": str(it.get("item", "")),
-                    "location": str(it.get("location", "")), "cast": str(it.get("cast", "")),
-                    "equipment": str(it.get("equipment", "")), "notes": str(it.get("notes", "")),
-                })
-            return {"title": str(data.get("title", "拍摄通告单")), "date": str(data.get("date", "待定")),
-                    "items": items, "mode": "online", **({"references": refs} if refs else {})}
+                 {"role": "user", "content": user_content[:9000]}], api_key=api_key)
+            day = _normalize_stripboard(data)
+            day["mode"] = "online"
+            if refs:
+                day["references"] = refs
+            return day
         except Exception as e:  # noqa: BLE001
             logger.warning("在线 rundown 失败(%s),回退离线", e)
     return offline_rundown(text, refs=refs)
@@ -428,36 +762,77 @@ async def rundown(text: str, api_key: str = None, case_ctx: str = "", refs: list
 # --------------------------------------------------------------------------
 # 日程规划 schedule
 # --------------------------------------------------------------------------
+def _pack_days(infos, days):
+    """按地点聚类 + 页数预算（剧情片 6 页/天）把场次分到各天。"""
+    budget = 48  # 6 页 = 48/8
+    groups, cur, cur_pages, cur_locs = [], [], 0, set()
+    for info in infos:
+        new_loc = info["location"] not in cur_locs
+        if cur and (cur_pages + info["pages_eighths"] > budget or (new_loc and cur_pages >= 24)):
+            groups.append(cur)
+            cur, cur_pages, cur_locs = [], 0, set()
+        cur.append(info)
+        cur_pages += info["pages_eighths"]
+        cur_locs.add(info["location"])
+    if cur:
+        groups.append(cur)
+    # 天数是下限：不够就继续拆，避免一天塞太多
+    while len(groups) < days and any(len(g) > 1 for g in groups):
+        idx = max(range(len(groups)), key=lambda i: len(groups[i]))
+        group = groups.pop(idx)
+        mid = len(group) // 2
+        groups[idx:idx] = [group[:mid], group[mid:]]
+    return groups
+
+
 def offline_schedule(text: str, days: int = 2, refs: list = None):
-    scenes = parse_scenes(text)
     topic = _pick_topic(text)
-    if len(scenes) < 2:
-        scenes = scenes or [["(场景待补充)"]]
-    ref_case = refs[0] if refs else None
-    per_day = max(1, (len(scenes) + days - 1) // days)
-    out_days = []
-    for d in range(days):
-        chunk = scenes[d * per_day:(d + 1) * per_day]
-        tasks = [{"time": "09:00", "task": f"Day {d + 1} 集合与设备准备", "location": "集合点", "notes": "检查天气,外景确认光线"}]
-        t = 10 * 60
-        for i, scene in enumerate(chunk):
-            sname = scene[0][:20] if scene else f"场景 {d * per_day + i + 1}"
-            t += 50
-            tasks.append({
-                "time": f"{t // 60:02d}:{t % 60:02d}",
-                "task": f"拍摄:第{d * per_day + i + 1}场 {sname}",
-                "location": (ref_case["locations"][0] if ref_case and ref_case.get("locations") else "内景/外景(按勘景确认)"),
-                "notes": "同地点镜头集中拍,减少转场",
-            })
-        tasks.append({"time": "12:30", "task": "午餐与休息", "location": "", "notes": ""})
-        tasks.append({"time": "13:30", "task": "下午拍摄/转场", "location": "待定", "notes": "预留 30 分钟转场缓冲"})
-        tasks.append({"time": "18:00", "task": "收工与素材双备份", "location": "", "notes": ""})
-        base_tip = ("外景安排在光线最好的时段(黄金时刻);如遇雨天,启用备份日或改拍内景。" if d == 0
-                    else "最后一天预留补拍时间,优先补拍第 1 天的问题镜头。")
-        if ref_case and d == 0:
-            base_tip += f" 案例{ref_case['title']}的经验:{ref_case.get('lessons', '')[:60]}"
-        out_days.append({"day": f"Day {d + 1}", "theme": "外景为主" if d == 0 else "内景与补拍", "tasks": tasks, "tip": base_tip})
-    out = {"title": f"《{topic}》拍摄日程", "days": out_days, "mode": "offline"}
+    infos = analyze_script(text)
+    total_minutes = sum(i["est_minutes"] for i in infos)
+    needed = max(1, math.ceil(total_minutes / (9 * 60)))  # 每天有效拍摄约 9 小时
+    effective_days = max(1, min(max(1, days), needed))
+    groups = _pack_days(infos, effective_days)
+    out_days, cast_days, risks = [], {}, []
+
+    for d, group in enumerate(groups, 1):
+        night = sum(1 for i in group if i["day_night"] == "NIGHT")
+        ext = sum(1 for i in group if i["int_ext"] == "EXT")
+        theme = "夜戏集中" if night * 2 > len(group) else ("外景为主" if ext * 2 > len(group) else "内景为主")
+        day = _build_stripboard(group, topic, start=8 * 60, day_label=f"Day {d}")
+        day["theme"] = theme
+        day["date"] = "待定"
+        day["location"] = "、".join(loc["name"] for loc in day["locations"][:3])
+        day["tips"] = []
+        if any(i["day_night"] in ("DUSK", "DAWN") for i in group):
+            day["tips"].append("黄金时刻约 20 分钟：提前 40 分钟布好机位与反光板")
+        if night:
+            day["tips"].append("夜戏先拍全景定空间，再拍特写；注意遮光与邻居噪音投诉")
+        if day["totals"]["company_moves"]:
+            day["tips"].append(f"当日 {day['totals']['company_moves']} 次 company move，按 30 分钟/次计")
+        if d == len(groups):
+            day["tips"].append("最后一天留 1–2 小时补拍 buffer，不要排满")
+        day["tasks"] = [{"time": b["time"], "task": b["note"], "location": "", "notes": f"{b['est_minutes']} 分钟"}
+                        for b in day["blocks"]]
+        out_days.append(day)
+
+        for info in group:
+            for name in info["cast"]:
+                cast_days.setdefault(name, set()).add(d)
+        if ext:
+            risks.append({"risk": f"Day {d} 有外景，遇雨需改期", "mitigation": "预留内景 cover set 或备选日"})
+
+    strategy = (
+        f"{len(infos)} 场 / {sum(i['pages_eighths'] for i in infos)}/8 页，按地点聚类拆成 {len(out_days)} 天；"
+        "同地点连续拍、日夜分块，最后一天留补拍缓冲。"
+    )
+    out = {
+        "title": f"《{topic}》拍摄日程",
+        "strategy": strategy,
+        "mode": "offline",
+        "days": out_days,
+        "cast_schedule": [{"name": n, "days": sorted(ds), "notes": ""} for n, ds in cast_days.items()],
+        "risks": risks[:4],
+    }
     if refs:
         out["references"] = refs
     return out
@@ -468,25 +843,44 @@ async def schedule(text: str, api_key: str = None, case_ctx: str = "", refs: lis
         try:
             user_content = text[:4000]
             if case_ctx:
-                user_content += f"\n\n参考案例(检索自案例库,请借鉴其排期原则与转场安排,但必须适配用户需求):\n{case_ctx}"
+                user_content += f"\n\n参考资料（检索所得：案例 / 场面模式 / 通告单模板，请借鉴排期原则但必须适配用户项目）：\n{case_ctx}"
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_SCHEDULE},
-                 {"role": "user", "content": user_content[:6000]}], api_key=api_key)
-            days = []
-            for d in data.get("days", []) or []:
+                 {"role": "user", "content": user_content[:9000]}], api_key=api_key)
+            out_days = []
+            for i, d in enumerate(data.get("days", []) or []):
                 if not isinstance(d, dict):
                     continue
-                tasks = []
-                for tk in d.get("tasks", []) or []:
-                    if not isinstance(tk, dict):
-                        continue
-                    tasks.append({
-                        "time": str(tk.get("time", "")), "task": str(tk.get("task", "")),
-                        "location": str(tk.get("location", "")), "notes": str(tk.get("notes", "")),
-                    })
-                days.append({"day": str(d.get("day", "")), "theme": str(d.get("theme", "")), "tasks": tasks, "tip": str(d.get("tip", ""))})
-            return {"title": str(data.get("title", "拍摄日程")), "days": days, "mode": "online",
-                    **({"references": refs} if refs else {})}
+                day = _normalize_stripboard({
+                    "title": d.get("theme", ""),
+                    "day": str(d.get("day", f"Day {i + 1}")),
+                    "date": d.get("date", "待定"),
+                    "crew_call": d.get("call", "08:00"),
+                    "cast_call": d.get("cast_call", d.get("call", "08:00")),
+                    "wrap": d.get("wrap", "19:00"),
+                    "scenes": d.get("scenes", []),
+                    "blocks": d.get("blocks", []),
+                    "locations": d.get("locations", []),
+                    "cast_calls": d.get("cast_calls", []),
+                })
+                day["theme"] = str(d.get("theme", ""))
+                day["date"] = str(d.get("date", "待定"))
+                day["location"] = str(d.get("location", ""))
+                tips = d.get("tips") or ([d["tip"]] if d.get("tip") else [])
+                day["tips"] = [str(t) for t in tips][:4]
+                day["tasks"] = [{"time": b["time"], "task": b["note"],
+                                 "location": "", "notes": f"{b['est_minutes']} 分钟"}
+                                for b in day["blocks"]]
+                out_days.append(day)
+            return {
+                "title": str(data.get("title", "拍摄日程")),
+                "strategy": str(data.get("strategy", "")),
+                "days": out_days,
+                "cast_schedule": data.get("cast_schedule", []) or [],
+                "risks": data.get("risks", []) or [],
+                "mode": "online",
+                **({"references": refs} if refs else {}),
+            }
         except Exception as e:  # noqa: BLE001
             logger.warning("在线日程失败(%s),回退离线", e)
     return offline_schedule(text, refs=refs)
@@ -515,6 +909,167 @@ IDEA_BANK = [
 ]
 
 
+IDEA_EXTRAS = {
+    "最后一班渡轮": {
+        "structure": ["建置：女孩每晚坐尾班渡轮，注意到多出的乘客", "升级：她开始数人数，只有她能看见他", "转折：渡轮公司宣布停航", "收尾：她归还铜扣，他终于下船"],
+        "reference_patterns": ["密闭空间里的陌生人（《迷失东京》式距离感）", "重复仪式建立默契"],
+        "visual_motif": "铜扣 / 船票：每次特写都比上次更旧",
+        "sound_idea": "引擎低频贯穿全片，结尾停航时突然安静",
+        "budget_note": "夜渡轮实拍 2 晚，2 名演员，无特效；用真实航班时刻表卡时间",
+    },
+    "换脸滤镜": {
+        "structure": ["建置：主角用滤镜约会，效果灵验", "升级：他看到熟人脸变灰白", "转折：滤镜照出他自己的遗照", "收尾：他删掉 App，最后一帧滤镜自动打开"],
+        "reference_patterns": ["screen-life / 手机屏幕叙事", "诅咒道具的规则逐步揭示"],
+        "visual_motif": "手机屏幕的冷光与夜店暖光的反差",
+        "sound_idea": "滤镜开启时的电子提示音，越听越刺耳",
+        "budget_note": "全部手机 POV + 实景夜店，1 名演员分饰多角",
+    },
+    "外卖员的最后一单": {
+        "structure": ["建置：深夜接单，备注诡异", "升级：医院走廊无人，保温箱发出声音", "转折：收件人现身，认出彼此", "收尾：他把心脏送进手术室，自己走进雨里"],
+        "reference_patterns": ["追逐片的空间压缩：走廊/楼梯/电梯", "单夜结构（one-night story）"],
+        "visual_motif": "保温箱的红色指示灯",
+        "sound_idea": "心跳声从保温箱里传出，逐渐与配乐节拍同步",
+        "budget_note": "废弃医院 1 晚 + 电动车跟拍；用手机稳定器代替轨道",
+    },
+    "妈妈的短视频": {
+        "structure": ["建置：儿子偷拍妈妈改造计划", "升级：视频爆红，妈妈越来越配合", "转折：他发现妈妈早就知道", "收尾：两人合拍最后一条，不剪"],
+        "reference_patterns": ["伪纪录片 / vlog 视角", "喜剧靠反应镜头而非台词"],
+        "visual_motif": "竖屏构图与横屏电影感的切换",
+        "sound_idea": "手机提示音当作节拍器",
+        "budget_note": "家里实景，手机 + 一盏窗光；妈妈角色找素人演出更真",
+    },
+    "停尸间的对讲机": {
+        "structure": ["建置：保安捡到对讲机", "升级：对讲机预言他的行动", "转折：三号停尸间躺着他自己", "收尾：他打破循环，代价是失去一段记忆"],
+        "reference_patterns": ["时间循环（《恐怖游轮》式）", "单一场景靠声音吓人"],
+        "visual_motif": "走廊尽头的绿灯",
+        "sound_idea": "对讲机的电流噪声代替 jump scare",
+        "budget_note": "一个停尸间布景 2 晚，4 个灯位，靠声音与剪辑制造恐怖",
+    },
+    "全班倒数第一": {
+        "structure": ["建置：他听见别人的心算分数", "升级：学霸的分数是 0", "转折：学霸求他帮忙", "收尾：他故意考砸，打破续命规则"],
+        "reference_patterns": ["校园类型 + 超能力规则", "考试场景的重复变奏"],
+        "visual_motif": "分数以字幕浮在人物头顶",
+        "sound_idea": "翻卷子声被放大成心跳",
+        "budget_note": "一间教室 + 走廊；超能力用字幕与音效实现，零特效",
+    },
+    "相亲直播": {
+        "structure": ["建置：两个 AI 代聊", "升级：AI 先恋爱了", "转折：女方也是真人配音", "收尾：两人关掉手机，真人重新自我介绍"],
+        "reference_patterns": ["双线叙事：真人尴尬 / AI 热烈", "喜剧靠信息差"],
+        "visual_motif": "手机屏幕与餐桌的来回切",
+        "sound_idea": "AI 语音的机械音逐渐变得有感情",
+        "budget_note": "一间餐厅 + 两部手机；AI 语音用 TTS，成本几乎为零",
+    },
+    "天台上的钢琴": {
+        "structure": ["建置：失聪调音师每天调琴", "升级：邻居投诉，房东要搬走钢琴", "转折：暴雨夜钢琴自弹", "收尾：情书交还，钢琴被留下"],
+        "reference_patterns": ["音乐驱动叙事", "一场景一空间的短片结构"],
+        "visual_motif": "琴键上的雨滴",
+        "sound_idea": "全片主观听感：失聪者的低频世界，结尾突然听见完整音色",
+        "budget_note": "一栋天台 + 一架旧钢琴；雨戏用消防水管，1 晚拍完",
+    },
+}
+
+
+def _concepts_from_scenes(topic: str, limit: int = 3):
+    """离线灵感兜底：用户给的题材在灵感库里没有时，用场面模式库组合概念。"""
+    import library
+
+    out = []
+    for scene in library.search_scenes(topic, k=limit) or []:
+        beats = scene.get("beat_structure", []) or []
+        out.append({
+            "title": scene.get("name_zh", "未命名概念"),
+            "genre": " / ".join(scene.get("genre", [])) or "剧情",
+            "logline": scene.get("conflict", ""),
+            "hook": beats[0] if beats else "",
+            "twist": scene.get("fix", ""),
+            "structure": beats,
+            "reference_patterns": [f"{scene.get('name_zh', '')}：{scene.get('staging', '')}"],
+            "visual_motif": scene.get("lighting", ""),
+            "sound_idea": scene.get("sound", ""),
+            "budget_note": f"{scene.get('page_eighths', '?')}/8 页，预计拍摄 {scene.get('shoot_minutes', '?')} 分钟",
+        })
+    return out
+
+
+MOOD_HINTS = {
+    "孤独": ["孤独", "寂寞", "一个人", "疏离", "alienation", "lonely"],
+    "浪漫": ["浪漫", "暗恋", "爱情", "心动", "暧昧", "romance"],
+    "温暖": ["温暖", "治愈", "亲情", "家庭", "友情", "warm"],
+    "压抑": ["压抑", "窒息", "绝望", "沉重", "oppressive"],
+    "荒诞": ["荒诞", "黑色幽默", "讽刺", "离谱", "absurd"],
+    "紧张": ["紧张", "悬疑", "惊悚", "焦灼", "thriller", "tension"],
+    "心碎": ["心碎", "失恋", "遗憾", "告别", "heartbreak"],
+    "怀旧": ["怀旧", "回忆", "年代", "nostalgia"],
+    "恐惧": ["恐惧", "恐怖", "害怕", "horror"],
+    "敬畏": ["敬畏", "史诗", "宏大", "震撼", "epic"],
+}
+
+
+def _mood_groups(topic: str, per_mood: int = 2, max_moods: int = 6):
+    """把「剧本 + 原片」库和个人灵感库按情绪分组，供同一主题下的不同情绪参考。"""
+    import case_store
+    import personal_library
+
+    pool = []
+    for c in case_store.load_cases():
+        pool.append({
+            "title": c["title"], "moods": c.get("tags", []), "cover": c.get("cover", ""),
+            "url": c.get("url", ""), "duration": c.get("duration", ""),
+            "script_page": c.get("script_page", ""), "script_pdf": c.get("script_pdf", ""),
+            "frames": c.get("frames", []),
+            "play": (c.get("stat") or {}).get("view", 0),
+            "source": c.get("source", ""), "personal": False,
+        })
+    for f in personal_library.list_films():
+        pool.append({
+            "title": f.get("title", ""), "moods": f.get("moods", []), "cover": f.get("cover", ""),
+            "url": f.get("url", ""), "duration": f.get("duration", ""),
+            "script_page": "", "script_pdf": "", "frames": f.get("frames", []), "play": 0,
+            "source": "个人灵感库", "personal": True,
+        })
+
+    low = (topic or "").lower()
+    scores = {}
+    for mood, words in MOOD_HINTS.items():
+        score = 0.0
+        if mood in (topic or ""):
+            score += 5
+        score += sum(2 for w in words if w.lower() in low)
+        score += min(3, sum(1 for f in pool if mood in f.get("moods", [])))
+        scores[mood] = score
+
+    groups = []
+    for mood in sorted(scores, key=lambda m: -scores[m]):
+        films = [f for f in pool if mood in f.get("moods", [])]
+        if not films:
+            continue
+        films.sort(key=lambda f: (f["personal"], f["play"]), reverse=True)
+        groups.append({"mood": mood, "films": films[:per_mood]})
+        if len(groups) >= max_moods:
+            break
+    return groups
+
+
+def _attach_stills(concept: dict, limit: int = 2):
+    """给灵感概念配真实短片的静帧（Bilibili 封面）+ 原片链接，避免空想。"""
+    import case_store
+
+    query = " ".join([
+        str(concept.get("genre", "")), str(concept.get("title", "")),
+        str(concept.get("visual_motif", "")), " ".join(concept.get("reference_patterns", []) or []),
+    ]).strip()
+    try:
+        hits = case_store.search_cases(query or "短片", k=limit + 1)
+    except Exception:  # noqa: BLE001
+        hits = []
+    concept["stills"] = [
+        {"title": h["title"], "cover": h.get("cover", ""), "url": h.get("url", ""),
+         "duration": h.get("duration", ""), "source": "Bilibili"}
+        for h in hits[:limit] if h.get("cover")
+    ]
+    return concept
+
+
 def offline_inspiration(topic: str = "", refs: list = None):
     pool = list(IDEA_BANK)
     # 题材近义词:按用户关键词优先给出同题材概念,不足 3 个时用随机补足
@@ -530,9 +1085,17 @@ def offline_inspiration(topic: str = "", refs: list = None):
     matched = [c for c in pool if any(syn in kw for syn in SYNONYMS.get(c["genre"].split("/")[0].strip(), [c["genre"].split("/")[0].strip()]))]
     rng = random.Random(topic + str(random.random()))
     rest = [c for c in pool if c not in matched]
-    picks = (matched + rng.sample(rest, max(0, 3 - len(matched))))[:3]
-    rng.shuffle(picks)
-    out = {"concepts": picks, "mode": "offline",
+    if not matched and topic:
+        picks = _concepts_from_scenes(topic)
+        if len(picks) < 3:
+            used = {c["title"] for c in picks}
+            picks += rng.sample([c for c in IDEA_BANK if c["title"] not in used], 3 - len(picks))
+    else:
+        picks = (matched + rng.sample(rest, max(0, 3 - len(matched))))[:3]
+        rng.shuffle(picks)
+    picks = [{**c, **IDEA_EXTRAS.get(c["title"], {})} for c in picks]
+    picks = [_attach_stills(c) for c in picks]
+    out = {"concepts": picks, "moods": _mood_groups(topic), "mode": "offline",
            "note": f"离线模式从灵感库中抽取了 3 个示例{(f'(主题:「{topic}」)' if topic else '')}——接入 API 后可按你的关键词定制生成。"}
     if refs:
         out["references"] = refs
@@ -544,20 +1107,27 @@ async def inspiration(text: str, api_key: str = None, case_ctx: str = "", refs: 
         try:
             user_content = text[:2000] or "随机"
             if case_ctx:
-                user_content += f"\n\n相关案例(检索自案例库,可作为灵感参照):\n{case_ctx}"
+                user_content += f"\n\n参考资料（案例 / 场面模式 / 视频样本节奏，可作为灵感参照）：\n{case_ctx}"
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_INSPIRATION},
-                 {"role": "user", "content": user_content[:6000]}], api_key=api_key)
+                 {"role": "user", "content": user_content[:9000]}], api_key=api_key)
             concepts = []
             for c in data.get("concepts", []) or []:
                 if not isinstance(c, dict):
                     continue
-                concepts.append({
+                concept = {
                     "title": str(c.get("title", "")), "genre": str(c.get("genre", "")),
                     "logline": str(c.get("logline", "")), "hook": str(c.get("hook", "")),
                     "twist": str(c.get("twist", "")),
-                })
-            return {"concepts": concepts, "mode": "online", **({"references": refs} if refs else {})}
+                    "structure": [str(x) for x in (c.get("structure") or [])][:5],
+                    "reference_patterns": [str(x) for x in (c.get("reference_patterns") or [])][:3],
+                    "visual_motif": str(c.get("visual_motif", "")),
+                    "sound_idea": str(c.get("sound_idea", "")),
+                    "budget_note": str(c.get("budget_note", "")),
+                }
+                concepts.append(_attach_stills(concept))
+            return {"concepts": concepts, "moods": _mood_groups(text),
+                    "mode": "online", **({"references": refs} if refs else {})}
         except Exception as e:  # noqa: BLE001
             logger.warning("在线灵感失败(%s),回退离线", e)
     return offline_inspiration(_pick_topic(text) if text else "", refs=refs)
@@ -583,38 +1153,59 @@ async def cases_tool(message: str, api_key: str = None):
             logger.warning("在线案例检索失败(%s),回退离线", e)
     hits = case_store.search_cases(query, k=3)
     titles = "、".join(c["title"] for c in hits)
-    text = (f"为你找到 {len(hits)} 部相关参考案例:{titles}。"
-            "可以先看每部案例的拍摄 Rundown 与经验教训;需要的话告诉我你的想法,"
-            "我帮你对照案例给出改编建议。(离线演示模式)")
+    text = (f"为你找到 {len(hits)} 部相关真实短片:{titles}。"
+            "每条都附 Bilibili 来源链接与封面,可以直接点开看原片;"
+            "需要的话告诉我你的想法,我帮你对照这些片子做风格/结构上的借鉴。(离线演示模式)")
     return {"text": text, "cases": hits, "steps": [{"tool": "search_cases", "query": query}], "mode": "offline"}
 
 
 # --------------------------------------------------------------------------
 # 统一入口
 # --------------------------------------------------------------------------
-async def run_tool(tool: str, message: str, api_key: str = None):
+def _build_context(tool: str, message: str):
+    """为创作类工具组装检索上下文：案例 + 场面模式 + 镜头模式 + 通告单模板。"""
     import case_store
+    import library
 
+    parts, refs = [], []
+    try:
+        ctx, refs = case_store.cases_context(message, k=2)
+        if ctx:
+            parts.append(ctx)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("案例检索失败: %s", e)
+    try:
+        if tool in ("review", "storyboard", "inspiration"):
+            parts.extend(library.scene_to_text(s) for s in library.search_scenes(message, k=2))
+        if tool == "storyboard":
+            parts.extend(library.shot_to_text(s) for s in library.search_shots(message, k=3))
+        if tool in ("rundown", "schedule"):
+            parts.extend(library.template_to_text(t) for t in library.search_templates(message, k=1))
+            parts.extend(library.scene_to_text(s) for s in library.search_scenes(message, k=2))
+        if tool == "inspiration":
+            parts.extend(library.sample_to_text(v) for v in library.search_samples(message, k=2))
+    except Exception as e:  # noqa: BLE001
+        logger.warning("资料库检索失败: %s", e)
+    return "\n\n".join(p for p in parts if p), refs
+
+
+async def run_tool(tool: str, message: str, api_key: str = None):
     if tool == "cases":
         return await cases_tool(message, api_key)
-    # 创作类工具先检索相关案例,注入提示词(在线)或附到结果(离线)
-    case_ctx, refs = "", []
+    # 创作类工具先检索资料（案例/场面/镜头/通告单），注入提示词或附到结果
+    ctx, refs = "", []
     if tool in ("review", "storyboard", "rundown", "schedule", "inspiration"):
-        try:
-            ctx, refs = case_store.cases_context(message, k=2)
-            case_ctx = ctx
-        except Exception as e:  # noqa: BLE001
-            logger.warning("案例检索失败: %s", e)
+        ctx, refs = _build_context(tool, message)
     if tool == "review":
-        return await review(message, api_key, case_ctx, refs)
+        return await review(message, api_key, ctx, refs)
     if tool == "storyboard":
-        return await storyboard(message, api_key, case_ctx, refs)
+        return await storyboard(message, api_key, ctx, refs)
     if tool == "rundown":
-        return await rundown(message, api_key, case_ctx, refs)
+        return await rundown(message, api_key, ctx, refs)
     if tool == "schedule":
-        return await schedule(message, api_key, case_ctx, refs)
+        return await schedule(message, api_key, ctx, refs)
     if tool == "inspiration":
-        return await inspiration(message, api_key, case_ctx, refs)
+        return await inspiration(message, api_key, ctx, refs)
     raise ValueError(f"未知工具: {tool}")
 
 

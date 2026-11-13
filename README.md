@@ -1,6 +1,6 @@
 # 🎬 Filmmate · 影视创作 AI 助理
 
-> **📁 仓库导航**：本目录是 2026-11-05 的 Python 原型（FastAPI + 原生 HTML/JS）。
+> **更新日志**：[`CHANGELOG.md`](CHANGELOG.md)　｜　**📁 仓库导航**：本目录是 2026-11-05 的 Python 原型（FastAPI + 原生 HTML/JS）。
 > 团队正式栈（Tauri 2 + React + Vite + TS，Phase 1 聊天 UI + Phase 2 语音输入 + Phase 3 会话落盘 +
 > Phase 4 工具调用可视化）在 **[`filmmate-web/`](filmmate-web/README.md)**，前后端消息契约在
 > **[`filmmate-web/docs/CONTRACT.md`](filmmate-web/docs/CONTRACT.md)**。
@@ -10,7 +10,7 @@
 **COMP4431 Artificial Intelligence (2026/27) Group Project — Domain-specific Chatbot**
 
 一个面向影视/视频创作者的领域专属 AI 助理。定位是**辅助创作者做决策**,而不是替代创作:
-帮创作者 **检查剧本漏洞 → 设计分镜 → 排拍摄 Rundown → 规划拍摄日程 → 找参考案例**,并回答
+帮创作者 **检查剧本漏洞 → 设计分镜 → 排拍摄 Rundown → 规划拍摄日程 → 找灵感/参考短片**,并回答
 镜头语言、灯光、收音、剪辑等专业问题(中英双语)。
 
 ---
@@ -37,10 +37,10 @@
 
 #### 1. RAG 知识库检索增强(双库检索)
 - **专业知识库**(`knowledge/knowledge.json`,78 条):景别、机位、运镜、灯光、收音、剪辑、拍摄流程、香港取景、设备;
-- **作品案例库**(`cases/cases.json`,10 部完整案例):每部含剧本梗概、分镜要点、拍摄 Rundown、设备清单与经验教训;
+- **真实短片库**(`data/library/films_real.json`,78 部):全部来自 Bilibili 公开 API 校验,含标题/时长/UP主/简介/封面/原片链接;不写臆造的制作数据;
 - 检索实现(`rag.py` / `case_store.py`):中文用 jieba 分词 + **Okapi BM25** 关键词检索;
   安装 `sentence-transformers` 后自动升级为 **dense 向量 + 余弦相似度**检索(向量缓存到 `*/vectors/` 下);
-- 回答**附带来源引用**(知识条目 / 参考案例),不编造。
+- 回答**附带来源引用**(知识条目 / 真实短片与剧本链接),不编造。
 
 #### 2. 模型自主工具调用(Agent / Function Calling)
 - 后端向 DeepSeek 声明两个检索工具 `search_knowledge` / `search_cases`(`llm.py` 的 `TOOLS_SCHEMA`);
@@ -164,9 +164,9 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 ### 7 分钟演示脚本建议
 1. **剧本医生**(约 1.5 min):发送一段埋了 3 个漏洞的剧本(时间跳变、角色消失、伏笔未回收)
    → AI 逐一找出,按严重程度分类 + 原文引用 + 修改建议(强调"辅助人决策"的定位);
-2. **分镜建议**(约 1.5 min):点"分镜建议"→ 展示 SVG 分镜卡片(景别/机位/运镜),指出它借鉴了哪个参考案例;
+2. **分镜建议**(约 1.5 min):上传剧本 → 点"分镜建议" → 展示 shot list 与 SVG 分镜卡片;
 3. **语音问答**(约 1 min):点 🎤 说"拍夜景需要准备什么灯光?" → RAG 回答 + 知识库引用 + 🔊 朗读;
-4. **参考案例**(约 1 min):输入"有没有校园爱情短片案例" → 展示模型调用 search_cases 的过程与案例卡片;
+4. **灵感/参考**(约 1 min):输入"孤独 暗恋" → 按情绪分组的真实电影静帧 + 剧本/原片链接;
 5. **Rundown/日程**(约 1 min):生成通告单 + 导出 CSV;
 6. 讲实现(RAG 双库、Agent 工具调用、提示词注入案例)+ 挑战与限制(约 1.5 min)。
 
@@ -271,6 +271,81 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 
 ---
 
+## 🎭 灵感 = 参考案例（已合并）
+
+底部的「灵感」现在是唯一入口，不再有单独的「参考案例」：
+
+- 输入一个主题（如「孤独 暗恋」），会先给出 3 个概念，再按**情绪分组**列出真实电影静帧：
+  `孤独 → 爱尔兰人 / 小丑`、`温暖 → 绿皮书 / 小妇人`、`压抑 → 奥本海默 / 利益区域` …
+- 静帧不是封面：用 B 站官方 `videoshot` 帧拼图裁出**整部片均匀分布的 6 帧真实画面**，点卡片可看 6 帧大图；
+- 每张静帧都带 **▶ 原片（Bilibili）** 和 **📄 剧本（scriptslug PDF）**；
+- 情绪分组优先匹配你输入的情绪词，其余按库内该情绪的影片数量排序；
+- 点「我的库」可以粘贴 Bilibili 链接、填情绪标签，还可以**附一份剧本（PDF/DOCX）**；个人条目存本机 `data/personal/`（不进仓库），会自动混入情绪分组并标「我的」。
+
+> 逐帧来源：B 站播放器预览帧（`/x/player/videoshot`，10×10 拼图，480×270/帧），
+> 不下载整部影片；生成脚本 `python3 scripts/build_frames.py`，图片在 `static/frames/<bvid>/`。
+> 这不是原片全分辨率截图，画质有限；如需 1080p 帧，需要下载原片后用 ffmpeg 抽取（版权/体积另议）。
+
+![情绪分组灵感](docs/screenshots/moods.png)
+
+## 📎 剧本上传（PDF / DOCX / TXT）
+
+剧本检查、分镜建议、Rundown、日程规划都要求**先有剧本**：
+
+1. 点输入框左侧 **📎**，选择 PDF / DOCX / TXT / Markdown / Fountain（≤ 15 MB）；
+2. 服务端解析为纯文本（PDF 用 `pypdf`，DOCX 用 `python-docx`），页面显示「文件名 · 字数 · 已就绪」；
+3. 选择功能并发送。没有剧本时点这四个功能，会提示先上传；
+4. 灵感 / 参考案例不需要剧本，直接输入题材即可。
+
+> 扫描版 PDF 若没有文字层，会提示需要先 OCR；文件只在内存中解析，不落盘。
+
+## 🪟 极简界面
+
+界面只保留三样东西：**顶部的 Filmmate logo、中间对话区、底部功能栏 + 输入框**。
+原来的顶部导航、状态徽章、设置抽屉、示例剧本卡片全部移除；API Key 改由根目录 `.env` 配置。
+
+## 🗂️ 数据层 v2（2026-11-13 大幅扩充）
+
+原来的数据只有「50 个视频 + 78 条知识 + 10 个案例」，样本格式也只有 `time_start/time_end/description`，
+撑不起专业的剧本审阅、分镜和通告单。现在扩充为五类可检索资料：
+
+| 数据 | 数量 | 内容 |
+|---|---|---|
+| 专业知识库 | **198 条**（78 + 120 条扩充） | 剧本结构/审阅、人物、对白、类型片、场面调度、灯光、收音、剪辑、制片、通告单、场记、预算、勘景、香港拍摄、安全法规、后期交付 |
+| 剧本 + 原片双源库 | **15 部**（36 部候选，严格匹配片长/单 P） | 每部同时有 **scriptslug 剧本 PDF** 与 **Bilibili 原片**，人工按情绪标注（孤独/压抑/浪漫/荒诞…） |
+| 真实短片库 | **78 部** | Bilibili 公开 API 校验的短片/动画元数据（504 镜头解析）；目前作为独立样本保留，不混入「剧本+原片」情绪分组 |
+| 场面模式库 | **40 个** | 每类戏的戏剧功能、节拍结构、冲突/潜台词、走位调度、建议镜头、光线声音、页数与拍摄分钟估算 |
+| 镜头模式库 | **60 个** | 景别/机位/运镜/焦段/帧率/光线/声音/叙事用途/常见误用 |
+| 通告单模板 | **7 套** | 单日广告、产品 demo、MV、3 天短片、纪录访谈、企业宣传片、8 天长片；`crew_call → setup → scene → move → meal → wrap` + 页数/时长合计 |
+| 视频样本 | **50 个 / 504 镜头** | 在原时间码+描述基础上，自动解析出景别、机位、运镜、日夜、光线、节奏统计与场景分组（标注 `derived=true`，是推断而非原片分析） |
+
+> **数据真实性**：早期原型里的 10 部案例和后来生成的 9 部「合成教学案例」**已全部删除**，不再进入检索。
+> 「剧本 + 原片」库只收录 scriptslug 有剧本 PDF、且 Bilibili 有原片（时长与真实片长误差 ≤15 分钟、单 P）的电影；
+> 匹配不到的 21 部直接列在 `misses` 里，不硬凑。
+> 真实短片库的每条记录都带 `bvid`、`url`、`verified_at`，可用 `scripts/validate_data.py` 复核；
+> 场面/镜头/通告单模板属于**编辑整理的方法库/行业模板**，不是影片档案，UI 与文档均已标注。
+
+**完整字段规范见 [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md)。**
+
+### 这些数据怎么用
+
+- 问答 Agent 现在有 **5 个检索工具**：`search_knowledge` / `search_cases` / `search_scenes` / `search_shots` / `search_stripboards`，演示时能看到模型连续调用多个工具；
+- 五个创作工具在生成前会先检索对应资料（案例 + 场面 + 镜头 + 通告单模板）注入提示词；
+- **Rundown 输出升级为 stripboard**：场次号、INT/EXT、场景标题、日/夜、演员、地点、页数（1/8 页）、预计拍摄分钟、company move、meal、cast calls、收工合计；
+- **分镜输出升级为 shot list**：每场先给 coverage（master/OTS/singles/inserts），每个镜头带焦段、光线、声音、目的、转场；
+- **日程输出升级为 DOOD**：每天页数/时长/转场/用餐合计、演员档期、风险与备案；
+- 离线模式（没有 API Key）也能生成上述结构，数据全部来自本地资料库。
+
+### 维护脚本
+
+```bash
+python3 scripts/validate_data.py     # 校验 schema / 枚举 / totals 求和一致性
+python3 scripts/eval_retrieval.py    # 18 条代表性查询的检索命中率（当前 18/18）
+python3 scripts/enrich_samples.py    # 重新从 _ref 样本生成富化数据
+```
+
+---
+
 ## 📁 文件结构
 
 ```
@@ -278,8 +353,9 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 ├── config.py            # 配置(读 .env / 环境变量)
 ├── llm.py               # DeepSeek 客户端 + Agent 工具调用循环
 ├── prompts.py           # 系统提示词与各工具 JSON 规范
-├── rag.py               # 专业知识库检索(BM25 / dense)
-├── case_store.py        # 案例库检索 + 案例上下文构建
+├── rag.py               # 专业知识库检索(BM25 / dense,合并扩充卷)
+├── case_store.py        # 案例库检索(v2 字段)+ 案例上下文构建
+├── library.py           # 场面/镜头/通告单/富化样本的统一加载与检索
 ├── tools.py             # 意图识别 + 五个创作工具(在线/离线双实现)
 ├── voice_input_api.py   # Phase 2:语音转写 /api/transcribe(whisper-1)
 ├── chat_storage.py      # Phase 3:会话 JSON 存储(原子写/加锁/损坏隔离)
@@ -289,8 +365,22 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 ├── .env.example
 ├── start.bat                  # Windows 一键启动(后端 + 前端)
 ├── start-filmmate.ps1         # start.bat 调用的 PowerShell 脚本(负责启停两个进程)
-├── knowledge/knowledge.json   # 专业知识库(78 条)
-├── cases/cases.json           # 作品案例库(10 部)
+├── knowledge/knowledge.json   # 专业知识库(基础 78 条)
+├── cases/                    # 已清空（虚构案例已移除，改用 data/library/films_real.json）
+├── data/library/              # 数据层 v2（见 docs/DATA_SCHEMA.md）
+│   ├── knowledge_extra.json   # 扩充知识 120 条
+│   ├── scenes.json            # 场面模式 40 个
+│   ├── shots.json             # 镜头模式 60 个
+│   ├── stripboards.json       # 通告单模板 7 套
+│   ├── films_real.json       # 真实短片库 78 部（Bilibili，含核验时间）
+│   └── samples_enriched.json  # 50 个视频样本的专业富化
+├── docs/DATA_SCHEMA.md        # 数据 schema 与质量规范
+├── scripts/validate_data.py   # 数据校验
+├── scripts/eval_retrieval.py  # 检索评测
+├── scripts/enrich_samples.py  # 样本富化
+├── scripts/build_scripted_films.py # 剧本+原片双源匹配（scriptslug × Bilibili）
+├── scripts/build_frames.py    # 从 B 站 videoshot 抽真实静帧
+├── static/frames/             # 每部电影 6 张真实静帧
 ├── data/conversations/        # Phase 3 会话存储目录(目录保留,会话 JSON 已 .gitignore)
 ├── filmmate-web/              # Tauri 2 + React 19 + Vite 前端(见其 README)
 └── static/
@@ -307,5 +397,5 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 - 本 README 的语音输入指 `static/` 原型用的浏览器 Web Speech API;Tauri/React 版的语音输入是 whisper-1(经 `voice_input_api.py`),见 `filmmate-web/README.md`;
 - 语音识别依赖浏览器支持(推荐 Chrome),首次使用需授权麦克风;
 - BM25 检索对同义词不敏感,装了 sentence-transformers 的向量模式效果更好;
-- 聊天上下文保留最近 6 轮;案例库为示例数据(10 部),可按同样格式继续扩充;
+- 聊天上下文保留最近 6 轮;真实短片库为 Bilibili 平台数据(78 部),可按 `scripts/build_real_films.py` 继续扩充;
 - 航拍等法规信息以官方发布为准。

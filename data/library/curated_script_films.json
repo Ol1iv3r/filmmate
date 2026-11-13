@@ -1,0 +1,367 @@
+{
+ "note": "人工挑选：仅保留 scriptslug 有剧本、且能在 Bilibili 找到原片的影片",
+ "films": [
+  {
+   "slug": "parasite-2019",
+   "title_en": "Parasite",
+   "title_zh": "寄生虫",
+   "moods": [
+    "压抑",
+    "荒诞",
+    "黑色幽默"
+   ],
+   "runtime_min": 132
+  },
+  {
+   "slug": "joker-2019",
+   "title_en": "Joker",
+   "title_zh": "小丑",
+   "moods": [
+    "孤独",
+    "压抑",
+    "疯狂"
+   ],
+   "runtime_min": 122
+  },
+  {
+   "slug": "marriage-story-2019",
+   "title_en": "Marriage Story",
+   "title_zh": "婚姻故事",
+   "moods": [
+    "心碎",
+    "真实"
+   ],
+   "runtime_min": 137
+  },
+  {
+   "slug": "lady-bird-2017",
+   "title_en": "Lady Bird",
+   "title_zh": "伯德小姐",
+   "moods": [
+    "成长",
+    "温暖"
+   ],
+   "runtime_min": 94
+  },
+  {
+   "slug": "call-me-by-your-name-2017",
+   "title_en": "Call Me By Your Name",
+   "title_zh": "请以你的名字呼唤我",
+   "moods": [
+    "浪漫",
+    "怀旧"
+   ],
+   "runtime_min": 132
+  },
+  {
+   "slug": "roma-2018",
+   "title_en": "Roma",
+   "title_zh": "罗马",
+   "moods": [
+    "怀旧",
+    "温柔"
+   ],
+   "runtime_min": 135
+  },
+  {
+   "slug": "the-favourite-2018",
+   "title_en": "The Favourite",
+   "title_zh": "宠儿",
+   "moods": [
+    "荒诞",
+    "权力"
+   ],
+   "runtime_min": 119
+  },
+  {
+   "slug": "green-book-2018",
+   "title_en": "Green Book",
+   "title_zh": "绿皮书",
+   "moods": [
+    "温暖",
+    "幽默"
+   ],
+   "runtime_min": 130
+  },
+  {
+   "slug": "get-out-2017",
+   "title_en": "Get Out",
+   "title_zh": "逃出绝命镇",
+   "moods": [
+    "恐惧",
+    "讽刺"
+   ],
+   "runtime_min": 104
+  },
+  {
+   "slug": "a-star-is-born-2018",
+   "title_en": "A Star is Born",
+   "title_zh": "一个明星的诞生",
+   "moods": [
+    "浪漫",
+    "心碎"
+   ],
+   "runtime_min": 136
+  },
+  {
+   "slug": "three-billboards-outside-ebbing-missouri-2017",
+   "title_en": "Three Billboards",
+   "title_zh": "三块广告牌",
+   "moods": [
+    "愤怒",
+    "黑色幽默"
+   ],
+   "runtime_min": 115
+  },
+  {
+   "slug": "the-shape-of-water-2017",
+   "title_en": "The Shape of Water",
+   "title_zh": "水形物语",
+   "moods": [
+    "浪漫",
+    "奇幻"
+   ],
+   "runtime_min": 123
+  },
+  {
+   "slug": "1917-2019",
+   "title_en": "1917",
+   "title_zh": "1917",
+   "moods": [
+    "紧张",
+    "沉浸"
+   ],
+   "runtime_min": 119
+  },
+  {
+   "slug": "knives-out-2019",
+   "title_en": "Knives Out",
+   "title_zh": "利刃出鞘",
+   "moods": [
+    "悬疑",
+    "幽默"
+   ],
+   "runtime_min": 130
+  },
+  {
+   "slug": "little-women-2019",
+   "title_en": "Little Women",
+   "title_zh": "小妇人",
+   "moods": [
+    "温暖",
+    "成长"
+   ],
+   "runtime_min": 135
+  },
+  {
+   "slug": "jojo-rabbit-2019",
+   "title_en": "Jojo Rabbit",
+   "title_zh": "乔乔的异想世界",
+   "moods": [
+    "荒诞",
+    "温暖"
+   ],
+   "runtime_min": 108
+  },
+  {
+   "slug": "the-irishman-2019",
+   "title_en": "The Irishman",
+   "title_zh": "爱尔兰人",
+   "moods": [
+    "孤独",
+    "宿命"
+   ],
+   "runtime_min": 209
+  },
+  {
+   "slug": "dune-2021",
+   "title_en": "Dune",
+   "title_zh": "沙丘",
+   "moods": [
+    "敬畏",
+    "史诗"
+   ],
+   "runtime_min": 155
+  },
+  {
+   "slug": "the-power-of-the-dog-2021",
+   "title_en": "The Power of the Dog",
+   "title_zh": "犬之力",
+   "moods": [
+    "压抑",
+    "孤独"
+   ],
+   "runtime_min": 126
+  },
+  {
+   "slug": "coda-2021",
+   "title_en": "CODA",
+   "title_zh": "健听女孩",
+   "moods": [
+    "温暖",
+    "亲情"
+   ],
+   "runtime_min": 111
+  },
+  {
+   "slug": "everything-everywhere-all-at-once-2022",
+   "title_en": "Everything Everywhere All at Once",
+   "title_zh": "瞬息全宇宙",
+   "moods": [
+    "荒诞",
+    "温暖"
+   ],
+   "runtime_min": 139
+  },
+  {
+   "slug": "the-banshees-of-inisherin-2022",
+   "title_en": "The Banshees of Inisherin",
+   "title_zh": "伊尼舍林的报丧女妖",
+   "moods": [
+    "孤独",
+    "荒诞"
+   ],
+   "runtime_min": 114
+  },
+  {
+   "slug": "tar-2022",
+   "title_en": "TÁR",
+   "title_zh": "塔尔",
+   "moods": [
+    "压抑",
+    "权力"
+   ],
+   "runtime_min": 158
+  },
+  {
+   "slug": "top-gun-maverick-2022",
+   "title_en": "Top Gun: Maverick",
+   "title_zh": "壮志凌云2",
+   "moods": [
+    "热血",
+    "紧张"
+   ],
+   "runtime_min": 131
+  },
+  {
+   "slug": "oppenheimer-2023",
+   "title_en": "Oppenheimer",
+   "title_zh": "奥本海默",
+   "moods": [
+    "敬畏",
+    "压抑"
+   ],
+   "runtime_min": 180
+  },
+  {
+   "slug": "poor-things-2023",
+   "title_en": "Poor Things",
+   "title_zh": "可怜的东西",
+   "moods": [
+    "荒诞",
+    "奇幻"
+   ],
+   "runtime_min": 141
+  },
+  {
+   "slug": "killers-of-the-flower-moon-2023",
+   "title_en": "Killers of the Flower Moon",
+   "title_zh": "花月杀手",
+   "moods": [
+    "沉重",
+    "史诗"
+   ],
+   "runtime_min": 206
+  },
+  {
+   "slug": "anatomy-of-a-fall-2023",
+   "title_en": "Anatomy of a Fall",
+   "title_zh": "坠落的审判",
+   "moods": [
+    "紧张",
+    "冷峻"
+   ],
+   "runtime_min": 151
+  },
+  {
+   "slug": "past-lives-2023",
+   "title_en": "Past Lives",
+   "title_zh": "过往人生",
+   "moods": [
+    "遗憾",
+    "温柔"
+   ],
+   "runtime_min": 105
+  },
+  {
+   "slug": "barbie-2023",
+   "title_en": "Barbie",
+   "title_zh": "芭比",
+   "moods": [
+    "荒诞",
+    "欢乐"
+   ],
+   "runtime_min": 114
+  },
+  {
+   "slug": "the-zone-of-interest-2023",
+   "title_en": "The Zone of Interest",
+   "title_zh": "利益区域",
+   "moods": [
+    "压抑",
+    "冷峻"
+   ],
+   "runtime_min": 105
+  },
+  {
+   "slug": "anora-2024",
+   "title_en": "Anora",
+   "title_zh": "阿诺拉",
+   "moods": [
+    "荒诞",
+    "心碎"
+   ],
+   "runtime_min": 139
+  },
+  {
+   "slug": "the-substance-2024",
+   "title_en": "The Substance",
+   "title_zh": "某种物质",
+   "moods": [
+    "恐惧",
+    "身体"
+   ],
+   "runtime_min": 141
+  },
+  {
+   "slug": "conclave-2024",
+   "title_en": "Conclave",
+   "title_zh": "秘密会议",
+   "moods": [
+    "悬疑",
+    "庄严"
+   ],
+   "runtime_min": 120
+  },
+  {
+   "slug": "the-brutalist-2024",
+   "title_en": "The Brutalist",
+   "title_zh": "粗野派",
+   "moods": [
+    "史诗",
+    "压抑"
+   ],
+   "runtime_min": 215
+  },
+  {
+   "slug": "nickel-boys-2024",
+   "title_en": "Nickel Boys",
+   "title_zh": "镍币男孩",
+   "moods": [
+    "沉重",
+    "孤独"
+   ],
+   "runtime_min": 140
+  }
+ ]
+}

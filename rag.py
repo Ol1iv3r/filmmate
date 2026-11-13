@@ -34,23 +34,61 @@ def current_mode():
 
 
 def is_relevant(query: str):
-    """判断查询是否与知识库相关(按模式使用不同阈值)。"""
+    """判断查询是否与知识库相关。
+
+    短查询（如「香港」）会被 BM25 的长度归一化压低分数，光看阈值会误判，
+    因此额外检查标题/分类的字面命中。
+    """
+    query = (query or "").strip()
+    if not query:
+        return False
     mode = current_mode()
-    threshold = 0.25 if mode == "dense" else 4.5
-    hits = retrieve(query, k=1, min_score=threshold)
-    return len(hits) > 0
+    if mode == "dense":
+        return len(retrieve(query, k=1, min_score=0.25)) > 0
+
+    hits = retrieve(query, k=1, min_score=0)
+    if not hits:
+        return False
+    top = hits[0]
+    low = query.lower()
+    label = f"{top.get('title', '')} {top.get('category', '')}".lower()
+    if len(query) <= 8 and low in label:
+        return True
+    return top.get("score", 0) >= 4.5
 
 
 def _load_entries():
     if _CACHE["entries"] is None:
         data = json.loads(config.KNOWLEDGE_FILE.read_text(encoding="utf-8"))
-        _CACHE["entries"] = data["entries"]
+        entries = list(data["entries"])
+        # 扩充卷：data/library/knowledge_extra.json（缺失时静默跳过）
+        extra_file = config.BASE_DIR / "data" / "library" / "knowledge_extra.json"
+        if extra_file.exists():
+            try:
+                extra = json.loads(extra_file.read_text(encoding="utf-8")).get("entries", [])
+                known = {e.get("id") for e in entries}
+                added = [e for e in extra if e.get("id") not in known and e.get("content")]
+                entries.extend(added)
+                logger.info("知识库扩充卷加载 %d 条", len(added))
+            except (ValueError, OSError) as exc:
+                logger.warning("知识库扩充卷读取失败(%s)，仅使用基础库", exc)
+        _CACHE["entries"] = entries
         logger.info("知识库加载完成: %d 条", len(_CACHE["entries"]))
     return _CACHE["entries"]
 
 
+# 疑问词/虚词：会稀释检索信号（例如「推镜头什么时候用」被「什么时候用」带偏）
+STOPWORDS = {
+    "什么", "什么时候", "怎么", "怎样", "如何", "为什么", "哪个", "哪些", "多少", "是否",
+    "可以", "应该", "需要", "一下", "这个", "那个", "我们", "你们", "他们", "时候",
+    "的话", "一个", "一些", "还是", "或者", "以及", "对于", "关于", "有没有", "请问",
+    "the", "a", "an", "is", "are", "of", "to", "how", "what", "when", "why", "which",
+    "should", "can", "do", "does", "i", "we", "you", "it", "for", "and", "or",
+}
+
+
 def tokenize(text: str):
-    """中文用 jieba 分词,英文/数字按词切分,统一小写。"""
+    """中文用 jieba 分词,英文/数字按词切分,统一小写,并去掉疑问词/虚词。"""
     text = text.lower()
     tokens = []
     try:
@@ -65,7 +103,7 @@ def tokenize(text: str):
                 tokens.extend(re.findall(r"[a-z0-9]+", seg))
     except ImportError:
         tokens = re.findall(r"[a-z0-9]+|[\u4e00-\u9fff]", text)
-    return [t for t in tokens if len(t) > 0]
+    return [t for t in tokens if len(t) > 0 and t not in STOPWORDS]
 
 
 class BM25Index:
@@ -123,7 +161,8 @@ def _dense_retrieve(query: str, k: int):
         if cache_file.exists():
             npz = np.load(cache_file)
             vecs, model_name = npz["vecs"], str(npz["model"])
-            if model_name == str(model):
+            # 条目数变化（如加载了扩充卷）时必须重建，否则索引会错位
+            if model_name == str(model) and len(vecs) == len(entries):
                 _CACHE["dense"] = (model, vecs)
         if _CACHE["dense"] is None:
             t0 = time.time()

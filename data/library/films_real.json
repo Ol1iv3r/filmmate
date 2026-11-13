@@ -1,0 +1,2114 @@
+{
+ "name": "Filmmate 真实短片库",
+ "description": "从 Bilibili 公开 API 校验的真实短片元数据（标题/时长/UP 主/简介/封面/链接）。只引用来源，不编造制作数据；版权归原作者，仅用于学习参考。",
+ "source": "api.bilibili.com",
+ "verified_at": "2026-11-13T20:42:28+08:00",
+ "count": 78,
+ "films": [
+  {
+   "id": "bili-BV13s411T7bT",
+   "bvid": "BV13s411T7bT",
+   "title": "村庄",
+   "title_raw": "人性反思动画《村庄》",
+   "summary": "场库 作者：Mark Baker(英国) 曾获66届奥斯卡金像奖最佳动画短片奖提名。 第47届英国电影学院奖最佳动画短片奖提名。",
+   "url": "https://www.bilibili.com/video/BV13s411T7bT",
+   "cover": "https://i0.hdslb.com/bfs/archive/5e4af318b97724fa0fa7f2fc7d7ab60858f2c3a5.jpg",
+   "duration_sec": 891,
+   "duration": "14:51",
+   "owner": "南方16",
+   "pubdate": "2018-08-12",
+   "description": "场库 作者：Mark Baker(英国) 曾获66届奥斯卡金像奖最佳动画短片奖提名。 第47届英国电影学院奖最佳动画短片奖提名。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "学生作品",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 275415,
+    "like": 4624
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1z94y1z7qX",
+   "bvid": "BV1z94y1z7qX",
+   "title": "神奇飞书",
+   "title_raw": "奥斯卡金像奖最佳动画短片奖《神奇飞书》",
+   "summary": "奥斯卡最佳动画短片 The Fantastic Flying Books of Mr. Morris Lessmore 一场台风把Morris 的家园吹成了废墟，一切都变得灰暗无色。在他迷茫无措时，一本本会飞的书突然出现在自己的世界，从此改变了他暗淡无望的生活，也赋予了其他人希望、力量和梦想。",
+   "url": "https://www.bilibili.com/video/BV1z94y1z7qX",
+   "cover": "https://i1.hdslb.com/bfs/archive/0779ae0738ed9ceb5eece7ec0f41eec0a73920cb.jpg",
+   "duration_sec": 887,
+   "duration": "14:47",
+   "owner": "Max放映厅",
+   "pubdate": "2023-08-25",
+   "description": "奥斯卡最佳动画短片 The Fantastic Flying Books of Mr. Morris Lessmore 一场台风把Morris 的家园吹成了废墟，一切都变得灰暗无色。在他迷茫无措时，一本本会飞的书突然出现在自己的世界，从此改变了他暗淡无望的生活，也赋予了其他人希望、力量和梦想。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 293132,
+    "like": 7489
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1B3411Z77D",
+   "bvid": "BV1B3411Z77D",
+   "title": "雇佣人生",
+   "title_raw": "奥斯卡获奖动画短片《雇佣人生》，一部获得了全世界102个奖项的动画短片，意蕴深长，引人深思！ 豆瓣9.2分。",
+   "summary": "奥斯卡获奖动画短片《雇佣人生》，一部获得了全世界102个奖项的动画短片，意蕴深长，引人深思！ 豆瓣9.2分。",
+   "url": "https://www.bilibili.com/video/BV1B3411Z77D",
+   "cover": "https://i2.hdslb.com/bfs/archive/bd7e79886f95ee7d7b6f425a1c81b55591e1371f.jpg",
+   "duration_sec": 380,
+   "duration": "6:20",
+   "owner": "Max放映厅",
+   "pubdate": "2023-01-18",
+   "description": "奥斯卡获奖动画短片《雇佣人生》，一部获得了全世界102个奖项的动画短片，意蕴深长，引人深思！ 豆瓣9.2分。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 291448,
+    "like": 7594
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV13s411D73w",
+   "bvid": "BV13s411D73w",
+   "title": "精神分裂症",
+   "title_raw": "黑暗系动画短片之一【精神分裂症(2008法国)】戛纳电影节柯达短片电影奖",
+   "summary": "土豆视频 一切都由一枚150吨的陨石引发。陨石砸中了男主人公亨利家对面楼的天线，幸运的是他毫发无损。但此事过后，他的世界刚好与现实世界偏离了水平91cm。因此他去接受心理治疗，非但毫无进展，反而在回忆事故发生过后，又多出了75cm的垂直距离。于是他变得越来越自闭，越来越孤独。这与世界之间的91cm距离，他到底能否穿越和克服，最终回归正常生活……",
+   "url": "https://www.bilibili.com/video/BV13s411D73w",
+   "cover": "https://i0.hdslb.com/bfs/archive/0ca180a108cd8491dc00bb8d187c42aaee5a1eda.jpg",
+   "duration_sec": 783,
+   "duration": "13:03",
+   "owner": "都是有身份证的怕什么",
+   "pubdate": "2015-04-08",
+   "description": "土豆视频 一切都由一枚150吨的陨石引发。陨石砸中了男主人公亨利家对面楼的天线，幸运的是他毫发无损。但此事过后，他的世界刚好与现实世界偏离了水平91cm。因此他去接受心理治疗，非但毫无进展，反而在回忆事故发生过后，又多出了75cm的垂直距离。于是他变得越来越自闭，越来越孤独。这与世界之间的91cm距离，他到底能否穿越和克服，最终回归正常生活……",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "社会"
+   ],
+   "stat": {
+    "view": 115346,
+    "like": 2028
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV13d2gYuExJ",
+   "bvid": "BV13d2gYuExJ",
+   "title": "怕怕不怕",
+   "title_raw": "北京电影学院学生作品——《怕怕不怕》该片曾获得北京电影学院第十届动画学院奖最佳短片奖、ASIFA中国奖。。。",
+   "summary": "北京电影学院学生作品——《怕怕不怕》（作者：谭晓佳 梁艺天 吴汀 吴亚杰 方梦诗 王艺霏） 该片曾获得北京电影学院第十届动画学院奖最佳短片奖、ASIFA中国奖。 本片是2010年12月1日发表的一部12分钟的粤语动画短片，讲述了刚搬到猫世界的小鳄鱼怕怕，因为生疏没有朋友，总是因为不敢挤进围满小猫的雪糕车，而吃不到钟爱的红豆雪糕，她总是默默的站在雪糕店的对街等",
+   "url": "https://www.bilibili.com/video/BV13d2gYuExJ",
+   "cover": "https://i0.hdslb.com/bfs/archive/6aff40b1914e50406895a71155d062de8ab11bf2.jpg",
+   "duration_sec": 761,
+   "duration": "12:41",
+   "owner": "Max放映厅",
+   "pubdate": "2024-10-10",
+   "description": "北京电影学院学生作品——《怕怕不怕》（作者：谭晓佳 梁艺天 吴汀 吴亚杰 方梦诗 王艺霏） 该片曾获得北京电影学院第十届动画学院奖最佳短片奖、ASIFA中国奖。 本片是2010年12月1日发表的一部12分钟的粤语动画短片，讲述了刚搬到猫世界的小鳄鱼怕怕，因为生疏没有朋友，总是因为不敢挤进围满小猫的雪糕车，而吃不到钟爱的红豆雪糕，她总是默默的站在雪糕店的对街等待，直到小猫们都离开了，才凑上去买雪糕， 但那时雪糕都卖光了。但是怕怕每天还是在那里不停的等。终于在一个下午，一个“同类”朋友出现了……",
+   "category": "动画",
+   "signals": [
+    "学生作品",
+    "动画"
+   ],
+   "tags": [
+    "校园"
+   ],
+   "stat": {
+    "view": 412275,
+    "like": 28449
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV11t411Z7H1",
+   "bvid": "BV11t411Z7H1",
+   "title": "失物招领",
+   "title_raw": "第83届奥斯卡最佳动画短片奖《失物招领》",
+   "summary": "Jineson的视频《第83届奥斯卡最佳动画短片奖《失物招领》》: (来自@网易云音乐)",
+   "url": "https://www.bilibili.com/video/BV11t411Z7H1",
+   "cover": "https://i2.hdslb.com/bfs/archive/7e6811f924c1c153eaef405c640e176f7e19dda6.jpg",
+   "duration_sec": 952,
+   "duration": "15:52",
+   "owner": "bibi常",
+   "pubdate": "2018-10-16",
+   "description": "Jineson的视频《第83届奥斯卡最佳动画短片奖《失物招领》》: http://music.163.com/video/6575C745E4A5FD2F91059CF67543AABA/?userid=588797108 (来自@网易云音乐)",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "音乐"
+   ],
+   "stat": {
+    "view": 323553,
+    "like": 4591
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Bb4y1J7es",
+   "bvid": "BV1Bb4y1J7es",
+   "title": "菇菇历险记",
+   "title_raw": "获奖无数！油管百万播放动画短片《菇菇历险记》",
+   "summary": "蘑菇马丁出生在错误的岩石上，他历经种种挑战，不畏风雨的前往远方，只为了找寻其他同伴。这是一个关于平等和抛开身份的故事。",
+   "url": "https://www.bilibili.com/video/BV1Bb4y1J7es",
+   "cover": "https://i1.hdslb.com/bfs/archive/718b66e717098dab46c144102e50e5a7f55b12dc.jpg",
+   "duration_sec": 878,
+   "duration": "14:38",
+   "owner": "小破站短视频精选",
+   "pubdate": "2022-01-21",
+   "description": "https://www.youtube.com/watch?v=eDaNejmf-1A&list=WL&index=2&t=387s 蘑菇马丁出生在错误的岩石上，他历经种种挑战，不畏风雨的前往远方，只为了找寻其他同伴。这是一个关于平等和抛开身份的故事。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 326385,
+    "like": 3848
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1G4411i7mg",
+   "bvid": "BV1G4411i7mg",
+   "title": "Alike",
+   "title_raw": "【奥斯卡最佳动画短片】Alike",
+   "summary": "Vimeo",
+   "url": "https://www.bilibili.com/video/BV1G4411i7mg",
+   "cover": "https://i1.hdslb.com/bfs/archive/aab83bfc315e5755b7f1887f3924931811e9acb2.jpg",
+   "duration_sec": 482,
+   "duration": "8:02",
+   "owner": "秦木灵",
+   "pubdate": "2019-05-05",
+   "description": "Vimeo",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 305619,
+    "like": 7906
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1uw6TBiEbB",
+   "bvid": "BV1uw6TBiEbB",
+   "title": "Cardboard",
+   "title_raw": "2026年奥斯卡入围动画短片《Cardboard》",
+   "summary": "曾入围 2025 昂西国际动画影展，由 J.P. Vine 执导、《天兵阿荣》动画团队 Locksmith Animation 制作。 故事讲述一位单亲猪爸爸带着小猪们搬到老旧露营拖车区，生活虽困难，但孩子们用纸箱和水枪打造出自己的科幻宇宙。 J.P. Vine曾任职于皮克斯和阿德曼动画工作室，担任故事板艺术家。",
+   "url": "https://www.bilibili.com/video/BV1uw6TBiEbB",
+   "cover": "https://i1.hdslb.com/bfs/archive/a4dd7d6f0fe4475c9761684b6ebcd93700b91244.jpg",
+   "duration_sec": 496,
+   "duration": "8:16",
+   "owner": "wuhu动画人空间",
+   "pubdate": "2026-01-27",
+   "description": "曾入围 2025 昂西国际动画影展，由 J.P. Vine 执导、《天兵阿荣》动画团队 Locksmith Animation 制作。 故事讲述一位单亲猪爸爸带着小猪们搬到老旧露营拖车区，生活虽困难，但孩子们用纸箱和水枪打造出自己的科幻宇宙。 J.P. Vine曾任职于皮克斯和阿德曼动画工作室，担任故事板艺术家。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "科幻"
+   ],
+   "stat": {
+    "view": 335818,
+    "like": 6460
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1BZ4y1H79N",
+   "bvid": "BV1BZ4y1H79N",
+   "title": "鹬",
+   "title_raw": "奥斯卡最佳动画短片《鹬》（Piper）",
+   "summary": "晨曦微茫的小岛上，海水轻柔俯视着纤尘不染的沙滩。伴随着浪花的涌动，浮游生物、海藻、海螺、扇贝等海洋生命搁浅在陆地之上，等待它们的则是饥肠辘辘的捕食者。 矶鹬（sandpiper）三五成群，鸣叫着落在了湿漉漉的沙滩上，啄食着可口的扇贝。许是经过了多年的历练，每当新一波潮水涌过来时，它们便第一时间轻盈地躲开，绝不会沾湿半根羽毛。不远处的灌木丛里，一只破壳未久的小",
+   "url": "https://www.bilibili.com/video/BV1BZ4y1H79N",
+   "cover": "https://i2.hdslb.com/bfs/archive/cce4f53ace5da03e781bcd89552ec0185be508a5.jpg",
+   "duration_sec": 366,
+   "duration": "6:06",
+   "owner": "哔哩哔哩放映员",
+   "pubdate": "2020-06-17",
+   "description": "晨曦微茫的小岛上，海水轻柔俯视着纤尘不染的沙滩。伴随着浪花的涌动，浮游生物、海藻、海螺、扇贝等海洋生命搁浅在陆地之上，等待它们的则是饥肠辘辘的捕食者。 矶鹬（sandpiper）三五成群，鸣叫着落在了湿漉漉的沙滩上，啄食着可口的扇贝。许是经过了多年的历练，每当新一波潮水涌过来时，它们便第一时间轻盈地躲开，绝不会沾湿半根羽毛。不远处的灌木丛里，一只破壳未久的小矶鹬窥伺着父母的一举一动。少顷，妈妈飞回巢穴，小家伙一如既往张开嘴巴等着喂食，不过妈妈似乎决意要让孩子独立，自顾自将扇贝肉吃到肚子里。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 3470522,
+    "like": 110085
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1f64y197kP",
+   "bvid": "BV1f64y197kP",
+   "title": "鸟！鸟！鸟！",
+   "title_raw": "鸟！鸟！鸟！（For the Birds）第74届奥斯卡最佳动画短片奖。",
+   "summary": "导 演: Ralph Eggleston 外文名：For the Birds 中文名：鸟！鸟！鸟！ 2001-第74届奥斯卡最佳动画短片奖 2001-Vancouver小国和动画节-3D电脑动画短片 2001-Anima Mundi动画节-最佳电影 x2 2001-芝加哥国际儿童电影节-短片/视频 - 动画第二名 2000-安妮奖-动画短片类突出成就奖 20",
+   "url": "https://www.bilibili.com/video/BV1f64y197kP",
+   "cover": "https://i0.hdslb.com/bfs/archive/8baae8d7b17e66aa2956676d1e497f8170af8e08.jpg",
+   "duration_sec": 216,
+   "duration": "3:36",
+   "owner": "何斜浩",
+   "pubdate": "2021-06-06",
+   "description": "导 演: Ralph Eggleston 外文名：For the Birds 中文名：鸟！鸟！鸟！ 2001-第74届奥斯卡最佳动画短片奖 2001-Vancouver小国和动画节-3D电脑动画短片 2001-Anima Mundi动画节-最佳电影 x2 2001-芝加哥国际儿童电影节-短片/视频 - 动画第二名 2000-安妮奖-动画短片类突出成就奖 2000-Sitges - 加泰罗尼亚国际电影节-最佳动画短片 影片开始于一群小鸟停在一根电话线上休憩。这时飞来一只大得很多，看起来很笨拙的鸟。大鸟很友好的跟小鸟们打招呼，但是小鸟们却嘲讽并挖苦大鸟的样子，并拒绝跟大鸟在一起。他们纷纷朝大鸟站立的另一个方向移动。 然而大鸟很想跟小鸟们在一起，于是它飞起来并落在小鸟中间。由于它比小鸟要重很多，当它落下后，电线如图片上那样，一下子就下垂了很多。 这时小鸟对它很反感，距离它最近的两只小鸟开始用嘴啄",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 311469,
+    "like": 3073
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1os411S7LT",
+   "bvid": "BV1os411S7LT",
+   "title": "守坝员 The Dam Keeper 英字",
+   "title_raw": "【奥斯卡最佳动画短片提名】守坝员 The Dam Keeper 英字【2015】",
+   "summary": "自压 【第87届奥斯卡金像奖最佳动画短片(提名)】 豆瓣：8.2分，短片讲述了出身工人家庭的小猪，因为大坝看守员的工作，每天仪表颓丧在学校受尽嘲弄，性格孤僻自卑。直到他遇到了古灵精怪的转校生狐狸，他的生活开始发生了变化...PS：另外一部提名动画《我和我的莫顿自行车》av2139327",
+   "url": "https://www.bilibili.com/video/BV1os411S7LT",
+   "cover": "https://i2.hdslb.com/bfs/archive/320abaffbea312c7cd92cbb8b698e37210191af7.jpg",
+   "duration_sec": 1092,
+   "duration": "18:12",
+   "owner": "兰若斯特",
+   "pubdate": "2015-04-05",
+   "description": "自压 【第87届奥斯卡金像奖最佳动画短片(提名)】 豆瓣：8.2分，短片讲述了出身工人家庭的小猪，因为大坝看守员的工作，每天仪表颓丧在学校受尽嘲弄，性格孤僻自卑。直到他遇到了古灵精怪的转校生狐狸，他的生活开始发生了变化...PS：另外一部提名动画《我和我的莫顿自行车》av2139327",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "校园"
+   ],
+   "stat": {
+    "view": 456391,
+    "like": 3713
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1gW411Q7nV",
+   "bvid": "BV1gW411Q7nV",
+   "title": "失物招领",
+   "title_raw": "奥斯卡获奖动画短片《失物招领》，直戳你的泪点",
+   "summary": "",
+   "url": "https://www.bilibili.com/video/BV1gW411Q7nV",
+   "cover": "https://i2.hdslb.com/bfs/archive/6b66eb275c7b331036f4188b2a0d88424b706f42.jpg",
+   "duration_sec": 381,
+   "duration": "6:21",
+   "owner": "此刻点燃",
+   "pubdate": "2018-08-21",
+   "description": "https://tv.sohu.com/v/dXMvNTcyMTI1NC81NzE2NjQzLnNodG1s.html?src=pl",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 976422,
+    "like": 36317
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1HS4y1F7RJ",
+   "bvid": "BV1HS4y1F7RJ",
+   "title": "兽性",
+   "title_raw": "拿奖拿到手软！2022入围奥斯卡最佳动画短片《兽性》",
+   "summary": "导演: Hugo Covarrubias 编剧: Hugo Covarrubias / Martín Erazo 类型: 动画 / 短片 制片国家/地区: 智利 语言: 无对白 上映日期: 2021-06-14(法国) 片长: 16分钟 又名: Beast",
+   "url": "https://www.bilibili.com/video/BV1HS4y1F7RJ",
+   "cover": "https://i1.hdslb.com/bfs/archive/66cfd30ec4b651e471f73ee2a82e4248fb94d152.jpg",
+   "duration_sec": 970,
+   "duration": "16:10",
+   "owner": "小破站短视频精选",
+   "pubdate": "2022-02-18",
+   "description": "https://vimeo.com/558189701 导演: Hugo Covarrubias 编剧: Hugo Covarrubias / Martín Erazo 类型: 动画 / 短片 制片国家/地区: 智利 语言: 无对白 上映日期: 2021-06-14(法国) 片长: 16分钟 又名: Beast",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "默片"
+   ],
+   "stat": {
+    "view": 491831,
+    "like": 11230
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1be411y7ts",
+   "bvid": "BV1be411y7ts",
+   "title": "细雨",
+   "title_raw": "关于抑郁症，新加坡团队做了一支获奖动画短片《细雨》",
+   "summary": "Sacha Goedegebure 是一位屡获殊荣的 Blender 爱好者，目前是新加坡 Omens Studios 的剧集主管。 短片以一位患有抑郁症的中年男子为中心，他在一个雨天遇到了一位开朗的年轻女子，这位年轻女子向他介绍了对现实的不同看法。 Written and Directed by: Sacha Goedegebure Music by: J",
+   "url": "https://www.bilibili.com/video/BV1be411y7ts",
+   "cover": "https://i2.hdslb.com/bfs/archive/86e7c3fbc45ce4c4af4e031874090ad1c3b71273.jpg",
+   "duration_sec": 424,
+   "duration": "7:04",
+   "owner": "wuhu动画人空间",
+   "pubdate": "2023-12-14",
+   "description": "https://www.youtube.com/watch?v=tbsfc6Wn2DU Sacha Goedegebure 是一位屡获殊荣的 Blender 爱好者，目前是新加坡 Omens Studios 的剧集主管。 短片以一位患有抑郁症的中年男子为中心，他在一个雨天遇到了一位开朗的年轻女子，这位年轻女子向他介绍了对现实的不同看法。 Written and Directed by: Sacha Goedegebure Music by: Jan Morgenstern Produced by: Kelvin Chow Executive Producer: Tang Chi Sim",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "社会"
+   ],
+   "stat": {
+    "view": 542998,
+    "like": 34496
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1V4411W75w",
+   "bvid": "BV1V4411W75w",
+   "title": "月神",
+   "title_raw": "〔治愈〕奥斯卡第八十四届金像奖短片《月神》，一部暖心的七分钟动画",
+   "summary": "百度",
+   "url": "https://www.bilibili.com/video/BV1V4411W75w",
+   "cover": "https://i2.hdslb.com/bfs/archive/5755b6221bd423d35e35afde4c29ea3f12210bd5.jpg",
+   "duration_sec": 418,
+   "duration": "6:58",
+   "owner": "愤怒的毛毛熊",
+   "pubdate": "2019-05-28",
+   "description": "百度",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "治愈"
+   ],
+   "stat": {
+    "view": 1024191,
+    "like": 11482
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Dh411o7r2",
+   "bvid": "BV1Dh411o7r2",
+   "title": "低头人生",
+   "title_raw": "中国获奥斯卡动画短片《低头人生》，太讽刺了！",
+   "summary": "tt5433902 导演: 谢承霖 编剧: 谢承霖 类型: 动画 / 短片 制片国家/地区: 中国大陆 人人： 语言: 无对白 上映日期: 2015-04-22(网络) 片长: 3分钟 又名: Life Smartphone 繁华的都市内，自远而近传来了咔咔声。一名白领拎着提包，只顾低头玩手中的手机。他和一位穿着连衣裙的女性擦身而过，不小心把对方的裙子扯了下",
+   "url": "https://www.bilibili.com/video/BV1Dh411o7r2",
+   "cover": "https://i0.hdslb.com/bfs/archive/1fa1eb39058164f8c19f7a0d7c938677a8927249.jpg",
+   "duration_sec": 168,
+   "duration": "2:48",
+   "owner": "小破站短视频精选",
+   "pubdate": "2020-07-19",
+   "description": "tt5433902 导演: 谢承霖 编剧: 谢承霖 类型: 动画 / 短片 制片国家/地区: 中国大陆 人人：http://www.rrdyw.cc/ 语言: 无对白 上映日期: 2015-04-22(网络) 片长: 3分钟 又名: Life Smartphone 繁华的都市内，自远而近传来了咔咔声。一名白领拎着提包，只顾低头玩手中的手机。他和一位穿着连衣裙的女性擦身而过，不小心把对方的裙子扯了下来，自己也撞到了电线杆上。那名女性全然没有注意自己只身着内衣的事实，也玩着手机走进了咖啡厅，一屁股坐死了椅子上的猫咪，也令后面的人受了伤。整个都市如此的安静，没有人大声喧哗，却绝不安宁。人们痴迷于掌中方寸虚拟世界，医生错误地给病人扎针，消防员没能救下跳楼的人，老人摔死孙子又被拿着电梯的工人戳死，妙龄女郎见死不救反而热衷与尸体和车祸现场合影。 多么奇怪的世界，每个人都低着脑袋，成为手机的俘虏……",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "默片",
+    "女性"
+   ],
+   "stat": {
+    "view": 377288,
+    "like": 10822
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1mt411e7Pt",
+   "bvid": "BV1mt411e7Pt",
+   "title": "小绳子 Cuerdas",
+   "title_raw": "【动画短片】获奖感人短片《小绳子 Cuerdas》",
+   "summary": "Cuerdas Cortometraje Oficial 灵感来自导演儿女的真实故事。故事虽然不新，但却以细腻取胜，讲述了两个特殊孩子之间的唯美到令人心痛的伟大友谊。2014 年获得西班牙戈雅奖最佳动画短片，2017 年获得世界动画杂志最佳专业 CG 奖。该片一共获奖 300 多次，并且还在继续参与评奖中。",
+   "url": "https://www.bilibili.com/video/BV1mt411e7Pt",
+   "cover": "https://i1.hdslb.com/bfs/archive/b2b6c1aacc9d5851ddf90b4d67d052891acd90f9.jpg",
+   "duration_sec": 656,
+   "duration": "10:56",
+   "owner": "小破站短视频精选",
+   "pubdate": "2018-12-17",
+   "description": "Cuerdas Cortometraje Oficial 灵感来自导演儿女的真实故事。故事虽然不新，但却以细腻取胜，讲述了两个特殊孩子之间的唯美到令人心痛的伟大友谊。2014 年获得西班牙戈雅奖最佳动画短片，2017 年获得世界动画杂志最佳专业 CG 奖。该片一共获奖 300 多次，并且还在继续参与评奖中。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 734968,
+    "like": 33449
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1ob4y1u71e",
+   "bvid": "BV1ob4y1u71e",
+   "title": "LOOP",
+   "title_raw": "人类的本质就是「重复」？获奖动画短片《LOOP》",
+   "summary": "在这个社会中，每个人都一遍又一遍地重复同样的行为，在这个社会中，每个人一遍又一遍地重复同样的行为，在这个社会中，每个人一遍又一遍地重复同样的行为，在这个社会中，每个人都一遍又一遍地重复同样的行为。 存在一遍又一遍地重复相同的动作。 Dirección / Direction: Pablo Polledri Productora / Production Co",
+   "url": "https://www.bilibili.com/video/BV1ob4y1u71e",
+   "cover": "https://i2.hdslb.com/bfs/archive/aa2be6d8bd28fe7c649a72ef06d3a3588521ebf8.jpg",
+   "duration_sec": 491,
+   "duration": "8:11",
+   "owner": "wuhu动画人空间",
+   "pubdate": "2023-11-13",
+   "description": "https://www.youtube.com/watch?v=ijq_UkRKSFw 在这个社会中，每个人都一遍又一遍地重复同样的行为，在这个社会中，每个人一遍又一遍地重复同样的行为，在这个社会中，每个人一遍又一遍地重复同样的行为，在这个社会中，每个人都一遍又一遍地重复同样的行为。 存在一遍又一遍地重复相同的动作。 Dirección / Direction: Pablo Polledri Productora / Production Company: UniKo, Maniac Planet Guión / Script: Pablo Polledri Producción / Production: Iván Miñambres Fotografía / Cinematography: Leire Acha Arte / Art: Pablo Polledri Montaje / ",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "社会"
+   ],
+   "stat": {
+    "view": 899219,
+    "like": 58673
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1oq4y1f7mL",
+   "bvid": "BV1oq4y1f7mL",
+   "title": "包宝宝",
+   "title_raw": "2019奥斯卡最佳动画短片《包宝宝》Bao，温情治愈",
+   "summary": "网络平台",
+   "url": "https://www.bilibili.com/video/BV1oq4y1f7mL",
+   "cover": "https://i1.hdslb.com/bfs/archive/9b01356c430a7edd468c235458012f3d9b9325d4.jpg",
+   "duration_sec": 457,
+   "duration": "7:37",
+   "owner": "野有蔓草萋萋",
+   "pubdate": "2021-05-16",
+   "description": "网络平台",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "治愈"
+   ],
+   "stat": {
+    "view": 498962,
+    "like": 1997
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1ib41147Lh",
+   "bvid": "BV1ib41147Lh",
+   "title": "鸟的故事",
+   "title_raw": "奥斯卡最佳动画短片【鸟的故事】",
+   "summary": "奥斯卡最佳短片 鸟的故事 希望大家投个币支持一下新人up",
+   "url": "https://www.bilibili.com/video/BV1ib41147Lh",
+   "cover": "https://i1.hdslb.com/bfs/archive/2ad498379c6865caeb210f2ef2aa7b4236091e61.jpg",
+   "duration_sec": 206,
+   "duration": "3:26",
+   "owner": "与浩然同行",
+   "pubdate": "2019-03-26",
+   "description": "奥斯卡最佳短片 鸟的故事 希望大家投个币支持一下新人up",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 121486,
+    "like": 619
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Ux411q7ct",
+   "bvid": "BV1Ux411q7ct",
+   "title": "狐狸和老鼠",
+   "title_raw": "【短片】奥斯卡获奖短片 狐狸和老鼠【Mr.Harry的一些奇怪的视频搬运翻译】",
+   "summary": "来自法国动画节esma作品 一只小老鼠和一只狐狸的温馨故事",
+   "url": "https://www.bilibili.com/video/BV1Ux411q7ct",
+   "cover": "https://i1.hdslb.com/bfs/archive/67827d88ac66d2e8b4b316289d6e04683a9211a4.jpg",
+   "duration_sec": 381,
+   "duration": "6:21",
+   "owner": "Mr-Harry",
+   "pubdate": "2017-07-28",
+   "description": "来自法国动画节esma作品 一只小老鼠和一只狐狸的温馨故事",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 476008,
+    "like": 7623
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1q341147JE",
+   "bvid": "BV1q341147JE",
+   "title": "昼与夜",
+   "title_raw": "皮克斯奥斯卡提名动画短片《昼与夜》",
+   "summary": "导演: 泰迪·牛顿 编剧: 贾思敏·迈克格拉德 类型: 动画 / 短片 制片国家/地区: 美国 语言: 英语 上映日期: 2010-06-18 片长: 6 分钟 又名: 阳光昼与阴郁夜 / 白天与夜晚 / 日与夜 / Day and Night IMDb: tt1620446 清晨的第一缕阳光照在碧绿的草原上，雄鸡对日长鸣，农场此起彼伏传来家畜的叫声。随着镜",
+   "url": "https://www.bilibili.com/video/BV1q341147JE",
+   "cover": "https://i2.hdslb.com/bfs/archive/7929bac5b650c2965015846a92f39cb07a734209.jpg",
+   "duration_sec": 368,
+   "duration": "6:08",
+   "owner": "小破站短视频精选",
+   "pubdate": "2021-12-05",
+   "description": "https://www.sinemalar.com/film/77797/day-night 导演: 泰迪·牛顿 编剧: 贾思敏·迈克格拉德 类型: 动画 / 短片 制片国家/地区: 美国 语言: 英语 上映日期: 2010-06-18 片长: 6 分钟 又名: 阳光昼与阴郁夜 / 白天与夜晚 / 日与夜 / Day and Night IMDb: tt1620446 清晨的第一缕阳光照在碧绿的草原上，雄鸡对日长鸣，农场此起彼伏传来家畜的叫声。随着镜头拉远，我们看见这片灿烂光明的三维世界竟然藏在一个二维精灵的体内。他似乎是昼之精灵，他与白天融为一体。迈着轻快的步伐，昼之精灵四处游走，突然看见一个呼呼大睡的家伙。那也是一个二维精灵，其身体里是安静祥和的三维黑夜世界，小羊羔正一只只从围栏处越过。显而易见，这是夜之精灵，他不幸被充满好奇的昼之精灵吵醒，两个小家伙你追我赶，自以为是，互较高下，不肯",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 208121,
+    "like": 7937
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1BR4y1s7Ev",
+   "bvid": "BV1BR4y1s7Ev",
+   "title": "伤心加油站",
+   "title_raw": "为丈夫复仇！加拿大获奖动画短片《伤心加油站》",
+   "summary": "www.youtube.com/watch?v=uVzT6D-yhZg 导演: 米雪儿郝 / 菲恩詹 / 艾蜜莉徐 / 林荣藤 / 章永赫 / 金知秀 / 章素彬 / 阿鲁纳奇雅妮 / 凯瑟琳伊万诺夫乔治亚卡瓦纳 / 丹尼尔布雷克 / 史达林卢 类型: 动画 / 短片 制片国家/地区: 加拿大 上映日期: 2021(台中国际动画影展) 片长: 10分钟 妻子",
+   "url": "https://www.bilibili.com/video/BV1BR4y1s7Ev",
+   "cover": "https://i1.hdslb.com/bfs/archive/1ece96a0d237d4bcf15e3f7b49540e8475c199e9.jpg",
+   "duration_sec": 550,
+   "duration": "9:10",
+   "owner": "小破站短视频精选",
+   "pubdate": "2021-12-08",
+   "description": "www.youtube.com/watch?v=uVzT6D-yhZg 导演: 米雪儿郝 / 菲恩詹 / 艾蜜莉徐 / 林荣藤 / 章永赫 / 金知秀 / 章素彬 / 阿鲁纳奇雅妮 / 凯瑟琳伊万诺夫乔治亚卡瓦纳 / 丹尼尔布雷克 / 史达林卢 类型: 动画 / 短片 制片国家/地区: 加拿大 上映日期: 2021(台中国际动画影展) 片长: 10分钟 妻子为了帮去世的丈夫报仇，在追踪犯人的过程中也让自己身陷险境，复仇是否成功只差临门一脚。然而，就在最后一刻，摇摆不定的选择，究竟将她推入黑暗深渊还是走出光明之路？",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 977447,
+    "like": 68752
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Es41197CL",
+   "bvid": "BV1Es41197CL",
+   "title": "Feast",
+   "title_raw": "【动画/爱情】《Feast》美味盛宴-2014-第87届奥斯卡最佳动画短片（完整版）",
+   "summary": "这是一部迪士尼动画工作室（Walt Disney Animation Studios）的最新短片《盛宴》（Feast）即将随11月7日的迪士尼动画片《六大英雄》（Big Hero 6）上映，这部短片今年6月10日在法国昂西国际动画电影节上首映，短片的剧情非常紧凑，讲述了一个男人的爱情生活，不过这一切都是通过他的狗狗每天与主人所吃的东西反映出来的。值得看看。",
+   "url": "https://www.bilibili.com/video/BV1Es41197CL",
+   "cover": "https://i2.hdslb.com/bfs/archive/42b8ae1839d6889eb94e7fd73502565d7ef3c3a6.jpg",
+   "duration_sec": 373,
+   "duration": "6:13",
+   "owner": "大吃号船长",
+   "pubdate": "2016-02-19",
+   "description": "这是一部迪士尼动画工作室（Walt Disney Animation Studios）的最新短片《盛宴》（Feast）即将随11月7日的迪士尼动画片《六大英雄》（Big Hero 6）上映，这部短片今年6月10日在法国昂西国际动画电影节上首映，短片的剧情非常紧凑，讲述了一个男人的爱情生活，不过这一切都是通过他的狗狗每天与主人所吃的东西反映出来的。值得看看。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "爱情"
+   ],
+   "stat": {
+    "view": 813820,
+    "like": 23658
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1X541197gV",
+   "bvid": "BV1X541197gV",
+   "title": "父与女",
+   "title_raw": "【父与女】 4k重制 第73届奥斯卡最佳动画短片",
+   "summary": "原视频素材： 《父与女》（Father and Daughter）是迈克尔·度德威特执导拍摄的一部剧情动画片，于2001年5月27日在波兰上映，曾获得第73届奥斯卡最佳动画短片奖。影片讲述父亲带着女儿一起骑单车，他们穿过林间小路，骑过草地，骑上高坡，来到平静的湖边，而父亲在河岸挥别而去。思念父亲的女儿，骑着单车，日复一日，年复一年的，来到河畔等待。",
+   "url": "https://www.bilibili.com/video/BV1X541197gV",
+   "cover": "https://i0.hdslb.com/bfs/archive/cd4ab2fc5a78079e42a547e336da6f07d4f8f2f0.jpg",
+   "duration_sec": 512,
+   "duration": "8:32",
+   "owner": "IS烂柯人",
+   "pubdate": "2022-05-18",
+   "description": "原视频素材：https://www.youtube.com/watch?v=Oo4KXZVApsQ 《父与女》（Father and Daughter）是迈克尔·度德威特执导拍摄的一部剧情动画片，于2001年5月27日在波兰上映，曾获得第73届奥斯卡最佳动画短片奖。影片讲述父亲带着女儿一起骑单车，他们穿过林间小路，骑过草地，骑上高坡，来到平静的湖边，而父亲在河岸挥别而去。思念父亲的女儿，骑着单车，日复一日，年复一年的，来到河畔等待。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 94137,
+    "like": 2491
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Xz4y1Q7Kx",
+   "bvid": "BV1Xz4y1Q7Kx",
+   "title": "纸人",
+   "title_raw": "第85届奥斯卡最佳动画短片——《纸人》1080p",
+   "summary": "www.youtube.com 《纸人》由前皮克斯员工，首次做导演的John Kah 影片结合了手绘动画和CG电脑动画，并获得第85届奥斯卡最佳动画短片奖。 故事发生在20世纪40年代的纽约，一天早晨，一个在上班途中的男人无意间在地铁站偶遇一名美丽女子，女子意外地在男人的文件上留 下一个鲜红唇印。唇印和女子一起深深地印在了男人的心里。本以为这只是一面之缘，但",
+   "url": "https://www.bilibili.com/video/BV1Xz4y1Q7Kx",
+   "cover": "https://i0.hdslb.com/bfs/archive/bdcc97cf9382bb6108b85f87a64b273a865fa754.jpg",
+   "duration_sec": 394,
+   "duration": "6:34",
+   "owner": "枫林6699",
+   "pubdate": "2020-06-24",
+   "description": "www.youtube.com 《纸人》由前皮克斯员工，首次做导演的John Kah 影片结合了手绘动画和CG电脑动画，并获得第85届奥斯卡最佳动画短片奖。 故事发生在20世纪40年代的纽约，一天早晨，一个在上班途中的男人无意间在地铁站偶遇一名美丽女子，女子意外地在男人的文件上留 下一个鲜红唇印。唇印和女子一起深深地印在了男人的心里。本以为这只是一面之缘，但无精打采的男人很快发现这个美丽的女子竟然出现在他办公室街对面的那幢大楼里。女子随时会离开，男人知道必须做点什么引起女子的注意。办公",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "职场",
+    "历史"
+   ],
+   "stat": {
+    "view": 92248,
+    "like": 2673
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV19W4y1P73r",
+   "bvid": "BV19W4y1P73r",
+   "title": "钓鱼人",
+   "title_raw": "别等失去才后悔没珍惜，获奖动画短片《钓鱼人》",
+   "summary": "Noah's atelier 男人 Noah 住在海滨小镇的边缘，他一直喜欢的女生搬离了这里，而手中仅有的念想——一枚女生儿时送的吊坠，也不小心掉进海中，被鱼吞掉。 为了找回吊坠，Noah 从此每天都在早出晚归地钓鱼，对其他的一切不闻不问。而镇上负责点灯的老人 Ivo 逐渐发现了这一点，一直悉心、但默默守护着 Noah 回家的路。 短片的节奏与如今的时代格格",
+   "url": "https://www.bilibili.com/video/BV19W4y1P73r",
+   "cover": "https://i0.hdslb.com/bfs/archive/8e8b02dd4c245b3aeedfc16c664819fb253fc4d4.jpg",
+   "duration_sec": 814,
+   "duration": "13:34",
+   "owner": "YouTube精选字幕组",
+   "pubdate": "2024-01-08",
+   "description": "Noah's atelier 男人 Noah 住在海滨小镇的边缘，他一直喜欢的女生搬离了这里，而手中仅有的念想——一枚女生儿时送的吊坠，也不小心掉进海中，被鱼吞掉。 为了找回吊坠，Noah 从此每天都在早出晚归地钓鱼，对其他的一切不闻不问。而镇上负责点灯的老人 Ivo 逐渐发现了这一点，一直悉心、但默默守护着 Noah 回家的路。 短片的节奏与如今的时代格格不入，不仅叙事很慢，许多故事细节也都没有解说、只是隐藏在画面之中。但如果能够静心细细品味，能够感受到的，是短视频远远无法传达的感动。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 86479,
+    "like": 4583
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1B34y167mE",
+   "bvid": "BV1B34y167mE",
+   "title": "你是谁？",
+   "title_raw": "这支短片很治愈！智利获奖动画短片《你是谁？》",
+   "summary": "www.youtube.com/watch?v=GWGbOjlJDkU 导演: Julio Pot 编剧: Francisco Javier Olea 主演: Al Gravelle / Jay Alessandra / Mario Caceres 类型: 动画 制片国家/地区: 智利 Chile 语言: 英语 上映日期: 2019-09-03(墨西哥) 片",
+   "url": "https://www.bilibili.com/video/BV1B34y167mE",
+   "cover": "https://i1.hdslb.com/bfs/archive/5cceb813e700be935a755ceba8386bd08acd1033.jpg",
+   "duration_sec": 812,
+   "duration": "13:32",
+   "owner": "小破站短视频精选",
+   "pubdate": "2021-12-19",
+   "description": "www.youtube.com/watch?v=GWGbOjlJDkU 导演: Julio Pot 编剧: Francisco Javier Olea 主演: Al Gravelle / Jay Alessandra / Mario Caceres 类型: 动画 制片国家/地区: 智利 Chile 语言: 英语 上映日期: 2019-09-03(墨西哥) 片长: 13 分钟 又名: ¿Y ud quién es? IMDb: tt12762898",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "治愈"
+   ],
+   "stat": {
+    "view": 83815,
+    "like": 3027
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1BQrNB7EkR",
+   "bvid": "BV1BQrNB7EkR",
+   "title": "上帝怯场",
+   "title_raw": "戛纳提名动画短片《上帝怯场》",
+   "summary": "火车旅途中，艾瑞尔与保罗以素描彼此内心最深恐惧来消磨时间。当神秘乘客吉尔达突然介入这场游戏时，事态开始失控。然而她与恐惧的关系，远比两人玩笑般的涂鸦来得危险。",
+   "url": "https://www.bilibili.com/video/BV1BQrNB7EkR",
+   "cover": "https://i0.hdslb.com/bfs/archive/9f7c8058e99416b81e406efed2479e702b3316d6.jpg",
+   "duration_sec": 892,
+   "duration": "14:52",
+   "owner": "小破站短视频精选",
+   "pubdate": "2026-01-09",
+   "description": "https://www.imdb.com/title/tt37675860/ 火车旅途中，艾瑞尔与保罗以素描彼此内心最深恐惧来消磨时间。当神秘乘客吉尔达突然介入这场游戏时，事态开始失控。然而她与恐惧的关系，远比两人玩笑般的涂鸦来得危险。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 79820,
+    "like": 4206
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1E34y147rC",
+   "bvid": "BV1E34y147rC",
+   "title": "洞穴",
+   "title_raw": "社恐必看！奥斯卡提名皮克斯治愈动画《洞穴》",
+   "summary": "YouTube 导演: 玛德琳·莎拉芬 编剧: 玛德琳·莎拉芬 类型: 动画 / 短片 制片国家/地区: 美国 语言: 英语 上映日期: 2020-12-25(美国) 片长: 6分钟 又名: 小窝 聚焦地下动物世界，主角是一只想要独居的兔子，打好洞之后却发现有鼹鼠、老鼠等各位热情的邻居上门，原来四通八达，只想独自一兔的它瑟瑟发抖……",
+   "url": "https://www.bilibili.com/video/BV1E34y147rC",
+   "cover": "https://i0.hdslb.com/bfs/archive/b69efad1f9fe4069e18b97acd1944262e92ef93c.jpg",
+   "duration_sec": 394,
+   "duration": "6:34",
+   "owner": "小破站短视频精选",
+   "pubdate": "2022-03-30",
+   "description": "YouTube 导演: 玛德琳·莎拉芬 编剧: 玛德琳·莎拉芬 类型: 动画 / 短片 制片国家/地区: 美国 语言: 英语 上映日期: 2020-12-25(美国) 片长: 6分钟 又名: 小窝 聚焦地下动物世界，主角是一只想要独居的兔子，打好洞之后却发现有鼹鼠、老鼠等各位热情的邻居上门，原来四通八达，只想独自一兔的它瑟瑟发抖……",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "治愈"
+   ],
+   "stat": {
+    "view": 1616910,
+    "like": 58749
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Cy4y1v7vP",
+   "bvid": "BV1Cy4y1v7vP",
+   "title": "Who Are You 你是谁：人生的意义",
+   "title_raw": "【获奖动画短片】Who Are You 你是谁：人生的意义（双语字幕）",
+   "summary": "\"The two most important days in your life are the day you are born and the day you find out why.\"--Mark Twain",
+   "url": "https://www.bilibili.com/video/BV1Cy4y1v7vP",
+   "cover": "https://i2.hdslb.com/bfs/archive/477746aba7cc762eb54c54555844f32b3c07af5e.jpg",
+   "duration_sec": 812,
+   "duration": "13:32",
+   "owner": "KK_Fantasy",
+   "pubdate": "2020-12-12",
+   "description": "\"The two most important days in your life are the day you are born and the day you find out why.\"--Mark Twain",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "科幻"
+   ],
+   "stat": {
+    "view": 50510,
+    "like": 734
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Tf421Q7Zc",
+   "bvid": "BV1Tf421Q7Zc",
+   "title": "闪耀",
+   "title_raw": "有时人生出现“故障”也没关系。来自巴西的获奖动画短片《闪耀》",
+   "summary": "Happy Kappy 在一个“灯泡人”组成的世界中，大家都会通过发光来表达自己。然而一个少年不知为何失去了光芒，这让它觉得自己格格不入，慢慢陷入了抑郁......",
+   "url": "https://www.bilibili.com/video/BV1Tf421Q7Zc",
+   "cover": "https://i1.hdslb.com/bfs/archive/1dbb062785eee20c96be70b418e58bf116452f41.jpg",
+   "duration_sec": 171,
+   "duration": "2:51",
+   "owner": "YouTube精选字幕组",
+   "pubdate": "2024-06-21",
+   "description": "Happy Kappy 在一个“灯泡人”组成的世界中，大家都会通过发光来表达自己。然而一个少年不知为何失去了光芒，这让它觉得自己格格不入，慢慢陷入了抑郁......",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "成长"
+   ],
+   "stat": {
+    "view": 46675,
+    "like": 5017
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1KyB1BeELY",
+   "bvid": "BV1KyB1BeELY",
+   "title": "生生不息",
+   "title_raw": "[无需字幕]生生不息/奥斯卡最佳动画短片短名单 Forevergreen (2025)",
+   "summary": "AMAzon 一只孤儿小熊和一棵慈爱的树之间展开了一段欢乐的冒险之旅。然而，当小熊抵挡不住食物的诱惑时，一切都变得危机四伏。小熊陷入绝望，随之而来的是火灾和致命的危险，直到树的无私奉献才拯救了它。",
+   "url": "https://www.bilibili.com/video/BV1KyB1BeELY",
+   "cover": "https://i1.hdslb.com/bfs/archive/9b4420ce15a0b95dd5f06f8be5dac91b7ada2805.jpg",
+   "duration_sec": 784,
+   "duration": "13:04",
+   "owner": "typacm",
+   "pubdate": "2025-12-25",
+   "description": "AMAzon 一只孤儿小熊和一棵慈爱的树之间展开了一段欢乐的冒险之旅。然而，当小熊抵挡不住食物的诱惑时，一切都变得危机四伏。小熊陷入绝望，随之而来的是火灾和致命的危险，直到树的无私奉献才拯救了它。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 38099,
+    "like": 1064
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1UZ4y1J7Tg",
+   "bvid": "BV1UZ4y1J7Tg",
+   "title": "战争结束了！受列侬和洋子音乐的启发",
+   "title_raw": "[无需字幕]战争结束了！受列侬和洋子音乐的启发/奥斯卡最佳动画短片提名 WAR IS OVER! Inspired by the Music of John",
+   "summary": "以第一次世界大战为背景，一场毫无意义的战争正在激烈进行，但冲突双方的两名士兵正在玩一场欢乐的国际象棋游戏。，通过一只英勇的信鸽在战场上为士兵们传递信息。 游戏和战争逐渐走向高潮，但两名士兵都不认识自己的对手。 无论谁赢得了比赛，有一件事是肯定的：战争没有赢家。",
+   "url": "https://www.bilibili.com/video/BV1UZ4y1J7Tg",
+   "cover": "https://i2.hdslb.com/bfs/archive/4771ed33b8e8ca55dc8ed7ec3188ebb63bfd497a.jpg",
+   "duration_sec": 672,
+   "duration": "11:12",
+   "owner": "typacm",
+   "pubdate": "2024-01-24",
+   "description": "https://weibo.com/5585898541/NDlyqfKf8 以第一次世界大战为背景，一场毫无意义的战争正在激烈进行，但冲突双方的两名士兵正在玩一场欢乐的国际象棋游戏。，通过一只英勇的信鸽在战场上为士兵们传递信息。 游戏和战争逐渐走向高潮，但两名士兵都不认识自己的对手。 无论谁赢得了比赛，有一件事是肯定的：战争没有赢家。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "战争",
+    "音乐"
+   ],
+   "stat": {
+    "view": 35956,
+    "like": 1424
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1b2BKBfEjs",
+   "bvid": "BV1b2BKBfEjs",
+   "title": "树冠羞避",
+   "title_raw": "2026奥斯卡提名动画短片《树冠羞避》，这才是奥斯卡该有的样子",
+   "summary": "GOBELINS Paris 40岁的海伦来到法国乡下探望年迈的母亲。但母亲的行为与以往大不相同，她似乎与花园尽头的植物、昆虫以及那棵老橡树建立了一种奇特的联系…… 短片来自于精品频出的法国GOBELINS Paris学院，没有猎奇、没有政治正确，只有最纯粹的情感表达，完全就是心目中奥斯卡该有的样子",
+   "url": "https://www.bilibili.com/video/BV1b2BKBfEjs",
+   "cover": "https://i0.hdslb.com/bfs/archive/16143b8adc1519534ddef9c7ffe5652183452f61.jpg",
+   "duration_sec": 536,
+   "duration": "8:56",
+   "owner": "YouTube精选字幕组",
+   "pubdate": "2025-12-23",
+   "description": "GOBELINS Paris 40岁的海伦来到法国乡下探望年迈的母亲。但母亲的行为与以往大不相同，她似乎与花园尽头的植物、昆虫以及那棵老橡树建立了一种奇特的联系…… 短片来自于精品频出的法国GOBELINS Paris学院，没有猎奇、没有政治正确，只有最纯粹的情感表达，完全就是心目中奥斯卡该有的样子",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 33574,
+    "like": 1464
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Jr4y187mu",
+   "bvid": "BV1Jr4y187mu",
+   "title": "失物招领",
+   "title_raw": "【皮克斯短片】失物招领",
+   "summary": "YouTube 《Lou》，2017年《赛车总动员3》附录短篇。 奥斯卡最佳动画短片奖提名。 主人公Lou是一只藏身在学校失物招领处小木箱中的小精灵，它的身体由箱子中的各种遗失物品组成，负责看管小朋友们弄丢的东西并提醒他们来取。一个课间，突然出现的校园恶霸引起Lou的注意，于是，一场背包争夺战随即展开……",
+   "url": "https://www.bilibili.com/video/BV1Jr4y187mu",
+   "cover": "https://i1.hdslb.com/bfs/archive/562218e2c3aeb54b8385e5a7024cf06ba1822276.jpg",
+   "duration_sec": 416,
+   "duration": "6:56",
+   "owner": "吃货大叔睇乜野",
+   "pubdate": "2022-04-30",
+   "description": "YouTube 《Lou》，2017年《赛车总动员3》附录短篇。 奥斯卡最佳动画短片奖提名。 主人公Lou是一只藏身在学校失物招领处小木箱中的小精灵，它的身体由箱子中的各种遗失物品组成，负责看管小朋友们弄丢的东西并提醒他们来取。一个课间，突然出现的校园恶霸引起Lou的注意，于是，一场背包争夺战随即展开……",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "校园"
+   ],
+   "stat": {
+    "view": 31931,
+    "like": 983
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1kDtu6TE9z",
+   "bvid": "BV1kDtu6TE9z",
+   "title": "退休计划",
+   "title_raw": "入围本届奥斯卡，经典英式幽默动画短片《退休计划》",
+   "summary": "人的一生，到底能有多少事情是梦想过，但又没时间做的呢？要是都留着退休后，一起全部做完，岂不是能把人爽死的“完美养老方案”？ 这部入围奥斯卡的《退休计划》，以简单到极限的画风，配上平淡的英式黑色幽默。精准描绘了当下年轻人面对花花世界，忙碌、欲望、贫穷与迷茫交织的精神世界......",
+   "url": "https://www.bilibili.com/video/BV1kDtu6TE9z",
+   "cover": "https://i0.hdslb.com/bfs/archive/0a2145d9e9be518b6adaded6cf32b530a93f579b.jpg",
+   "duration_sec": 425,
+   "duration": "7:05",
+   "owner": "Max放映厅",
+   "pubdate": "2026-09-01",
+   "description": "人的一生，到底能有多少事情是梦想过，但又没时间做的呢？要是都留着退休后，一起全部做完，岂不是能把人爽死的“完美养老方案”？ 这部入围奥斯卡的《退休计划》，以简单到极限的画风，配上平淡的英式黑色幽默。精准描绘了当下年轻人面对花花世界，忙碌、欲望、贫穷与迷茫交织的精神世界......",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "喜剧"
+   ],
+   "stat": {
+    "view": 22540,
+    "like": 789
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1WQ4y1w7Nn",
+   "bvid": "BV1WQ4y1w7Nn",
+   "title": "一种遗嘱",
+   "title_raw": "[英语无字]一种遗嘱/奥斯卡最佳动画短片入围 A Kind of Testament (2023)",
+   "summary": "VIMEO 一位年轻女子在互联网上发现了一些动画，这些动画显然是根据她的私人自拍照创作的。 一名身份不明的同名女性承认身份盗窃，但这位女性还没来得及回答为什么就去世了。",
+   "url": "https://www.bilibili.com/video/BV1WQ4y1w7Nn",
+   "cover": "https://i0.hdslb.com/bfs/archive/54749540032602050b76da49b9fa88d439224670.jpg",
+   "duration_sec": 986,
+   "duration": "16:26",
+   "owner": "typacm",
+   "pubdate": "2024-01-17",
+   "description": "VIMEO 一位年轻女子在互联网上发现了一些动画，这些动画显然是根据她的私人自拍照创作的。 一名身份不明的同名女性承认身份盗窃，但这位女性还没来得及回答为什么就去世了。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "女性"
+   ],
+   "stat": {
+    "view": 21123,
+    "like": 1106
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV16D4y1p7yD",
+   "bvid": "BV16D4y1p7yD",
+   "title": "黑洞滑水道",
+   "title_raw": "[自译中字]黑洞滑水道/奥斯卡最佳动画短片入围 Black Slide (2021)",
+   "summary": "Amazon 胆小的艾维恩正准备进入青春期，某天他和最好的朋友闯进了水乐园里最热门也是尖叫声最多的滑水道，他在长长的水道内竟意外得到预知未来的能力。",
+   "url": "https://www.bilibili.com/video/BV16D4y1p7yD",
+   "cover": "https://i0.hdslb.com/bfs/archive/eaaedc768b149092734e8b9e72ea9f4bb7f433c3.jpg",
+   "duration_sec": 668,
+   "duration": "11:08",
+   "owner": "typacm",
+   "pubdate": "2023-01-10",
+   "description": "Amazon 胆小的艾维恩正准备进入青春期，某天他和最好的朋友闯进了水乐园里最热门也是尖叫声最多的滑水道，他在长长的水道内竟意外得到预知未来的能力。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "科幻",
+    "成长"
+   ],
+   "stat": {
+    "view": 18642,
+    "like": 791
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Xv4y1y7Zc",
+   "bvid": "BV1Xv4y1y7Zc",
+   "title": "鸵鸟先知",
+   "title_raw": "[自译中字]鸵鸟先知/奥斯卡最佳动画短片入围An Ostrich Told Me the World is Fake and I Think I Believe",
+   "summary": "Vimeo 当一个年轻的电话销售员面对一只神秘的会说话的鸵鸟时，他了解到这个世界是一个谎言。他抛开眼前日益减少的面包机销售额，集中精力说服他的同事相信他的可怕发现。生活在定格动画的世界里是一件很可怕的事情，在那里你的脸会脱落，一只巨手控制着你的一举一动。",
+   "url": "https://www.bilibili.com/video/BV1Xv4y1y7Zc",
+   "cover": "https://i1.hdslb.com/bfs/archive/23d4eddee53e3211b1d71b1696e0cc0aa8177fca.jpg",
+   "duration_sec": 679,
+   "duration": "11:19",
+   "owner": "typacm",
+   "pubdate": "2023-01-15",
+   "description": "Vimeo 当一个年轻的电话销售员面对一只神秘的会说话的鸵鸟时，他了解到这个世界是一个谎言。他抛开眼前日益减少的面包机销售额，集中精力说服他的同事相信他的可怕发现。生活在定格动画的世界里是一件很可怕的事情，在那里你的脸会脱落，一只巨手控制着你的一举一动。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 16848,
+    "like": 857
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1c7h86wEgK",
+   "bvid": "BV1c7h86wEgK",
+   "title": "泪珠成珍的女孩",
+   "title_raw": "2026奥斯卡提名最佳动画短片《泪珠成珍的女孩 》引人入胜的寓言故事！一个悲伤的女孩，一个爱她的男孩，以及贪婪商人如何自食恶果的故事。。。",
+   "summary": "-",
+   "url": "https://www.bilibili.com/video/BV1c7h86wEgK",
+   "cover": "https://i2.hdslb.com/bfs/archive/fc58cf5c06ae3b9a5bb6bc2054a23fa105aa45ae.jpg",
+   "duration_sec": 1045,
+   "duration": "17:25",
+   "owner": "Max放映厅",
+   "pubdate": "2026-09-23",
+   "description": "-",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "女性"
+   ],
+   "stat": {
+    "view": 11214,
+    "like": 552
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1FQ4y1w7FT",
+   "bvid": "BV1FQ4y1w7FT",
+   "title": "我们的制服",
+   "title_raw": "[自译中字]我们的制服/奥斯卡最佳动画短片提名 Our Uniform (2023)",
+   "summary": "一名伊朗女孩通过旧校服的皱纹和面料展现了她的学校记忆。 她承认自己只不过是一个“女性”，并在学生时代探索了这个想法的根源。",
+   "url": "https://www.bilibili.com/video/BV1FQ4y1w7FT",
+   "cover": "https://i0.hdslb.com/bfs/archive/22e236727b253eada7cde37aeed786afc45eb3e4.jpg",
+   "duration_sec": 421,
+   "duration": "7:01",
+   "owner": "typacm",
+   "pubdate": "2024-01-26",
+   "description": "https://weibo.com/5585898541/NDuMkBlPA 一名伊朗女孩通过旧校服的皱纹和面料展现了她的学校记忆。 她承认自己只不过是一个“女性”，并在学生时代探索了这个想法的根源。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "校园",
+    "女性"
+   ],
+   "stat": {
+    "view": 8244,
+    "like": 566
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1r84y1Y7HS",
+   "bvid": "BV1r84y1Y7HS",
+   "title": "比我想记住的更多",
+   "title_raw": "[自译中字]比我想记住的更多/奥斯卡最佳动画短片入围 More Than I Want to Remember (2022)",
+   "summary": "Amazon 一天晚上，在刚果东南部的家中，14岁的穆格尼被炸弹的声音惊醒。当她的家人分散到周围的森林中自救时，Mugeni发现只剩自己一个人。",
+   "url": "https://www.bilibili.com/video/BV1r84y1Y7HS",
+   "cover": "https://i1.hdslb.com/bfs/archive/862bcd544f66825aed6e4089397572e43d2205f3.jpg",
+   "duration_sec": 874,
+   "duration": "14:34",
+   "owner": "typacm",
+   "pubdate": "2023-01-03",
+   "description": "Amazon 一天晚上，在刚果东南部的家中，14岁的穆格尼被炸弹的声音惊醒。当她的家人分散到周围的森林中自救时，Mugeni发现只剩自己一个人。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 7636,
+    "like": 346
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV12w411R7C1",
+   "bvid": "BV12w411R7C1",
+   "title": "老人与海",
+   "title_raw": "老人与海 (1999) 奥斯卡最佳动画短片",
+   "summary": "还原海明威的小说《老人与海》，每一帧都是绝美的玻璃油画。海明威开创写作的“冰山理论”，通过小说的文字呈现1/8的同时，让读者感受另外7/8的存在。读海明威，需要沉浸和活跃大胆的想象。",
+   "url": "https://www.bilibili.com/video/BV12w411R7C1",
+   "cover": "https://i1.hdslb.com/bfs/archive/3b3e7da717ea5d9cba5fd04ff6eee903b49f6825.jpg",
+   "duration_sec": 1305,
+   "duration": "21:45",
+   "owner": "TalentQ_",
+   "pubdate": "2021-07-08",
+   "description": "还原海明威的小说《老人与海》，每一帧都是绝美的玻璃油画。海明威开创写作的“冰山理论”，通过小说的文字呈现1/8的同时，让读者感受另外7/8的存在。读海明威，需要沉浸和活跃大胆的想象。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 138356,
+    "like": 2205
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1ft421u7Jz",
+   "bvid": "BV1ft421u7Jz",
+   "title": "课间播放",
+   "title_raw": "Robin Robin 知更鸟罗宾 【奥斯卡最佳动画短片】课间播放",
+   "summary": "【奥斯卡最佳动画短片】仅作学习用途，转载侵删",
+   "url": "https://www.bilibili.com/video/BV1ft421u7Jz",
+   "cover": "https://i2.hdslb.com/bfs/archive/842465d39678a6a0e7297b46d71f31d89c633b4b.jpg",
+   "duration_sec": 1757,
+   "duration": "29:17",
+   "owner": "JinyuLOO",
+   "pubdate": "2024-05-12",
+   "description": "【奥斯卡最佳动画短片】仅作学习用途，转载侵删",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 105496,
+    "like": 1816
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV17s411d7CT",
+   "bvid": "BV17s411d7CT",
+   "title": "超清",
+   "title_raw": "【超清】奥斯卡最佳动画短片获奖——老人与海（1999）",
+   "summary": "经典名著改变的经典动画 油画渲染特效今天看来依然是非酷炫，和原著的意境非常配 永恒的经典，看多少编都不会腻",
+   "url": "https://www.bilibili.com/video/BV17s411d7CT",
+   "cover": "https://i0.hdslb.com/bfs/archive/9901bc260d63824cec76854110baa62a17e3a6a5.jpg",
+   "duration_sec": 1229,
+   "duration": "20:29",
+   "owner": "巴氏消独夜",
+   "pubdate": "2015-11-08",
+   "description": "经典名著改变的经典动画 油画渲染特效今天看来依然是非酷炫，和原著的意境非常配 永恒的经典，看多少编都不会腻",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 941480,
+    "like": 35467
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Ex411j7aQ",
+   "bvid": "BV1Ex411j7aQ",
+   "title": "彼得与狼",
+   "title_raw": "第80届奥斯卡最佳动画短片 彼得与狼",
+   "summary": "光盘刻录 第80届奥斯卡最佳动画短片 彼得与狼",
+   "url": "https://www.bilibili.com/video/BV1Ex411j7aQ",
+   "cover": "https://i0.hdslb.com/bfs/archive/fc573def630b6c54cc4750eeaefcfb54b7144b01.jpg",
+   "duration_sec": 2027,
+   "duration": "33:47",
+   "owner": "零度骑士阿忒弥斯",
+   "pubdate": "2017-11-05",
+   "description": "光盘刻录 第80届奥斯卡最佳动画短片 彼得与狼",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 230706,
+    "like": 2535
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1SGEzzpEck",
+   "bvid": "BV1SGEzzpEck",
+   "title": "也许是大象",
+   "title_raw": "[英语英字]也许是大象/奥斯卡最佳动画短片短名单 Kanskje det var elefanter (2024)",
+   "summary": "VIMEO 70 年代，三个叛逆的少女、一个不安分的母亲、一个与土豆打交道的父亲，也许还有几头大象，来到了繁华的内罗毕。他们的家庭从此发生了翻天覆地的变化。",
+   "url": "https://www.bilibili.com/video/BV1SGEzzpEck",
+   "cover": "https://i2.hdslb.com/bfs/archive/4861194ad4cbd1dc15f896af557a0622e55b9542.jpg",
+   "duration_sec": 1008,
+   "duration": "16:48",
+   "owner": "typacm",
+   "pubdate": "2025-05-15",
+   "description": "VIMEO 70 年代，三个叛逆的少女、一个不安分的母亲、一个与土豆打交道的父亲，也许还有几头大象，来到了繁华的内罗毕。他们的家庭从此发生了翻天覆地的变化。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "亲情",
+    "历史"
+   ],
+   "stat": {
+    "view": 4450,
+    "like": 214
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1gr4y1U7gE",
+   "bvid": "BV1gr4y1U7gE",
+   "title": "我们，再一次 Us Again",
+   "title_raw": "[奥斯卡最佳动画短片入围][无需字幕]我们，再一次 Us Again (2021)",
+   "summary": "蓝光压制 讲述一个老年男子Art和他有一颗年轻的心的妻子Dot的故事，他们在一个魔法般的晚上，通过舞蹈找回了自己一生的热情。这部时长约6分钟的短片没有台词，将通过舞蹈和funk和soul味道的配乐来讲述故事。片中舞步是与曾亮相《World of Dance》的知名夫妻舞者Keone和Mari Madrid合作，他们曾有一段热门舞蹈的设计是扮演一对老人。",
+   "url": "https://www.bilibili.com/video/BV1gr4y1U7gE",
+   "cover": "https://i2.hdslb.com/bfs/archive/68283640a365693ecb62b43b7fed33ee5df0bef6.jpg",
+   "duration_sec": 410,
+   "duration": "6:50",
+   "owner": "typacm",
+   "pubdate": "2022-01-04",
+   "description": "蓝光压制 讲述一个老年男子Art和他有一颗年轻的心的妻子Dot的故事，他们在一个魔法般的晚上，通过舞蹈找回了自己一生的热情。这部时长约6分钟的短片没有台词，将通过舞蹈和funk和soul味道的配乐来讲述故事。片中舞步是与曾亮相《World of Dance》的知名夫妻舞者Keone和Mari Madrid合作，他们曾有一段热门舞蹈的设计是扮演一对老人。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "科幻",
+    "默片"
+   ],
+   "stat": {
+    "view": 4327,
+    "like": 212
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1SA66YeEPh",
+   "bvid": "BV1SA66YeEPh",
+   "title": "柏树阴影下",
+   "title_raw": "[无需字幕]柏树阴影下/奥斯卡最佳动画短片短名单 Dar Saaye Sarv (2023)",
+   "summary": "MUBI 一位患有创伤后应激障碍的前船长与他的女儿住在海边的房子里，过着艰苦而隐居的生活。",
+   "url": "https://www.bilibili.com/video/BV1SA66YeEPh",
+   "cover": "https://i2.hdslb.com/bfs/archive/5c6ce3228f929f0dd3d20ef03db1d1e24673d45a.jpg",
+   "duration_sec": 1177,
+   "duration": "19:37",
+   "owner": "typacm",
+   "pubdate": "2025-01-02",
+   "description": "MUBI 一位患有创伤后应激障碍的前船长与他的女儿住在海边的房子里，过着艰苦而隐居的生活。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 3913,
+    "like": 135
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV16b4y1D76z",
+   "bvid": "BV16b4y1D76z",
+   "title": "地方守护神 Genius Loci",
+   "title_raw": "[奥斯卡最佳动画短片提名][法语英字]地方守护神 Genius Loci (2020)",
+   "summary": "网络 年轻的Reine正在寻找，但她不知道自己在寻找什么。在细腻的图画和流畅的动画中，我们通过她的眼睛看到了这个世界，她的感知也变得有形。",
+   "url": "https://www.bilibili.com/video/BV16b4y1D76z",
+   "cover": "https://i2.hdslb.com/bfs/archive/0986fb15af743f54a6fa75e90dedf2d306674b5e.jpg",
+   "duration_sec": 915,
+   "duration": "15:15",
+   "owner": "typacm",
+   "pubdate": "2021-04-13",
+   "description": "网络 年轻的Reine正在寻找，但她不知道自己在寻找什么。在细腻的图画和流畅的动画中，我们通过她的眼睛看到了这个世界，她的感知也变得有形。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 3462,
+    "like": 105
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1eV411E7Rg",
+   "bvid": "BV1eV411E7Rg",
+   "title": "两个遥远的陌生人",
+   "title_raw": "奥斯卡最佳真人短片《两个遥远的陌生人》",
+   "summary": "《两个遥远的陌生人》是一部美国科幻短片，获第93届奥斯卡最佳真人短片。由特雷沃恩·弗里德（Travon Free）撰写，由弗里德（Free）和马丁·德斯蒙德·罗（Martin Desmond Roe）执导。这部电影通过一个陷入时间循环的角色的视角，审视了美国黑人在与警察相遇时一次又一次的死亡循环……“土拨鼠之日”的戏码再次重演。 From：Travon Fr",
+   "url": "https://www.bilibili.com/video/BV1eV411E7Rg",
+   "cover": "https://i1.hdslb.com/bfs/archive/d02df8fba0c7d0198544e6a350e1608ba240c141.jpg",
+   "duration_sec": 1925,
+   "duration": "32:05",
+   "owner": "我随口那么一说",
+   "pubdate": "2021-05-10",
+   "description": "https://www.xinpianchang.com/a11264417?from=UserLike 《两个遥远的陌生人》是一部美国科幻短片，获第93届奥斯卡最佳真人短片。由特雷沃恩·弗里德（Travon Free）撰写，由弗里德（Free）和马丁·德斯蒙德·罗（Martin Desmond Roe）执导。这部电影通过一个陷入时间循环的角色的视角，审视了美国黑人在与警察相遇时一次又一次的死亡循环……“土拨鼠之日”的戏码再次重演。 From：Travon Free",
+   "category": "真人",
+   "signals": [
+    "获奖",
+    "真人"
+   ],
+   "tags": [
+    "科幻",
+    "犯罪"
+   ],
+   "stat": {
+    "view": 41975,
+    "like": 776
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1UhFpz8Ekc",
+   "bvid": "BV1UhFpz8Ekc",
+   "title": "邻居的窗",
+   "title_raw": "第92届奥斯卡金像奖最佳真人短片《邻居的窗》",
+   "summary": "短片讲述了一个带着三个孩子的母亲，因为日常生活和丈夫陷入沮丧。而这时，她发现自己可以通过窗户看到住在对面邻居的生活...",
+   "url": "https://www.bilibili.com/video/BV1UhFpz8Ekc",
+   "cover": "https://i2.hdslb.com/bfs/archive/a355f2a05ad484086d1c7678d6ff63d92f4adfd6.jpg",
+   "duration_sec": 1238,
+   "duration": "20:38",
+   "owner": "麦浪映画MLYH",
+   "pubdate": "2026-02-07",
+   "description": "短片讲述了一个带着三个孩子的母亲，因为日常生活和丈夫陷入沮丧。而这时，她发现自己可以通过窗户看到住在对面邻居的生活...",
+   "category": "真人",
+   "signals": [
+    "获奖",
+    "真人"
+   ],
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 41269,
+    "like": 614
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1V4411Y7VF",
+   "bvid": "BV1V4411Y7VF",
+   "title": "如果我是英雄",
+   "title_raw": "入围2018奥斯卡最佳动画奖的中国动画《如果我是英雄》！",
+   "summary": "腾讯",
+   "url": "https://www.bilibili.com/video/BV1V4411Y7VF",
+   "cover": "https://i0.hdslb.com/bfs/archive/147d754c2f709c35cb3467ebb62e26a3587dbc3a.jpg",
+   "duration_sec": 444,
+   "duration": "7:24",
+   "owner": "沐尘侃剧",
+   "pubdate": "2019-05-10",
+   "description": "腾讯",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 1108911,
+    "like": 39032
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1EG4y1u7cY",
+   "bvid": "BV1EG4y1u7cY",
+   "title": "阳光晒屁股",
+   "title_raw": "【原创动画】《阳光晒屁股》",
+   "summary": "简介：一个普通家庭的平凡一夜。害怕黑夜的孩子似乎长大了些，为生计奔忙的爸妈似乎幸福了些。生活在大多数时间里就是由这样一个个不起眼的小转变组成，慢慢形成了我们的一生。 出品方：上海本来影业 监制：顾辰、朱彦潼 总制片：彭祺俊 导演：李泽熙 主创团队：李泽熙、谢树涛、张仁远、姚洁玉 声音指导：李丹枫 音乐：B6 本片完成于2022年初。曾入围FIRST青年电影展",
+   "url": "https://www.bilibili.com/video/BV1EG4y1u7cY",
+   "cover": "https://i1.hdslb.com/bfs/archive/6ff90035cbdf1c062af2e6f6a617f9a7ea85867d.jpg",
+   "duration_sec": 608,
+   "duration": "10:08",
+   "owner": "李导游乐人间",
+   "pubdate": "2023-02-04",
+   "description": "简介：一个普通家庭的平凡一夜。害怕黑夜的孩子似乎长大了些，为生计奔忙的爸妈似乎幸福了些。生活在大多数时间里就是由这样一个个不起眼的小转变组成，慢慢形成了我们的一生。 出品方：上海本来影业 监制：顾辰、朱彦潼 总制片：彭祺俊 导演：李泽熙 主创团队：李泽熙、谢树涛、张仁远、姚洁玉 声音指导：李丹枫 音乐：B6 本片完成于2022年初。曾入围FIRST青年电影展主竞赛单元、获得中国国际动漫节金猴奖综合短片金奖、中国动漫金龙奖最佳短片金奖、东布洲国际动画周评委特别推荐奖。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "音乐"
+   ],
+   "stat": {
+    "view": 1578431,
+    "like": 106247
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1PZ4y1N7fe",
+   "bvid": "BV1PZ4y1N7fe",
+   "title": "雨后",
+   "title_raw": "【法国获奖动画《雨后》，聪明牧羊犬与羊群的暖心故事】",
+   "summary": "转载微博：YouTube精选",
+   "url": "https://www.bilibili.com/video/BV1PZ4y1N7fe",
+   "cover": "https://i1.hdslb.com/bfs/archive/a8245ff7578d7acdc555eed5f6a5f9e2f58fa377.jpg",
+   "duration_sec": 536,
+   "duration": "8:56",
+   "owner": "快乐小火花09",
+   "pubdate": "2020-09-08",
+   "description": "转载微博：YouTube精选",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "治愈"
+   ],
+   "stat": {
+    "view": 171450,
+    "like": 10789
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1YZ4y157As",
+   "bvid": "BV1YZ4y157As",
+   "title": "鱼生",
+   "title_raw": "引人深思的获奖动画《鱼生》",
+   "summary": "居酒屋中同时出现了两桌截然不同的客人，厨师经过一番深思熟虑后，决定为他们提供两种不同的招牌菜......而这短短一分钟的抉择，正对应了海洋动物们的一生。",
+   "url": "https://www.bilibili.com/video/BV1YZ4y157As",
+   "cover": "https://i0.hdslb.com/bfs/archive/dcfe658359d1906dcf1ca5069622fa56656cd9b0.jpg",
+   "duration_sec": 148,
+   "duration": "2:28",
+   "owner": "YouTube精选字幕组",
+   "pubdate": "2020-10-04",
+   "description": "https://vimeo.com/333203660 居酒屋中同时出现了两桌截然不同的客人，厨师经过一番深思熟虑后，决定为他们提供两种不同的招牌菜......而这短短一分钟的抉择，正对应了海洋动物们的一生。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 1188526,
+    "like": 81146
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1N4411b7fS",
+   "bvid": "BV1N4411b7fS",
+   "title": "585号",
+   "title_raw": "入围奥斯卡高分隐喻动画《585号》",
+   "summary": "转载 在一个反乌托邦的世界里，每一个酒杯都有重要的使命，而一个胆小的酒杯却试图逃避这个重要的“成人仪式”，但个性是需要某些代价。《Pour585》是一个细思极恐的警示故事，使用酒精与酒杯来隐喻思想的灌输这一过程。该片入围了2018年奥斯卡最佳动画短片奖。",
+   "url": "https://www.bilibili.com/video/BV1N4411b7fS",
+   "cover": "https://i0.hdslb.com/bfs/archive/a6232d1102ac9e815f5c4b5cceba363eb4253269.png",
+   "duration_sec": 287,
+   "duration": "4:47",
+   "owner": "哈喽-飝",
+   "pubdate": "2019-04-27",
+   "description": "转载https://www.vmovier.com/56484?from=index_new_img 在一个反乌托邦的世界里，每一个酒杯都有重要的使命，而一个胆小的酒杯却试图逃避这个重要的“成人仪式”，但个性是需要某些代价。《Pour585》是一个细思极恐的警示故事，使用酒精与酒杯来隐喻思想的灌输这一过程。该片入围了2018年奥斯卡最佳动画短片奖。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 3840259,
+    "like": 121596
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1Xb411z7ZA",
+   "bvid": "BV1Xb411z7ZA",
+   "title": "Bilby",
+   "title_raw": "2019奥斯卡最治愈短片《Bilby》：唯有勇敢和爱，才能一往无前",
+   "summary": "转自微信",
+   "url": "https://www.bilibili.com/video/BV1Xb411z7ZA",
+   "cover": "https://i2.hdslb.com/bfs/archive/bd483950b990f5b92c7ea8d2fe4ef1e46e74749e.jpg",
+   "duration_sec": 482,
+   "duration": "8:02",
+   "owner": "竹杨",
+   "pubdate": "2019-02-07",
+   "description": "转自微信",
+   "category": "短片",
+   "signals": [
+    "获奖"
+   ],
+   "tags": [
+    "治愈"
+   ],
+   "stat": {
+    "view": 1731788,
+    "like": 59811
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1HG4y1F78V",
+   "bvid": "BV1HG4y1F78V",
+   "title": "新月",
+   "title_raw": "[英语无字幕]新月/奥斯卡最佳动画短片入围 New Moon (2022)",
+   "summary": "AMazon 小杰杰和他母亲伊迪充满想象力超现实主义之旅。伴随着夏日前夕西费城后院的晶体管收音机播放的艾瑞莎·富兰克林的声音，他们的梦想被新月照亮。",
+   "url": "https://www.bilibili.com/video/BV1HG4y1F78V",
+   "cover": "https://i0.hdslb.com/bfs/archive/32621a1ab37c721b4b4873ca513d13be618915e2.jpg",
+   "duration_sec": 709,
+   "duration": "11:49",
+   "owner": "typacm",
+   "pubdate": "2023-01-19",
+   "description": "AMazon 小杰杰和他母亲伊迪充满想象力超现实主义之旅。伴随着夏日前夕西费城后院的晶体管收音机播放的艾瑞莎·富兰克林的声音，他们的梦想被新月照亮。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "亲情",
+    "社会"
+   ],
+   "stat": {
+    "view": 2046,
+    "like": 83
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1r3iJBVENP",
+   "bvid": "BV1r3iJBVENP",
+   "title": "夜靴",
+   "title_raw": "[自译中字]夜靴/奥斯卡最佳动画短片短名单 The Night Boots (2024)",
+   "summary": "当父母招待朋友时，一个孩子在夜深人静之时穿着橡胶靴离家出走，钻进了灌木丛。在那里，一只好奇而孤僻的怪兽将引领他深入森林腹地，去结识生活在那里的夜行生物。为了不再次孤单，怪兽竭尽全力地拖延孩子离开的时间。",
+   "url": "https://www.bilibili.com/video/BV1r3iJBVENP",
+   "cover": "https://i0.hdslb.com/bfs/archive/04d219a6826d46f29d3a1f47e46af0efd96622bc.jpg",
+   "duration_sec": 741,
+   "duration": "12:21",
+   "owner": "typacm",
+   "pubdate": "2026-01-05",
+   "description": "https://www.youtube.com/watch?v=_hyOfZfwpwQ 当父母招待朋友时，一个孩子在夜深人静之时穿着橡胶靴离家出走，钻进了灌木丛。在那里，一只好奇而孤僻的怪兽将引领他深入森林腹地，去结识生活在那里的夜行生物。为了不再次孤单，怪兽竭尽全力地拖延孩子离开的时间。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 2042,
+    "like": 94
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1YnvCBhEAm",
+   "bvid": "BV1YnvCBhEAm",
+   "title": "埃鲁",
+   "title_raw": "[自译中字]埃鲁/奥斯卡最佳动画短片短名单 Éiru (2025)",
+   "summary": "Amazon 在铁器时代，某个威猛的战士氏族正欢庆着对敌作战的最新胜利。凯旋途中，他们遇见了族中最年幼瘦小的艾鲁，她梦想着成为一名强大的战士，并最终获得了族人的重视。但强大的战士们从不把她当回事，认定艾鲁只配做一件事：从古老的村庄井中为口渴者打水。当这口井突然干涸时，唯有艾鲁瘦小的身躯能深入井底探查真相。在隐蔽的地下世界，她发现被战争撕裂的隐秘国度：自然万物",
+   "url": "https://www.bilibili.com/video/BV1YnvCBhEAm",
+   "cover": "https://i2.hdslb.com/bfs/archive/9038c3af0f3c0a90a72ae2f408cdc9c2ec95e057.jpg",
+   "duration_sec": 781,
+   "duration": "13:01",
+   "owner": "typacm",
+   "pubdate": "2025-12-28",
+   "description": "Amazon 在铁器时代，某个威猛的战士氏族正欢庆着对敌作战的最新胜利。凯旋途中，他们遇见了族中最年幼瘦小的艾鲁，她梦想着成为一名强大的战士，并最终获得了族人的重视。但强大的战士们从不把她当回事，认定艾鲁只配做一件事：从古老的村庄井中为口渴者打水。当这口井突然干涸时，唯有艾鲁瘦小的身躯能深入井底探查真相。在隐蔽的地下世界，她发现被战争撕裂的隐秘国度：自然万物的联结与大地女神命脉皆已支离破碎。现在，正是艾鲁证明自己价值的机会！",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "战争",
+    "环保",
+    "悬疑"
+   ],
+   "stat": {
+    "view": 2037,
+    "like": 78
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1A3Nv6nE9J",
+   "bvid": "BV1A3Nv6nE9J",
+   "title": "小绳子",
+   "title_raw": "动画短片《小绳子》故事根据真实事件改编讲述了两个特殊孩子之间美好到令人心痛的伟大友谊，最后的结局超暖心",
+   "summary": "西班牙视其为教育必看短片，共获得过300多次奖项的它也是世界上获奖最多的短片。讲述了两个特殊孩子之间美好到令人心痛的伟大友谊，最后的结局超暖心",
+   "url": "https://www.bilibili.com/video/BV1A3Nv6nE9J",
+   "cover": "https://i1.hdslb.com/bfs/archive/295555597ed0e8e4769a7f4cf08b448e72b10ab3.jpg",
+   "duration_sec": 653,
+   "duration": "10:53",
+   "owner": "Max放映厅",
+   "pubdate": "2026-07-15",
+   "description": "西班牙视其为教育必看短片，共获得过300多次奖项的它也是世界上获奖最多的短片。讲述了两个特殊孩子之间美好到令人心痛的伟大友谊，最后的结局超暖心",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [
+    "治愈",
+    "反转"
+   ],
+   "stat": {
+    "view": 1866,
+    "like": 91
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1YRNzeTEzq",
+   "bvid": "BV1YRNzeTEzq",
+   "title": "魔糖",
+   "title_raw": "[自译中字]魔糖/奥斯卡最佳动画短片提名 Magic Candies (2024)",
+   "summary": "Amazon 其他孩子从不叫Dong-Dong一起玩，但他可以自己玩弹珠。直到有一天，他买了一袋五颜六色的糖果，开始发现不一样的声音和视角。",
+   "url": "https://www.bilibili.com/video/BV1YRNzeTEzq",
+   "cover": "https://i1.hdslb.com/bfs/archive/6e1c3b551e45ad65c80e66ceae159d002daf1d68.jpg",
+   "duration_sec": 1238,
+   "duration": "20:38",
+   "owner": "typacm",
+   "pubdate": "2025-02-12",
+   "description": "Amazon 其他孩子从不叫Dong-Dong一起玩，但他可以自己玩弹珠。直到有一天，他买了一袋五颜六色的糖果，开始发现不一样的声音和视角。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 15509,
+    "like": 543
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1PXBLB2EJ7",
+   "bvid": "BV1PXBLB2EJ7",
+   "title": "男孩、鼹鼠、狐狸和马",
+   "title_raw": "第95届奥斯卡金像奖最佳动画短片《男孩、鼹鼠、狐狸和马》（中文字幕）",
+   "summary": "查理·麦克西的同名绘本改编的手绘动画，关于善良、友谊、勇气和希望，通过一段辛酸而真挚的旅程，讲述了一个男孩、一只鼹鼠、一只狐狸和一匹马，四个孤独的灵魂在寻找家的过程中结伴而行，并在彼此身上找到了自己存在的意义。",
+   "url": "https://www.bilibili.com/video/BV1PXBLB2EJ7",
+   "cover": "https://i2.hdslb.com/bfs/archive/397e754fb8fb4995121e2e27082e86294ca5b73a.jpg",
+   "duration_sec": 2049,
+   "duration": "34:09",
+   "owner": "麦浪映画MLYH",
+   "pubdate": "2025-12-24",
+   "description": "查理·麦克西的同名绘本改编的手绘动画，关于善良、友谊、勇气和希望，通过一段辛酸而真挚的旅程，讲述了一个男孩、一只鼹鼠、一只狐狸和一匹马，四个孤独的灵魂在寻找家的过程中结伴而行，并在彼此身上找到了自己存在的意义。",
+   "category": "动画",
+   "signals": [
+    "获奖",
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 13055,
+    "like": 426
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1dK4y1q7rf",
+   "bvid": "BV1dK4y1q7rf",
+   "title": "二十多岁",
+   "title_raw": "皮克斯动画短片《二十多岁 》成年人的生活可能会很艰难，有时候一切都顺风顺水，而另外一些时候，你只是躲在大衣里的孩子，希望谁也不会注意到你。",
+   "summary": "皮克斯动画短片《二十多岁 》 成年人的生活可能会很艰难，有时候一切都顺风顺水，而另外一些时候，你只是躲在大衣里的孩子，希望谁也不会注意到你。聚集现代人成年后的内心感受。",
+   "url": "https://www.bilibili.com/video/BV1dK4y1q7rf",
+   "cover": "https://i1.hdslb.com/bfs/archive/7181d23d9fc6aae86f06ff51cb2711b4588da7d1.jpg",
+   "duration_sec": 462,
+   "duration": "7:42",
+   "owner": "Max放映厅",
+   "pubdate": "2024-01-17",
+   "description": "皮克斯动画短片《二十多岁 》 成年人的生活可能会很艰难，有时候一切都顺风顺水，而另外一些时候，你只是躲在大衣里的孩子，希望谁也不会注意到你。聚集现代人成年后的内心感受。",
+   "category": "动画",
+   "signals": [
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 272422,
+    "like": 17365
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1kJx4eNEeE",
+   "bvid": "BV1kJx4eNEeE",
+   "title": "蠢蠢的死法",
+   "title_raw": "油管2亿播放量动画短片《蠢蠢的死法》好多种蠢蠢的死法，但是都在现实世界中有人会做的。。。",
+   "summary": "油管2亿播放量动画短片《蠢蠢的死法》好多种蠢蠢的死法，但是都在现实世界中有人会做的。。。",
+   "url": "https://www.bilibili.com/video/BV1kJx4eNEeE",
+   "cover": "https://i1.hdslb.com/bfs/archive/beac1fc4bdde44617ac90f3db8c6936ad6fb08b6.jpg",
+   "duration_sec": 183,
+   "duration": "3:03",
+   "owner": "Max放映厅",
+   "pubdate": "2024-09-30",
+   "description": "油管2亿播放量动画短片《蠢蠢的死法》好多种蠢蠢的死法，但是都在现实世界中有人会做的。。。",
+   "category": "动画",
+   "signals": [
+    "动画"
+   ],
+   "tags": [
+    "社会"
+   ],
+   "stat": {
+    "view": 544634,
+    "like": 40242
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1TH4y1D72E",
+   "bvid": "BV1TH4y1D72E",
+   "title": "电焊工波力",
+   "title_raw": "动画短片《电焊工波力》豆瓣9.0分，《机器人总动员》番外篇，以正片太空阶段故事的平行叙述来表现一个尽职尽责且略显偏执的可爱机器人形象",
+   "summary": "动画短片《电焊工波力》",
+   "url": "https://www.bilibili.com/video/BV1TH4y1D72E",
+   "cover": "https://i0.hdslb.com/bfs/archive/20d0dbfdaa3270ffb0b4166716295d560190f92a.jpg",
+   "duration_sec": 456,
+   "duration": "7:36",
+   "owner": "Max放映厅",
+   "pubdate": "2023-09-09",
+   "description": "动画短片《电焊工波力》",
+   "category": "动画",
+   "signals": [
+    "动画"
+   ],
+   "tags": [
+    "科幻"
+   ],
+   "stat": {
+    "view": 304559,
+    "like": 9079
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1rU4y1H7iq",
+   "bvid": "BV1rU4y1H7iq",
+   "title": "飘",
+   "title_raw": "皮克斯动画短片《飘》 每个特别的人，都值得被爱",
+   "summary": "父亲发现孩子有漂浮在空中的能力，因为担心孩子会被人议论，于是就想方设法隐藏儿子的能力。但随着孩子长大，有了自己的想法后，父亲面临着艰难的抉择——是更加强硬地施加控制，还是选择接受孩子的特别。 短片来自皮克斯的SparkShort计划——由皮克斯的一小组员工携力，进行一次题材、画风、剧情、技术都没有限制，完全自由的创作，讲述员工们自己的故事，并最终以皮克斯的官",
+   "url": "https://www.bilibili.com/video/BV1rU4y1H7iq",
+   "cover": "https://i2.hdslb.com/bfs/archive/0cdde3ac1e73936585674ba7ffc90dadf7f5eabf.jpg",
+   "duration_sec": 438,
+   "duration": "7:18",
+   "owner": "YouTube精选字幕组",
+   "pubdate": "2021-03-03",
+   "description": "https://youtu.be/1HAGuju_yKY 父亲发现孩子有漂浮在空中的能力，因为担心孩子会被人议论，于是就想方设法隐藏儿子的能力。但随着孩子长大，有了自己的想法后，父亲面临着艰难的抉择——是更加强硬地施加控制，还是选择接受孩子的特别。 短片来自皮克斯的SparkShort计划——由皮克斯的一小组员工携力，进行一次题材、画风、剧情、技术都没有限制，完全自由的创作，讲述员工们自己的故事，并最终以皮克斯的官方账号帮他们发行。",
+   "category": "动画",
+   "signals": [
+    "动画"
+   ],
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 1435662,
+    "like": 38240
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1oX4y1T7v5",
+   "bvid": "BV1oX4y1T7v5",
+   "title": "暴力云与送子鹤",
+   "title_raw": "创意动画短片《暴力云与送子鹤》，温情满满！",
+   "summary": "YouTube 在西方传说中有一种鸟名字叫“鹳”，这种鸟是运送孩子的。但是“鹳”运送的孩子又是从哪来的呢？原来，在天空的云层中，有生命的云朵们像女娲一样捏出一个个小婴儿，让送子鹳带入千家万户。 《暴力云与送子鹳》是皮克斯《飞屋环游记》的加映短片。",
+   "url": "https://www.bilibili.com/video/BV1oX4y1T7v5",
+   "cover": "https://i0.hdslb.com/bfs/archive/81ef2708d35221de81ad1c785df33a08b4e87038.jpg",
+   "duration_sec": 361,
+   "duration": "6:01",
+   "owner": "皎皎明月天",
+   "pubdate": "2021-01-02",
+   "description": "YouTube 在西方传说中有一种鸟名字叫“鹳”，这种鸟是运送孩子的。但是“鹳”运送的孩子又是从哪来的呢？原来，在天空的云层中，有生命的云朵们像女娲一样捏出一个个小婴儿，让送子鹳带入千家万户。 《暴力云与送子鹳》是皮克斯《飞屋环游记》的加映短片。",
+   "category": "动画",
+   "signals": [
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 406848,
+    "like": 5350
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV1FL411H7bm",
+   "bvid": "BV1FL411H7bm",
+   "title": "小孩儿",
+   "title_raw": "清华美院2021届动画毕设短片 | 《小孩儿》",
+   "summary": "清华大学美术学院2021届本科动画毕设短片 “家里什么时候多出一个小孩儿来，我已经记不清了。小孩儿坏毛病很多，但当她离开后，我才开始想她。” 这是一个有关我 与我家那个不同寻常的“小孩儿”间的故事。 或许每个人都曾有过这样一个小孩儿陪在身边，那么，如果你看到了这个故事，请回家看看他/她吧。",
+   "url": "https://www.bilibili.com/video/BV1FL411H7bm",
+   "cover": "https://i2.hdslb.com/bfs/archive/681809c723832ea3647c000fe4873836361df7a6.jpg",
+   "duration_sec": 350,
+   "duration": "5:50",
+   "owner": "2194_",
+   "pubdate": "2021-08-10",
+   "description": "清华大学美术学院2021届本科动画毕设短片 “家里什么时候多出一个小孩儿来，我已经记不清了。小孩儿坏毛病很多，但当她离开后，我才开始想她。” 这是一个有关我 与我家那个不同寻常的“小孩儿”间的故事。 或许每个人都曾有过这样一个小孩儿陪在身边，那么，如果你看到了这个故事，请回家看看他/她吧。",
+   "category": "动画",
+   "signals": [
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 1104137,
+    "like": 68238
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV15V4y1H7Sy",
+   "bvid": "BV15V4y1H7Sy",
+   "title": "4K60帧",
+   "title_raw": "【4K60帧】迪士尼动画短片-纸人（paperman）",
+   "summary": "迪士尼2012动画短片-纸人(paperman) 4K画质修复，提高了帧数 视频源来自网络",
+   "url": "https://www.bilibili.com/video/BV15V4y1H7Sy",
+   "cover": "https://i0.hdslb.com/bfs/archive/9c231e74cc08e94929d0b6495d68168eb66987f7.png",
+   "duration_sec": 696,
+   "duration": "11:36",
+   "owner": "DM_PROJECT",
+   "pubdate": "2022-07-16",
+   "description": "迪士尼2012动画短片-纸人(paperman) 4K画质修复，提高了帧数 视频源来自网络",
+   "category": "动画",
+   "signals": [
+    "动画"
+   ],
+   "tags": [],
+   "stat": {
+    "view": 139073,
+    "like": 5175
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:28+08:00"
+  },
+  {
+   "id": "bili-BV19x411A7rn",
+   "bvid": "BV19x411A7rn",
+   "title": "调音师",
+   "title_raw": "调音师（2011年卢纹国际电影节最佳短片奖、2012年法国恺撒奖最佳短片奖）",
+   "summary": "转自网络 阿德里安是一个学习钢琴已有15年之久的天才钢琴家，可是在梦寐以求的伯恩斯坦钢琴大赛上他功败垂成，人生跌落谷底。经过一段时间调整，阿德里安重新振作，成为了一名盲人钢琴调音师。事实上他只是带上了隐形眼镜，这会让别人认为他听觉方面更加敏锐，并由此得到更多的同情和消费，甚至还会窥视到别人的生活与隐私，他兀自沉浸在这种虽处闹市又仿佛置身世外的超然之中。某天，",
+   "url": "https://www.bilibili.com/video/BV19x411A7rn",
+   "cover": "https://i1.hdslb.com/bfs/archive/aa03e61974459f2e7a3e189b5a0b9ffca30e9893.jpg",
+   "duration_sec": 817,
+   "duration": "13:37",
+   "owner": "安静苦笑ING",
+   "pubdate": "2015-03-09",
+   "description": "转自网络 阿德里安是一个学习钢琴已有15年之久的天才钢琴家，可是在梦寐以求的伯恩斯坦钢琴大赛上他功败垂成，人生跌落谷底。经过一段时间调整，阿德里安重新振作，成为了一名盲人钢琴调音师。事实上他只是带上了隐形眼镜，这会让别人认为他听觉方面更加敏锐，并由此得到更多的同情和消费，甚至还会窥视到别人的生活与隐私，他兀自沉浸在这种虽处闹市又仿佛置身世外的超然之中。某天，他来到一户人家工作，殊不知这里刚刚发生一起凶案",
+   "category": "短片",
+   "tags": [
+    "音乐"
+   ],
+   "stat": {
+    "view": 19343,
+    "like": 51
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:45+08:00"
+  },
+  {
+   "id": "bili-BV1qTqHBmEcf",
+   "bvid": "BV1qTqHBmEcf",
+   "title": "爱尔兰式告别",
+   "title_raw": "第95届奥斯卡金像奖最佳真人短片《爱尔兰式告别》",
+   "summary": "在北爱尔兰乡村的一座劳作农场的背景下，《爱尔兰式告别》是一部黑色喜剧，讲述疏远的兄弟图洛（谢默斯·奥哈拉饰）与洛肯（詹姆斯·马丁饰）因母亲（米歇尔·费尔利饰）的意外离世而重聚的故事。 在古怪教区神父奥谢（帕迪·詹金斯饰）的注视下，兄弟俩痛苦的团聚因图洛必须为患有唐氏综合症的洛肯重新安排照护计划而雪上加霜。但当两人发现母亲遗留的未完成遗愿清单时，洛肯看到了转机",
+   "url": "https://www.bilibili.com/video/BV1qTqHBmEcf",
+   "cover": "https://i1.hdslb.com/bfs/archive/b0b300d9f43105ecde5f7eea0028ab90fcca1e5d.jpg",
+   "duration_sec": 1410,
+   "duration": "23:30",
+   "owner": "麦浪映画MLYH",
+   "pubdate": "2025-12-18",
+   "description": "在北爱尔兰乡村的一座劳作农场的背景下，《爱尔兰式告别》是一部黑色喜剧，讲述疏远的兄弟图洛（谢默斯·奥哈拉饰）与洛肯（詹姆斯·马丁饰）因母亲（米歇尔·费尔利饰）的意外离世而重聚的故事。 在古怪教区神父奥谢（帕迪·詹金斯饰）的注视下，兄弟俩痛苦的团聚因图洛必须为患有唐氏综合症的洛肯重新安排照护计划而雪上加霜。但当两人发现母亲遗留的未完成遗愿清单时，洛肯看到了转机：他坚持要与图洛共同实现母亲清单上的每一个愿望——足足一百项——才肯离开农场……",
+   "category": "真人",
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 3158,
+    "like": 79
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:45+08:00"
+  },
+  {
+   "id": "bili-BV1fp4y167eo",
+   "bvid": "BV1fp4y167eo",
+   "title": "无论如何我爱你 If Anything Happens I",
+   "title_raw": "[英语中字][Netflix动画短片]无论如何我爱你 If Anything Happens I Love You (2020)",
+   "summary": "Netflix 一部精美的插画式动画短片，它带领我们踏上了一段非同寻常的情感之旅，讲述了一对父母如何努力克服痛失女儿后留下的伤痛，并使他们的家庭永远改变的故事。这部影片是一个令人惊叹的故事，它将人所感受到的痛苦与人类精神的坚韧并列。《无论如何我爱你》对于任何曾经爱过和失去过的人来说，都是一次感人的经历。",
+   "url": "https://www.bilibili.com/video/BV1fp4y167eo",
+   "cover": "https://i0.hdslb.com/bfs/archive/554b49fde12344108943a9f45e94733ac5f7f84e.jpg",
+   "duration_sec": 775,
+   "duration": "12:55",
+   "owner": "typacm",
+   "pubdate": "2020-11-22",
+   "description": "Netflix 一部精美的插画式动画短片，它带领我们踏上了一段非同寻常的情感之旅，讲述了一对父母如何努力克服痛失女儿后留下的伤痛，并使他们的家庭永远改变的故事。这部影片是一个令人惊叹的故事，它将人所感受到的痛苦与人类精神的坚韧并列。《无论如何我爱你》对于任何曾经爱过和失去过的人来说，都是一次感人的经历。",
+   "category": "动画",
+   "tags": [
+    "亲情"
+   ],
+   "stat": {
+    "view": 4084,
+    "like": 126
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:45+08:00"
+  },
+  {
+   "id": "bili-BV1U64y12765",
+   "bvid": "BV1U64y12765",
+   "title": "暴力云与送子鹳",
+   "title_raw": "《暴力云与送子鹳》（Partly Cloudy）",
+   "summary": "https://www.youtube.com/watch?v=7DmLkugdh9s&t=6s 皮克斯《飞屋环游记》的加映短片。 导 演：彼得·索恩 Peter Sohn 外文名：Partly Cloudy 中文名：暴力云与送子鹳 在西方传说中有一种鸟名字叫“鹳”，这种鸟是运送孩子的。但是“鹳”运送的孩子又是从哪来的呢？原来，在天空的云层中，有生命的云朵们",
+   "url": "https://www.bilibili.com/video/BV1U64y12765",
+   "cover": "https://i2.hdslb.com/bfs/archive/d27b7cf516d889ccb5cd1e79fed7eb64bbab1746.jpg",
+   "duration_sec": 350,
+   "duration": "5:50",
+   "owner": "何斜浩",
+   "pubdate": "2021-05-16",
+   "description": "https://www.youtube.com/watch?v=7DmLkugdh9s&t=6s 皮克斯《飞屋环游记》的加映短片。 导 演：彼得·索恩 Peter Sohn 外文名：Partly Cloudy 中文名：暴力云与送子鹳 在西方传说中有一种鸟名字叫“鹳”，这种鸟是运送孩子的。但是“鹳”运送的孩子又是从哪来的呢？原来，在天空的云层中，有生命的云朵们像女娲一样捏出一个个小婴儿，让送子鹳带入千家万户。而他们之中有一朵忧伤的“阴云”Gus，他总是制造些暴力宝宝，比如鳄鱼宝宝、山羊宝宝……他轻飘飘的质地倒是不怕扎不怕戳不怕咬，可就苦了他的搭档Peck，每次回来都是伤痕累累。直到一次，当Gus捧着一个鲨鱼宝宝交给他，已经筋疲力尽的Peck吓而远远的飞走了，而Gus伤心的哭了起来。但是别担心，和皮克斯的所有电影一样，短片也有个美好的结局。",
+   "category": "动画",
+   "tags": [
+    "反转"
+   ],
+   "stat": {
+    "view": 1847,
+    "like": 14
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:45+08:00"
+  },
+  {
+   "id": "bili-BV1Fz411v7C5",
+   "bvid": "BV1Fz411v7C5",
+   "title": "蓝雨伞之恋",
+   "title_raw": "蓝雨伞之恋-The Blue Umbrella--皮克斯创意动画短片",
+   "summary": "YouTube 在车水马龙的城市，天空逐渐开始下雨，跟着雨滴声的节奏缓缓带入音乐；短片在雨伞的角度讲述男女青年从首次见，经历各种磨难走到一起的故事，故事耐人寻味，音乐束后悠扬悦耳的声音仍然绵延不绝，回响在耳边…… 《蓝雨伞之恋》是2013年皮克斯出品动画短片，同年6月21日贴片《怪兽大学》在北美地区上映。",
+   "url": "https://www.bilibili.com/video/BV1Fz411v7C5",
+   "cover": "https://i1.hdslb.com/bfs/archive/e85364ebf9e03bb5b4fa3692d062f191ad38abd5.png",
+   "duration_sec": 407,
+   "duration": "6:47",
+   "owner": "精选创意短片",
+   "pubdate": "2020-06-30",
+   "description": "YouTube 在车水马龙的城市，天空逐渐开始下雨，跟着雨滴声的节奏缓缓带入音乐；短片在雨伞的角度讲述男女青年从首次见，经历各种磨难走到一起的故事，故事耐人寻味，音乐束后悠扬悦耳的声音仍然绵延不绝，回响在耳边…… 《蓝雨伞之恋》是2013年皮克斯出品动画短片，同年6月21日贴片《怪兽大学》在北美地区上映。",
+   "category": "动画",
+   "tags": [
+    "音乐"
+   ],
+   "stat": {
+    "view": 3954,
+    "like": 80
+   },
+   "source": "bilibili",
+   "verified_at": "2026-11-13T20:42:45+08:00"
+  }
+ ]
+}

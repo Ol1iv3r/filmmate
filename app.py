@@ -23,8 +23,11 @@ import case_store
 import chat_storage_api
 import config
 import llm
+import library
+import personal_api
 import prompts
 import rag
+import script_api
 import tools
 import voice_input_api
 
@@ -51,6 +54,8 @@ app.add_middleware(
 
 app.include_router(voice_input_api.router)
 app.include_router(chat_storage_api.router)
+app.include_router(script_api.router)
+app.include_router(personal_api.router)
 
 
 def sse(event: str, data) -> str:
@@ -70,6 +75,7 @@ async def health():
         "online": llm.available(),
         "knowledge_entries": rag.count(),
         "case_count": case_store.count(),
+        "library": library.stats(),
     }
 
 
@@ -96,6 +102,21 @@ async def handle_qa(message: str, history: list, api_key: str):
                 yield sse("citations", {"kind": "cases", "items": [
                     {"id": c["id"], "title": c["title"], "type": c["type"], "genre": c["genre"],
                      "logline": c["logline"], "score": c["score"]} for c in cases]})
+            elif st["tool"] == "search_scenes" and st["query"]:
+                scenes = library.search_scenes(st["query"], k=3)
+                yield sse("citations", {"kind": "scenes", "items": [
+                    {"title": s["name_zh"], "category": s["dramatic_function"],
+                     "score": s["score"]} for s in scenes]})
+            elif st["tool"] == "search_shots" and st["query"]:
+                shots = library.search_shots(st["query"], k=3)
+                yield sse("citations", {"kind": "shots", "items": [
+                    {"title": s["name_zh"], "category": f"{s['size']}/{s['angle']}/{s['movement']}",
+                     "score": s["score"]} for s in shots]})
+            elif st["tool"] == "search_stripboards" and st["query"]:
+                templates = library.search_templates(st["query"], k=2)
+                yield sse("citations", {"kind": "stripboards", "items": [
+                    {"title": t["name"], "category": f"{t['type']}·{t['shoot_days']}天",
+                     "score": t["score"]} for t in templates]})
         for chunk in chunk_text(text):
             yield sse("delta", {"text": chunk})
             await asyncio.sleep(0.02)
@@ -141,8 +162,22 @@ async def handle_qa(message: str, history: list, api_key: str):
 # --------------------------------------------------------------------------
 # 创作工具(剧本检查/分镜/rundown/日程/灵感/案例)
 # --------------------------------------------------------------------------
-async def handle_tool(tool: str, message: str, api_key: str):
-    if tool == "review" and len(message) < 60 and not re.search(r"[:：]", message):
+async def handle_tool(tool: str, message: str, api_key: str, script_text: str = "", script_name: str = ""):
+    # 只有剧本类任务才用上传文件覆盖输入；灵感/案例仍按用户当前输入检索
+    script_tools = ("review", "storyboard", "rundown", "schedule")
+    content = script_text if (script_text and tool in script_tools) else message
+    needs_script = tool in script_tools
+    if needs_script and len(content) < 40 and not re.search(r"第\s*\d+\s*[场幕景]", content):
+        hint = (
+            "请先上传剧本文件（PDF / DOCX / TXT），或在输入框里粘贴剧本全文，再点这个功能。\n\n"
+            "支持的格式：PDF、DOCX、TXT、Markdown、Fountain；单文件 ≤ 15 MB。\n"
+            "上传后我会读取场次、对白和动作描述，再据此检查/分镜/排通告单。"
+        )
+        for chunk in chunk_text(hint):
+            yield sse("delta", {"text": chunk})
+            await asyncio.sleep(0.01)
+        return
+    if tool == "review" and not script_name and len(content) < 60 and not re.search(r"[:：]", content):
         text = ("请把要检查的剧本或大纲贴给我(最好包含场次和对白),例如:\n\n"
                 "第1场 天台 夜\n小明:今晚的月亮真圆。\n小红:嗯,和去年一样。\n\n"
                 "我会从情节漏洞、时间线、人物动机、对白、结构等方面给出审阅报告。")
@@ -151,7 +186,9 @@ async def handle_tool(tool: str, message: str, api_key: str):
             await asyncio.sleep(0.015)
         return
 
-    payload = await tools.run_tool(tool, message, api_key)
+    payload = await tools.run_tool(tool, content, api_key)
+    if script_name:
+        payload["script_name"] = script_name
     yield sse("tool_data", {"tool": tool, "payload": payload})
     if payload.get("steps"):
         yield sse("steps", {"steps": payload["steps"]})
@@ -166,6 +203,8 @@ async def handle_tool(tool: str, message: str, api_key: str):
 async def chat(req: Request):
     body = await req.json()
     message = (body.get("message") or "").strip()
+    script_text = (body.get("script_text") or "").strip()
+    script_name = (body.get("script_name") or "").strip()
     forced = (body.get("tool") or "").strip() or None
     tool = forced or tools.detect_tool(message)
     api_key = (body.get("api_key") or "").strip()
@@ -174,7 +213,7 @@ async def chat(req: Request):
 
     async def gen():
         try:
-            if not message:
+            if not message and not script_text:
                 yield sse("done", {})
                 return
             yield sse("start", {
@@ -186,7 +225,7 @@ async def chat(req: Request):
                 async for ev in handle_qa(message, history, api_key):
                     yield ev
             else:
-                async for ev in handle_tool(tool, message, api_key):
+                async for ev in handle_tool(tool, message, api_key, script_text, script_name):
                     yield ev
             yield sse("done", {})
         except Exception as e:  # noqa: BLE001

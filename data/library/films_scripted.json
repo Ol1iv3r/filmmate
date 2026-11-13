@@ -1,0 +1,638 @@
+{
+ "name": "Filmmate 剧本 + 原片双源库",
+ "description": "每部电影都必须同时具备 scriptslug 剧本与 Bilibili 原片；人工挑选并按情绪标注。只存可核验元数据，不含臆造的制作数据。",
+ "verified_at": "2026-11-13T21:10:21+08:00",
+ "curated": 36,
+ "count": 16,
+ "films": [
+  {
+   "id": "bili-BV17M4y1A7c2",
+   "bvid": "BV17M4y1A7c2",
+   "title": "寄生虫",
+   "title_en": "Parasite",
+   "year": "2019",
+   "url": "https://www.bilibili.com/video/BV17M4y1A7c2",
+   "cover": "https://i1.hdslb.com/bfs/archive/a5b41a2943dde522cb6c34da90418a73699a0c74.png",
+   "duration": "2:26:14",
+   "duration_sec": 8774,
+   "owner": "X-09A",
+   "play": 554,
+   "moods": [
+    "压抑",
+    "荒诞",
+    "黑色幽默"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/parasite-2019",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/parasite-2019.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV17M4y1A7c2/frame-01.jpg",
+    "/static/frames/BV17M4y1A7c2/frame-02.jpg",
+    "/static/frames/BV17M4y1A7c2/frame-03.jpg",
+    "/static/frames/BV17M4y1A7c2/frame-04.jpg",
+    "/static/frames/BV17M4y1A7c2/frame-05.jpg",
+    "/static/frames/BV17M4y1A7c2/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV176xr67ECS",
+   "bvid": "BV176xr67ECS",
+   "title": "小丑",
+   "title_en": "Joker",
+   "year": "2019",
+   "url": "https://www.bilibili.com/video/BV176xr67ECS",
+   "cover": "https://i0.hdslb.com/bfs/archive/2a3b2f99d0e63fc04a64e44ed8bae55a2c98b537.jpg",
+   "duration": "2:06:26",
+   "duration_sec": 7586,
+   "owner": "影视压缩机",
+   "play": 614,
+   "moods": [
+    "孤独",
+    "压抑",
+    "疯狂"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/joker-2019",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/joker-2019.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV176xr67ECS/frame-01.jpg",
+    "/static/frames/BV176xr67ECS/frame-02.jpg",
+    "/static/frames/BV176xr67ECS/frame-03.jpg",
+    "/static/frames/BV176xr67ECS/frame-04.jpg",
+    "/static/frames/BV176xr67ECS/frame-05.jpg",
+    "/static/frames/BV176xr67ECS/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1rqAAzvEzk",
+   "bvid": "BV1rqAAzvEzk",
+   "title": "婚姻故事",
+   "title_en": "Marriage Story",
+   "year": "2019",
+   "url": "https://www.bilibili.com/video/BV1rqAAzvEzk",
+   "cover": "https://i0.hdslb.com/bfs/archive/29b6e6a1ccc76c646ae76bf43d612881de8bf628.jpg",
+   "duration": "2:17:03",
+   "duration_sec": 8223,
+   "owner": "夺命凶灵",
+   "play": 1878,
+   "moods": [
+    "心碎",
+    "真实"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/marriage-story-2019",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/marriage-story-2019.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1rqAAzvEzk/frame-01.jpg",
+    "/static/frames/BV1rqAAzvEzk/frame-02.jpg",
+    "/static/frames/BV1rqAAzvEzk/frame-03.jpg",
+    "/static/frames/BV1rqAAzvEzk/frame-04.jpg",
+    "/static/frames/BV1rqAAzvEzk/frame-05.jpg",
+    "/static/frames/BV1rqAAzvEzk/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1NPUpBfELK",
+   "bvid": "BV1NPUpBfELK",
+   "title": "伯德小姐",
+   "title_en": "Lady Bird",
+   "year": "2017",
+   "url": "https://www.bilibili.com/video/BV1NPUpBfELK",
+   "cover": "https://i1.hdslb.com/bfs/archive/6763567a862c82bdedd0f2b749644af54c79fbe6.jpg",
+   "duration": "1:33:31",
+   "duration_sec": 5611,
+   "owner": "清说",
+   "play": 18196,
+   "moods": [
+    "成长",
+    "温暖"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/lady-bird-2017",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/lady-bird-2017.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1NPUpBfELK/frame-01.jpg",
+    "/static/frames/BV1NPUpBfELK/frame-02.jpg",
+    "/static/frames/BV1NPUpBfELK/frame-03.jpg",
+    "/static/frames/BV1NPUpBfELK/frame-04.jpg",
+    "/static/frames/BV1NPUpBfELK/frame-05.jpg",
+    "/static/frames/BV1NPUpBfELK/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1rRHbz9EGE",
+   "bvid": "BV1rRHbz9EGE",
+   "title": "罗马",
+   "title_en": "Roma",
+   "year": "2018",
+   "url": "https://www.bilibili.com/video/BV1rRHbz9EGE",
+   "cover": "https://i0.hdslb.com/bfs/archive/9fab9d61200ef03dc2346502cf49f7cb671c210d.jpg",
+   "duration": "2:12:43",
+   "duration_sec": 7963,
+   "owner": "汤蝈蝈",
+   "play": 14846,
+   "moods": [
+    "怀旧",
+    "温柔"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/roma-2018",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/roma-2018.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1rRHbz9EGE/frame-01.jpg",
+    "/static/frames/BV1rRHbz9EGE/frame-02.jpg",
+    "/static/frames/BV1rRHbz9EGE/frame-03.jpg",
+    "/static/frames/BV1rRHbz9EGE/frame-04.jpg",
+    "/static/frames/BV1rRHbz9EGE/frame-05.jpg",
+    "/static/frames/BV1rRHbz9EGE/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1yLbM6KEFs",
+   "bvid": "BV1yLbM6KEFs",
+   "title": "宠儿",
+   "title_en": "The Favourite",
+   "year": "2018",
+   "url": "https://www.bilibili.com/video/BV1yLbM6KEFs",
+   "cover": "https://i0.hdslb.com/bfs/archive/45d173b2851558b4e04a68bfee80b0e3301371f1.jpg",
+   "duration": "1:51:48",
+   "duration_sec": 6708,
+   "owner": "不是张小宅",
+   "play": 31,
+   "moods": [
+    "荒诞",
+    "权力"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/the-favourite-2018",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/the-favourite-2018.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1yLbM6KEFs/frame-01.jpg",
+    "/static/frames/BV1yLbM6KEFs/frame-02.jpg",
+    "/static/frames/BV1yLbM6KEFs/frame-03.jpg",
+    "/static/frames/BV1yLbM6KEFs/frame-04.jpg",
+    "/static/frames/BV1yLbM6KEFs/frame-05.jpg",
+    "/static/frames/BV1yLbM6KEFs/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1oC4y1h7De",
+   "bvid": "BV1oC4y1h7De",
+   "title": "绿皮书",
+   "title_en": "Green Book",
+   "year": "2018",
+   "url": "https://www.bilibili.com/video/BV1oC4y1h7De",
+   "cover": "https://i1.hdslb.com/bfs/archive/dad700ffe26490b1e559132081e8d8e4aa09cfff.jpg",
+   "duration": "2:12:03",
+   "duration_sec": 7923,
+   "owner": "账号已注销",
+   "play": 64309,
+   "moods": [
+    "温暖",
+    "幽默"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/green-book-2018",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/green-book-2018.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1oC4y1h7De/frame-01.jpg",
+    "/static/frames/BV1oC4y1h7De/frame-02.jpg",
+    "/static/frames/BV1oC4y1h7De/frame-03.jpg",
+    "/static/frames/BV1oC4y1h7De/frame-04.jpg",
+    "/static/frames/BV1oC4y1h7De/frame-05.jpg",
+    "/static/frames/BV1oC4y1h7De/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1ciqnY8EzR",
+   "bvid": "BV1ciqnY8EzR",
+   "title": "水形物语",
+   "title_en": "The Shape of Water",
+   "year": "2017",
+   "url": "https://www.bilibili.com/video/BV1ciqnY8EzR",
+   "cover": "https://i2.hdslb.com/bfs/archive/c88e6dbb7d69c5c0775b663ee2f61418a1fff5b2.jpg",
+   "duration": "2:02:32",
+   "duration_sec": 7352,
+   "owner": "老玉米律师",
+   "play": 799,
+   "moods": [
+    "浪漫",
+    "奇幻"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/the-shape-of-water-2017",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/the-shape-of-water-2017.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1ciqnY8EzR/frame-01.jpg",
+    "/static/frames/BV1ciqnY8EzR/frame-02.jpg",
+    "/static/frames/BV1ciqnY8EzR/frame-03.jpg",
+    "/static/frames/BV1ciqnY8EzR/frame-04.jpg",
+    "/static/frames/BV1ciqnY8EzR/frame-05.jpg",
+    "/static/frames/BV1ciqnY8EzR/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV17RZ9BtEDH",
+   "bvid": "BV17RZ9BtEDH",
+   "title": "利刃出鞘",
+   "title_en": "Knives Out",
+   "year": "2019",
+   "url": "https://www.bilibili.com/video/BV17RZ9BtEDH",
+   "cover": "https://i2.hdslb.com/bfs/archive/ec52c46ee9078d7fa5b8dbce074f2afd37744c21.jpg",
+   "duration": "2:10:14",
+   "duration_sec": 7814,
+   "owner": "夺命凶灵",
+   "play": 2558,
+   "moods": [
+    "悬疑",
+    "幽默"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/knives-out-2019",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/knives-out-2019.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV17RZ9BtEDH/frame-01.jpg",
+    "/static/frames/BV17RZ9BtEDH/frame-02.jpg",
+    "/static/frames/BV17RZ9BtEDH/frame-03.jpg",
+    "/static/frames/BV17RZ9BtEDH/frame-04.jpg",
+    "/static/frames/BV17RZ9BtEDH/frame-05.jpg",
+    "/static/frames/BV17RZ9BtEDH/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1ih4D6MEhq",
+   "bvid": "BV1ih4D6MEhq",
+   "title": "爱尔兰人",
+   "title_en": "The Irishman",
+   "year": "2019",
+   "url": "https://www.bilibili.com/video/BV1ih4D6MEhq",
+   "cover": "https://i0.hdslb.com/bfs/archive/5508be47bc7343121490a84815dec4dcdccb09de.jpg",
+   "duration": "3:18:24",
+   "duration_sec": 11904,
+   "owner": "北野吾",
+   "play": 12390,
+   "moods": [
+    "孤独",
+    "宿命"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/the-irishman-2019",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/the-irishman-2019.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1ih4D6MEhq/frame-01.jpg",
+    "/static/frames/BV1ih4D6MEhq/frame-02.jpg",
+    "/static/frames/BV1ih4D6MEhq/frame-03.jpg",
+    "/static/frames/BV1ih4D6MEhq/frame-04.jpg",
+    "/static/frames/BV1ih4D6MEhq/frame-05.jpg",
+    "/static/frames/BV1ih4D6MEhq/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1yeZKBiEX1",
+   "bvid": "BV1yeZKBiEX1",
+   "title": "瞬息全宇宙",
+   "title_en": "Everything Everywhere All at Once",
+   "year": "2022",
+   "url": "https://www.bilibili.com/video/BV1yeZKBiEX1",
+   "cover": "https://i0.hdslb.com/bfs/archive/e9f892ac0ffe01d321f01c92009d44d507f93a41.jpg",
+   "duration": "2:19:20",
+   "duration_sec": 8360,
+   "owner": "余大满书房",
+   "play": 1046,
+   "moods": [
+    "荒诞",
+    "温暖"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/everything-everywhere-all-at-once-2022",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/everything-everywhere-all-at-once-2022.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1yeZKBiEX1/frame-01.jpg",
+    "/static/frames/BV1yeZKBiEX1/frame-02.jpg",
+    "/static/frames/BV1yeZKBiEX1/frame-03.jpg",
+    "/static/frames/BV1yeZKBiEX1/frame-04.jpg",
+    "/static/frames/BV1yeZKBiEX1/frame-05.jpg",
+    "/static/frames/BV1yeZKBiEX1/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1X2421T7rz",
+   "bvid": "BV1X2421T7rz",
+   "title": "可怜的东西",
+   "title_en": "Poor Things",
+   "year": "2023",
+   "url": "https://www.bilibili.com/video/BV1X2421T7rz",
+   "cover": "https://i1.hdslb.com/bfs/archive/c1d94c3cfe64acef04daf4f5e564849c00f2acdc.jpg",
+   "duration": "2:21:57",
+   "duration_sec": 8517,
+   "owner": "账号已注销",
+   "play": 12367,
+   "moods": [
+    "荒诞",
+    "奇幻"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/poor-things-2023",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/poor-things-2023.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1X2421T7rz/frame-01.jpg",
+    "/static/frames/BV1X2421T7rz/frame-02.jpg",
+    "/static/frames/BV1X2421T7rz/frame-03.jpg",
+    "/static/frames/BV1X2421T7rz/frame-04.jpg",
+    "/static/frames/BV1X2421T7rz/frame-05.jpg",
+    "/static/frames/BV1X2421T7rz/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1DoXqBWED3",
+   "bvid": "BV1DoXqBWED3",
+   "title": "坠落的审判",
+   "title_en": "Anatomy of a Fall",
+   "year": "2023",
+   "url": "https://www.bilibili.com/video/BV1DoXqBWED3",
+   "cover": "https://i2.hdslb.com/bfs/archive/7cbad94f65a44126ade65e804d782c3210205be9.jpg",
+   "duration": "2:31:50",
+   "duration_sec": 9110,
+   "owner": "蓝枫籽",
+   "play": 3472,
+   "moods": [
+    "紧张",
+    "冷峻"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/anatomy-of-a-fall-2023",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/anatomy-of-a-fall-2023.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1DoXqBWED3/frame-01.jpg",
+    "/static/frames/BV1DoXqBWED3/frame-02.jpg",
+    "/static/frames/BV1DoXqBWED3/frame-03.jpg",
+    "/static/frames/BV1DoXqBWED3/frame-04.jpg",
+    "/static/frames/BV1DoXqBWED3/frame-05.jpg",
+    "/static/frames/BV1DoXqBWED3/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1os2wY4Ezh",
+   "bvid": "BV1os2wY4Ezh",
+   "title": "利益区域",
+   "title_en": "The Zone of Interest",
+   "year": "2023",
+   "url": "https://www.bilibili.com/video/BV1os2wY4Ezh",
+   "cover": "https://i0.hdslb.com/bfs/archive/212551c3f2062a2556f5adeefa181a5615697f06.jpg",
+   "duration": "1:33:22",
+   "duration_sec": 5602,
+   "owner": "有趣知识八分饱",
+   "play": 8793,
+   "moods": [
+    "压抑",
+    "冷峻"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/the-zone-of-interest-2023",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/the-zone-of-interest-2023.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1os2wY4Ezh/frame-01.jpg",
+    "/static/frames/BV1os2wY4Ezh/frame-02.jpg",
+    "/static/frames/BV1os2wY4Ezh/frame-03.jpg",
+    "/static/frames/BV1os2wY4Ezh/frame-04.jpg",
+    "/static/frames/BV1os2wY4Ezh/frame-05.jpg",
+    "/static/frames/BV1os2wY4Ezh/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1A1NH6SEoE",
+   "bvid": "BV1A1NH6SEoE",
+   "title": "阿诺拉",
+   "title_en": "Anora",
+   "year": "2024",
+   "url": "https://www.bilibili.com/video/BV1A1NH6SEoE",
+   "cover": "https://i2.hdslb.com/bfs/archive/74f87db7bf6dfb0dadc6b37b333c4ed181d8cacd.jpg",
+   "duration": "2:20:45",
+   "duration_sec": 8445,
+   "owner": "文科dog",
+   "play": 246,
+   "moods": [
+    "荒诞",
+    "心碎"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/anora-2024",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/anora-2024.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1A1NH6SEoE/frame-01.jpg",
+    "/static/frames/BV1A1NH6SEoE/frame-02.jpg",
+    "/static/frames/BV1A1NH6SEoE/frame-03.jpg",
+    "/static/frames/BV1A1NH6SEoE/frame-04.jpg",
+    "/static/frames/BV1A1NH6SEoE/frame-05.jpg",
+    "/static/frames/BV1A1NH6SEoE/frame-06.jpg"
+   ]
+  },
+  {
+   "id": "bili-BV1Vg4y1R7TU",
+   "bvid": "BV1Vg4y1R7TU",
+   "title": "秘密会议",
+   "title_en": "Conclave",
+   "year": "2024",
+   "url": "https://www.bilibili.com/video/BV1Vg4y1R7TU",
+   "cover": "https://i0.hdslb.com/bfs/archive/321b53fac548530e00e7f6e4a7c211860477de44.jpg",
+   "duration": "2:10:01",
+   "duration_sec": 7801,
+   "owner": "真那么巧",
+   "play": 721,
+   "moods": [
+    "悬疑",
+    "庄严"
+   ],
+   "script": {
+    "page": "https://www.scriptslug.com/script/conclave-2024",
+    "pdf": "https://assets.scriptslug.com/live/pdf/scripts/conclave-2024.pdf"
+   },
+   "sources": [
+    "scriptslug",
+    "bilibili"
+   ],
+   "verified_at": "2026-11-13T21:10:21+08:00",
+   "frames": [
+    "/static/frames/BV1Vg4y1R7TU/frame-01.jpg",
+    "/static/frames/BV1Vg4y1R7TU/frame-02.jpg",
+    "/static/frames/BV1Vg4y1R7TU/frame-03.jpg",
+    "/static/frames/BV1Vg4y1R7TU/frame-04.jpg",
+    "/static/frames/BV1Vg4y1R7TU/frame-05.jpg",
+    "/static/frames/BV1Vg4y1R7TU/frame-06.jpg"
+   ]
+  }
+ ],
+ "misses": [
+  {
+   "title": "请以你的名字呼唤我",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "逃出绝命镇",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "一个明星的诞生",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "三块广告牌",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "1917",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "小妇人",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "乔乔的异想世界",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "沙丘",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "犬之力",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "健听女孩",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "伊尼舍林的报丧女妖",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "塔尔",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "壮志凌云2",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "奥本海默",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "花月杀手",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "过往人生",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "芭比",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "某种物质",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "粗野派",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  },
+  {
+   "title": "镍币男孩",
+   "reason": "无严格匹配的原片（片长/单 P/标题任一不符）"
+  }
+ ],
+ "frames_verified_at": "2026-11-13T21:19:34+08:00"
+}

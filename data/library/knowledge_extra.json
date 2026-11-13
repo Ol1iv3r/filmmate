@@ -1,0 +1,2316 @@
+{
+ "name": "Filmmate 影视创作知识库 · 扩充卷",
+ "description": "剧本结构/审阅/人物/对白/类型片 + 制片/通告单/场记/预算/勘景/香港拍摄/安全/后期/调度/灯光/收音/剪辑",
+ "count": 120,
+ "entries": [
+  {
+   "id": "struct-beat-sheet",
+   "category": "剧本结构",
+   "title": "节拍表（Beat Sheet）",
+   "keywords": [
+    "节拍表",
+    "beat sheet",
+    "save the cat",
+    "十五拍",
+    "剧本节奏"
+   ],
+   "content": "把 Save the Cat 的 15 拍落到页数：开场画面 p1、主题陈述 p5、激励事件 p12、第一幕转折 p25、中点 p55、全盘皆输 p75、第三幕 p85。用法是先填拍点、再写场景，逐拍检查是否有对应事件；常见错误是把「争论」拍写成吵架台词，或中点只加信息、不改变主角策略。",
+   "applies_to": [
+    "review",
+    "inspiration",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-sequence-method",
+   "category": "剧本结构",
+   "title": "八序列法（Sequence Method）",
+   "keywords": [
+    "八序列",
+    "sequence method",
+    "序列",
+    "幕结构",
+    "剧本拆解"
+   ],
+   "content": "把 110 页剧本切成 8 个 12–15 页的序列，每个序列要有自己的戏剧问题、升级和答案，结尾状态与开头相反。审阅时逐序列问：这段的问题是什么、谁在阻碍、结束时人物处境变了没有。若删掉整个序列不影响前后，说明它只是情节堆叠，不是序列。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "struct-midpoint",
+   "category": "剧本结构",
+   "title": "中点（Midpoint）",
+   "keywords": [
+    "中点",
+    "midpoint",
+    "转折点",
+    "turning point",
+    "假胜利",
+    "第二幕"
+   ],
+   "content": "中点在第 50–55 页，功能是把「被动反应」翻成「主动出击」：假胜利（赢了但埋下更大代价）或假失败（失去依靠后第一次主动）。判断标准是中点前后主角的目标或手段必须改变；若只是插入一场大场面、策略照旧，就是无效中点。常用做法：让他掌握新信息、公开立场，或盟友变敌人。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-act2-sag",
+   "category": "剧本结构",
+   "title": "第二幕疲软（Act 2 Sag）",
+   "keywords": [
+    "第二幕",
+    "act 2",
+    "中段疲软",
+    "节奏",
+    "写不下去"
+   ],
+   "content": "第二幕中段最常见的病，是主角反复用同一招。修法：列出第二幕每场「谁阻止他」，从中段起把阻碍换成来自盟友或自身缺陷，并让每次失败改变下一步计划；再加倒计时或关系线加压。若连续三场主角目标未变、赌注未升，就是疲软区，合并或删掉。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-inciting-incident",
+   "category": "剧本结构",
+   "title": "激励事件（Inciting Incident）",
+   "keywords": [
+    "激励事件",
+    "inciting incident",
+    "开场",
+    "钩子",
+    "第一幕"
+   ],
+   "content": "激励事件要在前 10–12 分钟发生，必须打破主角原有生活平衡、逼他做出选择，而不只是传来坏消息。检验：事件发生后，主角若还能照原样生活，它就不成立。常见错误是写成背景新闻或别人的危机；改法是让事件直接砸到主角身上，并给出必须行动的期限。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-opening-image",
+   "category": "剧本结构",
+   "title": "开场画面与收尾画面（Opening / Closing Image）",
+   "keywords": [
+    "开场画面",
+    "opening image",
+    "首尾呼应",
+    "人物弧光",
+    "结尾"
+   ],
+   "content": "开场画面用一张可拍的静态画面交代主角现状与缺陷（如他把闹钟按掉三次），收尾画面用同样构图、相反行为形成对照，观众由此看见弧光。检查：两幅画面能否用一句话说出差别；若结尾没有对应构图，人物转变就只停留在台词里。",
+   "applies_to": [
+    "review",
+    "storyboard",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "struct-theme-statement",
+   "category": "剧本结构",
+   "title": "主题陈述（Theme Statement）",
+   "keywords": [
+    "主题",
+    "theme",
+    "主题陈述",
+    "立意",
+    "价值观"
+   ],
+   "content": "主题陈述通常在第 5–10 页由配角或反派出说一句可辩论的「人生道理」，它不一定是真理，主角的弧光就是对它的验证、反驳或修正。审阅时问：这句话是什么？结尾主角的选择是否回应了它？若全片没人说出一个可被反对的主张，主题就只是气氛。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "struct-cold-open",
+   "category": "剧本结构",
+   "title": "冷开场（Cold Open）",
+   "keywords": [
+    "冷开场",
+    "cold open",
+    "片头",
+    "钩子",
+    "开场"
+   ],
+   "content": "冷开场是片头字幕前 2–5 分钟的独立小段，用一次微型冲突抛出全片问题或世界规则（如先给结局再倒叙）。判断：它必须自带起承转合，并与主线有信息或主题上的钩连；若只是炫技场面，观众记住的是场面，不是故事。",
+   "applies_to": [
+    "inspiration",
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-ticking-clock",
+   "category": "剧本结构",
+   "title": "倒计时（Ticking Clock）",
+   "keywords": [
+    "倒计时",
+    "ticking clock",
+    "时间压力",
+    "deadline",
+    "悬念"
+   ],
+   "content": "倒计时把「主角想不想」变成「来不来得及」。设置三件事：明确的截止时间、每过一个节点就抬高失败代价、倒计时由反派或客观条件驱动而非主角自设。常见错误是只在台词里说「时间不多了」，画面上却没有任何时间标记，观众感受不到压力。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-setup-payoff",
+   "category": "剧本结构",
+   "title": "埋设与回收（Setup / Payoff）",
+   "keywords": [
+    "伏笔",
+    "setup",
+    "payoff",
+    "planting",
+    "埋设回收",
+    "chekhov's gun",
+    "契诃夫之枪"
+   ],
+   "content": "埋设用「三次法则」：第一次让观众看见（背景、随手一提），第二次让人物注意到（台词确认），第三次才在压力下使用；回收必须改变剧情走向，而不是复述。审阅时把每个埋设和回收配对列表：只有埋没有收是漏洞，只有收没有埋是作弊。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-reversal",
+   "category": "剧本结构",
+   "title": "反转（Reversal）",
+   "keywords": [
+    "反转",
+    "reversal",
+    "twist",
+    "意料之外",
+    "伏笔"
+   ],
+   "content": "反转不是意外，是「重新解释已发生的事」：前文至少给过两个可被误读的线索，反转后才让它们获得新含义。判断标准是观众回想时能说出「原来那场戏是这个意思」。若反转依赖从未出现的新信息（隐藏双胞胎、突然的能力），那是补丁，不是反转。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "struct-scene-goal-conflict",
+   "category": "剧本结构",
+   "title": "场景目标、冲突与结果（Scene Goal / Conflict / Outcome）",
+   "keywords": [
+    "场景目标",
+    "scene goal",
+    "冲突",
+    "yes but",
+    "场次"
+   ],
+   "content": "每场戏写清三件事：谁想要什么（具体动作）、谁或什么在阻止、结束时局面变好还是变坏。用「Yes, but…」或「No, and…」写结果，逼下一场有推进。若三要素任一为空，它就是说明场；删掉后剧情不受影响，就该合并或改写。",
+   "applies_to": [
+    "review",
+    "qa",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "struct-b-story",
+   "category": "剧本结构",
+   "title": "副线 / B 故事（B-Story）",
+   "keywords": [
+    "B故事",
+    "b-story",
+    "副线",
+    "支线",
+    "主题线"
+   ],
+   "content": "B 故事通常承载主题与情感，用恋爱、师徒、亲子关系让主角暴露软肋，并在中点与主线交叉、在高潮提供解决主线的钥匙。写法：B 故事的人物要提出与主角相反的价值主张。常见错误是副线只负责让主角休息，删掉也不影响结局，那就是废线。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "struct-climax-resolution",
+   "category": "剧本结构",
+   "title": "高潮与结局（Climax / Resolution）",
+   "keywords": [
+    "高潮",
+    "climax",
+    "结局",
+    "resolution",
+    "收尾"
+   ],
+   "content": "高潮必须同时解决外部目标与内部缺陷：主角用学会的东西做出一个有代价的选择，而不是靠巧合或别人搭救。结局只做三件事：交代后果、回收情绪、给出最后一个画面，长度控制在几分钟内；高潮后再长篇解释，会稀释刚建立的情绪。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-coverage-report",
+   "category": "剧本审阅",
+   "title": "Coverage 报告结构",
+   "keywords": [
+    "剧本审阅",
+    "coverage",
+    "审稿意见",
+    "logline",
+    "推荐等级"
+   ],
+   "content": "标准 coverage 分四块：Logline（一句话）、Synopsis（不评价，只复述）、Comments（按结构/人物/对白分点）、Verdict（Recommend / Consider / Pass）。每条意见写成「问题 + 位置 + 可操作改法」，例如「p32 主角被动，建议让他主动拒绝邀约」。只写「节奏慢」不算 coverage。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-page-one-test",
+   "category": "剧本审阅",
+   "title": "第一页测试（First-Page Test）",
+   "keywords": [
+    "第一页",
+    "first page",
+    "开场",
+    "弃剧",
+    "钩子"
+   ],
+   "content": "第一页要完成三件事：给出主角、给出世界、抛出一个问题或不安。检验：遮住剧本名只读第一页，能否说出「谁、在哪、哪里不对劲」。常见错误是用天气、闹钟、自我介绍开场；改法是从一个正在进行的动作切入，把背景信息挪到第 3 页之后。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-scene-necessity",
+   "category": "剧本审阅",
+   "title": "场景必要性测试",
+   "keywords": [
+    "删戏",
+    "场景测试",
+    "but so",
+    "场次",
+    "节奏"
+   ],
+   "content": "逐场问三个问题：删掉它，后面哪场会看不懂？它是否改变了人物关系或信息差？它是否有独立冲突？三问全否即为可删场。另一种「But/So 测试」：在每场之间写 but 或 so，若只能写 and，说明是平铺直叙，需要合并或加转折。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-plot-hole-audit",
+   "category": "剧本审阅",
+   "title": "逻辑漏洞审计",
+   "keywords": [
+    "漏洞",
+    "plot hole",
+    "时间线",
+    "逻辑",
+    "穿帮"
+   ],
+   "content": "把时间线、人物位置、道具、知情范围列成四张表交叉核对：角色如何在 20 分钟内跨城？谁知道秘密、何时知道？关键道具最后在谁手上？漏洞多出在「为了让剧情发生而让人物变笨」，修法是补一场铺垫或改动机，而不是加旁白解释。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-motivation-check",
+   "category": "剧本审阅",
+   "title": "动机可信度检查",
+   "keywords": [
+    "动机",
+    "motivation",
+    "人物逻辑",
+    "为什么",
+    "可信度"
+   ],
+   "content": "每个关键行动追问三层：他想要什么（目标）、为什么是现在（触发）、不做的代价是什么（赌注）。三层缺一，观众就会问「他为什么不报警、为什么不离开」。常见错误是用「他就是坏人」解释反派；给反派一套自洽的道德逻辑，动机才成立。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-dialogue-pass",
+   "category": "剧本审阅",
+   "title": "对白专项审阅",
+   "keywords": [
+    "对白审阅",
+    "dialogue pass",
+    "台词",
+    "朗读",
+    "删台词"
+   ],
+   "content": "对白 pass 单独做，不改结构：①逐句删掉「你好、我没事」等社交废话；②标出所有把潜台词说破的句子；③检查每个角色能否只看台词就认出是谁；④朗读，单句超过两行半就拆开。改完对白页数通常减少 10–15%，节奏立刻变快。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-pacing-check",
+   "category": "剧本审阅",
+   "title": "节奏与页数审阅",
+   "keywords": [
+    "节奏",
+    "pacing",
+    "页数",
+    "幕比例",
+    "拖沓"
+   ],
+   "content": "用页数当尺：长片 100–120 页，第一幕 25 页、中点 55 页、第三幕 85 页起；单场超过 4 页要问是否重复。把每场页数画成柱状图，连续三场都长说明堆积，连续多场都短说明碎。节奏问题先改场次顺序与长度，不要靠加旁白提速。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-redundancy-check",
+   "category": "剧本审阅",
+   "title": "重复信息检查",
+   "keywords": [
+    "重复",
+    "冗余",
+    "redundancy",
+    "信息",
+    "删减"
+   ],
+   "content": "同一信息出现两次就是冗余：先台词说「她很孤独」，又拍她独自吃饭。规则是「说一次，演一次」，只留其一，优先留画面。审阅时给每条信息标出首次出现位置，第二次出现就删；尤其注意「预告式台词」——人物提前说出后面要发生的事。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-stakes-check",
+   "category": "剧本审阅",
+   "title": "赌注检查（Stakes）",
+   "keywords": [
+    "赌注",
+    "stakes",
+    "代价",
+    "风险",
+    "失败"
+   ],
+   "content": "赌注要具体到「失去什么、失去谁、什么时候失去」。逐幕问：主角失败会怎样？这个后果观众在乎吗？若答案是「世界会毁灭」但主角没有私人牵连，就加一条私人赌注（女儿、名誉、承诺）。每幕至少抬高一次代价，且代价不可逆。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-active-protagonist",
+   "category": "剧本审阅",
+   "title": "主角主动性检查",
+   "keywords": [
+    "主动",
+    "passive",
+    "主角",
+    "选择",
+    "推动剧情"
+   ],
+   "content": "统计主角每幕做出的主动选择：第一幕至少 1 次、第二幕每 15 页 1 次、第三幕必须由他的选择决定结局。若大量事件是「别人来找他、他被抓走」，主角就是被动。修法：把外部事件改成他的调查、他的谎言、他的赴约。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-exposition-audit",
+   "category": "剧本审阅",
+   "title": "说明性信息审计",
+   "keywords": [
+    "说明",
+    "exposition",
+    "解释性台词",
+    "as you know",
+    "背景"
+   ],
+   "content": "说明性台词有三个可测信号：人物向彼此解释双方都知道的事（As you know, Bob）、一句话里出现两个以上专有名词、信息说完后场景没有产生任何变化。审阅时逐场标出「纯说明段」，统计其页数占比，超过全片 10% 就会显得笨重；具体改法交给对白改写 pass，不在审计阶段混做。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-ending-check",
+   "category": "剧本审阅",
+   "title": "结尾审阅",
+   "keywords": [
+    "结尾",
+    "ending",
+    "高潮",
+    "收尾",
+    "满足感"
+   ],
+   "content": "结尾要同时回答三个问题：外部目标是否达成？主角内在缺陷是否改变？主题是否被验证？三者缺一即「不满足」。检查最后 10 页：高潮是否由主角的选择推动、是否回收了主要埋设、最后一个画面是否与开场对照。常见错误是高潮后加太多解释。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cov-genre-expectation",
+   "category": "剧本审阅",
+   "title": "类型期待审阅",
+   "keywords": [
+    "类型",
+    "genre",
+    "类型标签",
+    "观众预期",
+    "货不对板",
+    "承诺"
+   ],
+   "content": "审阅时先给剧本贴类型标签，再检查前 3 页、前 10 分钟是否兑现该类型的核心承诺：标成悬疑却在第 30 页才出现案件，标成喜剧却前 10 页无笑点，观众会觉得走错厅。方法：一句话写出「观众点开这部片想看到什么」，标出承诺兑现的页码；若晚于第 15 页或根本没有，建议改开场或改标签。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "cov-format-check",
+   "category": "剧本审阅",
+   "title": "剧本格式审阅",
+   "keywords": [
+    "格式",
+    "format",
+    "场景标题",
+    "剧本规范",
+    "场号"
+   ],
+   "content": "格式错误会让读者出戏：场景标题写全 INT./EXT.、地点、日/夜；动作段只写能拍的东西，不写心理；对白上方人物名居中，括号说明能不用就不用；每场标场号。专业剧本 1 页约 1 分钟，若 90 页读起来像 2 小时，通常是动作段写太满。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-want-vs-need",
+   "category": "人物",
+   "title": "想要与需要（Want vs Need）",
+   "keywords": [
+    "想要",
+    "need",
+    "人物弧光",
+    "目标",
+    "内在需求"
+   ],
+   "content": "Want 是主角以为自己要的（赢比赛、追到女孩），Need 是他真正缺的（被父亲认可、学会信任）。两者要在高潮合并：他放弃 Want 才得到 Need，或得到 Want 却发现不够。检验：写下 Want 和 Need 各一句，若结尾只解决 Want，人物就没有弧光。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-arc-types",
+   "category": "人物",
+   "title": "人物弧光三型",
+   "keywords": [
+    "弧光",
+    "character arc",
+    "正向弧",
+    "负向弧",
+    "平弧"
+   ],
+   "content": "正向弧光：主角修正错误信念，结局做出新选择；负向弧光：主角拒绝改变、被缺陷吞没（悲剧、黑色电影）；平弧：主角信念正确，世界或他人被改变。先定类型再写每一幕，否则容易写成「经历很多但没变」。三种弧光的高潮写法不同，不要混用。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "char-ghost-wound",
+   "category": "人物",
+   "title": "前史创伤（Ghost / Wound）",
+   "keywords": [
+    "前史",
+    "ghost",
+    "创伤",
+    "背景故事",
+    "闪回"
+   ],
+   "content": "Ghost 是塑造主角信念的过去事件（被抛弃、害死队友），它解释缺陷，但不等于借口。写法：全片只给 2–3 次碎片（物件、梦、别人提起时的反应），直到第二幕末才给完整信息。常见错误是开场用 5 分钟闪回讲完，观众失去拼图的乐趣。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "char-fatal-flaw",
+   "category": "人物",
+   "title": "致命缺陷（Fatal Flaw）",
+   "keywords": [
+    "缺陷",
+    "fatal flaw",
+    "人物弱点",
+    "高潮",
+    "成长"
+   ],
+   "content": "缺陷必须是「曾经保护过他的生存策略」，例如用谎言避免冲突、用控制避免被抛弃。它要在第三幕制造最大危机：主角最擅长的办法失效，必须换一种活法。检验：把缺陷删掉，高潮是否还成立？若不成立，这个缺陷就还只是装饰。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-motivation-chain",
+   "category": "人物",
+   "title": "动机链",
+   "keywords": [
+    "动机",
+    "motivation",
+    "信念",
+    "目标",
+    "行动"
+   ],
+   "content": "把动机写成链条：信念（世界是怎样的）→ 需求 → 目标 → 行动 → 代价。每一环都要能在剧本里找到对应场景。若人物做出与信念相反的行动而不自知，要么补一个转折，要么承认那就是他的「谎言」。抽掉任一环，人物行为就不可信。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-backstory-reveal",
+   "category": "人物",
+   "title": "前史投放",
+   "keywords": [
+    "前史",
+    "backstory",
+    "回忆杀",
+    "闪回",
+    "信息"
+   ],
+   "content": "前史只在「改变当下行为」时出现：他为什么不敢开车、为什么讨厌被碰。规则是「先行为，后解释」——先让观众看到异常反应，再在压力最大时给原因。大段回忆杀通常说明编剧不信任画面；能用一个动作或一件旧物代替，就别用闪回。",
+   "applies_to": [
+    "review",
+    "storyboard"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "char-relationship-map",
+   "category": "人物",
+   "title": "人物关系图",
+   "keywords": [
+    "人物关系",
+    "relationship",
+    "欲望",
+    "冲突",
+    "群像"
+   ],
+   "content": "画一张关系图，每条连线写「他要对方给什么」与「冲突是什么」。好的关系都是欲望互相卡住：母亲要儿子留下，儿子要母亲承认他长大。若两人之间没有互相需要又互相阻碍，这段关系就没有戏，合并或删掉。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-antagonist",
+   "category": "人物",
+   "title": "对手 / 反派（Antagonist）",
+   "keywords": [
+    "反派",
+    "antagonist",
+    "对手",
+    "动机",
+    "镜像"
+   ],
+   "content": "反派不是障碍物，是另一套世界观的化身：他认为自己在做好事，且他的方法在故事前段有效。写法：给反派一个与主角镜像的缺陷或创伤，让他在中点赢一次、在高潮逼主角面对缺陷。最弱的反派是「就是要毁灭世界」且没有私人理由。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-secondary-function",
+   "category": "人物",
+   "title": "配角功能",
+   "keywords": [
+    "配角",
+    "功能",
+    "工具人",
+    "盟友",
+    "群像",
+    "supporting character"
+   ],
+   "content": "每个配角要承担一种功能：盟友（推动行动）、导师（给规则）、捣乱者（制造误会）、镜像（展示另一种选择）。功能重叠就合并。检验：删掉该配角，主角是否少做一次选择？若只是陪聊或递道具，就把台词并给主角，或让道具自己出现。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-transformation-evidence",
+   "category": "人物",
+   "title": "转变的可信度",
+   "keywords": [
+    "人物转变",
+    "transformation",
+    "前后对照",
+    "弧光",
+    "选择"
+   ],
+   "content": "转变不能靠台词宣布，要靠「同一情境下的不同选择」：开场他遇到冲突就撒谎，结尾同样的冲突他选择说真话。写法：在中点前后各设计一个镜像场景，用相同机位和台词结构拍，让观众自己看出差别。少于两次对照，转变就像换了个人。",
+   "applies_to": [
+    "review",
+    "storyboard"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "char-empathy",
+   "category": "人物",
+   "title": "共情设计（Save the Cat）",
+   "keywords": [
+    "共情",
+    "empathy",
+    "救猫咪",
+    "主角",
+    "讨喜"
+   ],
+   "content": "观众不需要喜欢主角，但需要理解他、希望他成功。前 10 分钟给三样东西：一个被欺负或被误解的处境、一个对弱者的善意动作、一个他真正想要的具体目标。注意「救猫咪」不是洗白，若主角做了恶事，要让他付出可见的代价。",
+   "applies_to": [
+    "inspiration",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "char-contradiction",
+   "category": "人物",
+   "title": "人物矛盾性",
+   "keywords": [
+    "矛盾",
+    "contradiction",
+    "立体人物",
+    "内在冲突",
+    "挣扎"
+   ],
+   "content": "让人物在两个互相冲突的价值间挣扎（忠诚 vs 正义、自由 vs 安全），每次选择都失去另一样。写法：给他一句自相矛盾的自我描述，再用行动打脸。扁平人物不是没有缺点，而是没有内在冲突；检验：他是否为一个选择失眠？",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "dial-on-the-nose",
+   "category": "对白",
+   "title": "直白台词（On-the-Nose）",
+   "keywords": [
+    "直白",
+    "on the nose",
+    "台词",
+    "潜台词",
+    "改台词"
+   ],
+   "content": "on-the-nose 指人物把情绪和意图直接说出（「我很生气，因为你骗我」）。修法三步：写下他真正想说的；给他一个不能说的理由（面子、秘密、场合）；让他谈别的事但达到同样目的。检验：读出来像心理报告而不是对话，就是 on-the-nose。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "dial-subtext-rewrite",
+   "category": "对白",
+   "title": "潜台词改写",
+   "keywords": [
+    "潜台词",
+    "subtext",
+    "言外之意",
+    "改写",
+    "对话"
+   ],
+   "content": "把潜台词落到操作：A 想说「你别走」，却问「你几点回来」；用具体的家务、天气、账单承载情绪。规则是台词服务表面目的、动作泄露真实目的。审阅时给每场标一句「这场真正在谈什么」，若台词与它完全一致，就没有潜台词。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "dial-exposition-burial",
+   "category": "对白",
+   "title": "说明性对白的埋法",
+   "keywords": [
+    "说明",
+    "exposition",
+    "背景交代",
+    "as you know",
+    "信息"
+   ],
+   "content": "背景信息不要由知情人互相告知，改为：①新来者提问（合理无知）；②争论中被迫举证（「你去年就答应过」）；③文件、病历、新闻等实物；④让信息带代价（说出秘密会失去信任）。一场戏最多给两条新信息，多了观众记不住。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "dial-character-voice",
+   "category": "对白",
+   "title": "人物口吻区分",
+   "keywords": [
+    "口吻",
+    "voice",
+    "说话方式",
+    "人物声音",
+    "台词"
+   ],
+   "content": "用四个变量区分口吻：句长（短促或绕弯）、词汇层级（专业词或市井俚语）、口头禅与回避方式（反问、沉默、抢话）、对谁说什么（对上位者 vs 对朋友）。做盲测：遮住人物名，随机抽 10 句，若认不出说话者，就还没写出人物声音。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "dial-read-aloud",
+   "category": "对白",
+   "title": "朗读测试",
+   "keywords": [
+    "朗读",
+    "read aloud",
+    "拗口",
+    "台词长度",
+    "口语"
+   ],
+   "content": "对白必须过「朗读关」：找一个人对读，卡壳、换气不顺、绕舌的地方就是要改的地方；书面语（「然而」「此外」）在口语里几乎不出现。再做过长测试：单句超过 25 字、单段超过 6 句，观众会失去线索，拆成问答或加动作打断。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "dial-interruption-overlap",
+   "category": "对白",
+   "title": "打断与抢话",
+   "keywords": [
+    "打断",
+    "interruption",
+    "抢话",
+    "重叠",
+    "节奏"
+   ],
+   "content": "真实对话充满打断、抢话、答非所问。写法：用「—」表示被打断，让人物不听完就回应；权力高的一方打断对方，权力低的一方重复对方的话或沉默。注意打断要服务冲突（争夺话语权），若只是为了「自然」而打断，会显得杂乱。",
+   "applies_to": [
+    "review"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "dial-action-line",
+   "category": "对白",
+   "title": "台词即动作（Dialogue as Action）",
+   "keywords": [
+    "台词动作",
+    "dialogue as action",
+    "动词",
+    "潜台词",
+    "冲突"
+   ],
+   "content": "每句台词都应是一次「企图改变对方」的行动：恳求、威胁、试探、转移、羞辱。写法：在每句旁标动词（他在逼她表态、在拖延），没有动词的台词就是信息搬运。审阅时删掉所有不改变对方状态的句子，对话会立刻有张力。",
+   "applies_to": [
+    "review",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "dial-monologue",
+   "category": "对白",
+   "title": "长台词与独白",
+   "keywords": [
+    "独白",
+    "monologue",
+    "长台词",
+    "演讲",
+    "节奏"
+   ],
+   "content": "长台词只有在「说的人有阻力、听的人有反应」时才成立：把它切成 3 段，中间插入对方的打断、沉默或动作；把结论留到最后一句，前面用具体细节铺垫。超过一页的独白通常应拆成对话或改成视觉段落，尤其避免让角色边哭边讲完整前史。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "dial-silence",
+   "category": "对白",
+   "title": "沉默与停顿",
+   "keywords": [
+    "沉默",
+    "silence",
+    "停顿",
+    "留白",
+    "无台词"
+   ],
+   "content": "沉默也是台词：在对方说完最重的一句后停 2–3 秒，比再补一句解释更有力。写法：用动作填停顿（点烟、收碗、看窗外），让观众读到人物在压什么。常见错误是用「……」表示沉默却没有任何可拍的 action，导演和演员都无从下手。",
+   "applies_to": [
+    "review",
+    "storyboard"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "dial-comedy-rhythm",
+   "category": "对白",
+   "title": "喜剧对白节奏",
+   "keywords": [
+    "喜剧",
+    "comedy",
+    "包袱",
+    "节奏",
+    "笑点"
+   ],
+   "content": "喜剧台词靠「铺垫—误导—抖包袱」：先建立正常预期，再用一个具体、意外的细节打破；包袱词放句末，前面不要提前泄露。两人对话时让「正经人」保持严肃，笑点由反应镜头放大。删掉解释笑话的补句，观众笑完需要半秒空间。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "genre-conventions",
+   "category": "类型片",
+   "title": "类型公约（Genre Conventions）",
+   "keywords": [
+    "类型",
+    "conventions",
+    "公约",
+    "套路",
+    "观众预期"
+   ],
+   "content": "类型公约是观众对「这类片必须出现什么」的预期：恐怖片的规则与破规则、爱情片的相遇与阻碍、犯罪片的调查与反转。写法：先列 8–10 条公约，至少满足 6 条，再用 1–2 条反着来制造新鲜感。全部照搬会老套，全部反着来会激怒观众。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "genre-obligatory-scenes",
+   "category": "类型片",
+   "title": "必备场面（Obligatory Scenes）",
+   "keywords": [
+    "必备场面",
+    "obligatory scene",
+    "类型",
+    "情绪结账",
+    "套路"
+   ],
+   "content": "每个类型有几场不能省的戏：爱情片的表白与分手、动作片的训练与最终对决、悬疑片的线索揭示、体育片的决赛。它们不是套路，是观众的情绪结账点。审阅时对照类型清单逐项打勾；缺一场就要在别处补等价情绪，而不是用台词交代「后来他们在一起了」。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "genre-suspense-surprise",
+   "category": "类型片",
+   "title": "悬念与惊奇（Suspense vs Surprise）",
+   "keywords": [
+    "悬念",
+    "suspense",
+    "惊奇",
+    "希区柯克",
+    "戏剧反讽",
+    "dramatic irony",
+    "信息差"
+   ],
+   "content": "希区柯克炸弹理论：观众知道桌下有炸弹、人物不知道，就是悬念；突然爆炸，只有 5 秒惊奇。悬念靠「信息差 + 时间」：先让观众知道危险，再让人物在危险里做日常的事。写惊悚片时，先问「观众比角色多知道什么」，而不是「下一场怎么吓人」。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "genre-mystery-clues",
+   "category": "类型片",
+   "title": "推理线索与公平游戏",
+   "keywords": [
+    "推理",
+    "mystery",
+    "线索",
+    "red herring",
+    "凶手"
+   ],
+   "content": "公平推理要求所有破案信息在揭晓前都给过观众：至少 3 条真线索、2 条红鲱鱼，真线索要藏在更显眼的地方（观众看见但没在意）。凶手不能是最后一页才出现的新人物。改写时列出「观众在第几分钟掌握哪些信息」，确保推理可复盘。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "genre-romcom-engine",
+   "category": "类型片",
+   "title": "爱情喜剧引擎",
+   "keywords": [
+    "爱情片",
+    "romcom",
+    "阻碍",
+    "分手",
+    "误会"
+   ],
+   "content": "爱情片的核心不是相爱，是「为什么不能在一起」：阶级、谎言、时机、自我价值。写法：给两人各一个与爱情冲突的目标，让每次靠近都付出代价；第三幕分手必须由主角的缺陷造成，而非误会。误会式分手最廉价，观众会觉得被糊弄。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "genre-action-escalation",
+   "category": "类型片",
+   "title": "动作场面升级",
+   "keywords": [
+    "动作片",
+    "action",
+    "升级",
+    "打斗",
+    "场面"
+   ],
+   "content": "动作场面要按「规模、代价、私人程度」三条轴升级：第一场展示能力、第二场失败、第三场失去重要的人、终场用新学会的方式赢。每场开打前用 3 个镜头交代空间与出口，观众才看得懂打斗。最忌连续三场同等强度的打斗，会疲劳。",
+   "applies_to": [
+    "review",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "genre-scifi-rule",
+   "category": "类型片",
+   "title": "科幻设定规则",
+   "keywords": [
+    "科幻",
+    "sci-fi",
+    "设定",
+    "世界观",
+    "规则"
+   ],
+   "content": "科幻只改一个变量，然后严格推演后果：如果记忆可以买卖，社会、法律、亲密关系会怎样。写法：先写三条世界规则（能做什么、代价是什么、谁被排除），全片不违反；用日常细节展示规则（排队、广告、证件），而不是让角色解释设定。规则一破，观众就退出。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "genre-family-dinner",
+   "category": "类型片",
+   "title": "家庭片与饭桌戏",
+   "keywords": [
+    "家庭片",
+    "family drama",
+    "饭桌",
+    "群戏",
+    "冲突"
+   ],
+   "content": "家庭戏的张力来自「不能离开的房间」：饭桌、病房、葬礼。写法：让每个人带着不同目的上桌（要钱、要道歉、要隐瞒），用吃饭动作分配台词，冲突靠一个人说破禁忌。避免让全家轮流独白；真正的爆发点通常只有一个人先开口。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "genre-tone-contract",
+   "category": "类型片",
+   "title": "类型契约与基调",
+   "keywords": [
+    "基调",
+    "tone",
+    "类型契约",
+    "混类型",
+    "观众预期"
+   ],
+   "content": "开场 10 分钟要和观众签合同：这是写实犯罪片还是漫画式动作片？允许夸张到什么程度？合同一旦签下，后面不能随意改基调（突然的卡通笑点会破坏紧张）。混类型时定一个主类型、一个调味类型，比例约 7:3，并让调性转换有叙事理由。",
+   "applies_to": [
+    "review",
+    "inspiration"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "genre-short-film",
+   "category": "类型片",
+   "title": "短片类型策略",
+   "keywords": [
+    "短片",
+    "short film",
+    "概念",
+    "反转",
+    "低成本"
+   ],
+   "content": "短片（3–15 分钟）只做一件事：一个概念、一次转折、一个画面。类型选择上，恐怖、悬疑、喜剧最划算，因为靠信息差和节奏就能成立，不需要复杂世界观。结构：前 30 秒建立规则，中段升级两次，最后 30 秒给出反转或余味；不要硬塞长片的三幕。",
+   "applies_to": [
+    "inspiration",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "prod-page-eighths",
+   "category": "制片",
+   "title": "页面八分法 / Page Eighths",
+   "keywords": [
+    "page eighths",
+    "八分页",
+    "页面计数",
+    "拍摄页数",
+    "1页=8/8",
+    "计页"
+   ],
+   "content": "剧本一页按 8 个八分页（8/8）计算：1 又 3/8 页记作 11/8，半页是 4/8。拆景时逐场标注页数并相加，得到总页数与每日工作量。经验值剧情片 1 页约 60–90 分钟，动作、群戏、特效场另乘 1.5–2 倍；分镜、转场、补拍不计页，要单独预留时间。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "prod-company-move",
+   "category": "制片",
+   "title": "company move 转场",
+   "keywords": [
+    "company move",
+    "转场",
+    "移机",
+    "打包",
+    "器材车",
+    "拍摄地转移"
+   ],
+   "content": "company move 指整个剧组从一个拍摄地转移到另一个，必须单独写进通告单并给足时间：小规模市区转场 45–60 分钟，跨区或离岛 2–4 小时。打包顺序按「先收不用的、再收灯、最后收机」；演员可先走位或先放饭，器材车与人员车分开发车，到场先确认停车位与卸货口。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "prod-meal-penalty",
+   "category": "制片",
+   "title": "用餐罚款 / Meal Penalty",
+   "keywords": [
+    "meal penalty",
+    "用餐罚款",
+    "放饭",
+    "加班费",
+    "超时",
+    "6小时"
+   ],
+   "content": "meal penalty 是剧组超过约定用餐时间（常见为开机后第 6 小时）产生的罚款或加班费。香港没有好莱坞工会的统一罚则，实际按合约、劳工法例与演员/剧组协议执行，开拍前要写清用餐窗口与超时费率。现场做法：提前 30 分钟通知放饭，分段吃饭保证机器不停，别把放饭时间排进转场。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "prod-dood",
+   "category": "制片",
+   "title": "演员档期表 / DOOD",
+   "keywords": [
+    "DOOD",
+    "day out of days",
+    "档期表",
+    "演员档期",
+    "拍摄矩阵",
+    "hold"
+   ],
+   "content": "DOOD（Day Out of Days）是横轴为拍摄日、纵轴为演员的档期矩阵，格子里填 S 开拍、W 工作、H 保留、T 交通、F 完成。排期时先锁主演的 W 与 H，再把同场景演员的日期对齐，避免为一个人多开一天。每天收工更新并抄送制片、副导演与演员经纪，档期冲突要在开机前两周暴露。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "prod-release-form",
+   "category": "制片",
+   "title": "授权书 / Release Form",
+   "keywords": [
+    "release form",
+    "授权书",
+    "肖像权",
+    "场地同意书",
+    "音乐版权",
+    "同意书"
+   ],
+   "content": "release form 是让被拍摄者、场地业主、音乐版权方书面同意使用的法律文件，至少包含：授权范围（平台、地区、期限）、是否可修改、是否有偿、肖像与声音使用权。街头采访、路人入镜、商铺招牌、现成音乐都要签；未成年人须监护人签。没有 release 的素材，发行前必须删掉或打码。",
+   "applies_to": [
+    "qa",
+    "review",
+    "schedule"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "sb-stripboard",
+   "category": "通告单",
+   "title": "stripboard 分条",
+   "keywords": [
+    "stripboard",
+    "分条",
+    "条板",
+    "拆景",
+    "颜色分条",
+    "拍摄顺序"
+   ],
+   "content": "stripboard 把剧本拆成一场一条的纸条，按地点、日夜、演员、道具分色，再在板上重排拍摄顺序。一条只写一场，标场号、内外景、日夜、页数、演员、道具与备注；同景同光的条排在一起，转场条单独列出。排完先看总页数与转场次数，再核对演员档期，顺序改了整条板跟着挪。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "sb-call-sheet",
+   "category": "通告单",
+   "title": "通告单 / Call Sheet",
+   "keywords": [
+    "call sheet",
+    "通告单",
+    "集合时间",
+    "紧急联络",
+    "日出日落",
+    "通告"
+   ],
+   "content": "call sheet 是当天唯一的行动文件，必填：片名与版本号、日期、天气与日出日落、集合地点与停车、crew call/cast call、逐场时间表、演员与角色、crew 名单与电话、最近医院与紧急联络、器材车与场地联络人。前一日 18:00 前发出，现场只由制片或副导演改版，改动用红字标出。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "sb-cast-crew-call",
+   "category": "通告单",
+   "title": "cast call 与 crew call",
+   "keywords": [
+    "cast call",
+    "crew call",
+    "演员通告",
+    "工作人员集合",
+    "化妆时间",
+    "集合"
+   ],
+   "content": "crew call 是工作人员集合时间，cast call 是演员到场时间，两者常差 1–2 小时：crew 先卸车、布光、试机位，演员到场先化妆、定妆、走位。特写日或演员需现场定妆时，cast call 可提前到与 crew 同时；群演则安排在主机位布好之后，避免几十人干等。通告单上两个时间必须分列，不能只写一个「集合」。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "sb-cover-set",
+   "category": "通告单",
+   "title": "备用景 / Cover Set",
+   "keywords": [
+    "cover set",
+    "备用景",
+    "雨天方案",
+    "B计划",
+    "天气备份",
+    "室内备份"
+   ],
+   "content": "cover set 是为坏天气或场地突发准备的备用拍摄地，通常是同剧情的室内景或可搭景空间。通告单要在当日列出 cover set 的地址、联络人、可拍场次与最晚决策时间（一般在外景开拍前 2 小时看雷达图决定）。cover set 也要提前勘景、拿许可、确认电源，不能只在纸上写个备选。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "sb-call-sheet-version",
+   "category": "通告单",
+   "title": "通告单版本与发布",
+   "keywords": [
+    "通告单版本",
+    "call sheet 修改",
+    "已读回执",
+    "发布流程",
+    "改版",
+    "红字"
+   ],
+   "content": "通告单用版本号管理：v1 前一日 18:00 发出，v2 现场更新，v3 只用于突发改期。每次发布在文件名与页脚写日期时间，改动处用红字或高亮，并在群组要求各部门回执「已读」。天气、场地、演员三项任一变动就重发，禁止口头改通告；收工前把次日 v1 草稿给摄影、灯光、制片过一遍。",
+   "applies_to": [
+    "rundown",
+    "schedule",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "cont-axis-line",
+   "category": "场记",
+   "title": "轴线与 180 度规则（现场执行）",
+   "keywords": [
+    "轴线",
+    "180度",
+    "越轴",
+    "axis line",
+    "机位图",
+    "视线方向"
+   ],
+   "content": "轴线是两人视线或运动方向连成的那条线，所有机位必须留在同一侧，否则剪起来人物朝向会翻转。现场做法：开机前用胶带在地上标 A/B 机位与演员站位，画一张俯视线图贴在场记板背面；换机位前先问「有没有越轴」。要越轴就用中性镜头（正面、插入、移动镜头）过渡，并当场记录。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cont-eyeline",
+   "category": "场记",
+   "title": "视线匹配 / Eyeline",
+   "keywords": [
+    "eyeline",
+    "视线",
+    "视线匹配",
+    "看位",
+    "正反打",
+    "替身站位"
+   ],
+   "content": "eyeline 是角色看的方向与高度，正反打时两人的视线必须对得上：A 看画面右，B 就要看画面左，高度差不能超过一个头。现场用替身站位或贴胶带标记视线落点，拍单人镜头时让演员看向镜头旁 15–30 厘米的定点，而不是看镜头。视线错位是剪辑时最难救的连戏错误之一。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cont-prop-continuity",
+   "category": "场记",
+   "title": "道具连戏",
+   "keywords": [
+    "道具连戏",
+    "prop continuity",
+    "连戏",
+    "消耗道具",
+    "穿帮",
+    "摆位照"
+   ],
+   "content": "道具连戏要记录「位置、状态、数量、消耗」四件事：烟抽到多短、酒杯剩多少、信封有没有拆、伤口在第几镜出现。每场开拍前拍一张道具摆位照，收工前再拍一张；有消耗的道具（食物、烟、饮料）必须备同样的第二份，换道具时从同一状态接上。场记表上单独一栏写道具状态，不要只靠记忆。",
+   "applies_to": [
+    "qa",
+    "rundown",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cont-take-log",
+   "category": "场记",
+   "title": "场记表与 Take 记录",
+   "keywords": [
+    "场记表",
+    "take",
+    "best take",
+    "镜头记录",
+    "场记单",
+    "NG"
+   ],
+   "content": "场记表每拍一条就记：场号、镜号、take、机位、镜头焦距、时长、表演评价（good/best/NG）、技术问题（穿帮、麦克风入画、飞机声、焦点软）。收工前给剪辑一份「best takes 清单」，写明每个镜头推荐第几条及原因。没有记录的素材，后期要在几小时的原片里盲找，等于把时间成本转嫁给剪辑。",
+   "applies_to": [
+    "qa",
+    "rundown",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "cont-continuity-photos",
+   "category": "场记",
+   "title": "连戏照片与服装记录",
+   "keywords": [
+    "连戏照片",
+    "continuity photos",
+    "服装连戏",
+    "定妆照",
+    "穿帮",
+    "存档"
+   ],
+   "content": "连戏照片要拍「全景定关系 + 特写定细节」：全景看站位与背景道具，特写看领口、袖口、手表、发丝、血迹与污渍。每换一次机位或转场前拍一组，按「场-镜-take」命名存档。服装连戏还要记录每一层的穿脱顺序与脏污程度，演员跨日拍摄时用同一套内衣与配饰，避免颜色或领型变化。",
+   "applies_to": [
+    "qa",
+    "rundown",
+    "storyboard"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "biz-top-sheet",
+   "category": "预算",
+   "title": "预算总表 / Top Sheet",
+   "keywords": [
+    "top sheet",
+    "预算总表",
+    "budget",
+    "总预算",
+    "投资",
+    "一页表"
+   ],
+   "content": "top sheet 是给投资人看的一页预算总表，只列大项与总额：above-the-line（剧本、制片、导演、主演）、below-the-line（器材、场地、美术、交通、餐费、后期）、保险与杂费、contingency。每项写「预算数 / 已承诺 / 已支出」三列，底部一行总成本。明细放附表，top sheet 超过两页就说明分类没做干净。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "biz-contingency",
+   "category": "预算",
+   "title": "不可预见费 / Contingency",
+   "keywords": [
+    "contingency",
+    "不可预见费",
+    "预备金",
+    "10%",
+    "应急预算",
+    "超支"
+   ],
+   "content": "contingency 通常按总预算的 10% 计（5%–15%，视项目风险），用于天气、场地临时加价、补拍、器材故障等「无法事先列项」的支出。它不属于任何部门，动用要制片人书面批准并说明原因；开机前就花掉一半，说明预算本身低估。提案时把 contingency 单独列一行，不要藏进杂费。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "biz-above-below-line",
+   "category": "预算",
+   "title": "Above / Below the Line",
+   "keywords": [
+    "above the line",
+    "below the line",
+    "线上成本",
+    "线下成本",
+    "预算分类",
+    "主创费"
+   ],
+   "content": "above-the-line 指创意与版权相关的固定成本：故事版权、编剧、导演、制片人、主要演员；below-the-line 指执行成本：剧组日薪、器材、场地、美术、交通、餐饮、后期。两类分开列，方便判断「钱花在内容还是花在执行」。低预算项目常把导演费换成片酬分成，但要在合约里写清分成基数与回收顺序。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "biz-cost-report",
+   "category": "预算",
+   "title": "成本报告 / Cost Report",
+   "keywords": [
+    "cost report",
+    "成本报告",
+    "超支",
+    "EFC",
+    "预算对比",
+    "差异"
+   ],
+   "content": "cost report 每周更新一次，逐项对比「预算 / 已承诺 / 已支出 / 预计完成」（EFC），算出超支或结余。任何一项预计超 5% 就标红并写原因与补救方案；累计超 10% 要重新排剩余拍摄日。已承诺但未付的合约（场地、器材、后期）必须计入，否则账面会假性结余。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "biz-burn-rate",
+   "category": "预算",
+   "title": "每日烧钱率 / Burn Rate",
+   "keywords": [
+    "burn rate",
+    "每日成本",
+    "烧钱",
+    "超时成本",
+    "拍摄日成本",
+    "预算"
+   ],
+   "content": "burn rate 是剧组每天消耗的现金，算法：总预算 ÷ 拍摄天数，再加上每日固定开销（器材租金、场地、餐费、交通、人员日薪）。用它可以算出「多拍一天」与「超时一小时」的真实成本：超时一小时约等于全员时薪加场地与器材的加班费。谈判补拍或加景时，先报这个数字，比空谈预算有说服力。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "loc-permit",
+   "category": "勘景",
+   "title": "场地许可 / Permit",
+   "keywords": [
+    "permit",
+    "拍摄许可",
+    "场地申请",
+    "封路",
+    "公众责任险",
+    "政府场地"
+   ],
+   "content": "permit 分三类：私人场地（业主书面同意＋责任险）、政府场地（场地管理部门审批，香港可先经电影服务统筹科协调）、公共道路（警方与运输署，涉及封路要更早申请）。申请材料通常要场地平面图、拍摄时间、人数、车辆、保险证明与风险评估。许可没批下来就不要发通告，口头答应不算。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "loc-recon-checklist",
+   "category": "勘景",
+   "title": "勘景清单",
+   "keywords": [
+    "勘景",
+    "recon",
+    "踩点",
+    "场地清单",
+    "电源",
+    "噪音",
+    "动线"
+   ],
+   "content": "勘景带相机、测距仪、指南针与笔记本，逐项确认：电源位置与安培、窗户朝向与光线时段、环境噪音源、可遮光程度、器材进出通道与电梯尺寸、停车与卸货位、厕所与休息区、手机信号、消防通道、邻居与管理人员联络方式。每个空间拍「全景＋反打＋细节」，回去按场次做匹配表，不要只拍好看的角度。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "loc-sun-path",
+   "category": "勘景",
+   "title": "太阳轨迹与窗光",
+   "keywords": [
+    "sun path",
+    "太阳轨迹",
+    "窗光",
+    "方位角",
+    "golden hour",
+    "勘景"
+   ],
+   "content": "用 Sun Surveyor、PhotoPills 查拍摄日的日出日落、方位角与高度角，判断窗光什么时候进、影子往哪边倒、黄金时刻落在哪个立面。勘景时在上午、正午、黄昏各拍一张同机位参考图，标好时间；外景主镜头尽量排在光线稳定的时段，把需要硬光或逆光的镜头集中在已知窗口。",
+   "applies_to": [
+    "schedule",
+    "storyboard",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "loc-power",
+   "category": "勘景",
+   "title": "场地电力勘察",
+   "keywords": [
+    "电力",
+    "power",
+    "安培",
+    "插座",
+    "发电机",
+    "跳闸",
+    "瓦数"
+   ],
+   "content": "先算总瓦数再分配回路：香港市电 220V，一个 13A 插座理论约 2860W，实际按 80% 用（约 2300W），不要与空调、冰箱共用一路。问清电箱位置、剩余安培、可否加装临时供电；大功率灯（2kW 以上）分相接，避免跳闸。老楼要测电压降与接地，发电机放室外下风口并备油，电线过通道要贴胶带或加线槽。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "loc-noise-survey",
+   "category": "勘景",
+   "title": "环境噪音勘察",
+   "keywords": [
+    "噪音",
+    "noise",
+    "分贝",
+    "环境声",
+    "空调",
+    "飞机航道",
+    "勘景"
+   ],
+   "content": "用手机分贝仪或录音机在场景中心与窗边各测 30 秒，记录 dB 与主要来源：马路、空调外机、冰箱、电梯、学校、飞机航道、庙宇锣鼓。拍摄时能关的（空调、冰箱、抽气扇）先关，不能关的用毯子包覆或改拍特写；把噪音时段写进通告单，例如货车卸货集中在早上 7 点前。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "hk-tung-ping-chau",
+   "category": "香港拍摄",
+   "title": "东平洲拍摄",
+   "keywords": [
+    "东平洲",
+    "Tung Ping Chau",
+    "海岸公园",
+    "渔护署",
+    "街渡",
+    "离岛"
+   ],
+   "content": "东平洲以页岩海岸与日出闻名，属海岸公园范围，由渔护署管理，商业拍摄须事先向渔护署申请并遵守保护区规定；岛上补给与电力有限，器材、饮水、遮阳要自备。往返主要靠马料水码头街渡，只在星期六、日及公众假期开行，务必先核实船期与尾班船时间，错过就要留岛过夜。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "hk-tai-o",
+   "category": "香港拍摄",
+   "title": "大澳拍摄许可",
+   "keywords": [
+    "大澳",
+    "Tai O",
+    "棚屋",
+    "渔村",
+    "村民同意",
+    "潮汐",
+    "拍摄许可"
+   ],
+   "content": "大澳棚屋多为私人业权，逐户拍摄要取得业主同意，水道与棚屋区范围亦可能涉及渔护署或地政管理，商业拍摄建议先向相关部门核实申请要求。村内巷道狭窄、车辆不能直达，器材要用推车或人手搬运；涨潮时水面反光强，退潮露出泥滩，按潮汐表排拍摄顺序，并尊重居民作息。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "hk-central-permit",
+   "category": "香港拍摄",
+   "title": "中环商业区拍摄",
+   "keywords": [
+    "中环",
+    "Central",
+    "拍摄许可",
+    "行人路",
+    "商场",
+    "电影服务统筹科",
+    "封路"
+   ],
+   "content": "中环行人天桥、半山扶梯与皇后像广场一带人流密集，商业拍摄应事先经电影服务统筹科协调场地管理部门，涉及占用行人路或车道须警方、运输署同意；私人商场与写字楼大堂属业权范围，要书面许可。工作日中午最难拍，建议清晨 7 点前或周日；脚架与灯架贴反光标识，不要阻塞消防通道与巴士站。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "hk-public-housing",
+   "category": "香港拍摄",
+   "title": "公共屋邨拍摄",
+   "keywords": [
+    "公共屋邨",
+    "房屋署",
+    "屋邨办事处",
+    "拍摄申请",
+    "屋邨",
+    "居民同意"
+   ],
+   "content": "在公共屋邨范围内拍摄须向房屋署申请，并经屋邨办事处协调拍摄时间、路线与器材存放；屋邨属私人生活空间，拍摄居民要逐一取得同意，不可随意把镜头对准单位窗户与走廊。部分屋邨有门禁与访客登记，crew 名单要提前报备；晾衣竹、铁闸、走廊光管是常见画面，但不要移动住户物品。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "hk-drone-cad",
+   "category": "香港拍摄",
+   "title": "香港无人机拍摄法规",
+   "keywords": [
+    "无人机",
+    "drone",
+    "民航处",
+    "CAD",
+    "eSUA",
+    "禁飞区",
+    "航拍"
+   ],
+   "content": "香港无人机受《空运（航空服务）（修订）条例》及民航处规管，按重量分级注册与操作，商业航拍须符合操作要求并购买第三者责任保险。机场、直升机场、维港部分区域、监狱、人群上空与敏感设施禁飞；出发前用民航处 eSUA 查禁飞区与当天限制，涉及郊野公园、屋邨或私人土地另需土地管理者同意。",
+   "applies_to": [
+    "schedule",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "safe-stunts",
+   "category": "安全法规",
+   "title": "特技拍摄安全",
+   "keywords": [
+    "特技",
+    "stunt",
+    "替身",
+    "护具",
+    "安全线",
+    "排练",
+    "高风险"
+   ],
+   "content": "特技镜头要「先设计、再排练、后拍摄」：写清动作分解、落点、护具、替身与安全员位置，排练时用同等速度但不带情绪；现场设安全线，非必要人员清场，导演喊 cut 后先确认演员能动再靠近。高风险动作（车、火、高坠、水）必须配专业特技指导与医疗 standby，并预留备用镜头，不追求一条过。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "safe-pyro",
+   "category": "安全法规",
+   "title": "烟火与特别效果",
+   "keywords": [
+    "烟火",
+    "pyro",
+    "爆破",
+    "枪火",
+    "消防处",
+    "持牌",
+    "特别效果"
+   ],
+   "content": "烟火、爆破、枪火属受管制特别效果，须由持牌烟火师设计与操作，并按规定向消防处、警方及场地管理方申请，审批与时间要求需向相关部门核实。现场要划出安全距离、备灭火器与急救，演员走位与火点分开排练；风向改变、道具受潮、延迟点火都要有取消方案。没有牌照与许可，不能用「小效果」当借口。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "safe-night-shoot",
+   "category": "安全法规",
+   "title": "夜间拍摄安全",
+   "keywords": [
+    "夜拍",
+    "夜间拍摄",
+    "反光背心",
+    "交通管制",
+    "灯架",
+    "疲劳",
+    "安全"
+   ],
+   "content": "夜拍先解决「被看见」：工作人员穿反光背心，器材车与灯架贴反光条，路边拍摄摆雪糕筒并指定交通指挥；灯架加沙袋，电缆过路加线槽或胶带，避免绊倒。连续夜班不超过 3 天，收工安排交通，禁止疲劳驾驶；凌晨 2–4 点人最迟钝，把高风险镜头排在开工前段。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "safe-weather",
+   "category": "安全法规",
+   "title": "恶劣天气与拍摄",
+   "keywords": [
+    "天气",
+    "台风",
+    "黑雨",
+    "雷暴",
+    "天文台",
+    "酷热",
+    "停工"
+   ],
+   "content": "开拍前查香港天文台预报与警告：8 号风球、黑色暴雨警告生效时停止户外拍摄，人员撤到安全建筑内；雷暴时远离水边、山顶与金属灯架，收工不冒险抢镜头。酷热天气每 30 分钟补水休息，准备电解质与遮阳；寒冷或湿滑天气注意电池掉电与脚架打滑。天气决策要在通告单写明决策人与时间点。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "safe-insurance",
+   "category": "安全法规",
+   "title": "拍摄保险",
+   "keywords": [
+    "保险",
+    "insurance",
+    "公众责任险",
+    "器材险",
+    "人身意外",
+    "拍摄中断险"
+   ],
+   "content": "拍摄保险至少四类：公众责任险（场地与路人，保额按合约要求）、器材险（被盗、进水、摔坏）、人身意外险（特技与高空另加批注）、拍摄中断险（天气、主演病假）。投保时要如实申报无人机、爆破、水中、车辆等高风险项目，隐瞒会导致拒赔；开工前把保单副本交给场地管理方，收工核对器材清单再撤。",
+   "applies_to": [
+    "schedule",
+    "rundown",
+    "qa"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "post-delivery-h264-h265",
+   "category": "后期交付",
+   "title": "H.264 / H.265 交付编码",
+   "keywords": [
+    "H.264",
+    "H.265",
+    "HEVC",
+    "编码",
+    "码率",
+    "交付规格",
+    "ProRes"
+   ],
+   "content": "H.264（AVC）兼容性最好，是平台上传与客户审片的默认选择；H.265（HEVC）同画质约省 30–50% 码率，但旧设备、部分浏览器与剪辑软件支持不稳，交付前先确认对方能不能播。母版保留 ProRes 422 HQ 或 DNxHR，H.264/H.265 只做发行副本；上传码率按平台建议给足，二次压缩比文件大更伤画质。",
+   "applies_to": [
+    "qa",
+    "review",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "post-subtitle-delivery",
+   "category": "后期交付",
+   "title": "字幕交付规范",
+   "keywords": [
+    "字幕",
+    "SRT",
+    "ASS",
+    "burn-in",
+    "sidecar",
+    "双语字幕",
+    "交付"
+   ],
+   "content": "字幕分三种交付：burn-in（烧进画面，适合社媒与不可控播放环境）、sidecar（SRT/ASS 外挂，适合平台与影展）、分离母版（clean feed＋字幕文件）。SRT 只带时间码与文字，ASS 可控字体位置；双语字幕中文在上、英文在下，每行不超过 12–14 个汉字，避开画面下方 10% 的安全区，交付前逐条校对时间轴与错字。",
+   "applies_to": [
+    "qa",
+    "review",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "post-dit-backup",
+   "category": "后期交付",
+   "title": "DIT 与双备份",
+   "keywords": [
+    "DIT",
+    "双备份",
+    "checksum",
+    "素材备份",
+    "3-2-1",
+    "格式化",
+    "代理"
+   ],
+   "content": "DIT 现场流程：拷贝卡→校验（checksum）→生成第二份→两份都可读才格式化原卡，素材至少存两份、最好三份并有一份异地。按「项目/日期/机位/卡号」建目录，保留原始卡结构与音频、代理文件；备份完成前摄影卡不离开 DIT 台，收工出具备份报告并双方签字。没有校验的复制等于没备份。",
+   "applies_to": [
+    "qa",
+    "rundown",
+    "schedule"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "post-conform",
+   "category": "后期交付",
+   "title": "代理剪辑与回批",
+   "keywords": [
+    "conform",
+    "回批",
+    "代理剪辑",
+    "proxy",
+    "XML",
+    "AAF",
+    "套底"
+   ],
+   "content": "长片或高码率素材先转代理（ProRes Proxy/DNxHR LB）剪辑，锁定剪辑后导出 XML/AAF/EDL 回批原始素材，再做调色与特效。回批前统一帧率、时间码与 reel 名称，确认变速、嵌套、多机位片段已被正确处理；套底后逐镜比对构图与长度，避免丢帧或偏移。交付前保留一份「锁定版」工程与所有输出。",
+   "applies_to": [
+    "qa",
+    "review",
+    "storyboard"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "post-qc",
+   "category": "后期交付",
+   "title": "交付前 QC 清单",
+   "keywords": [
+    "QC",
+    "交付检查",
+    "响度",
+    "LUFS",
+    "黑场",
+    "爆音",
+    "版本号"
+   ],
+   "content": "交付前按清单过一遍：片头片尾时长与黑场、爆音与静音段、字幕错字与时间轴、画面边缘穿帮、台标与版权音乐、响度（网络平台常按 -14 LUFS，广播另计）、分辨率与帧率、文件名与版本号。用播放器全片看一遍而不是只看时间线，手机外放与耳机各听一次；发现问题的版本号加「_fix」重发，不要覆盖原文件。",
+   "applies_to": [
+    "qa",
+    "review",
+    "storyboard"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "block-coverage",
+   "category": "场面调度",
+   "title": "Coverage 覆盖拍法",
+   "keywords": [
+    "coverage",
+    "覆盖",
+    "master",
+    "OTS",
+    "singles",
+    "inserts",
+    "正反打"
+   ],
+   "content": "coverage 是用一组镜头把一场戏完整覆盖：master（全景定空间与轴线）→ OTS（过肩正反打）→ singles（单人近景）→ inserts（手、道具、时间）。先拍 master 锁定光位与走位，再按「同机位同光」集中拍 singles，最后补 inserts。每个景别至少两条，关键台词保三条；缺 inserts 的戏，剪辑时只能用大景别硬撑。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "block-blocking",
+   "category": "场面调度",
+   "title": "Blocking 走位调度",
+   "keywords": [
+    "blocking",
+    "走位",
+    "调度",
+    "地标",
+    "动线",
+    "演员调度"
+   ],
+   "content": "blocking 是演员与摄影机在空间里的移动设计。开拍前用胶带在地上标走位点，让演员走一遍并计时，再决定镜头是固定、跟随还是分段；调度要给出「动机」——他为什么起身、为什么走到窗边。先排演员、再定机位，不要为了漂亮运镜让演员绕路；复杂走位用俯视示意图沟通，收工前拍下正确走位作参考。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "block-multicam",
+   "category": "场面调度",
+   "title": "多机位调度",
+   "keywords": [
+    "多机位",
+    "multicam",
+    "A机",
+    "B机",
+    "机位分工",
+    "时码",
+    "群戏"
+   ],
+   "content": "多机位（multicam）让 A/B/C 机同时拍不同景别，适合对话、群戏、直播与一次性场面。分工原则：A 机 master 或中景定轴线，B 机过肩/近景抓表演，C 机插入或游机补细节；三台机器不要拍同一景别，机位夹角至少 30 度。开拍前统一时码与白平衡，现场只排一次走位，剪辑按机位切换，能省一半时间。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "block-master-shot",
+   "category": "场面调度",
+   "title": "Master Shot 主镜头",
+   "keywords": [
+    "master shot",
+    "主镜头",
+    "全景",
+    "轴线",
+    "兜底",
+    "先拍"
+   ],
+   "content": "master shot 是涵盖整场戏的广角镜头，作用是定空间、定轴线、给剪辑兜底。常规先拍 master：演员完整走一遍，摄影机用全景或中远景跟住调度，之后所有特写都能接上。若光线将变（黄昏、窗光），可先抢特写再补 master，但要用走位图与场记记录确保一致。master 不一定要用，但不能没有。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "block-depth",
+   "category": "场面调度",
+   "title": "纵深调度",
+   "keywords": [
+    "纵深",
+    "depth",
+    "前中后景",
+    "遮挡",
+    "深焦",
+    "走位",
+    "调度"
+   ],
+   "content": "纵深调度把信息放在前、中、后三层：前景走过的人、中景说话的人、背景发生的事，一个镜头里同时成立。用广角、深焦段与小光圈把三层都拍清楚，让演员沿纵深方向移动而不是横穿画面；前景遮挡可以制造窥视感，背景动作可以埋伏笔。缺点是布光难、焦点难跟，排练时要标好每个走位点的焦点距离。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "light-color-temperature",
+   "category": "灯光",
+   "title": "色温与混合光",
+   "keywords": [
+    "色温",
+    "color temperature",
+    "白平衡",
+    "CTO",
+    "CTB",
+    "混合光",
+    "5600K"
+   ],
+   "content": "先定基准色温再统一：日光 5600K、钨丝 3200K，混用会出现人物一半橙一半蓝。实拍把摄影机白平衡固定在主光色温，用 CTO/CTB 滤片把其他光源「拉齐」；想保留冷暖对比就留一盏窗光或霓虹不校正，但肤色必须落在主光一侧。换场景先测色温，别只靠监视器眼睛判断。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "light-practical",
+   "category": "灯光",
+   "title": "实用光源 / Practical",
+   "keywords": [
+    "practical",
+    "实用光",
+    "入画灯",
+    "台灯",
+    "霓虹",
+    "频闪",
+    "动机光"
+   ],
+   "content": "practical 是画面里看得见的灯具：台灯、霓虹、电视、天花灯。用真灯入画最自然，但要解决三件事：色温（换灯泡或贴 CTB）、亮度（加调光器或换低瓦数）、频闪（香港 50Hz 市电，快门设 1/50 或 1/100 秒）。灯泡太亮会过曝，可在灯罩内加柔光纸或 ND；拍夜戏时 practical 是动机光，主光要顺着它的方向打。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "light-negative-fill",
+   "category": "灯光",
+   "title": "负补光 / Negative Fill",
+   "keywords": [
+    "negative fill",
+    "负补光",
+    "黑旗",
+    "吸光",
+    "反差",
+    "黑布",
+    "塑形"
+   ],
+   "content": "negative fill 不是加光，而是用黑旗、黑布、黑泡沫板吸走反射光，把人物一侧压暗、增加反差。人物靠近白墙、浅色地板或雪地时最需要；把黑布放在镜头外的主光反侧，距离越近效果越强。配合柔光使用，可以做出「柔而不平」的肤质。判断标准：看阴影里是否还有细节，全黑就过了。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "light-golden-hour",
+   "category": "灯光",
+   "title": "黄金时刻抢拍计划",
+   "keywords": [
+    "golden hour",
+    "magic hour",
+    "黄金时刻",
+    "魔术时刻",
+    "日落",
+    "抢拍"
+   ],
+   "content": "golden hour 是日出后、日落前约一小时，magic hour 常指日落前后那 20–30 分钟的魔术光。提前查天文台日出日落时间，倒推：布光与走位在黄金时刻前 40 分钟完成，先拍不可重复的远景与逆光，再拍特写；太阳角度每分钟都在变，用同机位连拍并记录时间。阴天没有黄金时刻，要有 B 方案。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "light-ratio",
+   "category": "灯光",
+   "title": "光比与测光",
+   "keywords": [
+    "光比",
+    "light ratio",
+    "测光",
+    "IRE",
+    "主光",
+    "辅光",
+    "反差"
+   ],
+   "content": "光比是主光与辅光在人物脸上的亮度差：2:1 柔和、4:1 有立体感、8:1 以上戏剧化。用测光表分别读主光与阴影面，或看监视器波形；数字摄影宁欠勿过，高光一旦死白无法恢复。拍特写先把肤色定在 60–70 IRE，再调背景；换景别时重新测，因为灯距与角度变了，光比也会变。",
+   "applies_to": [
+    "storyboard",
+    "qa",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "sound-room-tone",
+   "category": "收音",
+   "title": "Room Tone 室内底噪",
+   "keywords": [
+    "room tone",
+    "底噪",
+    "环境底噪",
+    "室内环境声",
+    "连戏",
+    "收音"
+   ],
+   "content": "room tone 是每个场景在无人说话、无人移动时录 30–60 秒的环境底噪，用来在剪辑点填补对白间隙、掩盖接缝。做法：全场安静，空调与冰箱维持拍摄时状态，录音机与话筒位置不动，所有人屏住呼吸；文件名标「场号_roomtone」，单独存一份。没有 room tone，对白一剪就会出现「真空」，观众立刻出戏。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "sound-wild-track",
+   "category": "收音",
+   "title": "Wild Track 单独收音",
+   "keywords": [
+    "wild track",
+    "wild line",
+    "单独收音",
+    "群杂",
+    "补录",
+    "拟音",
+    "对白"
+   ],
+   "content": "wild track 是不带画面单独录的声音：群杂、脚步、开门、衣物摩擦、电话另一头台词、无法同期录的独白。拍完主镜头后让演员对着空气再说一遍台词（wild line），或让群演集体做反应声；录前拍手报「场号-内容」，方便后期对位。wild track 要录多个版本（近、远、不同情绪），剪辑才有得挑。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "sound-boom-operation",
+   "category": "收音",
+   "title": "Boom 举杆操作",
+   "keywords": [
+    "boom",
+    "挑杆",
+    "举杆",
+    "话筒影子",
+    "枪麦",
+    "收音",
+    "监听"
+   ],
+   "content": "举杆员站在镜头外，把话筒从人物头顶斜前方 45 度指向嘴部，距离 30–60 厘米，越近越饱满但越容易入画和喷麦。室内用短杆、室外用长杆加防风毛衣；注意话筒影子落在演员脸上或墙上，随时调整灯位与杆位。换手时先停录或放慢，杆身不要碰衣服与灯架；全程戴耳机监听，爆音、风噪、衣物摩擦要当场喊停。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "rundown"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "sound-lav-hidden",
+   "category": "收音",
+   "title": "领夹麦隐藏",
+   "keywords": [
+    "lavalier",
+    "领夹麦",
+    "隐藏",
+    "摩擦声",
+    "小蜜蜂",
+    "双通道",
+    "无线麦"
+   ],
+   "content": "lavalier 藏在衣领下 10–15 厘米，用医用胶带或专用夹固定在内层衣物，线上做「应力环」防止拉扯；两层衣服之间垫羊毛套减少摩擦，避免直接贴在皮肤或丝质面料上。领口太低、项链、围巾都会蹭麦，试装时就要试音。重要场次左右各藏一只，接双通道录制，一只出问题还有备份。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "sound-sync-multicam",
+   "category": "收音",
+   "title": "多机位与时码同步",
+   "keywords": [
+    "时码",
+    "timecode",
+    "jam sync",
+    "多机位",
+    "同步",
+    "32-bit float",
+    "打板"
+   ],
+   "content": "多机位拍摄要让所有机器与录音机共享同一时码：用 Tentacle、Timecode Systems 等时码器统一 jam sync，或每场开机拍手对板。独立录音机开 32-bit float 可防爆音，但不要代替监听；收工核对每台机器的帧率、时码偏移与文件名。剪辑前先同步全部素材，再做多机位切换，否则后期要逐条手动对轨。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "rundown"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "edit-assembly",
+   "category": "剪辑",
+   "title": "粗剪 Assembly",
+   "keywords": [
+    "assembly",
+    "粗剪",
+    "初剪",
+    "best take",
+    "时间线",
+    "剪辑流程"
+   ],
+   "content": "assembly 是把 coverage 按场顺序铺成一条完整时间线：先放 master 定场景骨架，再插入 OTS、singles 与 inserts，每个镜头只留 best take。原则是「先让故事成立，再谈节奏」：不要一边剪一边调色加音乐，也不要在粗剪阶段反复修剪同一个镜头。assembly 通常比成片长 30–50%，它的任务是暴露缺镜头与逻辑断点。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "edit-multicam",
+   "category": "剪辑",
+   "title": "多机位剪辑",
+   "keywords": [
+    "多机位剪辑",
+    "multicam",
+    "切机",
+    "同步",
+    "反应镜头",
+    "跳轴"
+   ],
+   "content": "多机位剪辑先把所有机位同步成 multicam 片段，再像导播一样实时切换：优先切「正在说话的人」与「反应的人」，同一句台词不要来回切超过两次，切点落在动作或语气转折上。机位夹角太近的切换会像跳切，宁可多停两秒；特写不要连续使用，中间插一个中景让眼睛休息。切完再逐段微调，避免机械对拍。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "review"
+   ],
+   "level": "advanced"
+  },
+  {
+   "id": "edit-rhythm",
+   "category": "剪辑",
+   "title": "剪辑节奏",
+   "keywords": [
+    "节奏",
+    "rhythm",
+    "剪辑点",
+    "留白",
+    "呼吸",
+    "声画"
+   ],
+   "content": "节奏不等于快，而是「信息释放的速度」。动作剪辑点落在动作完成前 1–2 帧最顺；情绪戏要敢于留白，让表演多停半秒；连续短镜头之后接一个长镜头，观众才感觉得到呼吸。判断方法：关掉声音看一遍，若画面仍能读懂，说明视觉节奏成立；再关画面听一遍，若声音能独立叙事，声画才算平衡。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "edit-platform-duration",
+   "category": "剪辑",
+   "title": "平台时长与版本",
+   "keywords": [
+    "平台时长",
+    "竖屏",
+    "9:16",
+    "版本",
+    "hook",
+    "短视频",
+    "交付"
+   ],
+   "content": "同一个项目要规划多版本：15 秒钩子版、30 秒完整版、60–90 秒叙事版、3–5 分钟正片。竖屏 9:16 不是把横屏裁一刀，要重新构图、把主体放中间偏上、字幕避开底部 UI；前 3 秒必须出现冲突或结果。各平台时长上限与画幅会调整，交付前查最新官方规格，不要用去年的参数套今天的平台。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "review"
+   ],
+   "level": "core"
+  },
+  {
+   "id": "edit-selects",
+   "category": "剪辑",
+   "title": "选 Take 原则",
+   "keywords": [
+    "选take",
+    "best take",
+    "表演",
+    "备用take",
+    "对比",
+    "场记表"
+   ],
+   "content": "选 take 的顺序：表演是否可信 > 情绪是否到位 > 技术是否合格。技术问题（轻微失焦、穿帮）能修则修，表演不对无法修；同一句台词优先选「反应的那一条」而不是「最工整的那一条」。把备选 take 叠在时间线上做对比，不要凭记忆；选定后在场记表上标注，方便回找与导演确认。",
+   "applies_to": [
+    "qa",
+    "storyboard",
+    "review"
+   ],
+   "level": "core"
+  }
+ ]
+}

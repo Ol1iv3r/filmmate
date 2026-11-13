@@ -11,26 +11,16 @@ const state = {
   voiceLang: localStorage.getItem("filmmate_voice_lang") || "zh-CN",
   ttsLang: localStorage.getItem("filmmate_tts_lang") || "zh-CN",
   current: null,            // 当前 bot 消息渲染句柄
+  script: null,             // 已上传剧本 {name, text, chars}
+  libScript: null,          // 个人灵感库附带的剧本
 };
 
 /* ---------------- 初始化 ---------------- */
 async function initHealth() {
   try {
-    const r = await fetch("/api/health");
-    const d = await r.json();
-    const badge = $("#modeBadge");
-    if (d.online) {
-      badge.textContent = "在线 · DeepSeek API";
-      badge.className = "badge badge-online";
-    } else {
-      badge.textContent = "离线演示模式(未配置 Key)";
-      badge.className = "badge badge-offline";
-    }
-    $("#apiKey").value = state.apiKey;
-    $("#voiceLang").value = state.voiceLang;
-    $("#ttsLang").value = state.ttsLang;
+    await fetch("/api/health");
   } catch (e) {
-    $("#modeBadge").textContent = "后端未启动";
+    console.warn("后端未启动", e);
   }
 }
 
@@ -57,11 +47,12 @@ function markdownLite(text) {
   return out.join("");
 }
 
-function addUserMessage(text) {
+function addUserMessage(text, scriptName) {
   hideHero();
   const wrap = document.createElement("div");
   wrap.className = "msg user";
-  wrap.innerHTML = `<div class="avatar">🧑‍🎨</div><div class="bubble">${markdownLite(text)}</div>`;
+  const attach = scriptName ? `<div class="attach-line">📄 ${esc(scriptName)}</div>` : "";
+  wrap.innerHTML = `<div class="avatar">🧑‍🎨</div><div class="bubble">${attach}${markdownLite(text)}</div>`;
   $("#messages").appendChild(wrap);
   scrollBottom();
 }
@@ -183,11 +174,13 @@ function handleBlock(block, m) {
 }
 
 async function send(text) {
-  if (!text || state.streaming) return;
+  const script = state.script;
+  if ((!text && !script) || state.streaming) return;
+  const content = text || "请处理这份剧本";
   state.streaming = true;
   setBusy(true);
-  addUserMessage(text);
-  state.history.push({ role: "user", content: text });
+  addUserMessage(content, script ? script.name : "");
+  state.history.push({ role: "user", content: content.slice(0, 2000) });
   const m = newBotMessage();
 
   try {
@@ -195,9 +188,11 @@ async function send(text) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: text,
+        message: content,
         tool: state.tool || null,
         api_key: state.apiKey,
+        script_text: script ? script.text : "",
+        script_name: script ? script.name : "",
         history: state.history.slice(-6, -1),
       }),
     });
@@ -296,6 +291,29 @@ function renderReview(el, p) {
     box.appendChild(ns);
     box.appendChild(np);
   }
+  if (p.genre_benchmark) {
+    const gb = document.createElement("p");
+    gb.style.cssText = "font-size:13px;color:var(--text-dim);margin-top:10px;border-left:2px solid var(--accent);padding-left:10px;";
+    gb.innerHTML = `<strong>类型对标</strong> ${esc(p.genre_benchmark)}`;
+    box.appendChild(gb);
+  }
+  if (p.production_risks && p.production_risks.length) {
+    const rTitle = document.createElement("div");
+    rTitle.className = "section-title";
+    rTitle.textContent = "制作风险";
+    box.appendChild(rTitle);
+    const riskWrap = document.createElement("div");
+    riskWrap.className = "risk-list";
+    for (const r of p.production_risks) {
+      const item = document.createElement("div");
+      item.className = `risk-item sev-${r.severity}`;
+      item.innerHTML = `<span class="sev">${esc(r.severity || "中")}</span>
+        <span class="risk-name">${esc(r.risk)}</span>
+        <span class="risk-fix">→ ${esc(r.mitigation || "")}</span>`;
+      riskWrap.appendChild(item);
+    }
+    box.appendChild(riskWrap);
+  }
   el.appendChild(box);
   renderReferences(el, p.references);
   if (p.mode) {
@@ -356,6 +374,17 @@ function sketchSVG(shot) {
 }
 
 function renderStoryboard(el, p) {
+  if (p.scene_plan && p.scene_plan.length) {
+    const plan = document.createElement("div");
+    plan.className = "scene-plan";
+    plan.innerHTML = p.scene_plan.map(sp => `
+      <div class="plan-item">
+        <span class="plan-scene">${esc(sp.scene || "")}</span>
+        <span class="plan-cov">${esc((sp.coverage || []).join(" + "))}</span>
+        ${sp.notes ? `<span class="plan-note">${esc(sp.notes)}</span>` : ""}
+      </div>`).join("");
+    el.appendChild(plan);
+  }
   const grid = document.createElement("div");
   grid.className = "shots-grid";
   for (const shot of p.shots || []) {
@@ -366,14 +395,24 @@ function renderStoryboard(el, p) {
       <div class="shot-info">
         <div class="tags">
           <span>${esc(shot.scene)}</span><span>${esc(shot.shot_type)}</span><span>${esc(shot.angle)}</span>
-          <span>${esc(shot.movement)}</span><span>${esc(shot.duration)}</span>
+          <span>${esc(shot.movement)}</span>${shot.lens ? `<span>${esc(shot.lens)}</span>` : ""}<span>${esc(shot.duration)}</span>
         </div>
         <div class="desc">${esc(shot.description || "")}</div>
+        ${shot.purpose ? `<div class="shot-row"><b>目的</b>${esc(shot.purpose)}</div>` : ""}
+        ${shot.lighting ? `<div class="shot-row"><b>光线</b>${esc(shot.lighting)}</div>` : ""}
+        ${shot.sound ? `<div class="shot-row"><b>声音</b>${esc(shot.sound)}</div>` : ""}
+        ${shot.transition ? `<div class="shot-row"><b>转场</b>${esc(shot.transition)}</div>` : ""}
         ${shot.dialogue ? `<div class="dlg">🗣 ${esc(shot.dialogue)}</div>` : ""}
       </div>`;
     grid.appendChild(card);
   }
   el.appendChild(grid);
+  if (p.coverage_notes) {
+    const cn = document.createElement("p");
+    cn.className = "coverage-note";
+    cn.textContent = "🎯 " + p.coverage_notes;
+    el.appendChild(cn);
+  }
   if (p.note) {
     const note = document.createElement("p");
     note.style.cssText = "font-size:12px;color:var(--text-dim);margin-top:8px;";
@@ -383,15 +422,106 @@ function renderStoryboard(el, p) {
   renderReferences(el, p.references);
 }
 
+function pagesLabel(n) {
+  if (!n) return "—";
+  const whole = Math.floor(n / 8), frac = n % 8;
+  if (whole && frac) return `${whole} 又 ${frac}/8`;
+  return whole ? `${whole} 页` : `${frac}/8`;
+}
+
+function minsLabel(m) {
+  if (!m) return "—";
+  return m >= 60 ? `${Math.floor(m / 60)}h${String(m % 60).padStart(2, "0")}` : `${m}m`;
+}
+
+function sceneRows(scenes) {
+  return (scenes || []).map(s => [
+    `#${s.scene_no}`, s.int_ext || "", s.heading || "", s.day_night === "NIGHT" ? "夜" : s.day_night === "DAY" ? "日" : (s.day_night || ""),
+    (s.cast || []).join("、"), s.location || "", pagesLabel(s.pages_eighths), `${s.est_minutes || 0} 分钟`,
+  ]);
+}
+
+const SCENE_HEADERS = ["场次", "INT/EXT", "场景标题", "日/夜", "演员", "地点", "页数", "预计"];
+
+function totalsLine(t) {
+  if (!t) return "";
+  const bits = [
+    `总页数 ${pagesLabel(t.pages_eighths)}`,
+    `拍摄 ${minsLabel(t.shoot_minutes)}`,
+    `转场 ${t.company_moves || 0} 次`,
+    `用餐 ${t.meals || 0} 次`,
+  ];
+  if ((t.shoot_minutes || 0) > 11 * 60) bits.push("⚠️ 超过 11 小时安全线");
+  return bits.join(" · ");
+}
+
 function renderRundown(el, p) {
   const title = document.createElement("div");
   title.className = "section-title";
-  title.textContent = `${p.title || "拍摄通告单"}${p.date ? ` · ${p.date}` : ""}`;
+  title.textContent = `${p.title || "拍摄通告单"}${p.day ? ` · ${p.day}` : ""}${p.date ? ` · ${p.date}` : ""}`;
   el.appendChild(title);
-  const rows = (p.items || []).map(it => [it.time, it.item, it.location, it.cast, it.equipment, it.notes]);
-  el.appendChild(buildTable(["时间", "项目", "地点", "人员", "设备", "备注"], rows));
-  el.appendChild(exportBtn("rundown.csv", [["时间", "项目", "地点", "人员", "设备", "备注"], ...rows]));
+
+  const calls = document.createElement("div");
+  calls.className = "call-strip";
+  calls.innerHTML = [
+    ["CREW CALL", p.crew_call], ["CAST CALL", p.cast_call], ["WRAP", p.wrap],
+  ].filter(([, v]) => v).map(([k, v]) => `<div class="call-item"><span>${k}</span><b>${esc(v)}</b></div>`).join("")
+    + (p.totals ? `<div class="call-item totals"><span>TOTALS</span><b>${esc(totalsLine(p.totals))}</b></div>` : "");
+  el.appendChild(calls);
+
+  if (p.scenes && p.scenes.length) {
+    const h = document.createElement("div");
+    h.className = "section-title";
+    h.textContent = "场次表（重点场次）· Stripboard";
+    el.appendChild(h);
+    const rows = sceneRows(p.scenes);
+    el.appendChild(buildTable(SCENE_HEADERS, rows));
+    el.appendChild(exportBtn("stripboard.csv", [SCENE_HEADERS, ...rows]));
+  }
+
+  if (p.blocks && p.blocks.length) {
+    const h = document.createElement("div");
+    h.className = "section-title";
+    h.textContent = "当日时间表 · Call Sheet";
+    el.appendChild(h);
+    const wrap = document.createElement("div");
+    wrap.className = "table-wrap";
+    wrap.innerHTML = `<table class="tbl calltbl"><thead><tr><th>时间</th><th>类型</th><th>内容</th><th>时长</th></tr></thead><tbody>
+      ${p.blocks.map(b => `<tr class="blk-${b.type}">
+        <td class="mono">${esc(b.time || "")}</td>
+        <td>${esc(blockIcon(b.type))} ${esc(b.type)}</td>
+        <td>${esc(b.note || "")}</td>
+        <td class="mono">${b.est_minutes ? b.est_minutes + "m" : ""}</td></tr>`).join("")}
+    </tbody></table>`;
+    el.appendChild(wrap);
+  }
+
+  if (p.cast_calls && p.cast_calls.length) {
+    const h = document.createElement("div");
+    h.className = "section-title";
+    h.textContent = "演员通告 · Cast Calls";
+    el.appendChild(h);
+    el.appendChild(buildTable(["演员", "角色", "到场", "备注"],
+      p.cast_calls.map(c => [c.name, c.role || "", c.call || "", c.notes || ""])));
+  }
+
+  if (p.safety && p.safety.length) {
+    const ul = document.createElement("ul");
+    ul.className = "note-list safety";
+    ul.innerHTML = p.safety.map(s => `<li>🦺 ${esc(s)}</li>`).join("");
+    el.appendChild(ul);
+  }
+  if (p.notes && p.notes.length) {
+    const ul = document.createElement("ul");
+    ul.className = "note-list";
+    ul.innerHTML = p.notes.map(s => `<li>▸ ${esc(s)}</li>`).join("");
+    el.appendChild(ul);
+  }
   renderReferences(el, p.references);
+}
+
+function blockIcon(type) {
+  return ({ crew_call: "⏰", cast_call: "💄", setup: "🔧", scene: "🎬", move: "🚚", meal: "🍽", wrap: "🌙", buffer: "🧯" })[type] || "•";
 }
 
 function renderSchedule(el, p) {
@@ -399,27 +529,96 @@ function renderSchedule(el, p) {
   title.className = "section-title";
   title.textContent = p.title || "拍摄日程";
   el.appendChild(title);
+  if (p.strategy) {
+    const s = document.createElement("p");
+    s.className = "strategy";
+    s.textContent = "📋 " + p.strategy;
+    el.appendChild(s);
+  }
   const allRows = [];
   for (const d of p.days || []) {
-    const head = document.createElement("div");
-    head.className = "section-title";
-    head.textContent = `${d.day} · ${d.theme || ""}`;
-    el.appendChild(head);
-    const rows = (d.tasks || []).map(tk => [d.day, tk.time, tk.task, tk.location, tk.notes]);
-    allRows.push(...rows);
-    el.appendChild(buildTable(["时间", "任务", "地点", "备注"], rows.map(r => r.slice(1))));
-    if (d.tip) {
-      const tip = document.createElement("p");
-      tip.style.cssText = "font-size:12px;color:var(--warn);margin:4px 0 10px;";
-      tip.textContent = "💡 " + d.tip;
-      el.appendChild(tip);
+    const card = document.createElement("div");
+    card.className = "day-card";
+    card.innerHTML = `
+      <div class="day-head">
+        <span class="day-no">${esc(d.day || "")}</span>
+        <span class="day-theme">${esc(d.theme || "")}</span>
+        <span class="day-time">${esc(d.crew_call || "")}${d.wrap ? " – " + esc(d.wrap) : ""}</span>
+        ${d.location ? `<span class="day-loc">📍 ${esc(d.location)}</span>` : ""}
+      </div>
+      <div class="day-totals">${esc(totalsLine(d.totals))}</div>`;
+    el.appendChild(card);
+
+    if (d.scenes && d.scenes.length) {
+      const rows = sceneRows(d.scenes);
+      allRows.push(...rows.map(r => [d.day, ...r]));
+      el.appendChild(buildTable(SCENE_HEADERS, rows));
+    } else if (d.tasks && d.tasks.length) {
+      el.appendChild(buildTable(["时间", "任务", "地点", "备注"], d.tasks.map(tk => [tk.time, tk.task, tk.location, tk.notes])));
+    }
+    if (d.blocks && d.blocks.length) {
+      const wrap = document.createElement("div");
+      wrap.className = "table-wrap";
+      wrap.innerHTML = `<table class="tbl calltbl"><tbody>
+        ${d.blocks.map(b => `<tr class="blk-${b.type}"><td class="mono">${esc(b.time || "")}</td>
+          <td>${esc(blockIcon(b.type))} ${esc(b.note || "")}</td><td class="mono">${b.est_minutes ? b.est_minutes + "m" : ""}</td></tr>`).join("")}
+      </tbody></table>`;
+      el.appendChild(wrap);
+    }
+    for (const tip of (d.tips || (d.tip ? [d.tip] : []))) {
+      const t = document.createElement("p");
+      t.className = "day-tip";
+      t.textContent = "💡 " + tip;
+      el.appendChild(t);
     }
   }
-  el.appendChild(exportBtn("schedule.csv", [["天", "时间", "任务", "地点", "备注"], ...allRows]));
+  el.appendChild(exportBtn("schedule.csv", [["天", ...SCENE_HEADERS], ...allRows]));
+
+  if (p.cast_schedule && p.cast_schedule.length) {
+    const h = document.createElement("div");
+    h.className = "section-title";
+    h.textContent = "演员档期 · DOOD";
+    el.appendChild(h);
+    el.appendChild(buildTable(["演员", "天数", "备注"],
+      p.cast_schedule.map(c => [c.name, (c.days || []).map(x => "D" + x).join(", "), c.notes || ""])));
+  }
+  if (p.risks && p.risks.length) {
+    const h = document.createElement("div");
+    h.className = "section-title";
+    h.textContent = "风险与备案";
+    el.appendChild(h);
+    el.appendChild(buildTable(["风险", "缓解方案"], p.risks.map(r => [r.risk, r.mitigation || ""])));
+  }
   renderReferences(el, p.references);
 }
 
 function renderInspiration(el, p) {
+  if (p.moods && p.moods.length) {
+    for (const group of p.moods) {
+      const head = document.createElement("div");
+      head.className = "mood-head";
+      head.innerHTML = `<span class="mood-name">${esc(group.mood)}</span><span class="mood-sub">这些片子在「${esc(group.mood)}」这一情绪上可以给你参考</span>`;
+      el.appendChild(head);
+      const row = document.createElement("div");
+      row.className = "mood-films";
+      row.innerHTML = (group.films || []).map(f => `
+        <div class="mood-film">
+          <a href="${esc(f.url)}" target="_blank" rel="noopener" class="mf-cover">
+            <img src="${esc((f.frames && f.frames[0]) || f.cover)}" alt="${esc(f.title)}" loading="lazy" referrerpolicy="no-referrer">
+            <span>${esc(f.duration || "")}${(f.frames || []).length ? " · 静帧" : ""}</span>
+          </a>
+          <a class="mf-title" href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.title)}${f.personal ? " · 我的" : ""}</a>
+          <div class="mf-meta">${f.script_page ? `<a href="${esc(f.script_page)}" target="_blank" rel="noopener">📄 剧本</a>` : ""}<a href="${esc(f.url)}" target="_blank" rel="noopener">▶ 原片</a></div>
+        </div>`).join("");
+      row.querySelectorAll(".mood-film").forEach((card, i) => {
+        card.addEventListener("click", (ev) => {
+          if (ev.target.closest("a")) return;
+          openFrameModal(group.films[i]);
+        });
+      });
+      el.appendChild(row);
+    }
+  }
   const grid = document.createElement("div");
   grid.className = "concept-grid";
   for (const c of p.concepts || []) {
@@ -430,7 +629,17 @@ function renderInspiration(el, p) {
       <div class="c-genre">${esc(c.genre)}</div>
       <p><strong>梗概</strong>${esc(c.logline)}</p>
       <p><strong>开场钩子</strong>${esc(c.hook)}</p>
-      <p><strong>反转</strong>${esc(c.twist)}</p>`;
+      <p><strong>反转</strong>${esc(c.twist)}</p>
+      ${(c.structure || []).length ? `<p><strong>结构</strong></p><ol class="c-struct">${c.structure.map(s => `<li>${esc(s)}</li>`).join("")}</ol>` : ""}
+      ${(c.reference_patterns || []).length ? `<p><strong>可借鉴</strong>${esc(c.reference_patterns.join("；"))}</p>` : ""}
+      ${c.visual_motif ? `<p><strong>视觉母题</strong>${esc(c.visual_motif)}</p>` : ""}
+      ${c.sound_idea ? `<p><strong>声音想法</strong>${esc(c.sound_idea)}</p>` : ""}
+      ${c.budget_note ? `<p class="c-budget"><strong>低成本方案</strong>${esc(c.budget_note)}</p>` : ""}
+      ${(c.stills || []).length && !(p.moods || []).length ? `<div class="stills">${c.stills.map(st => `
+        <a class="still" href="${esc(st.url)}" target="_blank" rel="noopener" title="${esc(st.title)}">
+          <img src="${esc(st.cover)}" alt="${esc(st.title)}" loading="lazy" referrerpolicy="no-referrer">
+          <span>${esc(st.title)} · ${esc(st.duration || "")}</span>
+        </a>`).join("")}</div>` : ""}`;
     grid.appendChild(card);
   }
   el.appendChild(grid);
@@ -445,23 +654,33 @@ function renderInspiration(el, p) {
 
 function renderCases(el, p) {
   const grid = document.createElement("div");
-  grid.className = "concept-grid";
+  grid.className = "film-grid";
   for (const c of p.cases || []) {
     const card = document.createElement("div");
-    card.className = "case-card";
-    const rundownRows = (c.rundown || []).slice(0, 4).map(r => `<tr><td>${esc(r.time)}</td><td>${esc(r.item)}</td></tr>`).join("");
+    card.className = "film-card";
+    const views = c.stat && c.stat.view ? (c.stat.view > 10000 ? (c.stat.view / 10000).toFixed(1) + " 万" : c.stat.view) : "";
     card.innerHTML = `
-      <div class="c-title">🎬 ${esc(c.title)}</div>
-      <div class="c-meta">${esc(c.type)} · ${esc(c.genre)} · ${esc(c.duration)} · ${esc(c.budget)}</div>
-      <p><span class="c-label">梗概:</span>${esc(c.logline)}</p>
-      <p><span class="c-label">拍摄地:</span>${esc((c.locations || []).join("、"))}</p>
-      <p><span class="c-label">设备:</span>${esc((c.equipment || []).join("、"))}</p>
-      <p><span class="c-label">Rundown(节选):</span></p>
-      <table class="tbl"><tr><th>时间</th><th>项目</th></tr>${rundownRows}</table>
-      <p style="margin-top:6px"><span class="c-label">经验教训:</span>${esc(c.lessons || "")}</p>`;
+      <a class="film-cover" href="${esc(c.url || "#")}" target="_blank" rel="noopener">
+        <img src="${esc(c.cover || "")}" alt="${esc(c.title)}" loading="lazy" referrerpolicy="no-referrer">
+        <span class="film-dur">${esc(c.duration || "")}</span>
+      </a>
+      <div class="film-body">
+        <a class="film-title" href="${esc(c.url || "#")}" target="_blank" rel="noopener">${esc(c.title)}</a>
+        <div class="film-meta">${esc(c.type || "短片")}${c.crew ? " · " + esc(c.crew) : ""}${views ? " · " + esc(String(views)) + "播放" : ""}</div>
+        ${c.logline ? `<p class="film-desc">${esc(c.logline)}</p>` : ""}
+        <div class="film-tags">${(c.tags || []).map(t => `<span>${esc(t)}</span>`).join("")}</div>
+        <div class="film-foot">
+          <a href="${esc(c.url || "#")}" target="_blank" rel="noopener">▶ 在 Bilibili 打开</a>
+          <span class="verified">✓ 来源已核验</span>
+        </div>
+      </div>`;
     grid.appendChild(card);
   }
   el.appendChild(grid);
+  const note = document.createElement("p");
+  note.className = "source-note";
+  note.textContent = "以上为 Bilibili 公开元数据（标题/时长/UP主/简介/链接），不含虚构的制作数据；版权归原作者。";
+  el.appendChild(note);
 }
 
 function buildTable(headers, rows) {
@@ -547,6 +766,10 @@ function bindEvents() {
   // 工具 chips
   document.querySelectorAll(".chip-tool").forEach(chip => {
     chip.addEventListener("click", () => {
+      if (chip.dataset.tool === "library") {
+        toggleLibrary();
+        return;
+      }
       document.querySelectorAll(".chip-tool").forEach(c => c.classList.remove("active"));
       chip.classList.add("active");
       state.tool = chip.dataset.tool || "";
@@ -555,7 +778,7 @@ function bindEvents() {
 
   $("#sendBtn").addEventListener("click", () => {
     const text = $("#input").value.trim();
-    if (!text) return;
+    if (!text && !state.script) return;
     $("#input").value = "";
     autoResize();
     send(text);
@@ -571,32 +794,157 @@ function bindEvents() {
 
   $("#micBtn").addEventListener("click", toggleMic);
 
-  $("#useSample").addEventListener("click", () => {
-    $("#input").value = $("#sampleScript").textContent;
-    autoResize();
-    document.querySelectorAll(".chip-tool").forEach(c => c.classList.remove("active"));
-    const reviewChip = [...document.querySelectorAll(".chip-tool")].find(c => c.dataset.tool === "review");
-    if (reviewChip) reviewChip.classList.add("active");
-    state.tool = "review";
-    $("#sendBtn").click();
+  // 我的灵感库
+  $("#libClose").addEventListener("click", () => $("#libraryPanel").classList.add("hidden"));
+  $("#fmClose").addEventListener("click", () => $("#frameModal").classList.add("hidden"));
+  $("#frameModal").addEventListener("click", (e) => {
+    if (e.target === $("#frameModal")) $("#frameModal").classList.add("hidden");
+  });
+  $("#libAdd").addEventListener("click", addLibraryFilm);
+  $("#libScriptBtn").addEventListener("click", () => $("#libScriptFile").click());
+  $("#libScriptFile").addEventListener("change", async (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    $("#libScriptName").textContent = "解析中…";
+    const fd = new FormData();
+    fd.append("file", file);
+    try {
+      const res = await fetch("/api/script/parse", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "解析失败");
+      state.libScript = { name: data.filename, text: data.text };
+      $("#libScriptName").textContent = "📄 " + data.filename;
+    } catch (err) {
+      state.libScript = null;
+      $("#libScriptName").textContent = "❌ " + err.message;
+    }
   });
 
-  // 设置抽屉
-  $("#settingsBtn").addEventListener("click", () => $("#settingsOverlay").classList.remove("hidden"));
-  $("#closeSettings").addEventListener("click", () => $("#settingsOverlay").classList.add("hidden"));
-  $("#settingsOverlay").addEventListener("click", (e) => {
-    if (e.target === $("#settingsOverlay")) $("#settingsOverlay").classList.add("hidden");
+  // 剧本上传
+  $("#attachBtn").addEventListener("click", () => $("#fileInput").click());
+  $("#fileInput").addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) uploadScript(file);
+    e.target.value = "";
   });
-  $("#saveSettings").addEventListener("click", () => {
-    state.apiKey = $("#apiKey").value.trim();
-    state.voiceLang = $("#voiceLang").value;
-    state.ttsLang = $("#ttsLang").value;
-    localStorage.setItem("filmmate_api_key", state.apiKey);
-    localStorage.setItem("filmmate_voice_lang", state.voiceLang);
-    localStorage.setItem("filmmate_tts_lang", state.ttsLang);
-    $("#settingsOverlay").classList.add("hidden");
-    initHealth();
+  $("#scriptRemove").addEventListener("click", () => {
+    state.script = null;
+    renderScriptChip();
   });
+}
+
+function openFrameModal(film) {
+  $("#fmTitle").textContent = film.title + (film.duration ? " · " + film.duration : "");
+  const frames = film.frames || [];
+  $("#fmGrid").innerHTML = frames.length
+    ? frames.map(u => `<img src="${esc(u)}" loading="lazy" alt="${esc(film.title)}">`).join("")
+    : `<img src="${esc(film.cover)}" alt="${esc(film.title)}">`;
+  $("#fmLinks").innerHTML = [
+    film.script_page ? `<a href="${esc(film.script_page)}" target="_blank" rel="noopener">📄 剧本</a>` : "",
+    `<a href="${esc(film.url)}" target="_blank" rel="noopener">▶ 原片</a>`,
+  ].join("");
+  $("#frameModal").classList.remove("hidden");
+}
+
+async function toggleLibrary() {
+  const panel = $("#libraryPanel");
+  panel.classList.toggle("hidden");
+  if (!panel.classList.contains("hidden")) refreshLibrary();
+}
+
+async function refreshLibrary() {
+  const list = $("#libList");
+  list.innerHTML = "<div class='lib-empty'>加载中…</div>";
+  try {
+    const res = await fetch("/api/library/personal");
+    const data = await res.json();
+    const films = data.films || [];
+    if (!films.length) {
+      list.innerHTML = "<div class='lib-empty'>还没有收藏。粘贴一条 Bilibili 链接试试。</div>";
+      return;
+    }
+    list.innerHTML = films.map(f => `
+      <div class="lib-item">
+        ${f.cover ? `<img src="${esc(f.cover)}" referrerpolicy="no-referrer" alt="">` : ""}
+        <div class="lib-info">
+          <a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.title)}</a>
+          <span>${esc((f.moods || []).join(" / "))}</span>
+        </div>
+        <button class="sc-remove" data-id="${esc(f.id)}">✕</button>
+      </div>`).join("");
+    list.querySelectorAll("button[data-id]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        await fetch("/api/library/personal/" + encodeURIComponent(btn.dataset.id), { method: "DELETE" });
+        refreshLibrary();
+      });
+    });
+  } catch (e) {
+    list.innerHTML = "<div class='lib-empty'>读取失败</div>";
+  }
+}
+
+async function addLibraryFilm() {
+  const url = $("#libUrl").value.trim();
+  const title = $("#libTitle").value.trim();
+  const moods = $("#libMoods").value.split(/[,，、\s]+/).filter(Boolean);
+  if (!url && !title) return;
+  const btn = $("#libAdd");
+  btn.disabled = true;
+  btn.textContent = "添加中…";
+  try {
+    const res = await fetch("/api/library/personal", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url, title, moods,
+        script_text: state.libScript ? state.libScript.text : "",
+        script_name: state.libScript ? state.libScript.name : "",
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "添加失败");
+    $("#libUrl").value = ""; $("#libTitle").value = ""; $("#libMoods").value = "";
+    state.libScript = null;
+    $("#libScriptName").textContent = "";
+    refreshLibrary();
+  } catch (e) {
+    alert(e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "添加";
+  }
+}
+
+async function uploadScript(file) {
+  const chip = $("#scriptChip");
+  chip.classList.remove("hidden");
+  $("#scriptName").textContent = file.name;
+  $("#scriptMeta").textContent = "解析中…";
+  const fd = new FormData();
+  fd.append("file", file);
+  try {
+    const res = await fetch("/api/script/parse", { method: "POST", body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "解析失败");
+    state.script = { name: data.filename, text: data.text, chars: data.chars };
+    renderScriptChip();
+  } catch (err) {
+    state.script = null;
+    $("#scriptMeta").textContent = "❌ " + err.message;
+  }
+}
+
+function renderScriptChip() {
+  const chip = $("#scriptChip");
+  if (!state.script) {
+    chip.classList.add("hidden");
+    $("#scriptName").textContent = "";
+    $("#scriptMeta").textContent = "";
+    return;
+  }
+  chip.classList.remove("hidden");
+  $("#scriptName").textContent = state.script.name;
+  $("#scriptMeta").textContent = `${state.script.chars.toLocaleString()} 字 · 已就绪`;
 }
 
 bindEvents();

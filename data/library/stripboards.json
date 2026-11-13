@@ -1,0 +1,3458 @@
+{
+  "name": "通告单与拍摄日程模板",
+  "templates": [
+    {
+      "id": "sb-1day-commercial",
+      "name": "单日广告通告单（1 天 / 2 场 / 1 次转场）",
+      "type": "广告",
+      "shoot_days": 1,
+      "crew_call": "07:30",
+      "cast_call": "08:00",
+      "wrap": "16:15",
+      "locations": [
+        {
+          "name": "咖啡馆（内景）",
+          "int_ext": "INT",
+          "permit": "店铺包场 1 天（07:00–13:00），含 2 名店员配合",
+          "notes": "临窗座位加 1/2 白柔光布，保留真实窗光方向；先拍窗边再拍吧台"
+        },
+        {
+          "name": "街角斑马线（外景）",
+          "int_ext": "EXT",
+          "permit": "市政拍摄许可 1 日 + 交通协管 2 人",
+          "notes": "14:00 后西晒逆光，需 ND1.2 与 8×8 反光板；人行道保留 1.5 m 通行宽度"
+        }
+      ],
+      "cast": [
+        {
+          "name": "女主 A",
+          "role": "顾客（主角）",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "咖啡师 B",
+          "role": "店员（配角）",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "群演 6 人",
+          "role": "街角路人",
+          "days": [
+            1
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "scene_no": 1,
+          "int_ext": "INT",
+          "heading": "咖啡馆 - 日",
+          "synopsis": "女主推门进店点单，被窗外的品牌海报吸引，回头对咖啡师笑了一下",
+          "cast": [
+            "女主 A",
+            "咖啡师 B"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 12,
+          "pages_eighths": 12,
+          "est_minutes": 165,
+          "location": "咖啡馆（内景）",
+          "day": 1,
+          "notes": "先全景建立空间，再按 8 个镜头 coverage 连拍；产品特写最后拍，避免奶泡塌掉"
+        },
+        {
+          "scene_no": 2,
+          "int_ext": "EXT",
+          "heading": "街角斑马线 - 日",
+          "synopsis": "女主端着外带杯穿过人群，逆光停步，品牌 slogan 在画面右侧定格",
+          "cast": [
+            "女主 A",
+            "群演 6 人"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 5,
+          "pages_eighths": 5,
+          "est_minutes": 75,
+          "location": "街角斑马线（外景）",
+          "day": 1,
+          "notes": "长焦压缩人群；定格镜头拍 8 条，给客户留选片空间"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "crew_call",
+          "time": "07:30",
+          "note": "crew call · 集合、早餐、设备清点、消防通道与用电安全简报",
+          "est_minutes": 30
+        },
+        {
+          "type": "cast_call",
+          "time": "08:00",
+          "note": "cast call · 妆发 30 分钟 + 服装确认，客户现场确认造型",
+          "est_minutes": 45
+        },
+        {
+          "type": "setup",
+          "time": "08:45",
+          "note": "布光：窗光为主 + 300W LED 补面，A/B 机位与滑轨测试",
+          "est_minutes": 45
+        },
+        {
+          "type": "scene",
+          "time": "09:30",
+          "scene_no": 1,
+          "est_minutes": 165,
+          "note": "先全景后中近景，产品特写留到最后"
+        },
+        {
+          "type": "move",
+          "time": "12:15",
+          "note": "// COMPANY MOVE TO 街角斑马线 // 同区转场按 30 分钟计（含装卸）",
+          "est_minutes": 30
+        },
+        {
+          "type": "meal",
+          "time": "12:45",
+          "note": "// MEAL BREAK @ 12:45 // 第 5 小时 15 分放饭，避开 meal penalty",
+          "est_minutes": 60
+        },
+        {
+          "type": "setup",
+          "time": "13:45",
+          "note": "外景：ND1.2 压高光、反光板补下巴光、划定群演走位线",
+          "est_minutes": 30
+        },
+        {
+          "type": "scene",
+          "time": "14:15",
+          "scene_no": 2,
+          "est_minutes": 75,
+          "note": "逆光长焦；定格镜头多拍 3 条安全条"
+        },
+        {
+          "type": "buffer",
+          "time": "15:30",
+          "note": "客户现场改 slogan / 补拍产品特写的缓冲",
+          "est_minutes": 20
+        },
+        {
+          "type": "wrap",
+          "time": "15:50",
+          "note": "// END OF DAY 16:15 // 素材双备份（SSD×2）、设备清点、场地恢复",
+          "est_minutes": 25
+        }
+      ],
+      "totals": {
+        "pages_eighths": 17,
+        "page_count": "2 1/8",
+        "shoot_minutes": 525,
+        "company_moves": 1,
+        "meals": 1,
+        "scenes": 2,
+        "shoot_days": 1
+      },
+      "days": [
+        {
+          "day": 1,
+          "date": "Day 1",
+          "call": "07:30",
+          "wrap": "16:15",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "07:30",
+              "note": "crew call · 集合、早餐、设备清点、消防通道与用电安全简报",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "08:00",
+              "note": "cast call · 妆发 30 分钟 + 服装确认，客户现场确认造型",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "08:45",
+              "note": "布光：窗光为主 + 300W LED 补面，A/B 机位与滑轨测试",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "09:30",
+              "scene_no": 1,
+              "est_minutes": 165,
+              "note": "先全景后中近景，产品特写留到最后"
+            },
+            {
+              "type": "move",
+              "time": "12:15",
+              "note": "// COMPANY MOVE TO 街角斑马线 // 同区转场按 30 分钟计（含装卸）",
+              "est_minutes": 30
+            },
+            {
+              "type": "meal",
+              "time": "12:45",
+              "note": "// MEAL BREAK @ 12:45 // 第 5 小时 15 分放饭，避开 meal penalty",
+              "est_minutes": 60
+            },
+            {
+              "type": "setup",
+              "time": "13:45",
+              "note": "外景：ND1.2 压高光、反光板补下巴光、划定群演走位线",
+              "est_minutes": 30
+            },
+            {
+              "type": "scene",
+              "time": "14:15",
+              "scene_no": 2,
+              "est_minutes": 75,
+              "note": "逆光长焦；定格镜头多拍 3 条安全条"
+            },
+            {
+              "type": "buffer",
+              "time": "15:30",
+              "note": "客户现场改 slogan / 补拍产品特写的缓冲",
+              "est_minutes": 20
+            },
+            {
+              "type": "wrap",
+              "time": "15:50",
+              "note": "// END OF DAY 16:15 // 素材双备份（SSD×2）、设备清点、场地恢复",
+              "est_minutes": 25
+            }
+          ],
+          "totals": {
+            "pages_eighths": 17,
+            "page_count": "2 1/8",
+            "shoot_minutes": 525,
+            "total_est_time": "8h45",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        }
+      ],
+      "checklist": [
+        "场地包场确认与钥匙（07:00 前到场）",
+        "艺人肖像授权（1 年全媒体，含二次剪辑）",
+        "产品道具备份：杯具/咖啡豆 ×3，另备 1 台备用咖啡机",
+        "客户签字的分镜与 slogan 版本（含备选结尾）",
+        "交通协管与市政拍摄许可复印件",
+        "食品造型师现场，冰桶与吸管/纸巾备份",
+        "应急现金、保险单、急救包"
+      ],
+      "tips": [
+        "广告 1 页 ≈ 2–3 小时，不能按剧情片 60–90 分钟估：食物/产品特写要留造型、换杯、擦杯壁的时间。",
+        "客户通常现场改脚本，buffer 的 20 分钟是止损；改超过 3 次就启用备选结尾镜头，别在片场重写分镜。",
+        "公司转场按 30 分钟/次计，跨区（如中环→西贡）按 60 分钟；本片同区只排 30 分钟。",
+        "餐补超时会产生 meal penalty：call 07:30，第 6 小时是 13:30，本片 12:45 放饭留了 45 分钟缓冲。",
+        "许可证、保险单、肖像授权开机前拍进手机：遇到巡查 1 分钟内能出示，别让现场停工等文件。"
+      ]
+    },
+    {
+      "id": "sb-1day-product",
+      "name": "单日产品 demo 通告单（棚拍 / 微距 + 高速摄影）",
+      "type": "产品广告",
+      "shoot_days": 1,
+      "crew_call": "08:00",
+      "cast_call": "08:30",
+      "wrap": "17:30",
+      "locations": [
+        {
+          "name": "A 棚（内景）",
+          "int_ext": "INT",
+          "permit": "摄影棚包棚 1 天（08:00–20:00），含灯光师 1 名与 1 名棚务",
+          "notes": "微距台与高速水槽分两区，中间用黑绒隔断；水槽区做防水与地漏检查"
+        }
+      ],
+      "cast": [
+        {
+          "name": "手模 A",
+          "role": "产品使用者（手部）",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "手模 B",
+          "role": "手部替身（备用）",
+          "days": [
+            1
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "scene_no": 1,
+          "int_ext": "INT",
+          "heading": "A 棚 微距台 - 日",
+          "synopsis": "产品从黑场里缓缓升起，logo 纹理在侧逆光下逐层显现",
+          "cast": [],
+          "day_night": "DAY",
+          "page_eighths": 3,
+          "pages_eighths": 3,
+          "est_minutes": 90,
+          "location": "A 棚（内景）",
+          "day": 1,
+          "notes": "100mm 微距 + 电控滑轨，焦点堆栈 5 层；每换一次灯位重做白平衡"
+        },
+        {
+          "scene_no": 2,
+          "int_ext": "INT",
+          "heading": "A 棚 高速水槽 - 日",
+          "synopsis": "乳白色液体从产品表面溅开，1000fps 下凝住的瞬间",
+          "cast": [
+            "手模 A"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 2,
+          "pages_eighths": 2,
+          "est_minutes": 120,
+          "location": "A 棚（内景）",
+          "day": 1,
+          "notes": "Phantom 1000fps、1/4000s；每 NG 一次擦台、换液、重设轨迹"
+        },
+        {
+          "scene_no": 3,
+          "int_ext": "INT",
+          "heading": "A 棚 产品台 - 日",
+          "synopsis": "手模拿起产品、按压、放回，特写切到使用场景 demo",
+          "cast": [
+            "手模 A"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 5,
+          "pages_eighths": 5,
+          "est_minutes": 90,
+          "location": "A 棚（内景）",
+          "day": 1,
+          "notes": "双机：A 机 50mm 中近景，B 机 100mm 微距切手部"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "crew_call",
+          "time": "08:00",
+          "note": "crew call · 器材进场、棚内用电与地线检查、产品开箱清点",
+          "est_minutes": 30
+        },
+        {
+          "type": "cast_call",
+          "time": "08:30",
+          "note": "cast call · 手模手部护理、指甲修整、与产品合影确认肤色",
+          "est_minutes": 30
+        },
+        {
+          "type": "setup",
+          "time": "09:00",
+          "note": "布光：微距台侧逆光 + 黑绒吸光；电控滑轨与焦点堆栈测试",
+          "est_minutes": 90
+        },
+        {
+          "type": "scene",
+          "time": "10:30",
+          "scene_no": 1,
+          "est_minutes": 90,
+          "note": "按「升—停—纹理—logo」4 个镜头拍，景深不足就堆栈"
+        },
+        {
+          "type": "meal",
+          "time": "12:00",
+          "note": "// MEAL BREAK @ 12:00 // 第 4 小时放饭，饭后换高速机",
+          "est_minutes": 45
+        },
+        {
+          "type": "setup",
+          "time": "12:45",
+          "note": "换 Phantom + 水槽：1/4000s 需要 4 盏 1.2K 硬光，灯位重排",
+          "est_minutes": 45
+        },
+        {
+          "type": "scene",
+          "time": "13:30",
+          "scene_no": 2,
+          "est_minutes": 120,
+          "note": "按 6 条/小时算，先拍水花形态再拍产品不沾水版本"
+        },
+        {
+          "type": "scene",
+          "time": "15:30",
+          "scene_no": 3,
+          "est_minutes": 90,
+          "note": "手部 demo：按压/旋转/放回，特写与中近景各 3 条"
+        },
+        {
+          "type": "wrap",
+          "time": "17:00",
+          "note": "// END OF DAY 17:30 // 产品归还清单核对、素材双备份、棚内复位",
+          "est_minutes": 30
+        }
+      ],
+      "totals": {
+        "pages_eighths": 10,
+        "page_count": "1 1/4",
+        "shoot_minutes": 570,
+        "company_moves": 0,
+        "meals": 1,
+        "scenes": 3,
+        "shoot_days": 1
+      },
+      "days": [
+        {
+          "day": 1,
+          "date": "Day 1",
+          "call": "08:00",
+          "wrap": "17:30",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "08:00",
+              "note": "crew call · 器材进场、棚内用电与地线检查、产品开箱清点",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "08:30",
+              "note": "cast call · 手模手部护理、指甲修整、与产品合影确认肤色",
+              "est_minutes": 30
+            },
+            {
+              "type": "setup",
+              "time": "09:00",
+              "note": "布光：微距台侧逆光 + 黑绒吸光；电控滑轨与焦点堆栈测试",
+              "est_minutes": 90
+            },
+            {
+              "type": "scene",
+              "time": "10:30",
+              "scene_no": 1,
+              "est_minutes": 90,
+              "note": "按「升—停—纹理—logo」4 个镜头拍，景深不足就堆栈"
+            },
+            {
+              "type": "meal",
+              "time": "12:00",
+              "note": "// MEAL BREAK @ 12:00 // 第 4 小时放饭，饭后换高速机",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "12:45",
+              "note": "换 Phantom + 水槽：1/4000s 需要 4 盏 1.2K 硬光，灯位重排",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "13:30",
+              "scene_no": 2,
+              "est_minutes": 120,
+              "note": "按 6 条/小时算，先拍水花形态再拍产品不沾水版本"
+            },
+            {
+              "type": "scene",
+              "time": "15:30",
+              "scene_no": 3,
+              "est_minutes": 90,
+              "note": "手部 demo：按压/旋转/放回，特写与中近景各 3 条"
+            },
+            {
+              "type": "wrap",
+              "time": "17:00",
+              "note": "// END OF DAY 17:30 // 产品归还清单核对、素材双备份、棚内复位",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 10,
+            "page_count": "1 1/4",
+            "shoot_minutes": 570,
+            "total_est_time": "9h30",
+            "company_moves": 0,
+            "meals": 1,
+            "scenes": 3
+          }
+        }
+      ],
+      "checklist": [
+        "产品 5 台（hero 1 台 + 备用 4 台，含 1 台可拆解）",
+        "无尘布、镜头清洁液、气吹、防指纹手套",
+        "水花配方：牛奶 + 甘油 + 食用色素，另备纯净水 20 L",
+        "CFast 256G ×4 与读卡器，高速素材单独建目录",
+        "1.2K 硬光 ×4 与频闪测试报告（50/60Hz）",
+        "产品授权与商标使用范围（书面）",
+        "静物台水平仪、配重、18°C 保温箱"
+      ],
+      "tips": [
+        "高速摄影 1000fps 需要约 32 倍进光量：先按 1/4000s 算光，再上 1.2K 硬光；柔光箱会直接吃掉 2 档。",
+        "微距景深只有几毫米，用步进滑轨 + 焦点堆栈或 motion control 重复轨迹，不要靠手动跟焦。",
+        "液体镜头按 6 条/小时估：每 NG 一次要擦台、换液、重设轨迹；棚拍 1 页 ≈ 3–4 小时，别按剧情片 60–90 分钟估。",
+        "棚温 28°C 以上产品会凝露、巧克力会化：备 2 套产品在 18°C 保温箱，开拍前 10 分钟才取出。",
+        "公司转场按 30 分钟/次计，跨区 60 分钟；本片棚内零转场，省下的 45 分钟全部加给高速机。"
+      ]
+    },
+    {
+      "id": "sb-music-video",
+      "name": "音乐录影（MV）单日通告单（3 场景 / 2 次 company move）",
+      "type": "音乐录影",
+      "shoot_days": 1,
+      "crew_call": "10:30",
+      "cast_call": "11:00",
+      "wrap": "19:40",
+      "locations": [
+        {
+          "name": "地下停车场 B3（内景）",
+          "int_ext": "INT",
+          "permit": "物业许可 4 小时（11:00–15:00），含 2 个固定车位",
+          "notes": "水泥柱多，机位贴柱拍纵深；只用车灯与 1 支 LED 棒"
+        },
+        {
+          "name": "废弃仓库（内景）",
+          "int_ext": "INT",
+          "permit": "场地租赁 1 天 + 消防报备（烟机使用）",
+          "notes": "LED 墙需独立 32A 供电；烟机注意通风，消防通道保持畅通"
+        },
+        {
+          "name": "大厦天台（外景）",
+          "int_ext": "EXT",
+          "permit": "大厦物业许可 + 高空作业保险",
+          "notes": "日落 18:50；护栏外禁止站人，机位配安全绳，器材配沙袋"
+        }
+      ],
+      "cast": [
+        {
+          "name": "主唱 A",
+          "role": "主唱（performance）",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "吉他手 B",
+          "role": "乐队",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "鼓手 C",
+          "role": "乐队",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "贝斯手 D",
+          "role": "乐队",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "叙事女孩 E",
+          "role": "叙事线主角",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "群演 8 人",
+          "role": "停车场舞群",
+          "days": [
+            1
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "scene_no": 1,
+          "int_ext": "INT",
+          "heading": "地下停车场 B3 - 日",
+          "synopsis": "主唱在车灯扫过的水泥柱之间穿行，乐队在车顶演奏",
+          "cast": [
+            "主唱 A",
+            "吉他手 B",
+            "鼓手 C",
+            "贝斯手 D",
+            "群演 8 人"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 4,
+          "pages_eighths": 4,
+          "est_minutes": 90,
+          "location": "地下停车场 B3（内景）",
+          "day": 1,
+          "notes": "车灯频闪与 playback 对拍；手持 + 24mm 广角贴柱"
+        },
+        {
+          "scene_no": 2,
+          "int_ext": "INT",
+          "heading": "废弃仓库 - 夜",
+          "synopsis": "叙事女孩在 LED 墙前独舞，画面切成红蓝两套色温",
+          "cast": [
+            "叙事女孩 E",
+            "群演 8 人"
+          ],
+          "day_night": "NIGHT",
+          "page_eighths": 3,
+          "pages_eighths": 3,
+          "est_minutes": 95,
+          "location": "废弃仓库（内景）",
+          "day": 1,
+          "notes": "LED 墙按 BPM 编程，副歌第 1 拍触发闪白"
+        },
+        {
+          "scene_no": 3,
+          "int_ext": "EXT",
+          "heading": "大厦天台 - 黄昏",
+          "synopsis": "乐队在天台逆光剪影，主唱唱完最后一句，镜头拉向城市天际线",
+          "cast": [
+            "主唱 A",
+            "吉他手 B",
+            "鼓手 C",
+            "贝斯手 D"
+          ],
+          "day_night": "DUSK",
+          "page_eighths": 2,
+          "pages_eighths": 2,
+          "est_minutes": 40,
+          "location": "大厦天台（外景）",
+          "day": 1,
+          "notes": "日落前后 20 分钟窗口，先拍全景剪影，18:55 后只拍特写与拉镜"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "crew_call",
+          "time": "10:30",
+          "note": "crew call · 器材车停 B3、停车场封闭与安全锥、playback 测试",
+          "est_minutes": 30
+        },
+        {
+          "type": "cast_call",
+          "time": "11:00",
+          "note": "cast call · 妆发（烟熏/湿发）+ 乐队调音与对拍",
+          "est_minutes": 45
+        },
+        {
+          "type": "setup",
+          "time": "11:45",
+          "note": "车灯布光：2 台车斜打硬光 + 薄雾；A 机手持、B 机广角低机位",
+          "est_minutes": 45
+        },
+        {
+          "type": "scene",
+          "time": "12:30",
+          "scene_no": 1,
+          "est_minutes": 90,
+          "note": "主歌 A/B 段各拍 8 条完整 take，playback 从第 1 小节起"
+        },
+        {
+          "type": "move",
+          "time": "14:00",
+          "note": "// COMPANY MOVE TO 废弃仓库 // 同区 20 分钟车程 + 20 分钟装卸",
+          "est_minutes": 40
+        },
+        {
+          "type": "setup",
+          "time": "14:40",
+          "note": "仓库：LED 墙对色、烟机、地胶与电缆过桥",
+          "est_minutes": 30
+        },
+        {
+          "type": "meal",
+          "time": "15:10",
+          "note": "// MEAL BREAK @ 15:10 // 第 4 小时 40 分放饭，晚场前完成",
+          "est_minutes": 45
+        },
+        {
+          "type": "scene",
+          "time": "15:55",
+          "scene_no": 2,
+          "est_minutes": 95,
+          "note": "副歌与桥段：LED 红/蓝两套色温，女孩独舞与乐队分拍"
+        },
+        {
+          "type": "move",
+          "time": "17:30",
+          "note": "// COMPANY MOVE TO 大厦天台 // 电梯限载，器材分 2 趟上",
+          "est_minutes": 35
+        },
+        {
+          "type": "setup",
+          "time": "18:05",
+          "note": "天台：机位贴女儿墙、ND 与反光板；安全绳检查后再上人",
+          "est_minutes": 25
+        },
+        {
+          "type": "scene",
+          "time": "18:30",
+          "scene_no": 3,
+          "est_minutes": 40,
+          "note": "日落 18:50：先全景剪影，18:55 后只拍特写与拉镜"
+        },
+        {
+          "type": "wrap",
+          "time": "19:10",
+          "note": "// END OF DAY 19:40 // 天台清场、烟机回收、素材双备份",
+          "est_minutes": 30
+        }
+      ],
+      "totals": {
+        "pages_eighths": 9,
+        "page_count": "1 1/8",
+        "shoot_minutes": 550,
+        "company_moves": 2,
+        "meals": 1,
+        "scenes": 3,
+        "shoot_days": 1
+      },
+      "days": [
+        {
+          "day": 1,
+          "date": "Day 1",
+          "call": "10:30",
+          "wrap": "19:40",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "10:30",
+              "note": "crew call · 器材车停 B3、停车场封闭与安全锥、playback 测试",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "11:00",
+              "note": "cast call · 妆发（烟熏/湿发）+ 乐队调音与对拍",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "11:45",
+              "note": "车灯布光：2 台车斜打硬光 + 薄雾；A 机手持、B 机广角低机位",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "12:30",
+              "scene_no": 1,
+              "est_minutes": 90,
+              "note": "主歌 A/B 段各拍 8 条完整 take，playback 从第 1 小节起"
+            },
+            {
+              "type": "move",
+              "time": "14:00",
+              "note": "// COMPANY MOVE TO 废弃仓库 // 同区 20 分钟车程 + 20 分钟装卸",
+              "est_minutes": 40
+            },
+            {
+              "type": "setup",
+              "time": "14:40",
+              "note": "仓库：LED 墙对色、烟机、地胶与电缆过桥",
+              "est_minutes": 30
+            },
+            {
+              "type": "meal",
+              "time": "15:10",
+              "note": "// MEAL BREAK @ 15:10 // 第 4 小时 40 分放饭，晚场前完成",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "15:55",
+              "scene_no": 2,
+              "est_minutes": 95,
+              "note": "副歌与桥段：LED 红/蓝两套色温，女孩独舞与乐队分拍"
+            },
+            {
+              "type": "move",
+              "time": "17:30",
+              "note": "// COMPANY MOVE TO 大厦天台 // 电梯限载，器材分 2 趟上",
+              "est_minutes": 35
+            },
+            {
+              "type": "setup",
+              "time": "18:05",
+              "note": "天台：机位贴女儿墙、ND 与反光板；安全绳检查后再上人",
+              "est_minutes": 25
+            },
+            {
+              "type": "scene",
+              "time": "18:30",
+              "scene_no": 3,
+              "est_minutes": 40,
+              "note": "日落 18:50：先全景剪影，18:55 后只拍特写与拉镜"
+            },
+            {
+              "type": "wrap",
+              "time": "19:10",
+              "note": "// END OF DAY 19:40 // 天台清场、烟机回收、素材双备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 9,
+            "page_count": "1 1/8",
+            "shoot_minutes": 550,
+            "total_est_time": "9h10",
+            "company_moves": 2,
+            "meals": 1,
+            "scenes": 3
+          }
+        }
+      ],
+      "checklist": [
+        "场地消防报备、保险单、天台高空作业保险",
+        "playback 设备：BPM 标记、备用音源、无线耳返 ×2",
+        "烟机/雾油与通风方案（消防通道不可堵）",
+        "天台安全绳、护栏检查记录、当日风速",
+        "道具车钥匙与油量（车灯需长时间供电）",
+        "妆发补妆包、吸油纸、湿发喷雾",
+        "CFexpress 卡 ×4、备用机电池 ×6"
+      ],
+      "tips": [
+        "MV 不按「页」排，按 playback 段落排：一首 3 分半的歌拆成主歌/副歌/桥段 3 大段，每段至少 6–8 条完整 take，剪辑才有得选。",
+        "黄金时刻只有约 20 分钟（本片 18:50–19:10），提前 40 分钟把机位、ND、反光板全部布好；窗口内只做表演，不调灯。",
+        "公司转场按 30 分钟/次计，跨区 60 分钟；本片 2 次转场共 75 分钟（含电梯限载分趟），现场不要再临时加机位。",
+        "天台必须做坠落防护与风速评估：6 级以上风停拍灯架与无人机；高空作业保险未覆盖前不要上人。",
+        "playback 与灯光调光台分开供电，避免 LED 频闪串进音频；现场留 1 条参考音轨对齐所有 take。"
+      ]
+    },
+    {
+      "id": "sb-short-3day",
+      "name": "3 分钟剧情短片通告单（3 天 / 6 场 / 含夜戏与黄金时刻）",
+      "type": "剧情短片",
+      "shoot_days": 3,
+      "crew_call": "11:00",
+      "cast_call": "11:30",
+      "wrap": "19:20",
+      "locations": [
+        {
+          "name": "老公寓客厅（内景）",
+          "int_ext": "INT",
+          "permit": "业主同意 2 天（含厨房与天台动线）",
+          "notes": "木地板会响，铺地毯消脚步；窗光方向固定，先拍窗边"
+        },
+        {
+          "name": "公寓天台（外景）",
+          "int_ext": "EXT",
+          "permit": "物业许可 1 晚 + 护栏加固",
+          "notes": "日落 18:30；晾衣绳与被子是主要前景，风大时用沙袋压灯架"
+        },
+        {
+          "name": "琴房（内景）",
+          "int_ext": "INT",
+          "permit": "培训机构 1 天（周日闭馆）",
+          "notes": "钢琴漆面反光，用黑旗压环境反射；木地板需铺保护垫"
+        },
+        {
+          "name": "老街街道（外景）",
+          "int_ext": "EXT",
+          "permit": "夜戏拍摄许可 + 雨车 1 台 + 交通协管 2 人",
+          "notes": "路灯为钠灯 2200K，需校色；雨车提前 3 小时接管上下水"
+        },
+        {
+          "name": "末班公交（内景）",
+          "int_ext": "INT",
+          "permit": "公交公司包车 1 夜（22:00–02:00），停场不营运",
+          "notes": "车顶灯管频闪，快门锁 1/50；车辆断电前先拍完夜景"
+        },
+        {
+          "name": "公寓厨房（内景）",
+          "int_ext": "INT",
+          "permit": "同公寓，含在 2 天租期内",
+          "notes": "黎明前蓝调窗光，不加灯；灶台实用灯做暖色对比"
+        }
+      ],
+      "cast": [
+        {
+          "name": "父亲 老陈",
+          "role": "听障父亲（手语）",
+          "days": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "name": "女儿 小满（9 岁）",
+          "role": "学琴的女儿",
+          "days": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "name": "钢琴老师",
+          "role": "配角",
+          "days": [
+            2
+          ]
+        },
+        {
+          "name": "公交司机",
+          "role": "配角",
+          "days": [
+            3
+          ]
+        },
+        {
+          "name": "乘客群演 4 人",
+          "role": "末班车乘客",
+          "days": [
+            3
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "scene_no": 1,
+          "int_ext": "INT",
+          "heading": "老公寓客厅 - 日",
+          "synopsis": "老陈修收音机，小满练琴，邻居敲门投诉；父亲把助听器摘下来",
+          "cast": [
+            "父亲 老陈",
+            "女儿 小满（9 岁）"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 8,
+          "pages_eighths": 8,
+          "est_minutes": 120,
+          "location": "老公寓客厅（内景）",
+          "day": 1,
+          "notes": "窗光作主光；先拍父亲修收音机的手部插入镜头"
+        },
+        {
+          "scene_no": 2,
+          "int_ext": "EXT",
+          "heading": "公寓天台 - 黄昏",
+          "synopsis": "父女在天台收被子，小满用手语说想参加比赛，父亲假装没看见",
+          "cast": [
+            "父亲 老陈",
+            "女儿 小满（9 岁）"
+          ],
+          "day_night": "DUSK",
+          "page_eighths": 4,
+          "pages_eighths": 4,
+          "est_minutes": 45,
+          "location": "公寓天台（外景）",
+          "day": 1,
+          "notes": "18:20–18:40 黄金时刻；先全景后手语特写"
+        },
+        {
+          "scene_no": 3,
+          "int_ext": "INT",
+          "heading": "琴房 - 日",
+          "synopsis": "小满偷练参赛曲，老师发现她根本听不见节拍器，教室安静下来",
+          "cast": [
+            "女儿 小满（9 岁）",
+            "钢琴老师"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 7,
+          "pages_eighths": 7,
+          "est_minutes": 150,
+          "location": "琴房（内景）",
+          "day": 2,
+          "notes": "节拍器声音做主观处理；钢琴反光用黑旗压掉"
+        },
+        {
+          "scene_no": 4,
+          "int_ext": "EXT",
+          "heading": "老街街道 - 夜",
+          "synopsis": "老陈冒雨去借钱买二手助听器，被店主拒绝，站在雨里抽完一支烟",
+          "cast": [
+            "父亲 老陈"
+          ],
+          "day_night": "NIGHT",
+          "page_eighths": 3,
+          "pages_eighths": 3,
+          "est_minutes": 90,
+          "location": "老街街道（外景）",
+          "day": 2,
+          "notes": "雨车 20:00 进场；先拍雨幕空镜再拍人物，最后拍点烟长镜头"
+        },
+        {
+          "scene_no": 5,
+          "int_ext": "INT",
+          "heading": "末班公交 - 夜",
+          "synopsis": "老陈在末班车上睡着坐过站，小满在终点站等他，两人隔着车窗对视",
+          "cast": [
+            "父亲 老陈",
+            "女儿 小满（9 岁）",
+            "公交司机",
+            "乘客群演 4 人"
+          ],
+          "day_night": "NIGHT",
+          "page_eighths": 7,
+          "pages_eighths": 7,
+          "est_minutes": 150,
+          "location": "末班公交（内景）",
+          "day": 3,
+          "notes": "车顶灯管频闪，快门 1/50；先拍车外隔窗视角，再拍车内正反打"
+        },
+        {
+          "scene_no": 6,
+          "int_ext": "INT",
+          "heading": "公寓厨房 - 黎明",
+          "synopsis": "父女吃面，小满把助听器推回父亲手边，父亲第一次戴上听她说话",
+          "cast": [
+            "父亲 老陈",
+            "女儿 小满（9 岁）"
+          ],
+          "day_night": "DAWN",
+          "page_eighths": 3,
+          "pages_eighths": 3,
+          "est_minutes": 60,
+          "location": "公寓厨房（内景）",
+          "day": 3,
+          "notes": "蓝调 05:00–05:30，窗光为主，不加灯"
+        }
+      ],
+      "blocks": [
+        {
+          "day": 1,
+          "type": "crew_call",
+          "time": "11:00",
+          "note": "crew call · 器材进场、公寓动线确认、儿童演员安全须知",
+          "est_minutes": 30
+        },
+        {
+          "day": 1,
+          "type": "cast_call",
+          "time": "11:30",
+          "note": "cast call · 妆发 + 手语指导与父女对词，监护人签署工时表",
+          "est_minutes": 60
+        },
+        {
+          "day": 1,
+          "type": "setup",
+          "time": "12:30",
+          "note": "客厅：窗光遮挡 1/2、实用灯补墙；A/B 机位与收音（lav + boom）",
+          "est_minutes": 60
+        },
+        {
+          "day": 1,
+          "type": "scene",
+          "time": "13:30",
+          "scene_no": 1,
+          "est_minutes": 120,
+          "note": "按「修收音机—练琴—敲门—摘助听器」4 拍拍，先拍插入镜头"
+        },
+        {
+          "day": 1,
+          "type": "meal",
+          "time": "15:30",
+          "note": "// MEAL BREAK @ 15:30 // 第 4 小时 30 分放饭（含儿童演员课业时间）",
+          "est_minutes": 45
+        },
+        {
+          "day": 1,
+          "type": "move",
+          "time": "16:15",
+          "note": "// COMPANY MOVE TO 公寓天台 // 同一栋楼，货梯运器材 30 分钟",
+          "est_minutes": 30
+        },
+        {
+          "day": 1,
+          "type": "setup",
+          "time": "16:45",
+          "note": "天台：落日方向测光、晾衣绳与被子走位、护栏检查",
+          "est_minutes": 60
+        },
+        {
+          "day": 1,
+          "type": "buffer",
+          "time": "17:45",
+          "note": "等光：黄金时刻 18:20 前不拍正片，先走位与试拍",
+          "est_minutes": 20
+        },
+        {
+          "day": 1,
+          "type": "scene",
+          "time": "18:05",
+          "scene_no": 2,
+          "est_minutes": 45,
+          "note": "黄金时刻 18:20–18:40：全景 3 条 + 手语特写 4 条"
+        },
+        {
+          "day": 1,
+          "type": "wrap",
+          "time": "18:50",
+          "note": "END OF DAY 19:20 // 被子/晾衣绳复原、素材双备份",
+          "est_minutes": 30
+        },
+        {
+          "day": 2,
+          "type": "crew_call",
+          "time": "13:00",
+          "note": "crew call · 琴房进场、钢琴保护、儿童演员课业时间确认",
+          "est_minutes": 30
+        },
+        {
+          "day": 2,
+          "type": "cast_call",
+          "time": "13:30",
+          "note": "cast call · 妆发 + 节拍器与手部动作练习",
+          "est_minutes": 45
+        },
+        {
+          "day": 2,
+          "type": "setup",
+          "time": "14:15",
+          "note": "琴房：窗光加柔、钢琴漆面消反、监听与房间麦",
+          "est_minutes": 60
+        },
+        {
+          "day": 2,
+          "type": "scene",
+          "time": "15:15",
+          "scene_no": 3,
+          "est_minutes": 150,
+          "note": "按「偷练—老师进门—听不见节拍—沉默」拍，钢琴特写最后"
+        },
+        {
+          "day": 2,
+          "type": "meal",
+          "time": "17:45",
+          "note": "// MEAL BREAK @ 17:45 // 第 4 小时 45 分放饭，晚场前完成",
+          "est_minutes": 45
+        },
+        {
+          "day": 2,
+          "type": "move",
+          "time": "18:30",
+          "note": "// COMPANY MOVE TO 老街街道 // 跨区 25 分钟车程 + 15 分钟装卸",
+          "est_minutes": 40
+        },
+        {
+          "day": 2,
+          "type": "setup",
+          "time": "19:10",
+          "note": "雨戏：雨车接管、防水罩、路灯 2200K 白平衡与地面反光",
+          "est_minutes": 50
+        },
+        {
+          "day": 2,
+          "type": "scene",
+          "time": "20:00",
+          "scene_no": 4,
+          "est_minutes": 90,
+          "note": "先拍雨幕空镜 3 条，再拍点烟长镜头（1 条 2 分钟）"
+        },
+        {
+          "day": 2,
+          "type": "wrap",
+          "time": "21:30",
+          "note": "END OF DAY 22:00 // 雨车回收、街道冲洗、素材备份",
+          "est_minutes": 30
+        },
+        {
+          "day": 3,
+          "type": "crew_call",
+          "time": "21:30",
+          "note": "crew call · 公交停场集合、车辆安全检查、夜戏保暖与热饮",
+          "est_minutes": 30
+        },
+        {
+          "day": 3,
+          "type": "cast_call",
+          "time": "22:00",
+          "note": "cast call · 妆发 + 儿童演员夜戏替身确认（21:00 后仅拍背影/手部）",
+          "est_minutes": 45
+        },
+        {
+          "day": 3,
+          "type": "setup",
+          "time": "22:45",
+          "note": "车内：车顶灯管频闪测试（1/50s）、座位反光、机位固定与减震",
+          "est_minutes": 60
+        },
+        {
+          "day": 3,
+          "type": "scene",
+          "time": "23:45",
+          "scene_no": 5,
+          "est_minutes": 150,
+          "note": "先拍车外隔窗视角，再拍车内正反打；到站播报声单独录"
+        },
+        {
+          "day": 3,
+          "type": "meal",
+          "time": "02:15",
+          "note": "// MEAL BREAK @ 02:15 // 第 4 小时 45 分放饭，热食 + 热饮",
+          "est_minutes": 45
+        },
+        {
+          "day": 3,
+          "type": "move",
+          "time": "03:00",
+          "note": "// COMPANY MOVE TO 公寓厨房 // 同区 15 分钟车程 + 15 分钟装卸",
+          "est_minutes": 30
+        },
+        {
+          "day": 3,
+          "type": "setup",
+          "time": "03:30",
+          "note": "厨房：蓝调窗光测光、灶台实用灯、面碗蒸汽（热水 + 甘油）",
+          "est_minutes": 45
+        },
+        {
+          "day": 3,
+          "type": "buffer",
+          "time": "04:15",
+          "note": "等蓝调：04:45 起拍，蓝调窗口 05:00–05:30",
+          "est_minutes": 30
+        },
+        {
+          "day": 3,
+          "type": "scene",
+          "time": "04:45",
+          "scene_no": 6,
+          "est_minutes": 60,
+          "note": "蓝调 05:00–05:30：先拍手部推助听器特写，再拍父女全景"
+        },
+        {
+          "day": 3,
+          "type": "wrap",
+          "time": "05:45",
+          "note": "END OF DAY 06:15 // 车辆归还、服装清点、素材双备份",
+          "est_minutes": 30
+        }
+      ],
+      "totals": {
+        "pages_eighths": 32,
+        "page_count": "4",
+        "shoot_minutes": 1565,
+        "company_moves": 3,
+        "meals": 3,
+        "scenes": 6,
+        "shoot_days": 3
+      },
+      "days": [
+        {
+          "day": 1,
+          "date": "Day 1",
+          "call": "11:00",
+          "wrap": "19:20",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "11:00",
+              "note": "crew call · 器材进场、公寓动线确认、儿童演员安全须知",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "11:30",
+              "note": "cast call · 妆发 + 手语指导与父女对词，监护人签署工时表",
+              "est_minutes": 60
+            },
+            {
+              "type": "setup",
+              "time": "12:30",
+              "note": "客厅：窗光遮挡 1/2、实用灯补墙；A/B 机位与收音（lav + boom）",
+              "est_minutes": 60
+            },
+            {
+              "type": "scene",
+              "time": "13:30",
+              "scene_no": 1,
+              "est_minutes": 120,
+              "note": "按「修收音机—练琴—敲门—摘助听器」4 拍拍，先拍插入镜头"
+            },
+            {
+              "type": "meal",
+              "time": "15:30",
+              "note": "// MEAL BREAK @ 15:30 // 第 4 小时 30 分放饭（含儿童演员课业时间）",
+              "est_minutes": 45
+            },
+            {
+              "type": "move",
+              "time": "16:15",
+              "note": "// COMPANY MOVE TO 公寓天台 // 同一栋楼，货梯运器材 30 分钟",
+              "est_minutes": 30
+            },
+            {
+              "type": "setup",
+              "time": "16:45",
+              "note": "天台：落日方向测光、晾衣绳与被子走位、护栏检查",
+              "est_minutes": 60
+            },
+            {
+              "type": "buffer",
+              "time": "17:45",
+              "note": "等光：黄金时刻 18:20 前不拍正片，先走位与试拍",
+              "est_minutes": 20
+            },
+            {
+              "type": "scene",
+              "time": "18:05",
+              "scene_no": 2,
+              "est_minutes": 45,
+              "note": "黄金时刻 18:20–18:40：全景 3 条 + 手语特写 4 条"
+            },
+            {
+              "type": "wrap",
+              "time": "18:50",
+              "note": "END OF DAY 19:20 // 被子/晾衣绳复原、素材双备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 12,
+            "page_count": "1 1/2",
+            "shoot_minutes": 500,
+            "total_est_time": "8h20",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        },
+        {
+          "day": 2,
+          "date": "Day 2",
+          "call": "13:00",
+          "wrap": "22:00",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "13:00",
+              "note": "crew call · 琴房进场、钢琴保护、儿童演员课业时间确认",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "13:30",
+              "note": "cast call · 妆发 + 节拍器与手部动作练习",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "14:15",
+              "note": "琴房：窗光加柔、钢琴漆面消反、监听与房间麦",
+              "est_minutes": 60
+            },
+            {
+              "type": "scene",
+              "time": "15:15",
+              "scene_no": 3,
+              "est_minutes": 150,
+              "note": "按「偷练—老师进门—听不见节拍—沉默」拍，钢琴特写最后"
+            },
+            {
+              "type": "meal",
+              "time": "17:45",
+              "note": "// MEAL BREAK @ 17:45 // 第 4 小时 45 分放饭，晚场前完成",
+              "est_minutes": 45
+            },
+            {
+              "type": "move",
+              "time": "18:30",
+              "note": "// COMPANY MOVE TO 老街街道 // 跨区 25 分钟车程 + 15 分钟装卸",
+              "est_minutes": 40
+            },
+            {
+              "type": "setup",
+              "time": "19:10",
+              "note": "雨戏：雨车接管、防水罩、路灯 2200K 白平衡与地面反光",
+              "est_minutes": 50
+            },
+            {
+              "type": "scene",
+              "time": "20:00",
+              "scene_no": 4,
+              "est_minutes": 90,
+              "note": "先拍雨幕空镜 3 条，再拍点烟长镜头（1 条 2 分钟）"
+            },
+            {
+              "type": "wrap",
+              "time": "21:30",
+              "note": "END OF DAY 22:00 // 雨车回收、街道冲洗、素材备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 10,
+            "page_count": "1 1/4",
+            "shoot_minutes": 540,
+            "total_est_time": "9h00",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        },
+        {
+          "day": 3,
+          "date": "Day 3",
+          "call": "21:30",
+          "wrap": "06:15",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "21:30",
+              "note": "crew call · 公交停场集合、车辆安全检查、夜戏保暖与热饮",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "22:00",
+              "note": "cast call · 妆发 + 儿童演员夜戏替身确认（21:00 后仅拍背影/手部）",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "22:45",
+              "note": "车内：车顶灯管频闪测试（1/50s）、座位反光、机位固定与减震",
+              "est_minutes": 60
+            },
+            {
+              "type": "scene",
+              "time": "23:45",
+              "scene_no": 5,
+              "est_minutes": 150,
+              "note": "先拍车外隔窗视角，再拍车内正反打；到站播报声单独录"
+            },
+            {
+              "type": "meal",
+              "time": "02:15",
+              "note": "// MEAL BREAK @ 02:15 // 第 4 小时 45 分放饭，热食 + 热饮",
+              "est_minutes": 45
+            },
+            {
+              "type": "move",
+              "time": "03:00",
+              "note": "// COMPANY MOVE TO 公寓厨房 // 同区 15 分钟车程 + 15 分钟装卸",
+              "est_minutes": 30
+            },
+            {
+              "type": "setup",
+              "time": "03:30",
+              "note": "厨房：蓝调窗光测光、灶台实用灯、面碗蒸汽（热水 + 甘油）",
+              "est_minutes": 45
+            },
+            {
+              "type": "buffer",
+              "time": "04:15",
+              "note": "等蓝调：04:45 起拍，蓝调窗口 05:00–05:30",
+              "est_minutes": 30
+            },
+            {
+              "type": "scene",
+              "time": "04:45",
+              "scene_no": 6,
+              "est_minutes": 60,
+              "note": "蓝调 05:00–05:30：先拍手部推助听器特写，再拍父女全景"
+            },
+            {
+              "type": "wrap",
+              "time": "05:45",
+              "note": "END OF DAY 06:15 // 车辆归还、服装清点、素材双备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 10,
+            "page_count": "1 1/4",
+            "shoot_minutes": 525,
+            "total_est_time": "8h45",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        }
+      ],
+      "checklist": [
+        "儿童演员工作许可、监护人到场、每日工时表",
+        "手语指导全程在场（含排练日）",
+        "雨车与街道拍摄许可、交通协管",
+        "公交包车合同与停场证明（22:00–02:00）",
+        "天台护栏加固、安全绳、灯具沙袋",
+        "助听器道具 ×2（1 个可拆）、收音机 ×2",
+        "场记板/时码同步器、双卡备份"
+      ],
+      "tips": [
+        "黄金时刻只有 20 分钟（本片 Day 1 的 18:20–18:40），提前 40 分钟布好机位、反光板与走位；窗口内只拍表演，不调灯、不换镜头。",
+        "儿童演员工时受法规限制（一般每日 8 小时内、含课业与休息），21:00 后只能拍背影/手部或使用替身；排表时把她的镜头全部前置。",
+        "夜戏雨车要提前 3 小时进场接管上下水，街道需提前 48 小时报备并安排交通协管，否则整晚作废。",
+        "4 页剧本（32/8，含大量动作与手语描述）折合约 3 分钟成片；按每天 1 页的慢速拍法（儿童演员 + 手语排练 + 夜戏转场），不套 90 分钟/页，成熟演员与日景同页数 1.5 天可拍完。",
+        "餐补超时会产生 meal penalty：Day 3 的 21:30 call，02:15 放饭已是第 4 小时 45 分，再拖 30 分钟就要按合同补餐费。"
+      ]
+    },
+    {
+      "id": "sb-doc-interview",
+      "name": "纪录访谈单日通告单（1 天 / 双机位 + b-roll）",
+      "type": "纪录片",
+      "shoot_days": 1,
+      "crew_call": "08:00",
+      "cast_call": "08:30",
+      "wrap": "18:05",
+      "locations": [
+        {
+          "name": "受访者家中客厅（内景）",
+          "int_ext": "INT",
+          "permit": "受访者授权 1 天，含家人出镜同意",
+          "notes": "窗光为主；提前移走私人照片、药瓶与日历"
+        },
+        {
+          "name": "社区球场（外景）",
+          "int_ext": "EXT",
+          "permit": "社区管理处方许可（口头 + 书面）",
+          "notes": "傍晚逆光；球场广播声保留作环境声，不另配音乐"
+        }
+      ],
+      "cast": [
+        {
+          "name": "受访者 陈伯",
+          "role": "主角（退休球场管理员）",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "陈伯的妻子",
+          "role": "b-roll 出镜",
+          "days": [
+            1
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "scene_no": 1,
+          "int_ext": "INT",
+          "heading": "受访者家中客厅 - 日",
+          "synopsis": "陈伯讲 30 年球场管理员的日常：钥匙、灯、雨天的排水沟",
+          "cast": [
+            "受访者 陈伯"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 2,
+          "pages_eighths": 2,
+          "est_minutes": 165,
+          "location": "受访者家中客厅（内景）",
+          "day": 1,
+          "notes": "双机：A 机 85mm 正面中景，B 机 35mm 侧 45° 近景；独立收音"
+        },
+        {
+          "scene_no": 2,
+          "int_ext": "EXT",
+          "heading": "社区球场 - 日",
+          "synopsis": "陈伯巡场、开灯、捡球，和打球的孩子打招呼（b-roll）",
+          "cast": [
+            "受访者 陈伯",
+            "陈伯的妻子"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 3,
+          "pages_eighths": 3,
+          "est_minutes": 110,
+          "location": "社区球场（外景）",
+          "day": 1,
+          "notes": "手持稳定器跟拍；至少拍 3 倍于访谈提到的动作时长"
+        },
+        {
+          "scene_no": 3,
+          "int_ext": "EXT",
+          "heading": "社区球场 - 黄昏",
+          "synopsis": "球场灯亮起，陈伯坐在看台上看年轻人打球，环境声收尾",
+          "cast": [
+            "受访者 陈伯"
+          ],
+          "day_night": "DUSK",
+          "page_eighths": 1,
+          "pages_eighths": 1,
+          "est_minutes": 30,
+          "location": "社区球场（外景）",
+          "day": 1,
+          "notes": "日落后 10 分钟蓝调；长焦压缩球场灯与天空"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "crew_call",
+          "time": "08:00",
+          "note": "crew call · 双机与无线麦清点、timecode 同步（jam sync）",
+          "est_minutes": 30
+        },
+        {
+          "type": "cast_call",
+          "time": "08:30",
+          "note": "cast call · 受访者换装、别 lav、10 分钟闲聊暖场",
+          "est_minutes": 30
+        },
+        {
+          "type": "setup",
+          "time": "09:00",
+          "note": "客厅：三点布光 + 背景层次，A/B 机与监视器位置（不挡视线）",
+          "est_minutes": 90
+        },
+        {
+          "type": "scene",
+          "time": "10:30",
+          "scene_no": 1,
+          "est_minutes": 120,
+          "note": "按 3 个问题块访谈，每块结束回放确认关键句"
+        },
+        {
+          "type": "meal",
+          "time": "12:30",
+          "note": "// MEAL BREAK @ 12:30 // 第 4 小时 30 分放饭，受访者一起用餐",
+          "est_minutes": 45
+        },
+        {
+          "type": "scene",
+          "time": "13:15",
+          "scene_no": 1,
+          "est_minutes": 45,
+          "note": "补问关键句与情绪镜头（手部、眼睛、沉默）"
+        },
+        {
+          "type": "move",
+          "time": "14:00",
+          "note": "// COMPANY MOVE TO 社区球场 // 同小区步行 10 分钟 + 装卸 15 分钟",
+          "est_minutes": 25
+        },
+        {
+          "type": "setup",
+          "time": "14:25",
+          "note": "球场：稳定器调平、ND 控制逆光、领夹麦换防风毛套",
+          "est_minutes": 30
+        },
+        {
+          "type": "scene",
+          "time": "14:55",
+          "scene_no": 2,
+          "est_minutes": 110,
+          "note": "跟拍巡场/开灯/捡球，每个动作至少 3 条"
+        },
+        {
+          "type": "setup",
+          "time": "16:45",
+          "note": "看台机位：长焦 + 三脚架，等球场灯亮",
+          "est_minutes": 20
+        },
+        {
+          "type": "scene",
+          "time": "17:05",
+          "scene_no": 3,
+          "est_minutes": 30,
+          "note": "蓝调 17:15–17:35：固定长镜头，只录环境声"
+        },
+        {
+          "type": "wrap",
+          "time": "17:35",
+          "note": "// END OF DAY 18:05 // 素材双备份、授权书拍照存档",
+          "est_minutes": 30
+        }
+      ],
+      "totals": {
+        "pages_eighths": 6,
+        "page_count": "3/4",
+        "shoot_minutes": 605,
+        "company_moves": 1,
+        "meals": 1,
+        "scenes": 3,
+        "shoot_days": 1
+      },
+      "days": [
+        {
+          "day": 1,
+          "date": "Day 1",
+          "call": "08:00",
+          "wrap": "18:05",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "08:00",
+              "note": "crew call · 双机与无线麦清点、timecode 同步（jam sync）",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "08:30",
+              "note": "cast call · 受访者换装、别 lav、10 分钟闲聊暖场",
+              "est_minutes": 30
+            },
+            {
+              "type": "setup",
+              "time": "09:00",
+              "note": "客厅：三点布光 + 背景层次，A/B 机与监视器位置（不挡视线）",
+              "est_minutes": 90
+            },
+            {
+              "type": "scene",
+              "time": "10:30",
+              "scene_no": 1,
+              "est_minutes": 120,
+              "note": "按 3 个问题块访谈，每块结束回放确认关键句"
+            },
+            {
+              "type": "meal",
+              "time": "12:30",
+              "note": "// MEAL BREAK @ 12:30 // 第 4 小时 30 分放饭，受访者一起用餐",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "13:15",
+              "scene_no": 1,
+              "est_minutes": 45,
+              "note": "补问关键句与情绪镜头（手部、眼睛、沉默）"
+            },
+            {
+              "type": "move",
+              "time": "14:00",
+              "note": "// COMPANY MOVE TO 社区球场 // 同小区步行 10 分钟 + 装卸 15 分钟",
+              "est_minutes": 25
+            },
+            {
+              "type": "setup",
+              "time": "14:25",
+              "note": "球场：稳定器调平、ND 控制逆光、领夹麦换防风毛套",
+              "est_minutes": 30
+            },
+            {
+              "type": "scene",
+              "time": "14:55",
+              "scene_no": 2,
+              "est_minutes": 110,
+              "note": "跟拍巡场/开灯/捡球，每个动作至少 3 条"
+            },
+            {
+              "type": "setup",
+              "time": "16:45",
+              "note": "看台机位：长焦 + 三脚架，等球场灯亮",
+              "est_minutes": 20
+            },
+            {
+              "type": "scene",
+              "time": "17:05",
+              "scene_no": 3,
+              "est_minutes": 30,
+              "note": "蓝调 17:15–17:35：固定长镜头，只录环境声"
+            },
+            {
+              "type": "wrap",
+              "time": "17:35",
+              "note": "// END OF DAY 18:05 // 素材双备份、授权书拍照存档",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 6,
+            "page_count": "3/4",
+            "shoot_minutes": 605,
+            "total_est_time": "10h05",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 3
+          }
+        }
+      ],
+      "checklist": [
+        "受访者肖像与内容授权书（含 b-roll 与二次使用）",
+        "双机 timecode 同步器与备用电池",
+        "lav ×2 + boom + 防风毛套 + 备用线材",
+        "问题提纲（3 版，按主题分块，每块 15–20 分钟）",
+        "家庭隐私物品清理清单（照片/药瓶/日历）",
+        "社区球场管理方许可与书面同意",
+        "双卡双盘备份、场记表与采访要点"
+      ],
+      "tips": [
+        "访谈的「页」没有意义，按问题块排：每个主题 15–20 分钟，拍完一段立刻回放确认关键句，缺了当场补问，别等剪辑才发现。",
+        "双机不要同轴：A 机 85mm 正面中景、B 机 35mm 侧 45° 近景，剪辑才有正反打；两台必须 jam sync 同一时码。",
+        "b-roll 至少拍到访谈里提到动作的 3 倍时长；先拍手部与环境，再拍全身，剪辑时才有覆盖。",
+        "受访者不是演员：开机前闲聊 10 分钟暖场，停机后先说「我们还在录」，避免收声事故与情绪断点。",
+        "公司转场按 30 分钟/次计，跨区 60 分钟；本片同小区只排 25 分钟，但器材必须减到 1 车，否则装卸超时。"
+      ]
+    },
+    {
+      "id": "sb-corporate",
+      "name": "企业宣传片单日通告单（办公室 + 高管访谈 + 产品）",
+      "type": "企业宣传片",
+      "shoot_days": 1,
+      "crew_call": "08:30",
+      "cast_call": "09:00",
+      "wrap": "19:15",
+      "locations": [
+        {
+          "name": "总部办公室（内景）",
+          "int_ext": "INT",
+          "permit": "企业自有场地 1 天，行政部配合封区",
+          "notes": "顶灯荧光 50Hz 频闪；玻璃隔断反光用黑旗压掉"
+        },
+        {
+          "name": "产品展示间（内景）",
+          "int_ext": "INT",
+          "permit": "同楼层，行政部陪同出入",
+          "notes": "黑绒背景 + 顶部柔光；未发布产品需保密遮盖"
+        }
+      ],
+      "cast": [
+        {
+          "name": "CEO 林总",
+          "role": "企业发言人",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "产品经理 阿Ken",
+          "role": "产品讲解",
+          "days": [
+            1
+          ]
+        },
+        {
+          "name": "员工群演 6 人",
+          "role": "会议/走廊/协作镜头",
+          "days": [
+            1
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "scene_no": 1,
+          "int_ext": "INT",
+          "heading": "总部办公室 - 日",
+          "synopsis": "员工在开放工位协作、会议白板讨论、走廊快步走过（b-roll）",
+          "cast": [
+            "员工群演 6 人"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 3,
+          "pages_eighths": 3,
+          "est_minutes": 120,
+          "location": "总部办公室（内景）",
+          "day": 1,
+          "notes": "先拍空镜再拍人；群演按「走—停—交接文件」3 个动作循环"
+        },
+        {
+          "scene_no": 2,
+          "int_ext": "INT",
+          "heading": "总部会议室 - 日",
+          "synopsis": "CEO 访谈：公司为什么做这件事、三年后的目标",
+          "cast": [
+            "CEO 林总",
+            "产品经理 阿Ken"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 4,
+          "pages_eighths": 4,
+          "est_minutes": 90,
+          "location": "总部办公室（内景）",
+          "day": 1,
+          "notes": "提词器只放关键词；背景带 logo 但不抢焦点"
+        },
+        {
+          "scene_no": 3,
+          "int_ext": "INT",
+          "heading": "产品展示间 - 日",
+          "synopsis": "产品经理演示新设备，特写接口、指示灯与手持使用",
+          "cast": [
+            "产品经理 阿Ken"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 2,
+          "pages_eighths": 2,
+          "est_minutes": 75,
+          "location": "产品展示间（内景）",
+          "day": 1,
+          "notes": "黑绒背景 + 顶部柔光；产品屏幕需贴防摩尔纹膜"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "crew_call",
+          "time": "08:30",
+          "note": "crew call · 办公室封区、器材静音（空调/投影）、频闪测试",
+          "est_minutes": 30
+        },
+        {
+          "type": "cast_call",
+          "time": "09:00",
+          "note": "cast call · 员工换装/走位、NDA 签署与保密提醒（CEO 单独 call 14:15）",
+          "est_minutes": 45
+        },
+        {
+          "type": "setup",
+          "time": "09:45",
+          "note": "办公室：窗光 + 顶灯改造（换 5600K 灯管）、机位与滑轨",
+          "est_minutes": 60
+        },
+        {
+          "type": "scene",
+          "time": "10:45",
+          "scene_no": 1,
+          "est_minutes": 120,
+          "note": "b-roll：先拍空镜，再拍群演 3 个动作循环，每个 3 条"
+        },
+        {
+          "type": "meal",
+          "time": "12:45",
+          "note": "// MEAL BREAK @ 12:45 // 第 4 小时 15 分放饭；CEO 14:15 到场妆发、14:45 开拍",
+          "est_minutes": 45
+        },
+        {
+          "type": "setup",
+          "time": "13:30",
+          "note": "访谈区：三点光 + 背景层次、提词器、监视器（CEO 左手侧）",
+          "est_minutes": 45
+        },
+        {
+          "type": "cast_call",
+          "time": "14:15",
+          "note": "CEO cast call · 妆发/别麦/提词器试读，14:45 开拍",
+          "est_minutes": 30
+        },
+        {
+          "type": "scene",
+          "time": "14:45",
+          "scene_no": 2,
+          "est_minutes": 90,
+          "note": "CEO 只给 90 分钟：6 个问题一次过，关键句补 2 条"
+        },
+        {
+          "type": "move",
+          "time": "16:15",
+          "note": "// COMPANY MOVE TO 产品展示间 // 同层转场，电梯 + 装卸 30 分钟",
+          "est_minutes": 30
+        },
+        {
+          "type": "setup",
+          "time": "16:45",
+          "note": "展示间：黑绒背景、顶部柔光、转台与防摩尔纹贴膜",
+          "est_minutes": 45
+        },
+        {
+          "type": "scene",
+          "time": "17:30",
+          "scene_no": 3,
+          "est_minutes": 75,
+          "note": "产品特写与手持 demo；先拍不反光角度，再拍屏幕"
+        },
+        {
+          "type": "wrap",
+          "time": "18:45",
+          "note": "// END OF DAY 19:15 // 保密素材单独封卡、场地复位、备份",
+          "est_minutes": 30
+        }
+      ],
+      "totals": {
+        "pages_eighths": 9,
+        "page_count": "1 1/8",
+        "shoot_minutes": 645,
+        "company_moves": 1,
+        "meals": 1,
+        "scenes": 3,
+        "shoot_days": 1
+      },
+      "days": [
+        {
+          "day": 1,
+          "date": "Day 1",
+          "call": "08:30",
+          "wrap": "19:15",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "08:30",
+              "note": "crew call · 办公室封区、器材静音（空调/投影）、频闪测试",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "09:00",
+              "note": "cast call · 员工换装/走位、NDA 签署与保密提醒（CEO 单独 call 14:15）",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "09:45",
+              "note": "办公室：窗光 + 顶灯改造（换 5600K 灯管）、机位与滑轨",
+              "est_minutes": 60
+            },
+            {
+              "type": "scene",
+              "time": "10:45",
+              "scene_no": 1,
+              "est_minutes": 120,
+              "note": "b-roll：先拍空镜，再拍群演 3 个动作循环，每个 3 条"
+            },
+            {
+              "type": "meal",
+              "time": "12:45",
+              "note": "// MEAL BREAK @ 12:45 // 第 4 小时 15 分放饭；CEO 14:15 到场妆发、14:45 开拍",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "13:30",
+              "note": "访谈区：三点光 + 背景层次、提词器、监视器（CEO 左手侧）",
+              "est_minutes": 45
+            },
+            {
+              "type": "cast_call",
+              "time": "14:15",
+              "note": "CEO cast call · 妆发/别麦/提词器试读，14:45 开拍",
+              "est_minutes": 30
+            },
+            {
+              "type": "scene",
+              "time": "14:45",
+              "scene_no": 2,
+              "est_minutes": 90,
+              "note": "CEO 只给 90 分钟：6 个问题一次过，关键句补 2 条"
+            },
+            {
+              "type": "move",
+              "time": "16:15",
+              "note": "// COMPANY MOVE TO 产品展示间 // 同层转场，电梯 + 装卸 30 分钟",
+              "est_minutes": 30
+            },
+            {
+              "type": "setup",
+              "time": "16:45",
+              "note": "展示间：黑绒背景、顶部柔光、转台与防摩尔纹贴膜",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "17:30",
+              "scene_no": 3,
+              "est_minutes": 75,
+              "note": "产品特写与手持 demo；先拍不反光角度，再拍屏幕"
+            },
+            {
+              "type": "wrap",
+              "time": "18:45",
+              "note": "// END OF DAY 19:15 // 保密素材单独封卡、场地复位、备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 9,
+            "page_count": "1 1/8",
+            "shoot_minutes": 645,
+            "total_est_time": "10h45",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 3
+          }
+        }
+      ],
+      "checklist": [
+        "企业 NDA 与保密清单（未发布产品、财务数据）",
+        "CEO 档期确认（90 分钟硬窗口，含补妆）",
+        "提词器与问题提纲（6 问，关键词版）",
+        "员工肖像授权与工牌/桌面清理",
+        "产品保密遮盖布、防摩尔纹贴膜",
+        "频闪测试与备用 5600K 灯管",
+        "品牌 logo 素材、字体规范与字幕版式"
+      ],
+      "tips": [
+        "企业片最贵的是「等高管」：把访谈排在精力高峰，CEO 只给 90 分钟，问题、提词器、水、补妆必须在他到场前全部就位。",
+        "办公室顶灯荧光灯会造成 50Hz 频闪：快门设 1/50 或 1/100 并现场回放确认，必要时整排换 5600K 灯管。",
+        "1 天硬排时先拍 b-roll（员工可等），再拍高管（不可等）。企业片按「镜头组」排而不按页：一个 scene block 里要完成 8–12 个 b-roll 镜头。",
+        "涉及未发布产品与财务数据：现场签 NDA、素材卡贴编号、单独封卡，拷贝记录留档。",
+        "公司转场按 30 分钟/次计，跨区 60 分钟；本片同层 1 次转场排 30 分钟，若换楼必须重排访谈窗口。"
+      ]
+    },
+    {
+      "id": "sb-feature-8day",
+      "name": "低成本长片 8 日通告单（12 场 / 多地点 / 含转场与缓冲日）",
+      "type": "剧情长片",
+      "shoot_days": 8,
+      "crew_call": "04:30",
+      "cast_call": "05:00",
+      "wrap": "15:40",
+      "locations": [
+        {
+          "name": "旧码头（外景）",
+          "int_ext": "EXT",
+          "permit": "渔村码头管理方许可 3 天 + 潮汐表",
+          "notes": "涨潮 06:30；黎明戏 06:30 开拍前布好，机位避开水线"
+        },
+        {
+          "name": "渔船船舱（内景）",
+          "int_ext": "INT",
+          "permit": "船主借用 1 天（停泊不作业）",
+          "notes": "船舱仅 1.2 m 高，24mm 广角贴顶；甲板湿滑，铺防滑垫"
+        },
+        {
+          "name": "渔村集市（外景）",
+          "int_ext": "EXT",
+          "permit": "村委会许可 + 2 个摊位协商",
+          "notes": "早市 06:00–09:00 最真实，之后清场；鱼腥味重，备口罩"
+        },
+        {
+          "name": "冰厂（内景）",
+          "int_ext": "INT",
+          "permit": "冰厂夜班许可（22:00–02:00）",
+          "notes": "−18°C 冷库，电池贴暖宝宝；进出冷库需防雾"
+        },
+        {
+          "name": "派出所（内景）",
+          "int_ext": "INT",
+          "permit": "分局宣传科许可 + 值班表确认",
+          "notes": "只能拍值班台区域，警徽与标识按规范入画"
+        },
+        {
+          "name": "铁皮屋（内景）",
+          "int_ext": "INT",
+          "permit": "屋主借用 2 天",
+          "notes": "屋顶漏光，用黑布 + 柔光补；屋内闷热，备风扇"
+        },
+        {
+          "name": "山路（外景）",
+          "int_ext": "EXT",
+          "permit": "林区道路许可 + 交通协管 2 人",
+          "notes": "黄昏 17:50；蚊虫多备驱蚊，机位靠山侧、系安全绳"
+        },
+        {
+          "name": "茶餐厅（内景）",
+          "int_ext": "INT",
+          "permit": "店铺包场 1 晚（21:00 后）",
+          "notes": "霓虹招牌是主光，注意绿色偏色；白平衡锁 4000K"
+        },
+        {
+          "name": "海边堤坝（外景）",
+          "int_ext": "EXT",
+          "permit": "海堤管理许可 + 夜间安全员",
+          "notes": "海风 5 级，灯架配沙袋；涨潮线外 2 m 设警戒"
+        },
+        {
+          "name": "船厂仓库（内景）",
+          "int_ext": "INT",
+          "permit": "船厂租用 1 天",
+          "notes": "高窗光 + 大量粉尘，机器需防尘罩；地面有油污，铺板"
+        }
+      ],
+      "cast": [
+        {
+          "name": "阿海",
+          "role": "渔工 / 主角",
+          "days": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "name": "阿玲",
+          "role": "妹妹（14 岁）",
+          "days": [
+            2,
+            3,
+            4,
+            7
+          ]
+        },
+        {
+          "name": "福叔",
+          "role": "债主 / 船老大",
+          "days": [
+            1,
+            2,
+            6
+          ]
+        },
+        {
+          "name": "财哥",
+          "role": "冰厂老板",
+          "days": [
+            3
+          ]
+        },
+        {
+          "name": "陈sir",
+          "role": "派出所民警",
+          "days": [
+            2
+          ]
+        },
+        {
+          "name": "霞姐",
+          "role": "茶餐厅老板娘",
+          "days": [
+            5
+          ]
+        },
+        {
+          "name": "鱼贩 阿强",
+          "role": "集市配角",
+          "days": [
+            2
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "scene_no": 1,
+          "int_ext": "EXT",
+          "heading": "旧码头 - 黎明",
+          "synopsis": "阿海把最后一筐鱼搬上岸，福叔的车停在堤上，车灯没关",
+          "cast": [
+            "阿海",
+            "福叔"
+          ],
+          "day_night": "DAWN",
+          "page_eighths": 24,
+          "pages_eighths": 24,
+          "est_minutes": 180,
+          "location": "旧码头（外景）",
+          "day": 1,
+          "notes": "日出 06:40；车灯做逆光，先拍全景再拍阿海手部冻疮特写"
+        },
+        {
+          "scene_no": 2,
+          "int_ext": "INT",
+          "heading": "渔船船舱 - 日",
+          "synopsis": "阿海在船舱夹层翻出父亲的借据与一张旧海图",
+          "cast": [
+            "阿海"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 28,
+          "pages_eighths": 28,
+          "est_minutes": 220,
+          "location": "渔船船舱（内景）",
+          "day": 1,
+          "notes": "手持 + 24mm 广角贴顶；借据特写用 100mm 微距"
+        },
+        {
+          "scene_no": 3,
+          "int_ext": "EXT",
+          "heading": "渔村集市 - 日",
+          "synopsis": "阿玲在鱼摊帮工，福叔当众催债，阿海把阿玲拉走",
+          "cast": [
+            "阿海",
+            "阿玲",
+            "福叔",
+            "鱼贩 阿强"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 20,
+          "pages_eighths": 20,
+          "est_minutes": 160,
+          "location": "渔村集市（外景）",
+          "day": 2,
+          "notes": "早市实拍，先拍环境再拍冲突；群演不看镜头"
+        },
+        {
+          "scene_no": 4,
+          "int_ext": "INT",
+          "heading": "冰厂 - 夜",
+          "synopsis": "阿海替财哥搬冰抵债，听见财哥打电话要收走渔船",
+          "cast": [
+            "阿海",
+            "财哥"
+          ],
+          "day_night": "NIGHT",
+          "page_eighths": 24,
+          "pages_eighths": 24,
+          "est_minutes": 170,
+          "location": "冰厂（内景）",
+          "day": 3,
+          "notes": "冷库雾气用热水制造；电池贴暖宝宝，机位进出不超过 20 分钟"
+        },
+        {
+          "scene_no": 5,
+          "int_ext": "EXT",
+          "heading": "码头 - 夜",
+          "synopsis": "雨里，阿玲质问阿海为什么卖船，阿海第一次发了火",
+          "cast": [
+            "阿海",
+            "阿玲"
+          ],
+          "day_night": "NIGHT",
+          "page_eighths": 28,
+          "pages_eighths": 28,
+          "est_minutes": 220,
+          "location": "旧码头（外景）",
+          "day": 3,
+          "notes": "雨车 19:20 进场；先拍雨幕空镜，再拍两人中景长镜头"
+        },
+        {
+          "scene_no": 6,
+          "int_ext": "INT",
+          "heading": "铁皮屋 - 日",
+          "synopsis": "阿海翻出母亲的遗物与一叠没寄出的信，决定卖船",
+          "cast": [
+            "阿海",
+            "阿玲"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 22,
+          "pages_eighths": 22,
+          "est_minutes": 175,
+          "location": "铁皮屋（内景）",
+          "day": 4,
+          "notes": "屋顶漏光做柔光；遗物特写不要摆拍，按原样拍"
+        },
+        {
+          "scene_no": 7,
+          "int_ext": "INT",
+          "heading": "派出所 - 日",
+          "synopsis": "陈sir 告诉阿海：父亲当年的海难可以申请补助，但要先证明船是他的",
+          "cast": [
+            "阿海",
+            "陈sir"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 16,
+          "pages_eighths": 16,
+          "est_minutes": 130,
+          "location": "派出所（内景）",
+          "day": 2,
+          "notes": "值班台实景，先拍手部盖章再拍正反打"
+        },
+        {
+          "scene_no": 8,
+          "int_ext": "EXT",
+          "heading": "山路 - 黄昏",
+          "synopsis": "阿海骑摩托载阿玲上山看海，两人第一次把话说开",
+          "cast": [
+            "阿海",
+            "阿玲"
+          ],
+          "day_night": "DUSK",
+          "page_eighths": 20,
+          "pages_eighths": 20,
+          "est_minutes": 150,
+          "location": "山路（外景）",
+          "day": 4,
+          "notes": "黄昏 17:50–18:10；摩托跟拍用稳定器 + 侧车"
+        },
+        {
+          "scene_no": 9,
+          "int_ext": "INT",
+          "heading": "茶餐厅 - 夜",
+          "synopsis": "霞姐给阿海介绍跑远洋的活，阿海拒绝，说船还没修好",
+          "cast": [
+            "阿海",
+            "霞姐"
+          ],
+          "day_night": "NIGHT",
+          "page_eighths": 24,
+          "pages_eighths": 24,
+          "est_minutes": 190,
+          "location": "茶餐厅（内景）",
+          "day": 5,
+          "notes": "霓虹主光偏绿，白平衡锁 4000K；先拍招牌反光"
+        },
+        {
+          "scene_no": 10,
+          "int_ext": "EXT",
+          "heading": "海边堤坝 - 夜",
+          "synopsis": "阿海把借据折成纸船放进海里，浪把它推回来",
+          "cast": [
+            "阿海"
+          ],
+          "day_night": "NIGHT",
+          "page_eighths": 26,
+          "pages_eighths": 26,
+          "est_minutes": 205,
+          "location": "海边堤坝（外景）",
+          "day": 5,
+          "notes": "海风 5 级；纸船拍 6 条，浪推回来的镜头等 3 次潮"
+        },
+        {
+          "scene_no": 11,
+          "int_ext": "INT",
+          "heading": "船厂仓库 - 日",
+          "synopsis": "阿海在废料堆里找到父亲的旧船木，福叔决定入伙",
+          "cast": [
+            "阿海",
+            "福叔"
+          ],
+          "day_night": "DAY",
+          "page_eighths": 28,
+          "pages_eighths": 28,
+          "est_minutes": 225,
+          "location": "船厂仓库（内景）",
+          "day": 6,
+          "notes": "高窗光 + 粉尘；先拍船木纹理再拍两人握手"
+        },
+        {
+          "scene_no": 12,
+          "int_ext": "EXT",
+          "heading": "旧码头 - 黎明",
+          "synopsis": "修好的船被推下水，阿海与阿玲站在船头，出字幕",
+          "cast": [
+            "阿海",
+            "阿玲"
+          ],
+          "day_night": "DAWN",
+          "page_eighths": 22,
+          "pages_eighths": 22,
+          "est_minutes": 175,
+          "location": "旧码头（外景）",
+          "day": 7,
+          "notes": "日出 06:40；06:30 开拍抢蓝调，船下水只拍 2 条，安全员在侧"
+        }
+      ],
+      "blocks": [
+        {
+          "day": 1,
+          "type": "crew_call",
+          "time": "04:30",
+          "note": "crew call · 码头集合、潮汐表确认、夜间转黎明的安全简报",
+          "est_minutes": 30
+        },
+        {
+          "day": 1,
+          "type": "cast_call",
+          "time": "05:00",
+          "note": "cast call · 渔工妆（冻疮/盐渍）+ 防水服装",
+          "est_minutes": 45
+        },
+        {
+          "day": 1,
+          "type": "setup",
+          "time": "05:45",
+          "note": "码头：黎明前布光，车灯逆光 + 1.2K 补脸；机位 A 稳定器 / B 长焦",
+          "est_minutes": 45
+        },
+        {
+          "day": 1,
+          "type": "scene",
+          "time": "06:30",
+          "scene_no": 1,
+          "est_minutes": 180,
+          "note": "日出 06:40：06:30 开拍抢蓝调与车灯逆光，日出后转顺光拍手部特写"
+        },
+        {
+          "day": 1,
+          "type": "meal",
+          "time": "09:30",
+          "note": "// MEAL BREAK @ 09:30 // 第 5 小时放饭，渔村早班作息",
+          "est_minutes": 45
+        },
+        {
+          "day": 1,
+          "type": "move",
+          "time": "10:15",
+          "note": "// COMPANY MOVE TO 渔船停泊区 // 同码头 10 分钟车程 + 20 分钟装卸",
+          "est_minutes": 30
+        },
+        {
+          "day": 1,
+          "type": "setup",
+          "time": "10:45",
+          "note": "船舱：贴顶 24mm、手持减震、借据特写用 100mm 微距",
+          "est_minutes": 45
+        },
+        {
+          "day": 1,
+          "type": "scene",
+          "time": "11:30",
+          "scene_no": 2,
+          "est_minutes": 220,
+          "note": "按「翻夹层—借据—海图—发呆」拍，先拍特写再拍全景"
+        },
+        {
+          "day": 1,
+          "type": "wrap",
+          "time": "15:10",
+          "note": "END OF DAY 15:40 // 渔船复位、素材双备份、明日通告确认",
+          "est_minutes": 30
+        },
+        {
+          "day": 2,
+          "type": "crew_call",
+          "time": "07:00",
+          "note": "crew call · 集市摊位协调、村民沟通、设备防潮",
+          "est_minutes": 30
+        },
+        {
+          "day": 2,
+          "type": "cast_call",
+          "time": "07:30",
+          "note": "cast call · 阿玲妆发（14 岁，需监护人陪同）、鱼贩群演",
+          "est_minutes": 45
+        },
+        {
+          "day": 2,
+          "type": "setup",
+          "time": "08:15",
+          "note": "集市：自然光 + 反光板，摊位招牌入画；收音避开叫卖",
+          "est_minutes": 45
+        },
+        {
+          "day": 2,
+          "type": "scene",
+          "time": "09:00",
+          "scene_no": 3,
+          "est_minutes": 160,
+          "note": "早市实拍：先环境后冲突；催债戏用长焦偷拍感"
+        },
+        {
+          "day": 2,
+          "type": "move",
+          "time": "11:40",
+          "note": "// COMPANY MOVE TO 派出所 // 跨区 15 分钟车程 + 15 分钟装卸",
+          "est_minutes": 30
+        },
+        {
+          "day": 2,
+          "type": "meal",
+          "time": "12:10",
+          "note": "// MEAL BREAK @ 12:10 // 第 5 小时 10 分放饭",
+          "est_minutes": 45
+        },
+        {
+          "day": 2,
+          "type": "setup",
+          "time": "12:55",
+          "note": "派出所：顶灯频闪测试、值班台背景、收音避开对讲机",
+          "est_minutes": 45
+        },
+        {
+          "day": 2,
+          "type": "scene",
+          "time": "13:40",
+          "scene_no": 7,
+          "est_minutes": 130,
+          "note": "先拍盖章手部，再拍阿海与陈sir 正反打"
+        },
+        {
+          "day": 2,
+          "type": "buffer",
+          "time": "15:50",
+          "note": "补拍集市空镜/插镜（wrap 前留 20 分钟）",
+          "est_minutes": 20
+        },
+        {
+          "day": 2,
+          "type": "wrap",
+          "time": "16:10",
+          "note": "END OF DAY 16:35 // 派出所复位、素材双备份",
+          "est_minutes": 25
+        },
+        {
+          "day": 3,
+          "type": "crew_call",
+          "time": "13:00",
+          "note": "crew call · 冰厂夜班交接、冷库安全与保暖",
+          "est_minutes": 30
+        },
+        {
+          "day": 3,
+          "type": "cast_call",
+          "time": "13:30",
+          "note": "cast call · 阿海湿发/冻伤妆，阿玲夜戏妆发",
+          "est_minutes": 45
+        },
+        {
+          "day": 3,
+          "type": "setup",
+          "time": "14:15",
+          "note": "冰厂：冷色光 + 凝露处理、机器防雾、机位进出动线",
+          "est_minutes": 60
+        },
+        {
+          "day": 3,
+          "type": "scene",
+          "time": "15:15",
+          "scene_no": 4,
+          "est_minutes": 170,
+          "note": "冷库内不超过 20 分钟一组，机器轮换；先拍搬冰全景"
+        },
+        {
+          "day": 3,
+          "type": "meal",
+          "time": "18:05",
+          "note": "// MEAL BREAK @ 18:05 // 第 5 小时 5 分放饭，热食 + 姜茶",
+          "est_minutes": 45
+        },
+        {
+          "day": 3,
+          "type": "move",
+          "time": "18:50",
+          "note": "// COMPANY MOVE TO 旧码头 // 同区 15 分钟车程 + 15 分钟装卸",
+          "est_minutes": 30
+        },
+        {
+          "day": 3,
+          "type": "setup",
+          "time": "19:20",
+          "note": "码头雨戏：雨车接管、防水罩、钠灯 2200K 白平衡",
+          "est_minutes": 50
+        },
+        {
+          "day": 3,
+          "type": "scene",
+          "time": "20:10",
+          "scene_no": 5,
+          "est_minutes": 220,
+          "note": "先拍雨幕空镜，再拍两人中景长镜头；最后拍阿海发火特写"
+        },
+        {
+          "day": 3,
+          "type": "wrap",
+          "time": "23:50",
+          "note": "END OF DAY 00:20 // 雨车回收、湿服装处理、素材备份",
+          "est_minutes": 30
+        },
+        {
+          "day": 4,
+          "type": "crew_call",
+          "time": "10:30",
+          "note": "crew call · 铁皮屋进场、屋顶遮光、山路器材分车",
+          "est_minutes": 30
+        },
+        {
+          "day": 4,
+          "type": "cast_call",
+          "time": "11:00",
+          "note": "cast call · 阿海/阿玲妆发，摩托安全帽与护具",
+          "est_minutes": 45
+        },
+        {
+          "day": 4,
+          "type": "setup",
+          "time": "11:45",
+          "note": "铁皮屋：屋顶漏光加柔、风扇/实用灯、遗物陈设",
+          "est_minutes": 45
+        },
+        {
+          "day": 4,
+          "type": "scene",
+          "time": "12:30",
+          "scene_no": 6,
+          "est_minutes": 175,
+          "note": "按「翻箱—信件—遗物—决定」拍，特写用自然光"
+        },
+        {
+          "day": 4,
+          "type": "meal",
+          "time": "15:25",
+          "note": "// MEAL BREAK @ 15:25 // 第 4 小时 55 分放饭，黄昏前完成",
+          "est_minutes": 45
+        },
+        {
+          "day": 4,
+          "type": "move",
+          "time": "16:10",
+          "note": "// COMPANY MOVE TO 山路 // 跨区 30 分钟车程 + 15 分钟装卸",
+          "est_minutes": 45
+        },
+        {
+          "day": 4,
+          "type": "setup",
+          "time": "16:55",
+          "note": "山路：黄昏方向测光、摩托跟拍稳定器、蚊虫防护与安全绳",
+          "est_minutes": 45
+        },
+        {
+          "day": 4,
+          "type": "scene",
+          "time": "17:40",
+          "scene_no": 8,
+          "est_minutes": 150,
+          "note": "黄昏 17:50–18:10：先拍骑行全景，窗口内只拍对话中景"
+        },
+        {
+          "day": 4,
+          "type": "wrap",
+          "time": "20:10",
+          "note": "END OF DAY 20:40 // 摩托归还、山路清理、素材备份",
+          "est_minutes": 30
+        },
+        {
+          "day": 5,
+          "type": "crew_call",
+          "time": "15:00",
+          "note": "crew call · 茶餐厅包场布置、霓虹招牌试灯",
+          "est_minutes": 30
+        },
+        {
+          "day": 5,
+          "type": "cast_call",
+          "time": "15:30",
+          "note": "cast call · 阿海/霞姐妆发，餐厅群演",
+          "est_minutes": 45
+        },
+        {
+          "day": 5,
+          "type": "setup",
+          "time": "16:15",
+          "note": "茶餐厅：霓虹主光 + 室内实用灯，白平衡锁 4000K",
+          "est_minutes": 60
+        },
+        {
+          "day": 5,
+          "type": "scene",
+          "time": "17:15",
+          "scene_no": 9,
+          "est_minutes": 190,
+          "note": "先拍招牌反光空镜，再拍两人对坐正反打"
+        },
+        {
+          "day": 5,
+          "type": "meal",
+          "time": "20:25",
+          "note": "// MEAL BREAK @ 20:25 // 第 5 小时 25 分放饭，海堤夜戏前完成",
+          "est_minutes": 45
+        },
+        {
+          "day": 5,
+          "type": "move",
+          "time": "21:10",
+          "note": "// COMPANY MOVE TO 海边堤坝 // 同区 25 分钟车程 + 15 分钟装卸",
+          "est_minutes": 40
+        },
+        {
+          "day": 5,
+          "type": "setup",
+          "time": "21:50",
+          "note": "堤坝：海风加固灯架、远景城市光、涨潮线警戒",
+          "est_minutes": 45
+        },
+        {
+          "day": 5,
+          "type": "scene",
+          "time": "22:35",
+          "scene_no": 10,
+          "est_minutes": 205,
+          "note": "纸船 6 条，浪推回来的镜头等 3 次潮；先拍全景再拍手部"
+        },
+        {
+          "day": 5,
+          "type": "wrap",
+          "time": "02:00",
+          "note": "END OF DAY 02:30 // 海堤清场、器材防盐雾处理、备份",
+          "est_minutes": 30
+        },
+        {
+          "day": 6,
+          "type": "crew_call",
+          "time": "10:00",
+          "note": "crew call · 船厂进场、粉尘防护、地面铺板",
+          "est_minutes": 30
+        },
+        {
+          "day": 6,
+          "type": "cast_call",
+          "time": "10:30",
+          "note": "cast call · 阿海/福叔妆发（油污/木屑）",
+          "est_minutes": 45
+        },
+        {
+          "day": 6,
+          "type": "setup",
+          "time": "11:15",
+          "note": "船厂：高窗光 + 负补、粉尘控制、船木陈设",
+          "est_minutes": 60
+        },
+        {
+          "day": 6,
+          "type": "scene",
+          "time": "12:15",
+          "scene_no": 11,
+          "est_minutes": 130,
+          "note": "先拍船木纹理与阿海的手，再拍两人对话"
+        },
+        {
+          "day": 6,
+          "type": "meal",
+          "time": "14:25",
+          "note": "// MEAL BREAK @ 14:25 // 第 4 小时 25 分放饭",
+          "est_minutes": 45
+        },
+        {
+          "day": 6,
+          "type": "scene",
+          "time": "15:10",
+          "scene_no": 11,
+          "est_minutes": 95,
+          "note": "福叔入伙的握手与结尾全景；补 2 条安全条"
+        },
+        {
+          "day": 6,
+          "type": "buffer",
+          "time": "16:45",
+          "note": "补拍船厂空镜/插镜，或提前拆景",
+          "est_minutes": 25
+        },
+        {
+          "day": 6,
+          "type": "wrap",
+          "time": "17:10",
+          "note": "END OF DAY 17:40 // 船厂复位、粉尘清理、素材备份",
+          "est_minutes": 30
+        },
+        {
+          "day": 7,
+          "type": "crew_call",
+          "time": "04:30",
+          "note": "crew call · 码头集合、下水戏安全会议、救生衣",
+          "est_minutes": 30
+        },
+        {
+          "day": 7,
+          "type": "cast_call",
+          "time": "05:00",
+          "note": "cast call · 阿海/阿玲妆发，湿身戏保暖",
+          "est_minutes": 45
+        },
+        {
+          "day": 7,
+          "type": "setup",
+          "time": "05:45",
+          "note": "码头：黎明前布光、船位固定、下水安全绳与救援艇",
+          "est_minutes": 45
+        },
+        {
+          "day": 7,
+          "type": "scene",
+          "time": "06:30",
+          "scene_no": 12,
+          "est_minutes": 175,
+          "note": "日出 06:40：06:30 开拍抢蓝调，先拍推船下水 2 条，再拍船头对视"
+        },
+        {
+          "day": 7,
+          "type": "meal",
+          "time": "09:25",
+          "note": "// MEAL BREAK @ 09:25 // 第 4 小时 55 分放饭，收工前早餐",
+          "est_minutes": 45
+        },
+        {
+          "day": 7,
+          "type": "buffer",
+          "time": "10:10",
+          "note": "补拍 1/5/12 场码头空镜与插镜，或提前收工",
+          "est_minutes": 45
+        },
+        {
+          "day": 7,
+          "type": "wrap",
+          "time": "10:55",
+          "note": "END OF DAY 11:25 // 船只归还、水下检查、素材总备份",
+          "est_minutes": 30
+        },
+        {
+          "day": 8,
+          "type": "crew_call",
+          "time": "08:00",
+          "note": "crew call · 缓冲日：器材清点、补拍清单确认",
+          "est_minutes": 30
+        },
+        {
+          "day": 8,
+          "type": "buffer",
+          "time": "08:30",
+          "note": "PICKUPS / WEATHER COVER：优先补 1、5、12 场空镜与插镜；无补拍则提前拆景",
+          "est_minutes": 210
+        },
+        {
+          "day": 8,
+          "type": "meal",
+          "time": "12:00",
+          "note": "// MEAL BREAK @ 12:00 // 第 4 小时放饭",
+          "est_minutes": 45
+        },
+        {
+          "day": 8,
+          "type": "buffer",
+          "time": "12:45",
+          "note": "器材归还、素材总备份（双盘 + 云端校验）、场地恢复与验收",
+          "est_minutes": 120
+        },
+        {
+          "day": 8,
+          "type": "wrap",
+          "time": "14:45",
+          "note": "END OF DAY 15:15 // 项目杀青，通告单与场记表归档",
+          "est_minutes": 30
+        }
+      ],
+      "totals": {
+        "pages_eighths": 282,
+        "page_count": "35 1/4",
+        "shoot_minutes": 4535,
+        "company_moves": 5,
+        "meals": 8,
+        "scenes": 12,
+        "shoot_days": 8
+      },
+      "days": [
+        {
+          "day": 1,
+          "date": "Day 1",
+          "call": "04:30",
+          "wrap": "15:40",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "04:30",
+              "note": "crew call · 码头集合、潮汐表确认、夜间转黎明的安全简报",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "05:00",
+              "note": "cast call · 渔工妆（冻疮/盐渍）+ 防水服装",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "05:45",
+              "note": "码头：黎明前布光，车灯逆光 + 1.2K 补脸；机位 A 稳定器 / B 长焦",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "06:30",
+              "scene_no": 1,
+              "est_minutes": 180,
+              "note": "日出 06:40：06:30 开拍抢蓝调与车灯逆光，日出后转顺光拍手部特写"
+            },
+            {
+              "type": "meal",
+              "time": "09:30",
+              "note": "// MEAL BREAK @ 09:30 // 第 5 小时放饭，渔村早班作息",
+              "est_minutes": 45
+            },
+            {
+              "type": "move",
+              "time": "10:15",
+              "note": "// COMPANY MOVE TO 渔船停泊区 // 同码头 10 分钟车程 + 20 分钟装卸",
+              "est_minutes": 30
+            },
+            {
+              "type": "setup",
+              "time": "10:45",
+              "note": "船舱：贴顶 24mm、手持减震、借据特写用 100mm 微距",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "11:30",
+              "scene_no": 2,
+              "est_minutes": 220,
+              "note": "按「翻夹层—借据—海图—发呆」拍，先拍特写再拍全景"
+            },
+            {
+              "type": "wrap",
+              "time": "15:10",
+              "note": "END OF DAY 15:40 // 渔船复位、素材双备份、明日通告确认",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 52,
+            "page_count": "6 1/2",
+            "shoot_minutes": 670,
+            "total_est_time": "11h10",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        },
+        {
+          "day": 2,
+          "date": "Day 2",
+          "call": "07:00",
+          "wrap": "16:35",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "07:00",
+              "note": "crew call · 集市摊位协调、村民沟通、设备防潮",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "07:30",
+              "note": "cast call · 阿玲妆发（14 岁，需监护人陪同）、鱼贩群演",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "08:15",
+              "note": "集市：自然光 + 反光板，摊位招牌入画；收音避开叫卖",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "09:00",
+              "scene_no": 3,
+              "est_minutes": 160,
+              "note": "早市实拍：先环境后冲突；催债戏用长焦偷拍感"
+            },
+            {
+              "type": "move",
+              "time": "11:40",
+              "note": "// COMPANY MOVE TO 派出所 // 跨区 15 分钟车程 + 15 分钟装卸",
+              "est_minutes": 30
+            },
+            {
+              "type": "meal",
+              "time": "12:10",
+              "note": "// MEAL BREAK @ 12:10 // 第 5 小时 10 分放饭",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "12:55",
+              "note": "派出所：顶灯频闪测试、值班台背景、收音避开对讲机",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "13:40",
+              "scene_no": 7,
+              "est_minutes": 130,
+              "note": "先拍盖章手部，再拍阿海与陈sir 正反打"
+            },
+            {
+              "type": "buffer",
+              "time": "15:50",
+              "note": "补拍集市空镜/插镜（wrap 前留 20 分钟）",
+              "est_minutes": 20
+            },
+            {
+              "type": "wrap",
+              "time": "16:10",
+              "note": "END OF DAY 16:35 // 派出所复位、素材双备份",
+              "est_minutes": 25
+            }
+          ],
+          "totals": {
+            "pages_eighths": 36,
+            "page_count": "4 1/2",
+            "shoot_minutes": 575,
+            "total_est_time": "9h35",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        },
+        {
+          "day": 3,
+          "date": "Day 3",
+          "call": "13:00",
+          "wrap": "00:20",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "13:00",
+              "note": "crew call · 冰厂夜班交接、冷库安全与保暖",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "13:30",
+              "note": "cast call · 阿海湿发/冻伤妆，阿玲夜戏妆发",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "14:15",
+              "note": "冰厂：冷色光 + 凝露处理、机器防雾、机位进出动线",
+              "est_minutes": 60
+            },
+            {
+              "type": "scene",
+              "time": "15:15",
+              "scene_no": 4,
+              "est_minutes": 170,
+              "note": "冷库内不超过 20 分钟一组，机器轮换；先拍搬冰全景"
+            },
+            {
+              "type": "meal",
+              "time": "18:05",
+              "note": "// MEAL BREAK @ 18:05 // 第 5 小时 5 分放饭，热食 + 姜茶",
+              "est_minutes": 45
+            },
+            {
+              "type": "move",
+              "time": "18:50",
+              "note": "// COMPANY MOVE TO 旧码头 // 同区 15 分钟车程 + 15 分钟装卸",
+              "est_minutes": 30
+            },
+            {
+              "type": "setup",
+              "time": "19:20",
+              "note": "码头雨戏：雨车接管、防水罩、钠灯 2200K 白平衡",
+              "est_minutes": 50
+            },
+            {
+              "type": "scene",
+              "time": "20:10",
+              "scene_no": 5,
+              "est_minutes": 220,
+              "note": "先拍雨幕空镜，再拍两人中景长镜头；最后拍阿海发火特写"
+            },
+            {
+              "type": "wrap",
+              "time": "23:50",
+              "note": "END OF DAY 00:20 // 雨车回收、湿服装处理、素材备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 52,
+            "page_count": "6 1/2",
+            "shoot_minutes": 680,
+            "total_est_time": "11h20",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        },
+        {
+          "day": 4,
+          "date": "Day 4",
+          "call": "10:30",
+          "wrap": "20:40",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "10:30",
+              "note": "crew call · 铁皮屋进场、屋顶遮光、山路器材分车",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "11:00",
+              "note": "cast call · 阿海/阿玲妆发，摩托安全帽与护具",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "11:45",
+              "note": "铁皮屋：屋顶漏光加柔、风扇/实用灯、遗物陈设",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "12:30",
+              "scene_no": 6,
+              "est_minutes": 175,
+              "note": "按「翻箱—信件—遗物—决定」拍，特写用自然光"
+            },
+            {
+              "type": "meal",
+              "time": "15:25",
+              "note": "// MEAL BREAK @ 15:25 // 第 4 小时 55 分放饭，黄昏前完成",
+              "est_minutes": 45
+            },
+            {
+              "type": "move",
+              "time": "16:10",
+              "note": "// COMPANY MOVE TO 山路 // 跨区 30 分钟车程 + 15 分钟装卸",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "16:55",
+              "note": "山路：黄昏方向测光、摩托跟拍稳定器、蚊虫防护与安全绳",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "17:40",
+              "scene_no": 8,
+              "est_minutes": 150,
+              "note": "黄昏 17:50–18:10：先拍骑行全景，窗口内只拍对话中景"
+            },
+            {
+              "type": "wrap",
+              "time": "20:10",
+              "note": "END OF DAY 20:40 // 摩托归还、山路清理、素材备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 42,
+            "page_count": "5 1/4",
+            "shoot_minutes": 610,
+            "total_est_time": "10h10",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        },
+        {
+          "day": 5,
+          "date": "Day 5",
+          "call": "15:00",
+          "wrap": "02:30",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "15:00",
+              "note": "crew call · 茶餐厅包场布置、霓虹招牌试灯",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "15:30",
+              "note": "cast call · 阿海/霞姐妆发，餐厅群演",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "16:15",
+              "note": "茶餐厅：霓虹主光 + 室内实用灯，白平衡锁 4000K",
+              "est_minutes": 60
+            },
+            {
+              "type": "scene",
+              "time": "17:15",
+              "scene_no": 9,
+              "est_minutes": 190,
+              "note": "先拍招牌反光空镜，再拍两人对坐正反打"
+            },
+            {
+              "type": "meal",
+              "time": "20:25",
+              "note": "// MEAL BREAK @ 20:25 // 第 5 小时 25 分放饭，海堤夜戏前完成",
+              "est_minutes": 45
+            },
+            {
+              "type": "move",
+              "time": "21:10",
+              "note": "// COMPANY MOVE TO 海边堤坝 // 同区 25 分钟车程 + 15 分钟装卸",
+              "est_minutes": 40
+            },
+            {
+              "type": "setup",
+              "time": "21:50",
+              "note": "堤坝：海风加固灯架、远景城市光、涨潮线警戒",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "22:35",
+              "scene_no": 10,
+              "est_minutes": 205,
+              "note": "纸船 6 条，浪推回来的镜头等 3 次潮；先拍全景再拍手部"
+            },
+            {
+              "type": "wrap",
+              "time": "02:00",
+              "note": "END OF DAY 02:30 // 海堤清场、器材防盐雾处理、备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 50,
+            "page_count": "6 1/4",
+            "shoot_minutes": 690,
+            "total_est_time": "11h30",
+            "company_moves": 1,
+            "meals": 1,
+            "scenes": 2
+          }
+        },
+        {
+          "day": 6,
+          "date": "Day 6",
+          "call": "10:00",
+          "wrap": "17:40",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "10:00",
+              "note": "crew call · 船厂进场、粉尘防护、地面铺板",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "10:30",
+              "note": "cast call · 阿海/福叔妆发（油污/木屑）",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "11:15",
+              "note": "船厂：高窗光 + 负补、粉尘控制、船木陈设",
+              "est_minutes": 60
+            },
+            {
+              "type": "scene",
+              "time": "12:15",
+              "scene_no": 11,
+              "est_minutes": 130,
+              "note": "先拍船木纹理与阿海的手，再拍两人对话"
+            },
+            {
+              "type": "meal",
+              "time": "14:25",
+              "note": "// MEAL BREAK @ 14:25 // 第 4 小时 25 分放饭",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "15:10",
+              "scene_no": 11,
+              "est_minutes": 95,
+              "note": "福叔入伙的握手与结尾全景；补 2 条安全条"
+            },
+            {
+              "type": "buffer",
+              "time": "16:45",
+              "note": "补拍船厂空镜/插镜，或提前拆景",
+              "est_minutes": 25
+            },
+            {
+              "type": "wrap",
+              "time": "17:10",
+              "note": "END OF DAY 17:40 // 船厂复位、粉尘清理、素材备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 28,
+            "page_count": "3 1/2",
+            "shoot_minutes": 460,
+            "total_est_time": "7h40",
+            "company_moves": 0,
+            "meals": 1,
+            "scenes": 1
+          }
+        },
+        {
+          "day": 7,
+          "date": "Day 7",
+          "call": "04:30",
+          "wrap": "11:25",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "04:30",
+              "note": "crew call · 码头集合、下水戏安全会议、救生衣",
+              "est_minutes": 30
+            },
+            {
+              "type": "cast_call",
+              "time": "05:00",
+              "note": "cast call · 阿海/阿玲妆发，湿身戏保暖",
+              "est_minutes": 45
+            },
+            {
+              "type": "setup",
+              "time": "05:45",
+              "note": "码头：黎明前布光、船位固定、下水安全绳与救援艇",
+              "est_minutes": 45
+            },
+            {
+              "type": "scene",
+              "time": "06:30",
+              "scene_no": 12,
+              "est_minutes": 175,
+              "note": "日出 06:40：06:30 开拍抢蓝调，先拍推船下水 2 条，再拍船头对视"
+            },
+            {
+              "type": "meal",
+              "time": "09:25",
+              "note": "// MEAL BREAK @ 09:25 // 第 4 小时 55 分放饭，收工前早餐",
+              "est_minutes": 45
+            },
+            {
+              "type": "buffer",
+              "time": "10:10",
+              "note": "补拍 1/5/12 场码头空镜与插镜，或提前收工",
+              "est_minutes": 45
+            },
+            {
+              "type": "wrap",
+              "time": "10:55",
+              "note": "END OF DAY 11:25 // 船只归还、水下检查、素材总备份",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 22,
+            "page_count": "2 3/4",
+            "shoot_minutes": 415,
+            "total_est_time": "6h55",
+            "company_moves": 0,
+            "meals": 1,
+            "scenes": 1
+          }
+        },
+        {
+          "day": 8,
+          "date": "Day 8",
+          "call": "08:00",
+          "wrap": "15:15",
+          "blocks": [
+            {
+              "type": "crew_call",
+              "time": "08:00",
+              "note": "crew call · 缓冲日：器材清点、补拍清单确认",
+              "est_minutes": 30
+            },
+            {
+              "type": "buffer",
+              "time": "08:30",
+              "note": "PICKUPS / WEATHER COVER：优先补 1、5、12 场空镜与插镜；无补拍则提前拆景",
+              "est_minutes": 210
+            },
+            {
+              "type": "meal",
+              "time": "12:00",
+              "note": "// MEAL BREAK @ 12:00 // 第 4 小时放饭",
+              "est_minutes": 45
+            },
+            {
+              "type": "buffer",
+              "time": "12:45",
+              "note": "器材归还、素材总备份（双盘 + 云端校验）、场地恢复与验收",
+              "est_minutes": 120
+            },
+            {
+              "type": "wrap",
+              "time": "14:45",
+              "note": "END OF DAY 15:15 // 项目杀青，通告单与场记表归档",
+              "est_minutes": 30
+            }
+          ],
+          "totals": {
+            "pages_eighths": 0,
+            "page_count": "—",
+            "shoot_minutes": 435,
+            "total_est_time": "7h15",
+            "company_moves": 0,
+            "meals": 1,
+            "scenes": 0
+          }
+        }
+      ],
+      "checklist": [
+        "8 天场地许可、潮汐表与海堤/山路安全许可",
+        "船只借用合同、船主保险与救援艇",
+        "14 岁演员的监护人与工时表（Day 2/3/4/7）",
+        "雨车、烟机、冷库防护与防盐雾工具",
+        "双机 + 稳定器 + 100mm 微距，电池 ×8",
+        "每日素材双备份（双盘 + 云端校验）",
+        "缓冲日补拍清单与天气备选方案",
+        "剧组保险、急救包、AED 位置确认"
+      ],
+      "tips": [
+        "8 天拍 35 页 ≈ 每天 4–5 页：靠固定机位、长镜头与自然光调度，不为每个镜头做 coverage；每场只定 2 个机位，超时就交给 B 机补。",
+        "转场按 30 分钟/次计，跨区（码头→山路）60 分钟；本片 5 次转场共 175 分钟已写进表内，现场临时加机位必然挤掉夜戏。",
+        "缓冲日（Day 8）不要排实拍：留给天气、跳拍与补镜；没有补拍就提前拆景归还器材，省一天租金与人工。",
+        "夜戏（Day 5 收 02:30）后把 Day 6 推迟到 10:00 开、只排 7 小时 40 分，保证 Day 7 黎明戏前有 10 小时 turnaround；低成本可以省灯省景，不能省睡眠。",
+        "餐补超时会产生 meal penalty：6 小时必须放饭；Day 3 的 18:05 放饭已是第 5 小时 5 分，再拖就要按合同补钱。",
+        "黄金时刻（Day 4 山路 17:50–18:10）只有 20 分钟，提前 40 分钟布好机位与反光板，先拍中景再拍特写。"
+      ]
+    }
+  ]
+}

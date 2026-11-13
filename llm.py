@@ -127,12 +127,49 @@ TOOLS_SCHEMA = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_scenes",
+            "description": "在场面模式库中检索某类戏的专业拍法：戏剧功能、节拍结构、冲突/潜台词、走位调度、建议镜头、光线与声音、页数（1/8 页）与拍摄分钟估算。适合回答「这场戏怎么拍」「怎么调度」「要拍多久」。",
+            "parameters": {
+                "type": "object",
+                "properties": {"query": {"type": "string", "description": "检索关键词,如:天台告白 夜景 关系转折 审讯对峙"}},
+                "required": ["query"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_shots",
+            "description": "在镜头模式库中检索具体镜头：景别/机位/运镜/焦段/帧率/光线/声音/叙事用途/常见误用。适合回答「这个情绪用什么镜头」「推镜头什么时候用」。",
+            "parameters": {
+                "type": "object",
+                "properties": {"query": {"type": "string", "description": "检索关键词,如:推镜头 孤独 大特写 荷兰角 手持跟拍"}},
+                "required": ["query"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_stripboards",
+            "description": "在通告单模板库中检索专业 stripboard / call sheet：crew_call、setup、scene、company move、meal、wrap 的时间块，页数（1/8 页）与拍摄分钟合计。适合回答「一天能拍多少」「通告单怎么排」「要几天」。",
+            "parameters": {
+                "type": "object",
+                "properties": {"query": {"type": "string", "description": "检索关键词,如:单日广告 夜戏 转场 三天短片"}},
+                "required": ["query"],
+            },
+        },
+    },
 ]
 
 
 def execute_tool(name: str, query: str, limit: int = 3):
     """执行检索工具,返回给模型的结果文本。"""
     import case_store
+    import library
     import rag
 
     if name == "search_knowledge":
@@ -145,7 +182,22 @@ def execute_tool(name: str, query: str, limit: int = 3):
         hits = case_store.search_cases(query, k=limit)
         if not hits:
             return "(案例库中没有检索到相关内容)"
-        return "\n\n".join(case_store.case_to_text(c)[:900] for c in hits)
+        return "\n\n".join(case_store.case_to_text(c)[:1200] for c in hits)
+    if name == "search_scenes":
+        hits = library.search_scenes(query, k=min(limit, 3))
+        if not hits:
+            return "(场面模式库中没有检索到相关内容)"
+        return "\n\n".join(library.scene_to_text(s) for s in hits)
+    if name == "search_shots":
+        hits = library.search_shots(query, k=min(limit, 4))
+        if not hits:
+            return "(镜头模式库中没有检索到相关内容)"
+        return "\n".join(library.shot_to_text(s) for s in hits)
+    if name == "search_stripboards":
+        hits = library.search_templates(query, k=min(limit, 2))
+        if not hits:
+            return "(通告单模板库中没有检索到相关内容)"
+        return "\n\n".join(library.template_to_text(t) for t in hits)
     return f"(未知工具 {name})"
 
 

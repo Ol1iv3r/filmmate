@@ -3,112 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Filmmate · 影视创作助理</title>
+<title>Filmmate</title>
 <link rel="stylesheet" href="/static/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
 </head>
 <body>
 <div class="app">
-  <!-- 顶部栏 -->
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo">🎬</span>
-      <div class="brand-text">
-        <h1>Filmmate</h1>
-        <p>影视创作助理 · 检查剧本 / 分镜 / Rundown / 日程</p>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <span id="modeBadge" class="badge badge-offline">检测中…</span>
-      <button id="settingsBtn" class="icon-btn" title="设置">⚙️</button>
-    </div>
+  <header class="brand-mini">
+    <span class="logo">🎬</span>
+    <h1>Filmmate</h1>
   </header>
 
-  <!-- 聊天区 -->
   <main id="chat" class="chat">
-    <div id="hero" class="hero">
-      <div class="hero-title">你的 AI 创作顾问</div>
-      <div class="hero-sub">把想法或剧本交给我,我来帮你找漏洞、出分镜、排通告单。</div>
-      <div class="hero-examples">
-        <button class="chip chip-tool" data-tool="">检查剧本漏洞</button>
-        <button class="chip chip-tool" data-tool="storyboard">给我分镜建议</button>
-        <button class="chip chip-tool" data-tool="cases">找参考案例</button>
-        <button class="chip chip-tool" data-tool="rundown">排拍摄 Rundown</button>
-        <button class="chip chip-tool" data-tool="schedule">规划拍摄日程</button>
-        <button class="chip chip-tool" data-tool="inspiration">来点灵感</button>
-      </div>
-      <div class="hero-sample" id="heroSample">
-        示例:把这段剧本发给我,我帮你检查——<br>
-        <code id="sampleScript">第1场 天台 夜
-小明:今晚的月亮真圆。
-小红:嗯,和去年一样。
-第2场 天台 日
-小明:你不是出国了吗?怎么还在香港?
-小红:我根本没走。
-第3场 教室 夜
-小明:我们明天几点见?
-小红:晚上八点,老地方。</code>
-        <button class="chip chip-use" id="useSample">用这段示例剧本</button>
-      </div>
-    </div>
     <div id="messages"></div>
   </main>
 
-  <!-- 输入区 -->
   <footer class="composer-wrap">
+    <div id="libraryPanel" class="library-panel hidden">
+      <div class="lib-head"><span>我的灵感库</span><button id="libClose" class="sc-remove">✕</button></div>
+      <div class="lib-form">
+        <input id="libUrl" placeholder="Bilibili 链接">
+        <input id="libTitle" placeholder="片名（可选）">
+        <input id="libMoods" placeholder="情绪标签，如：孤独, 浪漫">
+        <input id="libScriptFile" type="file" accept=".pdf,.docx,.txt,.md" hidden>
+        <button id="libScriptBtn" class="chip" type="button">＋剧本</button>
+        <span id="libScriptName" class="lib-script-name"></span>
+        <button id="libAdd" class="send-btn">添加</button>
+      </div>
+      <div id="libList" class="lib-list"></div>
+    </div>
+    <div id="scriptChip" class="script-chip hidden">
+      <span class="sc-icon">📄</span>
+      <span id="scriptName" class="sc-name"></span>
+      <span id="scriptMeta" class="sc-meta"></span>
+      <button id="scriptRemove" class="sc-remove" title="移除剧本">✕</button>
+    </div>
     <div class="tools-row" id="toolsRow">
       <button class="chip chip-tool active" data-tool="">智能问答</button>
-      <button class="chip chip-tool" data-tool="review">🔍 剧本检查</button>
-      <button class="chip chip-tool" data-tool="storyboard">🎞️ 分镜建议</button>
-      <button class="chip chip-tool" data-tool="rundown">📋 Rundown</button>
-      <button class="chip chip-tool" data-tool="schedule">🗓️ 日程规划</button>
-      <button class="chip chip-tool" data-tool="inspiration">💡 灵感</button>
-      <button class="chip chip-tool" data-tool="cases">🎬 参考案例</button>
+      <button class="chip chip-tool" data-tool="review">剧本检查</button>
+      <button class="chip chip-tool" data-tool="storyboard">分镜建议</button>
+      <button class="chip chip-tool" data-tool="rundown">Rundown</button>
+      <button class="chip chip-tool" data-tool="schedule">日程规划</button>
+      <button class="chip chip-tool" data-tool="inspiration">灵感</button>
+      <button class="chip chip-tool" data-tool="library">我的库</button>
     </div>
     <div class="composer">
-      <textarea id="input" rows="1" placeholder="说说你的想法,或直接把剧本贴给我…(支持语音输入,点🎤)"></textarea>
-      <div class="composer-actions">
-        <button id="micBtn" class="icon-btn" title="语音输入">🎤</button>
-        <button id="sendBtn" class="send-btn">发送 ↵</button>
-      </div>
+      <button id="attachBtn" class="icon-btn" title="上传剧本（PDF / DOCX / TXT）">📎</button>
+      <input id="fileInput" type="file" accept=".pdf,.docx,.txt,.md,.markdown,.fountain" hidden>
+      <textarea id="input" rows="1" placeholder="输入想法，或先上传剧本再选功能…"></textarea>
+      <button id="micBtn" class="icon-btn" title="语音输入">🎤</button>
+      <button id="sendBtn" class="send-btn">→</button>
     </div>
-    <div class="hint">提示:输入框上方选择功能;也可以直接输入「帮我看看这个剧本」「有没有类似案例」等自然语言。</div>
   </footer>
 </div>
-
-<!-- 设置抽屉 -->
-<div id="settingsOverlay" class="overlay hidden">
-  <div class="drawer">
-    <div class="drawer-head">
-      <h2>设置</h2>
-      <button id="closeSettings" class="icon-btn">✕</button>
-    </div>
-    <label class="field">
-      <span>DeepSeek API Key(在线模式)</span>
-      <input id="apiKey" type="password" placeholder="sk-…(留空则使用离线演示模式)">
-    </label>
-    <label class="field">
-      <span>语音输入语言</span>
-      <select id="voiceLang">
-        <option value="zh-CN">普通话 (zh-CN)</option>
-        <option value="zh-HK">粤语 (zh-HK)</option>
-        <option value="en-US">English (en-US)</option>
-      </select>
-    </label>
-    <label class="field">
-      <span>语音朗读(回答后点 🔊)</span>
-      <select id="ttsLang">
-        <option value="zh-CN">普通话 (zh-CN)</option>
-        <option value="zh-HK">粤语 (zh-HK)</option>
-        <option value="en-US">English (en-US)</option>
-        <option value="">关闭朗读</option>
-      </select>
-    </label>
-    <button id="saveSettings" class="send-btn">保存</button>
-    <p class="drawer-note">Key 只保存在本机浏览器 localStorage,发给后端用于本次调用。</p>
+<div id="frameModal" class="frame-modal hidden">
+  <div class="fm-box">
+    <button id="fmClose" class="sc-remove">✕</button>
+    <h3 id="fmTitle"></h3>
+    <div id="fmGrid" class="fm-grid"></div>
+    <div id="fmLinks" class="fm-links"></div>
   </div>
 </div>
-
 <script src="/static/app.js"></script>
 </body>
 </html>
