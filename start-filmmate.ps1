@@ -31,7 +31,7 @@ $backend = Start-Process -FilePath $py `
 
 Write-Host "Starting frontend http://localhost:5173 ..." -ForegroundColor Cyan
 $frontend = Start-Process -FilePath 'cmd.exe' `
-    -ArgumentList '/c', 'npm.cmd run dev' `
+    -ArgumentList '/c', 'npm.cmd run dev -- --open' `
     -WorkingDirectory $web `
     -NoNewWindow -PassThru
 
