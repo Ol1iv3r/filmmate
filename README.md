@@ -95,6 +95,51 @@ DeepSeek API (deepseek-chat, OpenAI 兼容接口;httpx 异步)
 
 ## 🚀 运行方法
 
+### ⚡ 一键启动:双击 `start.bat`(Windows,推荐)
+
+`start.bat` 会同时拉起 **Python 后端**(`app.py`)和 **React 前端**(`npm run dev`),
+关闭窗口或按 `Ctrl+C` 时两个进程一起结束。
+
+首次准备(只需一次):
+
+```bash
+# 1) 仓库根目录:Python 虚拟环境 + 后端依赖
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+# 2) 前端依赖
+cd filmmate-web
+npm install
+cd ..
+```
+
+配置 Key(**语音输入必须**,聊天按需):
+
+```ini
+# 仓库根目录 .env(复制 .env.example 后填写)
+AI_GATEWAY_API_KEY=vck_...     # 默认:经 Vercel AI Gateway 调用 openai/whisper-1
+# 或直连 OpenAI:
+OPENAI_API_KEY=sk-...
+```
+
+```ini
+# filmmate-web/.env(复制 filmmate-web/.env.example 后填写)
+VITE_TRANSCRIBE_BASE=http://127.0.0.1:8000   # 语音输入后端
+VITE_API_BASE=http://127.0.0.1:8000          # 聊天 / 会话落盘后端(可留空 = Mock 演示)
+VITE_REMOTE_CONVERSATIONS=1                  # 1 = 会话落盘;0 = 浏览器 localStorage
+```
+
+然后**双击 `start.bat`**,浏览器打开 **http://localhost:5173**:
+
+| 进程 | 地址 | 提供 |
+|---|---|---|
+| Python 后端 | http://127.0.0.1:8000 | `/api/chat`、`/api/transcribe`、`/api/conversations` |
+| Vite 前端 | http://localhost:5173 | Tauri 2 + React 聊天界面 |
+
+> macOS / Linux 没有 `start.bat`,手动开两个终端:根目录 `python app.py`,`filmmate-web` 里 `npm run dev`。
+
+### 🐍 只跑 Python 原型(任意系统)
+
 要求:Python 3.9+,联网(在线模式需要)。
 
 ```bash
@@ -127,6 +172,105 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 
 ---
 
+## 🎙️ Phase 2 · 语音输入(voice input)
+
+点麦克风 → 说话 → 再点一次停止 → whisper-1 转写 → **文字回填输入框,永不自动发送**。
+
+### 文件分工
+
+| 文件 | 角色 |
+|---|---|
+| `voice_input_api.py` | 后端 `POST /api/transcribe`:校验音频 → 转发上游 → 返回 `{"text": "..."}`;密钥只在服务端 |
+| `filmmate-web/src/hooks/useVoiceInput.ts` | 录音状态机 `idle → requesting → recording → transcribing`;持有 MediaRecorder,任何退出路径都释放麦克风 |
+| `filmmate-web/src/lib/voiceInput.ts` | 选择录音 MIME(webm/opus 优先)、检测环境支持、格式化计时 |
+| `filmmate-web/src/lib/voiceInputApi.ts` | 浏览器端上传音频,把 401/413/429/504 等错误翻译成用户可读文案 |
+| `filmmate-web/src/lib/voiceInputMerge.ts` | 把转写文本并入已有草稿(只补一个空格,不覆盖已输入内容) |
+| `filmmate-web/src/components/MicButton.tsx` | 麦克风按钮:idle / 录音中(显示计时)/ 转写中 |
+| `filmmate-web/src/components/Composer.tsx` | 接线:`onTranscript` → `mergeTranscript` → 写入输入框 |
+
+### 工作流程
+
+1. 点麦克风 → `getUserMedia` 申请权限 → `MediaRecorder` 以 32 kbps 开始录音(`webm/opus`);
+2. 再点一次 / 按 `Enter` → 停止录音,得到音频 `Blob`;
+3. `transcribeAudio()` → `POST {VITE_TRANSCRIBE_BASE}/api/transcribe`(multipart,`file=<audio>`);
+4. 后端检查空音频与 25 MB 上限 → 转发上游 → 返回 `{ "text": "..." }`;
+5. 前端 `mergeTranscript()` 把文字补到光标处,**不发送**,由用户自己按 Enter;
+6. 录音中按 `Esc` 取消;短于 400 ms 视为误触;最长 120 s 自动停止。
+
+### 使用的模型
+
+| 项 | 值 |
+|---|---|
+| 模型 | `openai/whisper-1`(Gateway 默认)/ `whisper-1`(直连 OpenAI) |
+| 默认上游 | Vercel AI Gateway `POST /v4/ai/transcription-model`(JSON + base64) |
+| 备选上游 | OpenAI `POST /v1/audio/transcriptions`(标准 multipart) |
+| 语言 | `TRANSCRIBE_LANGUAGE`(如 `zh` / `en` / `yue`),不填自动识别 |
+| 术语提示 | `TRANSCRIBE_PROMPT`(仅直连 OpenAI 生效) |
+| 限制 | 25 MB / 60 s 超时 |
+
+> ⚠️ AI Gateway 的 `/v1/audio/transcriptions` 不存在(会 404),转写必须走 v4 端点;
+> `MediaRecorder` 给的 `audio/webm;codecs=opus` 会先去掉 `;codecs=…` 再转发。
+
+---
+
+## 💾 Phase 3 · 会话落盘(chat storage)
+
+聊天记录 → `UIMessage[]` → dict → **每个会话一个 JSON 文件**,刷新 / 重启后仍在。
+
+### 文件分工
+
+| 文件 | 角色 |
+|---|---|
+| `chat_storage.py` | 存储核心:原子写入(`.tmp` + `os.replace`)、按会话 id 加锁、id 正则校验、损坏文件隔离、标题推导 |
+| `chat_storage_api.py` | 5 个 REST 路由 + Pydantic 校验,把存储异常翻译成 400 / 404 / 500 |
+| `chat_storage_langchain.py` | 预留:LangChain `BaseMessage.to_dict()` ↔ dict(未接线,未加入 requirements) |
+| `filmmate-web/src/lib/conversations.ts` | `ConversationRepository` 接口:`LocalRepository`(localStorage)/ `RemoteRepository`(REST),按环境变量选择 |
+| `app.py` | 注册 `/api/transcribe` 与 `/api/conversations` 两个 router |
+
+### 工作流程
+
+1. **新建会话** → `PUT /api/conversations/<id>`,body `{"messages": []}` → 生成 `<id>.json`,标题暂为「新对话」;
+2. **自动保存** → 发送消息后 500 ms debounce,以及回复结束(`ready` / `error`)时强制保存 → `PUT` 全量 `messages` → 原子重写文件;标题自动取第一条 user 消息(截 24 字);
+3. **侧栏列表** → `GET /api/conversations` → 读取目录下所有 JSON 的 `id / title / createdAt / updatedAt`,按 `updatedAt` 倒序;
+4. **打开会话** → `GET /api/conversations/<id>` → 返回 `{ messages }`;
+5. **重命名** → `PATCH /api/conversations/<id>`;**删除** → `DELETE /api/conversations/<id>`。
+
+### 落盘格式
+
+`data/conversations/<id>.json`:
+
+```json
+{
+  "version": 1,
+  "id": "conv-m3k2j1-a1b2c3",
+  "title": "第四場夜戲,先拍全景再切近景。",
+  "createdAt": 1762900000000,
+  "updatedAt": 1762900131000,
+  "messages": [
+    { "id": "m1", "role": "user",
+      "parts": [{ "type": "text", "text": "第四場夜戲,先拍全景再切近景。" }] },
+    { "id": "m2", "role": "assistant",
+      "parts": [{ "type": "text", "text": "收到,先 wide shot 再 close-up。" }] }
+  ]
+}
+```
+
+- `messages` 就是前端 `UIMessage[]` 原样落盘(text / tool-call / reasoning 等 part 都保留);
+- `createdAt` / `updatedAt` 是**毫秒时间戳**(number),与前端 `ConversationMeta` 一致;
+- `version` 用于 schema 演进:未知版本只跳过,不擅自改写。
+
+### 存储位置
+
+| 项 | 值 |
+|---|---|
+| 默认目录 | 仓库根目录 `data/conversations/`(可用 `CONVERSATIONS_DIR` 覆盖) |
+| 文件命名 | `<conversation-id>.json`,一个会话一个文件 |
+| 是否进仓库 | 否,已在 `.gitignore` 中 |
+| 开启方式 | `filmmate-web/.env`:`VITE_API_BASE=http://127.0.0.1:8000` + `VITE_REMOTE_CONVERSATIONS=1` |
+| 关闭方式 | `VITE_REMOTE_CONVERSATIONS=0`(退回浏览器 localStorage,不产生文件) |
+
+---
+
 ## 📁 文件结构
 
 ```
@@ -143,9 +287,12 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 ├── chat_storage_langchain.py # Phase 3:LangChain 消息 ↔ dict(预留,未接线)
 ├── requirements.txt
 ├── .env.example
+├── start.bat                  # Windows 一键启动(后端 + 前端)
+├── start-filmmate.ps1         # start.bat 调用的 PowerShell 脚本(负责启停两个进程)
 ├── knowledge/knowledge.json   # 专业知识库(78 条)
 ├── cases/cases.json           # 作品案例库(10 部)
 ├── data/conversations/        # Phase 3 运行后生成(已 .gitignore)
+├── filmmate-web/              # Tauri 2 + React 19 + Vite 前端(见其 README)
 └── static/
     ├── index.html       # 聊天界面
     ├── style.css        # 电影风深色主题
