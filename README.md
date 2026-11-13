@@ -129,7 +129,7 @@ VITE_API_BASE=http://127.0.0.1:8000          # 聊天 / 会话落盘后端(可�
 VITE_REMOTE_CONVERSATIONS=1                  # 1 = 会话落盘;0 = 浏览器 localStorage
 ```
 
-然后**双击 `start.bat`**,浏览器打开 **http://localhost:5173**:
+然后**双击 `start.bat`**,脚本会自动在浏览器打开 **http://localhost:5173**:
 
 | 进程 | 地址 | 提供 |
 |---|---|---|
