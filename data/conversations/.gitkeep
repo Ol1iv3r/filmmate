@@ -1,0 +1,2 @@
+# Keeps data/conversations/ in the repo. Conversation JSON files written here
+# at runtime are ignored by .gitignore and never committed.

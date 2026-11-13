@@ -265,7 +265,7 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 |---|---|
 | 默认目录 | 仓库根目录 `data/conversations/`(可用 `CONVERSATIONS_DIR` 覆盖) |
 | 文件命名 | `<conversation-id>.json`,一个会话一个文件 |
-| 是否进仓库 | 否,已在 `.gitignore` 中 |
+| 是否进仓库 | 目录保留(`data/conversations/.gitkeep`),会话 JSON 不提交(`.gitignore`) |
 | 开启方式 | `filmmate-web/.env`:`VITE_API_BASE=http://127.0.0.1:8000` + `VITE_REMOTE_CONVERSATIONS=1` |
 | 关闭方式 | `VITE_REMOTE_CONVERSATIONS=0`(退回浏览器 localStorage,不产生文件) |
 
@@ -291,7 +291,7 @@ pip install sentence-transformers   # 首次运行会下载多语言模型并缓
 ├── start-filmmate.ps1         # start.bat 调用的 PowerShell 脚本(负责启停两个进程)
 ├── knowledge/knowledge.json   # 专业知识库(78 条)
 ├── cases/cases.json           # 作品案例库(10 部)
-├── data/conversations/        # Phase 3 运行后生成(已 .gitignore)
+├── data/conversations/        # Phase 3 会话存储目录(目录保留,会话 JSON 已 .gitignore)
 ├── filmmate-web/              # Tauri 2 + React 19 + Vite 前端(见其 README)
 └── static/
     ├── index.html       # 聊天界面

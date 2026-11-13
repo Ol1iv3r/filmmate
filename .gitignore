@@ -13,8 +13,11 @@ __pycache__/
 .venv/
 venv/
 
-# Phase 3 会话存储（chat storage）：会话 JSON 落盘目录（本机数据，不进仓库）
-data/
+# Phase 3 会话存储（chat storage）：目录保留在仓库里，会话 JSON 是本机数据、不提交
+data/*
+!data/conversations/
+data/conversations/*
+!data/conversations/.gitkeep
 
 # 系统文件
 .DS_Store
