@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.1] — 2026-11-13
+
+### Fixed
+
+- **macOS 启动**：`start.bat` 是 Windows 批处理（PowerShell），macOS 无法执行；
+  改为使用仓库里的 `start.command`。新脚本只启动 Python 服务（8000），
+  不依赖 node/npm（Finder 启动时 nvm 不在 PATH 里）。
+- `start.command` 增加：健康检查、重复启动检测（已在运行则只开浏览器）、
+  `start.log` 日志、失败时暂停窗口；双击不再一闪而过。
+- README 的启动说明按 macOS / Windows 分开，并注明 `start.bat` 不能在 macOS 运行。
+
+
 ## [0.4.0] — 2026-11-13
 
 这一版的重点：**数据必须可核验**、**灵感与参考合并**、**剧本驱动创作工具**、**界面极简**。

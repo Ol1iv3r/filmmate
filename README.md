@@ -95,48 +95,49 @@ DeepSeek API (deepseek-chat, OpenAI 兼容接口;httpx 异步)
 
 ## 🚀 运行方法
 
-### ⚡ 一键启动:双击 `start.bat`(Windows,推荐)
+### ⚡ 一键启动（按系统选择）
 
-`start.bat` 会同时拉起 **Python 后端**(`app.py`)和 **React 前端**(`npm run dev`),
-关闭窗口或按 `Ctrl+C` 时两个进程一起结束。
+| 系统 | 双击 | 会启动 | 打开地址 |
+|---|---|---|---|
+| **macOS** | **`start.command`** | 只启动 Python 服务（不需要 node/npm） | **http://127.0.0.1:8000** |
+| **Windows** | **`start.bat`** | Python 后端 + React 前端 | http://localhost:5173 |
 
-首次准备(只需一次):
+> ⚠️ `start.bat` 是 Windows 批处理 + PowerShell，**macOS 无法执行**（双击通常只会被文本编辑器打开）。
+> macOS 请用 `start.command`；如果 Finder 提示「无法验证开发者」，右键 → 打开 → 仍要打开。
+
+macOS 首次准备（只需一次）：
 
 ```bash
-# 1) 仓库根目录:Python 虚拟环境 + 后端依赖
-python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-
-# 2) 前端依赖
-cd filmmate-web
-npm install
-cd ..
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 ```
 
-配置 Key(**语音输入必须**,聊天按需):
+然后双击 `start.command`：脚本会启动 `app.py`、等待健康检查、自动打开
+**http://127.0.0.1:8000**；关闭终端窗口或 `Ctrl+C` 会停止服务。
+如果服务已经在运行，脚本不会再起第二个进程，只打开浏览器。
+
+日志写在项目根目录 `start.log`，启动失败时终端会停住并显示日志末尾。
+
+Windows 首次准备：`start.bat` 需要 Python 后端 **和** 前端依赖，见下方“前端（可选）”。
+
+#### 配置 Key（可选）
 
 ```ini
-# 仓库根目录 .env(复制 .env.example 后填写)
-AI_GATEWAY_API_KEY=vck_...     # 默认:经 Vercel AI Gateway 调用 openai/whisper-1
+# 仓库根目录 .env（复制 .env.example 后填写）
+AI_GATEWAY_API_KEY=vck_...     # 语音输入：经 Vercel AI Gateway 调用 openai/whisper-1
 # 或直连 OpenAI:
 OPENAI_API_KEY=sk-...
 ```
 
-```ini
-# filmmate-web/.env(复制 filmmate-web/.env.example 后填写)
-VITE_TRANSCRIBE_BASE=http://127.0.0.1:8000   # 语音输入后端
-VITE_API_BASE=http://127.0.0.1:8000          # 聊天 / 会话落盘后端(可留空 = Mock 演示)
-VITE_REMOTE_CONVERSATIONS=1                  # 1 = 会话落盘;0 = 浏览器 localStorage
+不配置也能跑：全部功能有离线实现；配置 `DEEPSEEK_API_KEY` 后问答会由模型组织回答。
+
+#### 前端（可选，Windows 的 start.bat 会启动它）
+
+```bash
+cd filmmate-web
+npm install
+npm run dev        # http://localhost:5173
 ```
-
-然后**双击 `start.bat`**,脚本会自动在浏览器打开 **http://localhost:5173**:
-
-| 进程 | 地址 | 提供 |
-|---|---|---|
-| Python 后端 | http://127.0.0.1:8000 | `/api/chat`、`/api/transcribe`、`/api/conversations` |
-| Vite 前端 | http://localhost:5173 | Tauri 2 + React 聊天界面 |
-
-> macOS / Linux 没有 `start.bat`,手动开两个终端:根目录 `python app.py`,`filmmate-web` 里 `npm run dev`。
 
 ### 🐍 只跑 Python 原型(任意系统)
 
@@ -363,6 +364,7 @@ python3 scripts/enrich_samples.py    # 重新从 _ref 样本生成富化数据
 ├── chat_storage_langchain.py # Phase 3:LangChain 消息 ↔ dict(预留,未接线)
 ├── requirements.txt
 ├── .env.example
+├── start.command              # macOS 一键启动(只起 Python 服务, 8000)
 ├── start.bat                  # Windows 一键启动(后端 + 前端)
 ├── start-filmmate.ps1         # start.bat 调用的 PowerShell 脚本(负责启停两个进程)
 ├── knowledge/knowledge.json   # 专业知识库(基础 78 条)

@@ -39,3 +39,6 @@ src-tauri/target/
 
 # 个人灵感库（本机数据，不提交）
 data/personal/
+
+# 一键启动日志
+start.log
