@@ -21,8 +21,11 @@ DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 
+# 单次回复上限：防止模型陷入工具标签死循环时无限输出
+LLM_MAX_TOKENS = int(os.environ.get("LLM_MAX_TOKENS", "2000"))
+
 # 聊天模型统一入口：优先直连 DeepSeek；没有 DeepSeek key 时用 Vercel AI Gateway 上的 DeepSeek
-GATEWAY_CHAT_MODEL = os.environ.get("GATEWAY_CHAT_MODEL", "deepseek/deepseek-v3.2").strip()
+GATEWAY_CHAT_MODEL = os.environ.get("GATEWAY_CHAT_MODEL", "deepseek/deepseek-v4-flash").strip()
 
 # 语音转写配置(Phase 2):whisper-1,走 Vercel AI Gateway 或直连 OpenAI
 AI_GATEWAY_API_KEY = os.environ.get("AI_GATEWAY_API_KEY", "").strip()

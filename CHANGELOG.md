@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.3] — 2026-11-13
+
+### Fixed
+
+- **Gateway 工具调用泄漏**：`deepseek/deepseek-v3.2` 会在正文里输出
+  `<function_calls>` / `<｜DSML｜function_calls` 并陷入死循环（实测 202s、153KB 纯标签）。
+  - Gateway 聊天默认模型切换为 `deepseek/deepseek-v4-flash`（tool_calls 干净）；
+  - 增加 `LLM_MAX_TOKENS`（默认 2000）硬上限；
+  - `clean_model_text()` 清洗 DSML / function_calls 标记；
+  - 最终正文为空时给出明确兜底提示，不再把标签当回答。
+
+### Docs
+
+- README 新增「现状与下一步（Roadmap）」：数据库统一、剧本理解、Rundown 导出 Excel、
+  日程导出 .ics、2D Avatar，并同步重写「已知限制」。
+
+
 ## [0.4.2] — 2026-11-13
 
 ### Added

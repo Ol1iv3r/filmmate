@@ -15,6 +15,18 @@ import config
 logger = logging.getLogger("llm")
 
 
+def clean_model_text(text: str) -> str:
+    """清掉部分模型（如 DeepSeek via Gateway）泄漏到正文里的工具调用标记。"""
+    if not text:
+        return ""
+    text = re.sub(r"<\|?\s*/?\s*DSML\s*\|?[^>]*>", "", text, flags=re.I)
+    text = re.sub(r"<\|?\s*/?\s*DSML\s*\|?", "", text, flags=re.I)
+    text = re.sub(r"</?(?:function_calls?|tool_calls?)>", "", text, flags=re.I)
+    text = re.sub(r"<[^>]{0,40}(?:function_calls?|tool_calls?)[^>]{0,40}>", "", text, flags=re.I)
+    lines = [ln for ln in text.splitlines() if "function_calls" not in ln.lower() and "dsml" not in ln.lower()]
+    return "\n".join(lines).strip()
+
+
 def available(api_key: str = None):
     return bool(config.llm_settings(api_key)[0])
 
@@ -25,6 +37,7 @@ def _payload(messages, temperature, json_mode, stream, model):
         "messages": messages,
         "temperature": temperature,
         "stream": stream,
+        "max_tokens": config.LLM_MAX_TOKENS,
     }
     if json_mode:
         payload["response_format"] = {"type": "json_object"}
@@ -211,6 +224,7 @@ async def complete_raw(messages, api_key: str = None, temperature: float = 0.7, 
         "messages": messages,
         "temperature": temperature,
         "stream": False,
+        "max_tokens": config.LLM_MAX_TOKENS,
     }
     if tools:
         payload["tools"] = tools
@@ -236,7 +250,8 @@ async def chat_with_tools(messages, api_key: str = None, max_steps: int = 3):
         choice = data.get("choices", [{}])[0].get("message", {})
         tool_calls = choice.get("tool_calls") or []
         if tool_calls:
-            msgs.append({"role": "assistant", "content": choice.get("content") or "", "tool_calls": tool_calls})
+            msgs.append({"role": "assistant", "content": clean_model_text(choice.get("content") or ""),
+                         "tool_calls": tool_calls})
             for tc in tool_calls:
                 fn = tc.get("function", {})
                 name = fn.get("name", "")
@@ -252,9 +267,12 @@ async def chat_with_tools(messages, api_key: str = None, max_steps: int = 3):
                     result = f"(工具执行失败: {e})"
                 msgs.append({"role": "tool", "tool_call_id": tc.get("id", ""), "content": result})
             continue
-        text = choice.get("content") or ""
+        text = clean_model_text(choice.get("content") or "")
         if text.strip():
             return text, steps
     # 达到步数上限仍未给出最终回答 → 去掉工具强制生成一次
     data = await complete_raw(msgs, api_key=api_key)
-    return data.get("choices", [{}])[0].get("message", {}).get("content") or "", steps
+    final = clean_model_text(data.get("choices", [{}])[0].get("message", {}).get("content") or "")
+    if len(final) < 2:
+        final = "（模型这次没有给出正文，可能是工具调用格式异常。请重试，或把问题拆小一点。）"
+    return final, steps
