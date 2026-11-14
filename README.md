@@ -208,9 +208,9 @@ Install `sentence-transformers` in the Python virtual environment to enable sema
 python -m pip install "sentence-transformers>=3,<6"
 ```
 
-Activate `.venv` first or use its Python executable from step 4. The first sample search downloads [Multilingual E5 Small](https://huggingface.co/intfloat/multilingual-e5-small) and caches the segment vectors in `data/sample-index/`. Later searches reuse them. The default `EMBEDDING_MODE=auto` falls back to BM25 if the model is unavailable.
+Activate `.venv` first or use its Python executable from step 4. On first startup, FastAPI downloads [Multilingual E5 Small](https://huggingface.co/intfloat/multilingual-e5-small) (about 470 MB) and caches the segment vectors in `data/sample-index/` before accepting requests. Later startups reuse the model and index. The default `EMBEDDING_MODE=auto` falls back to BM25 if initialization fails. Set `EMBEDDING_MODE=bm25` in the root `.env` to skip model loading.
 
-Live chat can call `search_samples`, and storyboard and inspiration requests look up sample segments automatically. The index combines each segment's original description and keywords with its video title and tags. Each result includes the timestamp, a link to that moment, and neighboring shot descriptions. Try asking `请找有小鴨在人行道上行走的片段，然後用它的鏡頭順序為寵物短片設計分鏡。`
+Live chat can call `search_samples`, and storyboard and inspiration requests look up sample segments automatically. The model embeds each segment's original description, segment keywords, and video tags. Each result includes the timestamp, a link to that moment, and neighboring shot descriptions. Try asking `请找有小鴨在人行道上行走的片段，然後用它的鏡頭順序為寵物短片設計分鏡。`
 
 ### 7 分钟演示脚本建议
 1. **剧本医生**(约 1.5 min):发送一段埋了 3 个漏洞的剧本(时间跳变、角色消失、伏笔未回收)

@@ -63,15 +63,16 @@ def _vector_index():
     import numpy as np
     from sentence_transformers import SentenceTransformer
 
-    passages = [f"passage: {document}" for document in _documents()]
+    records, _ = _corpus()
+    # Keep the shot description first and leave multilingual titles to BM25.
+    passages = [f"passage: {item['description']} Keywords: {', '.join(item['keywords'])}"
+                for item in records]
     fingerprint = hashlib.sha256(json.dumps([MODEL, passages], ensure_ascii=False).encode()).hexdigest()
     model = SentenceTransformer(MODEL)
     try:
         with np.load(CACHE) as saved:
             vectors = saved["vectors"]
-            if str(saved["fingerprint"]) == fingerprint and vectors.shape == (
-                len(passages), model.get_sentence_embedding_dimension()
-            ):
+            if str(saved["fingerprint"]) == fingerprint and vectors.shape[0] == len(passages):
                 return model, vectors
     except (OSError, ValueError, KeyError):
         pass
@@ -92,15 +93,33 @@ def _vector_index():
     return model, vectors
 
 
-def _rank(query):
-    if config.EMBEDDING_MODE != "bm25":
+_search_index = None
+
+
+def prepare_index():
+    """Load the model and segment vectors before the server accepts requests."""
+    global _search_index
+    if config.EMBEDDING_MODE == "bm25" or not _documents():
+        return
+    with _index_lock:
+        if _search_index is not None:
+            return
         try:
-            with _index_lock:
-                model, vectors = _vector_index()
-            embedding = model.encode([f"query: {query}"], normalize_embeddings=True)[0]
-            return vectors @ embedding
+            logger.info("Preparing multilingual sample search with %s", MODEL)
+            _search_index = _vector_index()
+            logger.info("Multilingual sample index ready (%d segments)", len(_documents()))
         except ImportError:
             logger.info("SentenceTransformers unavailable; using sample keyword search")
+        except Exception:
+            logger.warning("Sample index startup failed; using keyword search", exc_info=True)
+
+
+def _rank(query):
+    if _search_index is not None and config.EMBEDDING_MODE != "bm25":
+        try:
+            model, vectors = _search_index
+            embedding = model.encode([f"query: {query}"], normalize_embeddings=True)[0]
+            return vectors @ embedding
         except Exception:
             logger.warning("Sample vector search failed; using keyword search", exc_info=True)
     index = _keyword_index()

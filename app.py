@@ -13,6 +13,7 @@ import asyncio
 import json
 import logging
 import re
+from contextlib import asynccontextmanager
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Request
@@ -28,6 +29,7 @@ import library
 import personal_api
 import prompts
 import rag
+import sample_search
 import script_api
 import tools
 import voice_input_api
@@ -35,7 +37,13 @@ import voice_input_api
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger("app")
 
-app = FastAPI(title="Filmmate 影视创作助理")
+@asynccontextmanager
+async def lifespan(_app):
+    await asyncio.to_thread(sample_search.prepare_index)
+    yield
+
+
+app = FastAPI(title="Filmmate 影视创作助理", lifespan=lifespan)
 STATIC_DIR = config.BASE_DIR / "static"
 WEB_DIST = config.BASE_DIR / "filmmate-web" / "dist"
 

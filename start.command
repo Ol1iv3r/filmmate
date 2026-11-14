@@ -61,15 +61,17 @@ cleanup() {
 }
 trap 'cleanup; exit 0' INT TERM HUP
 
-say "等待服务就绪…"
+say "等待服务就绪… 首次启动可能需要下载视频检索模型，请查看 start.log。"
 READY=0
-for _ in $(seq 1 40); do
+deadline=$((SECONDS + 600))
+while [ "$SECONDS" -lt "$deadline" ]; do
   if health; then READY=1; break; fi
   if ! kill -0 "$PID" 2>/dev/null; then break; fi
   sleep 0.5
 done
 
 if [ "$READY" != "1" ]; then
+  kill "$PID" 2>/dev/null
   say "❌ 启动失败，日志末尾："
   tail -20 "$LOG" | tee -a "$LOG"
   say ""

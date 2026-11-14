@@ -36,6 +36,7 @@ if (-not (Test-Path (Join-Path $root 'filmmate-web\dist\index.html') -PathType L
 }
 
 Write-Host "Starting Filmmate at $url ..." -ForegroundColor Cyan
+Write-Host "First startup may need to download the video search model."
 $server = Start-Process -FilePath $py `
     -ArgumentList 'app.py' `
     -WorkingDirectory $root `
@@ -43,7 +44,7 @@ $server = Start-Process -FilePath $py `
 
 try {
     $ready = $false
-    $deadline = [DateTime]::UtcNow.AddSeconds(20)
+    $deadline = [DateTime]::UtcNow.AddMinutes(10)
     while (-not $server.HasExited -and [DateTime]::UtcNow -lt $deadline) {
         if (Test-FilmmateHealth) {
             $ready = $true
