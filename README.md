@@ -200,7 +200,17 @@ The original HTML/JavaScript interface is available at [`/legacy`](http://127.0.
 
 For React development, run `npm run dev` inside `filmmate-web` and open [Vite](http://localhost:5173). To use live chat in Vite, start the Python server and set `VITE_API_BASE=http://127.0.0.1:8000` in `filmmate-web/.env`. With no API base configured, the standalone Vite app uses mock chat.
 
-For vector retrieval, install `sentence-transformers` in the Python virtual environment. The first use downloads and caches the multilingual embedding model.
+### Multilingual video sample search
+
+Install `sentence-transformers` in the Python virtual environment to enable semantic sample search.
+
+```bash
+python -m pip install "sentence-transformers>=3,<6"
+```
+
+Activate `.venv` first or use its Python executable from step 4. The first sample search downloads [Multilingual E5 Small](https://huggingface.co/intfloat/multilingual-e5-small) and caches the segment vectors in `data/sample-index/`. Later searches reuse them. The default `EMBEDDING_MODE=auto` falls back to BM25 if the model is unavailable.
+
+Live chat can call `search_samples`, and storyboard and inspiration requests look up sample segments automatically. The index combines each segment's original description and keywords with its video title and tags. Each result includes the timestamp, a link to that moment, and neighboring shot descriptions. Try asking `请找有小鴨在人行道上行走的片段，然後用它的鏡頭順序為寵物短片設計分鏡。`
 
 ### 7 分钟演示脚本建议
 1. **剧本医生**(约 1.5 min):发送一段埋了 3 个漏洞的剧本(时间跳变、角色消失、伏笔未回收)
@@ -370,7 +380,7 @@ For vector retrieval, install `sentence-transformers` in the Python virtual envi
 
 ### 这些数据怎么用
 
-- 问答 Agent 现在有 **5 个检索工具**：`search_knowledge` / `search_cases` / `search_scenes` / `search_shots` / `search_stripboards`，演示时能看到模型连续调用多个工具；
+- 问答 Agent 有 **6 个检索工具**：`search_knowledge` / `search_cases` / `search_scenes` / `search_shots` / `search_stripboards` / `search_samples`；
 - 五个创作工具在生成前会先检索对应资料（案例 + 场面 + 镜头 + 通告单模板）注入提示词；
 - **Rundown 输出升级为 stripboard**：场次号、INT/EXT、场景标题、日/夜、演员、地点、页数（1/8 页）、预计拍摄分钟、company move、meal、cast calls、收工合计；
 - **分镜输出升级为 shot list**：每场先给 coverage（master/OTS/singles/inserts），每个镜头带焦段、光线、声音、目的、转场；

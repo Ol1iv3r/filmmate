@@ -8,6 +8,6 @@ python-multipart>=0.0.9
 
 # 可选:开启"向量检索模式"(RAG 升级为 dense embedding + 余弦相似度)
 # 安装后重命名 knowledge/vectors 缓存会自动重建;未安装则自动用 BM25 检索,不影响运行
-# sentence-transformers>=2.6
+# sentence-transformers>=3,<6
 pypdf>=4.0
 python-docx>=1.1

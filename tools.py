@@ -5,6 +5,7 @@
   - 离线模式:本地启发式/模板(无需 API Key,保证现场演示不翻车)
 两个模式的输出结构完全一致,前端无需区分。
 """
+import asyncio
 import logging
 import math
 import random
@@ -13,6 +14,7 @@ from collections import Counter
 
 import llm
 import prompts
+import sample_search
 
 logger = logging.getLogger("tools")
 
@@ -20,7 +22,7 @@ logger = logging.getLogger("tools")
 # 意图识别(关键词规则,零延迟;前端快捷按钮可强制指定工具)
 # --------------------------------------------------------------------------
 _REVIEW_WORDS = ["检查", "漏洞", "审", "批改", "评价", "反馈", "意见", "问题", "bug", "review", "plot hole"]
-_STORY_WORDS = ["分镜", "storyboard", "分镜头", "镜头表", "shot list", "shotlist"]
+_STORY_WORDS = ["分镜", "storyboard", "分镜头", "镜头表", "shot list", "shotlist", "video plan", "拍摄分镜"]
 _RUNDOWN_WORDS = ["rundown", "通告", "call sheet", "拍摄清单", "拍摄安排", "拍摄表"]
 _SCHEDULE_WORDS = ["日程", "排期", "schedule", "拍摄计划", "拍几天", "拍摄日"]
 _IDEA_WORDS = ["灵感", "题材", "想法", "idea", "想拍", "点子", "创意", "brainstorm"]
@@ -44,10 +46,10 @@ def detect_tool(message: str):
     # 2) 粘贴了一大段疑似剧本(长文本、含场次/对白标记)→ 默认按剧本检查
     if len(msg) > 150 and (re.search(r"第\s*\d+\s*[场幕景]", msg) or re.search(r"scene\s*\d+", low) or re.search(r"^\s*[^:]{1,8}[:：].+$", msg, re.M)):
         return "review"
-    if _has_any(msg, _CASE_WORDS):
-        return "inspiration"
     if _has_any(msg, _STORY_WORDS):
         return "storyboard"
+    if _has_any(msg, _CASE_WORDS):
+        return "inspiration"
     if _has_any(msg, _SCHEDULE_WORDS) and "日程" in msg:
         return "schedule"
     if _has_any(msg, _RUNDOWN_WORDS):
@@ -408,7 +410,11 @@ async def storyboard(text: str, api_key: str = None, case_ctx: str = "", refs: l
         try:
             user_content = text[:4000]
             if case_ctx:
-                user_content += f"\n\n参考资料（检索所得：案例 / 场面模式 / 镜头模式，请借鉴其分镜设计与拍摄流程，但必须适配用户剧本）：\n{case_ctx}"
+                user_content += (
+                    "\n\n参考资料包含视频片段与拍摄模式。将参考片段的镜头顺序、构图和节奏适配到用户的剧本或创意简报。"
+                    "在 coverage_notes 中注明实际借鉴的样本标题与时间码，并说明借鉴方式。\n"
+                    f"{case_ctx}"
+                )
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_STORYBOARD},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
@@ -1182,10 +1188,14 @@ def _build_context(tool: str, message: str):
         if tool in ("rundown", "schedule"):
             parts.extend(library.template_to_text(t) for t in library.search_templates(message, k=1))
             parts.extend(library.scene_to_text(s) for s in library.search_scenes(message, k=2))
-        if tool == "inspiration":
-            parts.extend(library.sample_to_text(v) for v in library.search_samples(message, k=2))
     except Exception as e:  # noqa: BLE001
         logger.warning("资料库检索失败: %s", e)
+    if tool in ("storyboard", "inspiration"):
+        samples = sample_search.search_segments(message[:4000], k=2)
+        if samples:
+            parts.insert(0, "【视频片段】\n" + sample_search.segment_context(samples))
+            refs.extend({**hit, "id": f"{hit['video_id']}:{hit['start']}",
+                         "type": "Video sample", "logline": hit["description"]} for hit in samples)
     return "\n\n".join(p for p in parts if p), refs
 
 
@@ -1195,7 +1205,7 @@ async def run_tool(tool: str, message: str, api_key: str = None):
     # 创作类工具先检索资料（案例/场面/镜头/通告单），注入提示词或附到结果
     ctx, refs = "", []
     if tool in ("review", "storyboard", "rundown", "schedule", "inspiration"):
-        ctx, refs = _build_context(tool, message)
+        ctx, refs = await asyncio.to_thread(_build_context, tool, message)
     if tool == "review":
         return await review(message, api_key, ctx, refs)
     if tool == "storyboard":

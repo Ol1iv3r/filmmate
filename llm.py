@@ -4,6 +4,7 @@
 - complete: 一次性返回全文
 - complete_json: 要求 JSON 输出并解析,解析失败自动重试
 """
+import asyncio
 import json
 import logging
 import re
@@ -11,6 +12,7 @@ import re
 import httpx
 
 import config
+import sample_search
 
 logger = logging.getLogger("llm")
 
@@ -116,6 +118,18 @@ async def complete_json(messages, api_key: str = None, temperature: float = 0.4,
 # 模型自主决定何时调用检索工具,拿到结果后再生成最终回答
 # --------------------------------------------------------------------------
 TOOLS_SCHEMA = [
+    {
+        "type": "function",
+        "function": {
+            "name": "search_samples",
+            "description": "Find timestamped segments from annotated reference videos. Returns the matched descriptions, neighboring shots, and watch links. Use for reference-based video plans and shot sequences. Accepts Chinese or English queries.",
+            "parameters": {
+                "type": "object",
+                "properties": {"query": {"type": "string", "description": "Subject, setting, camera technique, or pacing to look for"}},
+                "required": ["query"],
+            },
+        },
+    },
     {
         "type": "function",
         "function": {
@@ -260,9 +274,15 @@ async def chat_with_tools(messages, api_key: str = None, max_steps: int = 3):
                 except json.JSONDecodeError:
                     args = {}
                 query = str(args.get("query", ""))
-                steps.append({"tool": name, "query": query})
+                step = {"tool": name, "query": query}
+                steps.append(step)
                 try:
-                    result = execute_tool(name, query)
+                    if name == "search_samples":
+                        hits = await asyncio.to_thread(sample_search.search_segments, query)
+                        step["hits"] = hits
+                        result = sample_search.segment_context(hits)
+                    else:
+                        result = execute_tool(name, query)
                 except Exception as e:  # noqa: BLE001
                     result = f"(工具执行失败: {e})"
                 msgs.append({"role": "tool", "tool_call_id": tc.get("id", ""), "content": result})

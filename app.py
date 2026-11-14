@@ -85,6 +85,11 @@ async def ui_message_stream(events):
             tool_id = uuid4().hex
             yield ui_chunk("tool-input-available", toolCallId=tool_id, toolName=data["tool"], input={})
             yield ui_chunk("tool-output-available", toolCallId=tool_id, output=data["payload"])
+            sample_hits = [ref for ref in data["payload"].get("references", []) if "video_id" in ref]
+            if sample_hits:
+                sample_id = uuid4().hex
+                yield ui_chunk("tool-input-available", toolCallId=sample_id, toolName="search_samples", input={})
+                yield ui_chunk("tool-output-available", toolCallId=sample_id, output={"hits": sample_hits})
         elif event == "delta":
             if not text_started:
                 for step in steps:
@@ -92,8 +97,8 @@ async def ui_message_stream(events):
                     kind = step["tool"].removeprefix("search_")
                     yield ui_chunk("tool-input-available", toolCallId=tool_id, toolName=step["tool"],
                                    input={"query": step["query"]})
-                    yield ui_chunk("tool-output-available", toolCallId=tool_id,
-                                   output={"references": citations.get(kind, [])})
+                    output = {"hits": step["hits"]} if "hits" in step else {"references": citations.get(kind, [])}
+                    yield ui_chunk("tool-output-available", toolCallId=tool_id, output=output)
                 yield ui_chunk("text-start", id=text_id)
                 text_started = True
             yield ui_chunk("text-delta", id=text_id, delta=data["text"])
@@ -230,7 +235,7 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
     # 只有剧本类任务才用上传文件覆盖输入；灵感/案例仍按用户当前输入检索
     script_tools = ("review", "storyboard", "rundown", "schedule")
     content = script_text if (script_text and tool in script_tools) else message
-    needs_script = tool in script_tools
+    needs_script = tool in ("review", "rundown", "schedule")
     if needs_script and len(content) < 40 and not re.search(r"第\s*\d+\s*[场幕景]", content):
         hint = (
             "请先上传剧本文件（PDF / DOCX / TXT），或在输入框里粘贴剧本全文，再点这个功能。\n\n"
