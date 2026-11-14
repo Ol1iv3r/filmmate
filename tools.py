@@ -1191,7 +1191,7 @@ def _build_context(tool: str, message: str):
     except Exception as e:  # noqa: BLE001
         logger.warning("资料库检索失败: %s", e)
     if tool in ("storyboard", "inspiration"):
-        samples = sample_search.search_segments(message[:4000], k=2)
+        samples = sample_search.search_segments(message[:4000])
         if samples:
             parts.insert(0, "【视频片段】\n" + sample_search.segment_context(samples))
             refs.extend({**hit, "id": f"{hit['video_id']}:{hit['start']}",
