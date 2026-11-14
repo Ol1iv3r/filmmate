@@ -17,6 +17,8 @@
 `createdAt` / `updatedAt` 是毫秒时间戳(number),与前端
 `ConversationMeta` 一致 —— 这一点和 Electron 版的 ISO 字符串不同。
 """
+from __future__ import annotations
+
 import asyncio
 import json
 import os
