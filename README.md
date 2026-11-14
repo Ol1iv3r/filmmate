@@ -141,86 +141,66 @@ DeepSeek API (deepseek-chat, OpenAI 兼容接口;httpx 异步)
 
 ---
 
-## 🚀 运行方法
+## Installation and setup
 
-### ⚡ 一键启动（按系统选择）
+Use Python 3.12 and Node.js 22.12 or later with npm. Run these commands from the repository root unless a step says otherwise.
 
-| 系统 | 双击 | 会启动 | 打开地址 |
-|---|---|---|---|
-| **macOS** | **`start.command`** | 只启动 Python 服务（不需要 node/npm） | **http://127.0.0.1:8000** |
-| **Windows** | **`start.bat`** | Python 后端 + React 前端 | http://localhost:5173 |
+### 1. Install the Python dependencies
 
-> ⚠️ `start.bat` 是 Windows 批处理 + PowerShell，**macOS 无法执行**（双击通常只会被文本编辑器打开）。
-> macOS 请用 `start.command`；如果 Finder 提示「无法验证开发者」，右键 → 打开 → 仍要打开。
-
-macOS 首次准备（只需一次）：
+**macOS**
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements.txt
 ```
 
-然后双击 `start.command`：脚本会启动 `app.py`、等待健康检查、自动打开
-**http://127.0.0.1:8000**；关闭终端窗口或 `Ctrl+C` 会停止服务。
-如果服务已经在运行，脚本不会再起第二个进程，只打开浏览器。
+**Windows**
 
-日志写在项目根目录 `start.log`，启动失败时终端会停住并显示日志末尾。
-
-Windows 首次准备：`start.bat` 需要 Python 后端 **和** 前端依赖，见下方“前端（可选）”。
-
-#### 配置 Key（可选）
-
-```ini
-# 仓库根目录 .env（复制 .env.example 后填写，不会提交到 git）
-# 方案 A：直连 DeepSeek（优先级最高）
-DEEPSEEK_API_KEY=sk-...
-
-# 方案 B：Vercel AI Gateway（聊天 + 语音都用这一把 vck_ key）
-AI_GATEWAY_API_KEY=vck_...
-# GATEWAY_CHAT_MODEL=google/gemini-4-hydrogen   # 默认值，可覆盖
-
-# 语音转写也可以直连 OpenAI
-OPENAI_API_KEY=sk-...
+```bat
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-不配置也能跑：全部功能有离线实现。配置 `DEEPSEEK_API_KEY` 或 `AI_GATEWAY_API_KEY` 后：
+### 2. Build the React frontend
 
-- 问答由模型组织，并会先调用检索工具；
-- 剧本检查 / 分镜 / Rundown / 日程走在线 JSON 生成（失败自动回退离线）。
-
-> 优先级：`DEEPSEEK_API_KEY` 直连 > `AI_GATEWAY_API_KEY`（默认模型 `google/gemini-4-hydrogen`）。
-> 同一把 Gateway key 同时用于聊天与 whisper 转写，注意额度。
-
-#### 前端（可选，Windows 的 start.bat 会启动它）
+Run the same commands on either platform.
 
 ```bash
 cd filmmate-web
-npm install
-npm run dev        # http://localhost:5173
+npm ci
+npm run build
+cd ..
 ```
 
-### 🐍 只跑 Python 原型(任意系统)
+The build writes to `filmmate-web/dist/`. Run `npm run build` inside `filmmate-web` again after changing the frontend.
 
-要求:Python 3.9+,联网(在线模式需要)。
+### 3. Configure online chat and voice input (optional)
 
-```bash
-# 1. 安装依赖(核心依赖都很轻量)
-pip install -r requirements.txt
+Copy `.env.example` to `.env` in the repository root. If you already have a `.env`, edit that file. Set `AI_GATEWAY_API_KEY` to use **Gemini 4 Hydrogen** for chat and **Whisper** for voice transcription through Vercel AI Gateway.
 
-# 2. (可选)配置 API Key —— 两种方式任选:
-#    a) 复制 .env.example 为 .env,填入 DEEPSEEK_API_KEY=sk-...
-#    b) 不配置,启动后在网页右上角 ⚙️ 设置里粘贴 Key(仅存本机浏览器)
-#    不配置 Key 也能运行:自动进入"离线演示模式",全部功能可用
-
-# 3. 启动
-python app.py
-# 浏览器打开 http://127.0.0.1:8000
+```ini
+AI_GATEWAY_API_KEY=your_gateway_key
+# GATEWAY_CHAT_MODEL=google/gemini-4-hydrogen
 ```
 
-可选:开启向量检索模式(默认自动检测)
-```bash
-pip install sentence-transformers   # 首次运行会下载多语言模型并缓存向量
-```
+Chat can run offline using local retrieval and templates. The React microphone requires a gateway key or an `OPENAI_API_KEY` for transcription. If you set `DEEPSEEK_API_KEY`, direct DeepSeek takes priority for chat. Restart Filmmate after editing `.env`.
+
+### 4. Launch Filmmate
+
+| Platform | Double-click | Run manually from the repository root |
+|---|---|---|
+| macOS | `start.command` | `.venv/bin/python app.py` |
+| Windows | `start.bat` | `.venv\Scripts\python.exe app.py` |
+
+Open [Filmmate](http://127.0.0.1:8000). FastAPI serves the React UI and API on the same port. The launchers open the browser automatically. Press **Ctrl+C** to stop the server. On macOS, the launcher writes startup output to `start.log`.
+
+The original HTML/JavaScript interface is available at [`/legacy`](http://127.0.0.1:8000/legacy).
+
+### Optional development setup
+
+For React development, run `npm run dev` inside `filmmate-web` and open [Vite](http://localhost:5173). To use live chat in Vite, start the Python server and set `VITE_API_BASE=http://127.0.0.1:8000` in `filmmate-web/.env`. With no API base configured, the standalone Vite app uses mock chat.
+
+For vector retrieval, install `sentence-transformers` in the Python virtual environment. The first use downloads and caches the multilingual embedding model.
 
 ### 7 分钟演示脚本建议
 1. **剧本医生**(约 1.5 min):发送一段埋了 3 个漏洞的剧本(时间跳变、角色消失、伏笔未回收)
@@ -424,9 +404,9 @@ python3 scripts/enrich_samples.py    # 重新从 _ref 样本生成富化数据
 ├── chat_storage_langchain.py # Phase 3:LangChain 消息 ↔ dict(预留,未接线)
 ├── requirements.txt
 ├── .env.example
-├── start.command              # macOS 一键启动(只起 Python 服务, 8000)
-├── start.bat                  # Windows 一键启动(后端 + 前端)
-├── start-filmmate.ps1         # start.bat 调用的 PowerShell 脚本(负责启停两个进程)
+├── start.command              # macOS 一键启动(FastAPI 提供 React 界面, 8000)
+├── start.bat                  # Windows 一键启动(FastAPI 提供 React 界面, 8000)
+├── start-filmmate.ps1         # start.bat 调用的 PowerShell 启动脚本
 ├── knowledge/knowledge.json   # 专业知识库(基础 78 条)
 ├── cases/                    # 已清空（虚构案例已移除，改用 data/library/films_real.json）
 ├── data/library/              # 数据层 v2（见 docs/DATA_SCHEMA.md）

@@ -83,7 +83,9 @@ VITE_REMOTE_CONVERSATIONS=1
 
 ## 🚀 快速开始
 
-以下命令从**仓库根目录**开始。
+默认入口由 FastAPI 提供。先在 `filmmate-web` 运行 `npm ci` 和 `npm run build`，然后从仓库根目录运行 `python app.py` 并打开 `http://127.0.0.1:8000`。聊天和语音 API 默认使用同一地址。
+
+如需单独开发 React，以下命令从**仓库根目录**开始。
 
 ```bash
 # 终端 1：Python 后端（语音输入 / 会话落盘需要；只演示 Phase 1/4 可跳过）
@@ -110,8 +112,8 @@ node scripts/smoke2.mjs   # 多工具时间线 / 停止 / 重命名 / 移动端 
 
 | 模式 | 条件 | 表现 |
 |---|---|---|
-| **本地演示** | `.env` 未配置 `VITE_API_BASE` | Mock 引擎用真实样本数据（50 部片 / 299 镜头段）流式模拟完整「检索→生成」过程 |
-| **API 在线** | `VITE_API_BASE=http://…` | `POST {base}/api/chat` 走 AI SDK 官方 `DefaultChatTransport` |
+| **本地演示** | 单独运行 Vite，且未配置 `VITE_API_BASE` | Mock 引擎用样本数据流式模拟「检索→生成」 |
+| **API 聊天** | 由 FastAPI 提供页面，或在 Vite 中配置 `VITE_API_BASE=http://…` | `POST /api/chat` 走 AI SDK 的 `DefaultChatTransport` |
 | **远端会话** | 加 `VITE_REMOTE_CONVERSATIONS=1` | 会话历史走 `{base}/api/conversations` REST（Jacky Phase 3） |
 
 > 语音输入与聊天模式**互相独立**：只要 `.env` 里的 `VITE_TRANSCRIBE_BASE` 指向 Python 后端，
@@ -141,9 +143,8 @@ app.post('/api/chat', async (req) => {
 })
 ```
 
-**当前进度**：Phase 2 的 `POST /api/transcribe` 与 Phase 3 的 `/api/conversations` 已在本仓库根部实现
-（`voice_input_api.py`、`chat_storage*.py`，由 `app.py` 注册）。前端侧已全部对接完成，
-剩下的只有把 `/api/chat` 从旧 SSE 换成上面的 `UIMessageStream`。
+**FastAPI 对接**：`app.py` 注册了 `/api/transcribe` 与 `/api/conversations`。
+`/api/chat` 收到 React 的 `messages` 请求时返回 `UIMessageStream`，供 React 展示文本和工具结果。
 
 ---
 

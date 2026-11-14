@@ -10,6 +10,8 @@
  * 与 Electron 版 src/main/ipc/transcribe.ts 的区别只有传输方式；
  * 校验（25 MB / 空音频）和错误分类完全一致。
  */
+import { API_BASE } from './transport'
+
 const MAX_AUDIO_BYTES = 25 * 1024 * 1024
 const TIMEOUT_MS = 60_000
 
@@ -32,10 +34,9 @@ function fail(code: TranscribeErrorCode, message: string): TranscribeResult {
   return { ok: false, code, message }
 }
 
-/** 专用变量优先，其次回退到聊天用的 VITE_API_BASE。 */
-function baseUrl(): string {
-  const env = import.meta.env
-  return (env.VITE_TRANSCRIBE_BASE || env.VITE_API_BASE || '').replace(/\/$/, '')
+/** 专用变量优先，其次复用聊天后端。 */
+function baseUrl(): string | undefined {
+  return (import.meta.env.VITE_TRANSCRIBE_BASE || API_BASE)?.replace(/\/$/, '')
 }
 
 function fileNameFor(blob: Blob): string {
@@ -75,7 +76,7 @@ export async function transcribeAudio(blob: Blob, language?: string): Promise<Tr
   }
 
   const base = baseUrl()
-  if (!base) {
+  if (base === undefined) {
     return fail(
       'NO_BACKEND',
       '未设置 VITE_TRANSCRIBE_BASE（或 VITE_API_BASE）。语音输入需要本地 Python 后端。',

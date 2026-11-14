@@ -1,7 +1,7 @@
 #!/bin/bash
 # Filmmate 一键启动（macOS）
 # 用法：在 Finder 里双击本文件；或在终端运行 ./start.command
-# 只启动 Python 服务（http://127.0.0.1:8000），不依赖 node/npm。
+# 启动 Python 服务，在 http://127.0.0.1:8000 提供已构建的 React 界面。
 # 关闭此终端窗口或按 Ctrl+C 会停止服务。
 
 set -u
@@ -41,6 +41,11 @@ if health; then
   say "✅ 服务已经在运行：$URL"
   /usr/bin/open "$URL" 2>/dev/null
   pause_exit 0
+fi
+
+if [ ! -f "$ROOT/filmmate-web/dist/index.html" ] || [ ! -d "$ROOT/filmmate-web/dist/assets" ]; then
+  say "❌ Build the React frontend first: cd filmmate-web && npm ci && npm run build"
+  pause_exit 1
 fi
 
 # 启动后端（日志写 start.log，终端也能看到）

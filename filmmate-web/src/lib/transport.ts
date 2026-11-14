@@ -1,17 +1,18 @@
 /**
  * Transport 选择器：
- *  - VITE_API_BASE 有值 → DefaultChatTransport 连 Jacky 的 AI SDK 后端
- *    （POST {base}/api/chat，标准 UIMessageStream 协议）
- *  - 无值 → MockTransport（本地流式 + 模拟 tool-call，独立可演示）
+ *  - 由 FastAPI 提供页面时，直接连接同源 API。
+ *  - 独立开发时可配置 VITE_API_BASE，留空则演示 MockTransport。
  *
  * 两个 transport 输出同构的 UIMessageChunk 流，渲染层零改动。
  */
 import { DefaultChatTransport, type ChatTransport, type UIMessage } from 'ai'
 import { buildPlan, buildSteps, streamFromSteps } from '../mock/mockEngine'
 
-export const API_BASE: string | undefined = import.meta.env.VITE_API_BASE || undefined
+export const API_BASE: string | undefined = document.querySelector('meta[name="filmmate-backend"]')
+  ? ''
+  : import.meta.env.VITE_API_BASE || undefined
 
-export const isMockMode = !API_BASE
+export const isMockMode = API_BASE === undefined
 
 class MockTransport implements ChatTransport<UIMessage> {
   sendMessages(options: {
@@ -35,7 +36,7 @@ class MockTransport implements ChatTransport<UIMessage> {
 }
 
 export function createTransport(): ChatTransport<UIMessage> {
-  if (API_BASE) {
+  if (API_BASE !== undefined) {
     return new DefaultChatTransport<UIMessage>({
       api: `${API_BASE.replace(/\/$/, '')}/api/chat`,
     })

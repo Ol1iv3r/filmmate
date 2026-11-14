@@ -1,12 +1,20 @@
-# Filmmate one-click launcher.
-# Starts the Python backend and the Vite dev server, then stops both
-# when this window is closed or Ctrl+C is pressed.
+# Starts the Python app and opens its browser interface.
 
 $ErrorActionPreference = 'Stop'
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$web = Join-Path $root 'filmmate-web'
 $py = Join-Path $root '.venv\Scripts\python.exe'
+$url = 'http://127.0.0.1:8000'
+
+function Test-FilmmateHealth {
+    try {
+        $health = Invoke-RestMethod -Uri "$url/api/health" -TimeoutSec 2
+        return ($health.ok -eq $true)
+    }
+    catch {
+        return $false
+    }
+}
 
 if (-not (Test-Path $py)) {
     Write-Host "[ERROR] Python venv not found: $py" -ForegroundColor Red
@@ -15,46 +23,47 @@ if (-not (Test-Path $py)) {
     exit 1
 }
 
-if (-not (Test-Path (Join-Path $web 'node_modules'))) {
-    Write-Host "[ERROR] node_modules not found in $web" -ForegroundColor Red
-    Write-Host "        Run: npm.cmd install (inside filmmate-web)"
+if (Test-FilmmateHealth) {
+    Write-Host "Filmmate is already running at $url" -ForegroundColor Green
+    Start-Process $url
+    exit 0
+}
+
+if (-not (Test-Path (Join-Path $root 'filmmate-web\dist\index.html') -PathType Leaf) -or
+    -not (Test-Path (Join-Path $root 'filmmate-web\dist\assets') -PathType Container)) {
+    Write-Host '[ERROR] Build the React frontend first. In filmmate-web, run npm ci and npm run build.' -ForegroundColor Red
     exit 1
 }
 
-Write-Host "Filmmate" -ForegroundColor White
-Write-Host "---------------------------------------------" -ForegroundColor DarkGray
-Write-Host "Starting backend  http://127.0.0.1:8000 ..." -ForegroundColor Cyan
-$backend = Start-Process -FilePath $py `
+Write-Host "Starting Filmmate at $url ..." -ForegroundColor Cyan
+$server = Start-Process -FilePath $py `
     -ArgumentList 'app.py' `
     -WorkingDirectory $root `
     -NoNewWindow -PassThru
 
-Write-Host "Starting frontend http://localhost:5173 ..." -ForegroundColor Cyan
-$frontend = Start-Process -FilePath 'cmd.exe' `
-    -ArgumentList '/c', 'npm.cmd run dev -- --open' `
-    -WorkingDirectory $web `
-    -NoNewWindow -PassThru
-
-Write-Host ""
-Write-Host "Open http://localhost:5173" -ForegroundColor Green
-Write-Host "Close this window or press Ctrl+C to stop both." -ForegroundColor Green
-Write-Host ""
-
-$exitCode = 0
 try {
-    while (-not $backend.HasExited -and -not $frontend.HasExited) {
-        Start-Sleep -Milliseconds 400
+    $ready = $false
+    $deadline = [DateTime]::UtcNow.AddSeconds(20)
+    while (-not $server.HasExited -and [DateTime]::UtcNow -lt $deadline) {
+        if (Test-FilmmateHealth) {
+            $ready = $true
+            break
+        }
+        Start-Sleep -Milliseconds 500
     }
+
+    if (-not $ready) {
+        Write-Host "[ERROR] Filmmate did not start. Check the Python output above." -ForegroundColor Red
+        exit 1
+    }
+
+    Write-Host "Filmmate is running at $url. Press Ctrl+C to stop it." -ForegroundColor Green
+    Start-Process $url
+    Wait-Process -Id $server.Id
+    exit $server.ExitCode
 }
 finally {
-    Write-Host ""
-    Write-Host "Stopping ..." -ForegroundColor Yellow
-    foreach ($p in @($frontend, $backend)) {
-        if ($p -and -not $p.HasExited) {
-            & taskkill.exe /PID $p.Id /T /F 2>$null | Out-Null
-        }
+    if (-not $server.HasExited) {
+        & taskkill.exe /PID $server.Id /T /F | Out-Null
     }
-    Write-Host "Stopped." -ForegroundColor Yellow
 }
-
-exit $exitCode

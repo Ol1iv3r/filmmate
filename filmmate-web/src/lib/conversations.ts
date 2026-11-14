@@ -9,6 +9,7 @@
  * 与 Jacky 计划中「LangChain message → dict → JSON 落盘」的做法一一对应。
  */
 import type { UIMessage } from 'ai'
+import { API_BASE } from './transport'
 
 export interface ConversationMeta {
   id: string
@@ -152,8 +153,8 @@ export class RemoteRepository implements ConversationRepository {
 }
 
 export function createRepository(): ConversationRepository {
-  const base = (import.meta.env.VITE_API_BASE as string | undefined)?.replace(/\/$/, '') ?? ''
+  const base = API_BASE?.replace(/\/$/, '')
   const remote = import.meta.env.VITE_REMOTE_CONVERSATIONS === '1' || import.meta.env.VITE_REMOTE_CONVERSATIONS === 'true'
-  if (remote && base) return new RemoteRepository(base)
+  if (remote && base !== undefined) return new RemoteRepository(base)
   return new LocalStorageRepository()
 }

@@ -1,6 +1,6 @@
 """Filmmate 后端入口:FastAPI + SSE 流式输出。
 
-事件流(SSE):
+聊天事件（React 使用 UIMessageStream，旧界面使用以下 SSE 事件）:
   start      {tool, label, mode}          会话开始,说明走哪个工具/模式
   steps      {steps}                      模型自主调用的检索工具过程(Agent 可视化)
   citations  {kind, items}                知识库/案例库引用
@@ -13,10 +13,11 @@ import asyncio
 import json
 import logging
 import re
+from uuid import uuid4
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 import case_store
@@ -36,6 +37,7 @@ logger = logging.getLogger("app")
 
 app = FastAPI(title="Filmmate 影视创作助理")
 STATIC_DIR = config.BASE_DIR / "static"
+WEB_DIST = config.BASE_DIR / "filmmate-web" / "dist"
 
 # 前端跑在 Vite(5173) 或 Tauri WebView(tauri://localhost),都算跨源。
 app.add_middleware(
@@ -58,8 +60,70 @@ app.include_router(script_api.router)
 app.include_router(personal_api.router)
 
 
-def sse(event: str, data) -> str:
+def legacy_event(event, data):
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+
+def ui_chunk(kind, **fields):
+    return f"data: {json.dumps(dict(type=kind, **fields), ensure_ascii=False)}\n\n"
+
+
+async def ui_message_stream(events):
+    yield ui_chunk("start", messageId=uuid4().hex)
+    text_id = "answer"
+    text_started = False
+    steps = []
+    citations = {}
+    failed = False
+
+    async for event, data in events:
+        if event == "steps":
+            steps.extend(data["steps"])
+        elif event == "citations":
+            citations.setdefault(data["kind"], []).extend(data["items"])
+        elif event == "tool_data":
+            tool_id = uuid4().hex
+            yield ui_chunk("tool-input-available", toolCallId=tool_id, toolName=data["tool"], input={})
+            yield ui_chunk("tool-output-available", toolCallId=tool_id, output=data["payload"])
+        elif event == "delta":
+            if not text_started:
+                for step in steps:
+                    tool_id = uuid4().hex
+                    kind = step["tool"].removeprefix("search_")
+                    yield ui_chunk("tool-input-available", toolCallId=tool_id, toolName=step["tool"],
+                                   input={"query": step["query"]})
+                    yield ui_chunk("tool-output-available", toolCallId=tool_id,
+                                   output={"references": citations.get(kind, [])})
+                yield ui_chunk("text-start", id=text_id)
+                text_started = True
+            yield ui_chunk("text-delta", id=text_id, delta=data["text"])
+        elif event == "error":
+            failed = True
+            yield ui_chunk("error", errorText=data["message"])
+
+    if text_started:
+        yield ui_chunk("text-end", id=text_id)
+    yield ui_chunk("finish", finishReason="error" if failed else "stop")
+    yield "data: [DONE]\n\n"
+
+
+def react_chat_body(body):
+    messages = body["messages"]
+    if not isinstance(messages, list):
+        raise HTTPException(status_code=422, detail="messages must be a list")
+    turns = [
+        {"role": message["role"], "content": "\n".join(
+            part["text"] for part in message["parts"]
+            if isinstance(part, dict) and part.get("type") == "text" and isinstance(part.get("text"), str)
+        )}
+        for message in messages
+        if isinstance(message, dict) and message.get("role") in ("user", "assistant")
+        and isinstance(message.get("parts"), list)
+    ]
+    for index in range(len(turns) - 1, -1, -1):
+        if turns[index]["role"] == "user":
+            return {"message": turns[index]["content"], "history": turns[:index]}
+    return {}
 
 
 def chunk_text(text: str, size: int = 6):
@@ -90,35 +154,35 @@ async def handle_qa(message: str, history: list, api_key: str):
         msgs += [{"role": m.get("role", "user"), "content": str(m.get("content", ""))} for m in history[-6:]]
         msgs.append({"role": "user", "content": message})
         text, steps = await llm.chat_with_tools(msgs, api_key=api_key)
-        yield sse("steps", {"steps": steps})
+        yield "steps", {"steps": steps}
         # 依据模型调用过的工具,补发引用(前端展示资料/案例来源)
         for st in steps:
             if st["tool"] == "search_knowledge" and st["query"]:
                 hits = rag.retrieve(st["query"], k=3)
-                yield sse("citations", {"kind": "knowledge", "items": [
-                    {"title": h["title"], "category": h["category"]} for h in hits]})
+                yield "citations", {"kind": "knowledge", "items": [
+                    {"title": h["title"], "category": h["category"]} for h in hits]}
             elif st["tool"] == "search_cases" and st["query"]:
                 cases = case_store.search_cases(st["query"], k=3)
-                yield sse("citations", {"kind": "cases", "items": [
+                yield "citations", {"kind": "cases", "items": [
                     {"id": c["id"], "title": c["title"], "type": c["type"], "genre": c["genre"],
-                     "logline": c["logline"], "score": c["score"]} for c in cases]})
+                     "logline": c["logline"], "score": c["score"]} for c in cases]}
             elif st["tool"] == "search_scenes" and st["query"]:
                 scenes = library.search_scenes(st["query"], k=3)
-                yield sse("citations", {"kind": "scenes", "items": [
+                yield "citations", {"kind": "scenes", "items": [
                     {"title": s["name_zh"], "category": s["dramatic_function"],
-                     "score": s["score"]} for s in scenes]})
+                     "score": s["score"]} for s in scenes]}
             elif st["tool"] == "search_shots" and st["query"]:
                 shots = library.search_shots(st["query"], k=3)
-                yield sse("citations", {"kind": "shots", "items": [
+                yield "citations", {"kind": "shots", "items": [
                     {"title": s["name_zh"], "category": f"{s['size']}/{s['angle']}/{s['movement']}",
-                     "score": s["score"]} for s in shots]})
+                     "score": s["score"]} for s in shots]}
             elif st["tool"] == "search_stripboards" and st["query"]:
                 templates = library.search_templates(st["query"], k=2)
-                yield sse("citations", {"kind": "stripboards", "items": [
+                yield "citations", {"kind": "stripboards", "items": [
                     {"title": t["name"], "category": f"{t['type']}·{t['shoot_days']}天",
-                     "score": t["score"]} for t in templates]})
+                     "score": t["score"]} for t in templates]}
         for chunk in chunk_text(text):
-            yield sse("delta", {"text": chunk})
+            yield "delta", {"text": chunk}
             await asyncio.sleep(0.02)
         return
 
@@ -127,25 +191,25 @@ async def handle_qa(message: str, history: list, api_key: str):
     if re.fullmatch(r"(hi|hello|hey|你好|哈喽|嗨|喂|在吗|good\s+(morning|afternoon|evening))[!！。 ]*", low):
         text = ("你好!我是 Filmmate,你的影视创作助理。我可以:检查剧本漏洞、给分镜建议、"
                 "排拍摄 Rundown、规划拍摄日程、找参考案例,或回答镜头语言/灯光/收音/剪辑等专业问题。想从哪里开始?")
-        yield sse("steps", {"steps": []})
+        yield "steps", {"steps": []}
         for chunk in chunk_text(text):
-            yield sse("delta", {"text": chunk})
+            yield "delta", {"text": chunk}
             await asyncio.sleep(0.015)
         return
     if re.search(r"谢谢|多谢|thank", low):
         text = "不客气!随时把你的剧本或想法发给我,继续打磨你的作品。"
-        yield sse("steps", {"steps": []})
+        yield "steps", {"steps": []}
         for chunk in chunk_text(text):
-            yield sse("delta", {"text": chunk})
+            yield "delta", {"text": chunk}
             await asyncio.sleep(0.015)
         return
 
     q = message[:40]
-    yield sse("steps", {"steps": [{"tool": "search_knowledge", "query": q}]})
+    yield "steps", {"steps": [{"tool": "search_knowledge", "query": q}]}
     hits = rag.retrieve(message, k=3) if rag.is_relevant(message) else []
     if hits:
-        yield sse("citations", {"kind": "knowledge", "items": [
-            {"title": h["title"], "category": h["category"]} for h in hits]})
+        yield "citations", {"kind": "knowledge", "items": [
+            {"title": h["title"], "category": h["category"]} for h in hits]}
         lines = [f"关于「{q}」,知识库检索到这些内容:"]
         for h in hits:
             lines.append(f"\n**{h['title']}**({h['category']})\n{h['content']}")
@@ -155,7 +219,7 @@ async def handle_qa(message: str, history: list, api_key: str):
         text = ("这个问题在我的影视知识库里没有直接答案。我可以帮你:检查剧本漏洞、设计分镜、"
                 "排拍摄 Rundown、规划拍摄日程、找参考案例。试试点击下方快捷按钮,或直接把剧本贴给我。")
     for chunk in chunk_text(text):
-        yield sse("delta", {"text": chunk})
+        yield "delta", {"text": chunk}
         await asyncio.sleep(0.015)
 
 
@@ -174,7 +238,7 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
             "上传后我会读取场次、对白和动作描述，再据此检查/分镜/排通告单。"
         )
         for chunk in chunk_text(hint):
-            yield sse("delta", {"text": chunk})
+            yield "delta", {"text": chunk}
             await asyncio.sleep(0.01)
         return
     if tool == "review" and not script_name and len(content) < 60 and not re.search(r"[:：]", content):
@@ -182,26 +246,31 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
                 "第1场 天台 夜\n小明:今晚的月亮真圆。\n小红:嗯,和去年一样。\n\n"
                 "我会从情节漏洞、时间线、人物动机、对白、结构等方面给出审阅报告。")
         for chunk in chunk_text(text):
-            yield sse("delta", {"text": chunk})
+            yield "delta", {"text": chunk}
             await asyncio.sleep(0.015)
         return
 
     payload = await tools.run_tool(tool, content, api_key)
     if script_name:
         payload["script_name"] = script_name
-    yield sse("tool_data", {"tool": tool, "payload": payload})
+    yield "tool_data", {"tool": tool, "payload": payload}
     if payload.get("steps"):
-        yield sse("steps", {"steps": payload["steps"]})
+        yield "steps", {"steps": payload["steps"]}
     intro = payload.get("text")
     if intro:
         for chunk in chunk_text(intro):
-            yield sse("delta", {"text": chunk})
+            yield "delta", {"text": chunk}
             await asyncio.sleep(0.015)
 
 
 @app.post("/api/chat")
 async def chat(req: Request):
     body = await req.json()
+    if not isinstance(body, dict):
+        raise HTTPException(status_code=422, detail="Chat body must be an object")
+    react = "messages" in body
+    if react:
+        body = react_chat_body(body)
     message = (body.get("message") or "").strip()
     script_text = (body.get("script_text") or "").strip()
     script_name = (body.get("script_name") or "").strip()
@@ -214,36 +283,56 @@ async def chat(req: Request):
     async def gen():
         try:
             if not message and not script_text:
-                yield sse("done", {})
+                yield "done", {}
                 return
-            yield sse("start", {
+            yield "start", {
                 "tool": tool or "qa",
                 "label": tools.tool_labels().get(tool or "qa", "知识问答"),
                 "mode": "online" if online else "offline",
-            })
+            }
             if tool is None:
                 async for ev in handle_qa(message, history, api_key):
                     yield ev
             else:
                 async for ev in handle_tool(tool, message, api_key, script_text, script_name):
                     yield ev
-            yield sse("done", {})
+            yield "done", {}
         except Exception as e:  # noqa: BLE001
             logger.exception("请求处理失败")
-            yield sse("error", {"message": str(e)})
+            error_message = "The chat request failed. Check the server log and try again." if react else str(e)
+            yield "error", {"message": error_message}
 
-    return StreamingResponse(
-        gen(),
-        media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
-    )
+    headers = {"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
+    if react:
+        headers["x-vercel-ai-ui-message-stream"] = "v1"
+        stream = ui_message_stream(gen())
+    else:
+        stream = (legacy_event(event, data) async for event, data in gen())
+    return StreamingResponse(stream, media_type="text/event-stream", headers=headers)
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
+if (WEB_DIST / "assets").is_dir():
+    app.mount("/assets", StaticFiles(directory=WEB_DIST / "assets"), name="react-assets")
+
+
 @app.get("/")
 async def index():
+    index_file = WEB_DIST / "index.html"
+    if not index_file.is_file() or not (WEB_DIST / "assets").is_dir():
+        raise HTTPException(
+            status_code=503,
+            detail="Build the React UI in filmmate-web with npm ci and npm run build, then restart Filmmate.",
+        )
+    html = await asyncio.to_thread(index_file.read_text, encoding="utf-8")
+    html = html.replace("</head>", '<meta name="filmmate-backend" content="same-origin"></head>', 1)
+    return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
+
+
+@app.get("/legacy")
+async def legacy_index():
     return FileResponse(STATIC_DIR / "index.html")
 
 
