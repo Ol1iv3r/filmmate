@@ -177,7 +177,7 @@ DEEPSEEK_API_KEY=sk-...
 
 # 方案 B：Vercel AI Gateway（聊天 + 语音都用这一把 vck_ key）
 AI_GATEWAY_API_KEY=vck_...
-# GATEWAY_CHAT_MODEL=deepseek/deepseek-v3.2   # 默认值，可换 deepseek/deepseek-v4-flash
+# GATEWAY_CHAT_MODEL=google/gemini-4-hydrogen   # 默认值，可覆盖
 
 # 语音转写也可以直连 OpenAI
 OPENAI_API_KEY=sk-...
@@ -188,7 +188,7 @@ OPENAI_API_KEY=sk-...
 - 问答由模型组织，并会先调用检索工具；
 - 剧本检查 / 分镜 / Rundown / 日程走在线 JSON 生成（失败自动回退离线）。
 
-> 优先级：`DEEPSEEK_API_KEY` 直连 > `AI_GATEWAY_API_KEY`（模型 `deepseek/deepseek-v3.2`）。
+> 优先级：`DEEPSEEK_API_KEY` 直连 > `AI_GATEWAY_API_KEY`（默认模型 `google/gemini-4-hydrogen`）。
 > 同一把 Gateway key 同时用于聊天与 whisper 转写，注意额度。
 
 #### 前端（可选，Windows 的 start.bat 会启动它）
