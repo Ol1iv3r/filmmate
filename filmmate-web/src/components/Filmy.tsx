@@ -50,6 +50,7 @@ export function Filmy({ thinking }: { thinking: boolean }) {
   const [bubble, setBubble] = useState<string | null>(null)
   const [rpsOpen, setRpsOpen] = useState(false)
   const [rpsResult, setRpsResult] = useState<RpsResult | null>(null)
+  const [rpsPos, setRpsPos] = useState({ left: 0, top: 0 })
 
   const targetRef = useRef<Target>(defaultTarget())
   const movingTimer = useRef<number | null>(null)
@@ -105,10 +106,10 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     })
     if (visible) {
       const r = visible.getBoundingClientRect()
-      const left = Math.max(8, Math.min(w - SIZE_W - 8, Math.round(r.left - 44)))
+      const centerY = r.top + r.height / 2
       return {
-        left,
-        top: Math.max(8, Math.round(r.top - 54)),
+        left: Math.max(8, Math.min(w - SIZE_W - 8, Math.round(r.left - 84))),
+        top: Math.max(8, Math.min(h - SIZE_H - 8, Math.round(centerY - 50))),
         mode: 'download',
         side: r.left + r.width / 2 > w / 2 ? 'right' : 'left',
       }
@@ -146,6 +147,26 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     }
   }, [applyTarget, computeTarget])
 
+  // 石头剪刀布浮层：对齐聊天内容区中线，避免盖住 Filmy
+  useEffect(() => {
+    if (!rpsOpen) return
+    const compute = () => {
+      const scroller = document.querySelector('.chat-scroll')
+      const rect = scroller ? scroller.getBoundingClientRect() : null
+      const width = window.innerWidth
+      const center = rect ? rect.left + rect.width / 2 : width / 2
+      const left = Math.max(140, Math.min(width - 140, center))
+      setRpsPos({ left, top: Math.max(96, target.top - 148) })
+    }
+    compute()
+    window.addEventListener('resize', compute)
+    window.addEventListener('scroll', compute, true)
+    return () => {
+      window.removeEventListener('resize', compute)
+      window.removeEventListener('scroll', compute, true)
+    }
+  }, [rpsOpen, target])
+
   useEffect(() => {
     if (thinking) {
       setExpression('waiting')
@@ -166,6 +187,14 @@ export function Filmy({ thinking }: { thinking: boolean }) {
         setRpsOpen(false)
         setExpression('waiting')
       } else {
+        const scroller = document.querySelector('.chat-scroll')
+        const rect = scroller ? scroller.getBoundingClientRect() : null
+        const width = window.innerWidth
+        const center = rect ? rect.left + rect.width / 2 : width / 2
+        setRpsPos({
+          left: Math.max(140, Math.min(width - 140, center)),
+          top: Math.max(96, target.top - 148),
+        })
         setRpsOpen(true)
         setExpression('think')
       }
@@ -314,24 +343,17 @@ export function Filmy({ thinking }: { thinking: boolean }) {
           {showHand && (
             <svg
               className={cn('filmy-pointer-hand', target.side === 'left' ? 'to-left' : 'to-right')}
-              viewBox="0 0 48 30"
-              width="36"
-              height="23"
+              viewBox="0 0 32 20"
+              width="26"
+              height="16"
               aria-hidden
             >
-              <rect x="2" y="8" width="18" height="15" rx="5" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
-              <rect x="17" y="6" width="22" height="13" rx="6" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
-              <rect x="32" y="8" width="14" height="8" rx="4" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
-              <path d="M8 8 L8 14" stroke="#20232b" strokeWidth="1.6" strokeLinecap="round" />
+              <rect x="1" y="5" width="12" height="11" rx="4" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
+              <rect x="11" y="4" width="14" height="10" rx="5" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
+              <rect x="23" y="6" width="8" height="6" rx="3" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
             </svg>
           )}
 
-          {/* 石头剪刀布：小 emoji 展示 Filmy 出了什么 */}
-          {rpsResult && botIcon && (
-            <span className={cn('filmy-bot-hand', 'outcome-' + rpsResult.outcome)} aria-hidden>
-              {botIcon}
-            </span>
-          )}
           {rpsResult && (
             <span className={cn('filmy-win-fx', 'fx-' + rpsResult.outcome)} aria-hidden />
           )}
@@ -369,7 +391,7 @@ export function Filmy({ thinking }: { thinking: boolean }) {
       {rpsOpen && thinking && (
         <div
           className="filmy-rps-layer filmy-rps-v2"
-          style={{ left: target.left + SIZE_W / 2, top: Math.max(60, target.top - 58) }}
+          style={{ left: rpsPos.left, top: rpsPos.top }}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="filmy-rps-buttons">
@@ -385,6 +407,13 @@ export function Filmy({ thinking }: { thinking: boolean }) {
               </button>
             ))}
           </div>
+          {rpsResult && (
+            <div className="filmy-rps-pair">
+              <span className="pair-user">{RPS.find((r) => r.key === rpsResult.me)?.icon}</span>
+              <span className="pair-dash" />
+              <span className={cn('pair-bot', 'outcome-' + rpsResult.outcome)}>{botIcon}</span>
+            </div>
+          )}
         </div>
       )}
     </>

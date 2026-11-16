@@ -4,9 +4,10 @@ import { FilmyMark } from './FilmyMark'
 import type { ConversationMeta } from '../lib/conversations'
 import { cn, formatTimeAgo } from '../lib/utils'
 import { isMockMode } from '../lib/transport'
+import { useI18n } from '../lib/i18n'
 
 /**
- * 会话侧栏：新建 / 切换 / 重命名 / 删除。
+ * 会话侧栏：新建 / 切换 / {t('重命名', 'Rename')} / {t('删除', 'Delete')}。
  * 列表 UI 属于 Phase 1；数据存取走 ConversationRepository（现在 localStorage，
  * Jacky Phase 3 的 JSON 落盘 API 好了之后自动切换）。
  */
@@ -29,6 +30,7 @@ export function Sidebar({
   onRename: (id: string, title: string) => void
   onDelete: (id: string) => void
 }) {
+  const { t } = useI18n()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editText, setEditText] = useState('')
   const [confirmId, setConfirmId] = useState<string | null>(null)
@@ -71,23 +73,23 @@ export function Sidebar({
             </span>
             <div className="brand-text">
               <span className="brand-name">Filmmate</span>
-              <span className="brand-tag">影视创作 AI 助理</span>
+              <span className="brand-tag">{t('影视创作 AI 助理', 'AI film assistant')}</span>
             </div>
           </div>
-          <button className="icon-btn sidebar-close" onClick={onClose} title="收起侧栏">
+          <button className="icon-btn sidebar-close" onClick={onClose} title={t('收起侧栏', 'Close sidebar')}>
             <PanelLeftClose size={15} />
           </button>
         </div>
 
         <button className="new-chat-btn" onClick={onNew}>
           <MessageSquarePlus size={15} />
-          新建对话
+          {t('新建对话', 'New chat')}
           <kbd>⌘K</kbd>
         </button>
 
-        <div className="conv-list-label">对话历史</div>
+        <div className="conv-list-label">{t('对话历史', 'Chats')}</div>
         <nav className="conv-list">
-          {conversations.length === 0 && <div className="conv-empty">还没有对话，先发一条试试。</div>}
+          {conversations.length === 0 && <div className="conv-empty">{t('还没有对话，先发一条试试。', 'No chats yet. Send the first message.')}</div>}
           {conversations.map((c) => (
             <div
               key={c.id}
@@ -115,18 +117,18 @@ export function Sidebar({
               <span className="conv-time">{formatTimeAgo(c.updatedAt)}</span>
               <span className="conv-actions" onClick={(e) => e.stopPropagation()}>
                 {editingId === c.id ? (
-                  <button className="icon-btn mini" onClick={() => commitRename(c.id)} title="确定">
+                  <button className="icon-btn mini" onClick={() => commitRename(c.id)} title={t('确定', 'Confirm')}>
                     <Check size={12} />
                   </button>
                 ) : (
-                  <button className="icon-btn mini" onClick={() => startRename(c)} title="重命名">
+                  <button className="icon-btn mini" onClick={() => startRename(c)} title={t('重命名', 'Rename')}>
                     <Pencil size={12} />
                   </button>
                 )}
                 <button
                   className={cn('icon-btn mini', 'danger', confirmId === c.id && 'armed')}
                   onClick={() => askDelete(c.id)}
-                  title={confirmId === c.id ? '再点一次确认删除' : '删除对话'}
+                  title={confirmId === c.id ? t('再点一次确认删除', 'Click again to delete') : t('删除对话', 'Delete conversation')}
                 >
                   {confirmId === c.id ? <X size={12} /> : <Trash2 size={12} />}
                 </button>
@@ -138,7 +140,7 @@ export function Sidebar({
         <div className="sidebar-foot">
           <span className={cn('mode-badge', isMockMode ? 'mock' : 'live')}>
             <span className="mode-dot" />
-            {isMockMode ? '本地演示模式' : 'API 在线模式'}
+            {isMockMode ? t('本地演示模式', 'Local demo') : t('API 在线模式', 'API online')}
           </span>
           <span className="sidebar-version">COMP4431 · Group 20</span>
         </div>

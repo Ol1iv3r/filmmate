@@ -1949,3 +1949,28 @@ button {
   25% { opacity: 1; }
   100% { opacity: 0; transform: translateY(8px) scale(1); }
 }
+
+/* Filmy v14: RPS 对齐聊天框 + 双方出拳小 emoji + 短手指 */
+.filmy-rps-layer.filmy-rps-v2 { bottom: auto !important; }
+.filmy-rps-v2 { align-items: center; justify-content: center; }
+.filmy-rps-v2 .filmy-rps-buttons { justify-content: center; }
+.filmy-rps-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 17px;
+  line-height: 1;
+  pointer-events: none;
+  animation: filmy-pair-in .25s ease-out;
+}
+@keyframes filmy-pair-in { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+.filmy-rps-pair .pair-user { filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+.filmy-rps-pair .pair-dash { width: 14px; height: 1.5px; background: rgba(255,255,255,.35); border-radius: 1px; }
+.filmy-rps-pair .pair-bot { filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+.filmy-rps-pair .pair-bot.outcome-win { animation: pair-lose .9s ease-in-out infinite; }
+.filmy-rps-pair .pair-bot.outcome-lose { animation: pair-win .6s ease-in-out infinite; }
+@keyframes pair-win { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes pair-lose { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+.filmy-pointer-hand { top: 42px; right: -24px; }
+.filmy-pointer-hand.to-left { left: -24px; }
