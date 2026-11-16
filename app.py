@@ -286,8 +286,13 @@ async def chat(req: Request):
     if not isinstance(body, dict):
         raise HTTPException(status_code=422, detail="Chat body must be an object")
     react = "messages" in body
+    top_meta = body.get("metadata") if isinstance(body.get("metadata"), dict) else {}
     if react:
         body = react_chat_body(body)
+        if top_meta:  # 兼容 transport 把 metadata 放在请求体顶层
+            for _key in ("tool", "kind", "storyboard", "script_text"):
+                if top_meta.get(_key) is not None and not body.get(_key):
+                    body[_key] = top_meta[_key]
     message = (body.get("message") or "").strip()
     script_text = (body.get("script_text") or "").strip()
     script_name = (body.get("script_name") or "").strip()
