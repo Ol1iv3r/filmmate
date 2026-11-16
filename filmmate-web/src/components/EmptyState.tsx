@@ -1,68 +1,136 @@
-import { Clapperboard, Sparkles, ScrollText, ListTodo, Lightbulb, CalendarClock } from 'lucide-react'
+import { useState } from 'react'
+import { CalendarClock, Clapperboard, Lightbulb, Plus, ScrollText, Sparkles } from 'lucide-react'
 import { isMockMode } from '../lib/transport'
+import { useI18n } from '../lib/i18n'
+import { cn } from '../lib/utils'
 
-export interface ExamplePrompt {
+export type HomeTool = 'inspiration' | 'review' | 'storyboard' | 'schedule' | 'refs'
+
+interface ToolBrief {
+  key: HomeTool
   icon: React.ReactNode
-  label: string
-  prompt: string
+  zh: { name: string; desc: string; how: string; hint: string }
+  en: { name: string; desc: string; how: string; hint: string }
 }
 
-export const EXAMPLES: ExamplePrompt[] = [
+const TOOL_BRIEFS: ToolBrief[] = [
   {
-    icon: <Sparkles size={16} />,
-    label: '出分镜（会先检索样本库）',
-    prompt: '给一个 30 秒可爱宠物零食广告出分镜，参考样本库里类似风格的片子',
+    key: 'inspiration',
+    icon: <Lightbulb size={15} />,
+    zh: { name: '找灵感', desc: '按题材找真实影片参考', how: '选题材 → 一句话描述感觉', hint: '选个题材吧～' },
+    en: { name: 'Find inspiration', desc: 'Real film references by genre', how: 'Pick a genre → describe a feeling', hint: 'Pick a genre~' },
   },
   {
-    icon: <ScrollText size={16} />,
-    label: '检查剧本漏洞',
-    prompt:
-      '帮我检查这段剧本的漏洞：第1场 天台 夜 小明：今晚的月亮真圆。小红：嗯，和去年一样。第2场 天台 日 小明：你不是出国了吗？怎么还在香港？小红：我根本没走。',
+    key: 'review',
+    icon: <ScrollText size={15} />,
+    zh: { name: '剧本检查/生成', desc: '查冲突，或按主题写剧本', how: '上传剧本回车，或直接说主题', hint: '想写还是想查？' },
+    en: { name: 'Script check / write', desc: 'Check conflicts or write by theme', how: 'Upload + Enter, or say a theme', hint: 'Write or check?' },
   },
   {
-    icon: <CalendarClock size={16} />,
-    label: '排拍摄 Rundown',
-    prompt: '帮我排一个校园短片 2 小时拍摄 rundown，6 人小团队单机',
+    key: 'storyboard',
+    icon: <Clapperboard size={15} />,
+    zh: { name: '分镜建议/生成', desc: '按剧本逐场出镜头表', how: '先上传剧本 → 点生成', hint: '先给我剧本～' },
+    en: { name: 'Storyboard', desc: 'Scene-by-scene shot list', how: 'Upload script → generate', hint: 'Script first~' },
+  },
+  {
+    key: 'schedule',
+    icon: <CalendarClock size={15} />,
+    zh: { name: '拍摄计划', desc: '按最近分镜排拍摄日', how: '说偏好，如 3 天、避开周末', hint: '说说你的档期～' },
+    en: { name: 'Shooting plan', desc: 'Shoot days from last storyboard', how: 'Say prefs: 3 days, avoid weekends', hint: 'Your dates?' },
+  },
+  {
+    key: 'refs',
+    icon: <Plus size={15} />,
+    zh: { name: '+参考片', desc: '收藏喜欢的片，AI 学你的口味', how: '贴 B站/YouTube 链接即可', hint: '加部心头好～' },
+    en: { name: '+ Reference film', desc: 'Save films you love, AI learns taste', how: 'Paste a Bilibili/YouTube link', hint: 'Add a favorite~' },
   },
 ]
 
-/** 空会话引导页：品牌 + 能力卡片 + 3 个示例 prompt 一键填入。 */
-export function EmptyState({ onPick }: { onPick: (prompt: string) => void }) {
+/** 首页：品牌 + 五个板块；点板块展示极短介绍与操作说明，不再堆示例卡。 */
+export function EmptyState({
+  onStartTool,
+  onOpenRefs,
+}: {
+  onStartTool: (tool: HomeTool) => void
+  onOpenRefs: () => void
+}) {
+  const { lang } = useI18n()
+  const [active, setActive] = useState<HomeTool | null>(null)
+
+  const pick = (tool: ToolBrief) => {
+    setActive(tool.key)
+    const detail = lang === 'zh' ? tool.zh : tool.en
+    window.dispatchEvent(new CustomEvent('filmy:say', { detail: { zh: tool.zh.hint, en: tool.en.hint } }))
+    void detail
+  }
+
+  const activeBrief = TOOL_BRIEFS.find((t) => t.key === active) ?? null
+  const text = (brief: ToolBrief) => (lang === 'zh' ? brief.zh : brief.en)
+
   return (
     <div className="empty-state">
-      <div className="hero">
+      <div className="hero hero-home">
         <div className="hero-logo">
-          <Clapperboard size={30} />
+          <Clapperboard size={28} />
         </div>
         <h2 className="hero-title">
-          你的 AI 创作顾问<span className="hero-dot">.</span>
+          {lang === 'zh' ? '你的 AI 创作顾问' : 'Your AI film consultant'}
+          <span className="hero-dot">.</span>
         </h2>
         <p className="hero-sub">
-          把想法或剧本交给我 —— 找灵感 → 剧本检查/生成 → 分镜建议/生成 → 拍摄计划，
-          每个回答都有真实影片样本做依据。
+          {lang === 'zh'
+            ? '找灵感 → 剧本 → 分镜 → 拍摄计划，每个回答都有真实影片样本做依据。'
+            : 'Inspiration → Script → Storyboard → Shooting plan, grounded in real film references.'}
         </p>
-        <div className="hero-capabilities">
-          <span><Lightbulb size={13} /> 找灵感</span>
-          <span><ScrollText size={13} /> 查剧本漏洞</span>
-          <span><Clapperboard size={13} /> 出分镜</span>
-          <span><ListTodo size={13} /> 排 Rundown</span>
-        </div>
       </div>
 
-      <div className="example-cards">
-        {EXAMPLES.map((ex) => (
-          <button key={ex.label} className="example-card" onClick={() => onPick(ex.prompt)}>
-            <span className="example-icon">{ex.icon}</span>
-            <span className="example-label">{ex.label}</span>
-            <span className="example-text">{ex.prompt.length > 60 ? ex.prompt.slice(0, 60) + '…' : ex.prompt}</span>
+      <div className="home-chips">
+        {TOOL_BRIEFS.map((brief) => (
+          <button
+            key={brief.key}
+            className={cn('home-chip', active === brief.key && 'active')}
+            onClick={() => pick(brief)}
+          >
+            {brief.icon}
+            <span>{text(brief).name}</span>
           </button>
         ))}
       </div>
 
+      {activeBrief ? (
+        <div className="tool-brief">
+          <div className="tool-brief-head">
+            <span className="tool-brief-icon">{activeBrief.icon}</span>
+            <span className="tool-brief-name">{text(activeBrief).name}</span>
+          </div>
+          <p className="tool-brief-desc">{text(activeBrief).desc}</p>
+          <p className="tool-brief-how">
+            {lang === 'zh' ? '怎么用：' : 'How: '}
+            {text(activeBrief).how}
+          </p>
+          <button
+            className="panel-btn"
+            onClick={() => {
+              if (activeBrief.key === 'refs') onOpenRefs()
+              else onStartTool(activeBrief.key)
+            }}
+          >
+            {lang === 'zh' ? '开始' : 'Start'}
+          </button>
+        </div>
+      ) : (
+        <div className="tool-brief tool-brief-empty">
+          {lang === 'zh' ? '点上面任意板块，看它怎么用。' : 'Tap a card above to see how it works.'}
+        </div>
+      )}
+
       {isMockMode && (
         <div className="mock-note">
-          当前为<strong>本地演示模式</strong>（无后端，流式与工具调用由 mock 引擎模拟）。
-          接入 Jacky 的 AI SDK 后端后会自动切换：在 <code>.env</code> 里填 <code>VITE_API_BASE</code> 即可。
+          {lang === 'zh' ? (
+            <>当前为<strong>本地演示模式</strong>（无后端，流式与工具调用由 mock 引擎模拟）。</>
+          ) : (
+            <>Currently in <strong>local demo mode</strong> (no backend; streaming and tools are simulated).</>
+          )}
         </div>
       )}
     </div>

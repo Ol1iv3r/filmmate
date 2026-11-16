@@ -3,6 +3,7 @@ import type { UIMessage } from 'ai'
 import { Volume2, Square, Copy, Check, RefreshCw } from 'lucide-react'
 import { messageToViews, type UiPartView } from '../lib/contract'
 import { cn, copyText, speak, stopSpeaking, stripMarkdown } from '../lib/utils'
+import { useI18n } from '../lib/i18n'
 import { Markdown } from './Markdown'
 import { ToolCard } from './parts/ToolCard'
 import { ReasoningBlock } from './parts/ReasoningBlock'
@@ -22,6 +23,7 @@ export function AssistantMessage({
   canRegenerate: boolean
   onRegenerate: () => void
 }) {
+  const { t } = useI18n()
   const views = messageToViews(message)
   // 板块（工具结果卡片）统一放到回答文字之后
   const orderedViews = [
@@ -105,14 +107,14 @@ export function AssistantMessage({
 
         {!streaming && (
           <div className="msg-actions">
-            <button className="icon-btn mini" onClick={onSpeak} title={speaking ? '停止朗读' : '朗读回答'}>
+            <button className="icon-btn mini" onClick={onSpeak} title={speaking ? t('停止朗读', 'Stop speaking') : t('朗读回答', 'Read aloud')}>
               {speaking ? <Square size={13} /> : <Volume2 size={13} />}
             </button>
-            <button className="icon-btn mini" onClick={onCopy} title="复制回答">
+            <button className="icon-btn mini" onClick={onCopy} title={t('复制回答', 'Copy answer')}>
               {copied ? <Check size={13} /> : <Copy size={13} />}
             </button>
             {canRegenerate && (
-              <button className="icon-btn mini" onClick={onRegenerate} title="重新生成">
+              <button className="icon-btn mini" onClick={onRegenerate} title={t('重新生成', 'Regenerate')}>
                 <RefreshCw size={13} />
               </button>
             )}

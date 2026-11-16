@@ -2,6 +2,7 @@ import { Mic, MicOff } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { formatDuration } from '../lib/voiceInput'
 import type { VoiceInputEngine, VoiceInputStatus } from '../hooks/useVoiceInput'
+import { useI18n } from '../lib/i18n'
 
 export interface MicButtonProps {
   status: VoiceInputStatus
@@ -30,6 +31,7 @@ export function MicButton({
   onStart,
   onStop,
 }: MicButtonProps) {
+  const { t } = useI18n()
   const recording = status === 'recording'
   const busy = status === 'requesting' || status === 'transcribing'
 

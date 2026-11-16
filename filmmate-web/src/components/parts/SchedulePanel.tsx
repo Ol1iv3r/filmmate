@@ -1,3 +1,5 @@
+import { useI18n } from '../../lib/i18n'
+
 interface CalendarEvent {
   title?: string
   start?: string
@@ -87,6 +89,7 @@ function buildIcs(payload: SchedulePayload): string {
 
 /** 拍摄计划：详细方案 + 拍摄日 + 下载日历（.ics）。 */
 export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
+  const { t } = useI18n()
   const days = payload.days ?? []
   if (!days.length && !payload.summary) return null
 
@@ -104,23 +107,23 @@ export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
 
   return (
     <div className="schedule-panel">
-      {payload.preferences && <div className="schedule-pref">已按你的偏好安排：{payload.preferences}</div>}
-      {payload.summary && <div className="logline-box"><div className="logline-title">拍摄方案</div><div className="logline-summary">{payload.summary}</div></div>}
+      {payload.preferences && <div className="schedule-pref">{t('已按你的偏好安排：', 'Scheduled by your preferences: ')}{payload.preferences}</div>}
+      {payload.summary && <div className="logline-box"><div className="logline-title">{t('拍摄方案', 'Shooting plan')}</div><div className="logline-summary">{payload.summary}</div></div>}
       {(payload.crew?.length || payload.equipment?.length) ? (
         <div className="schedule-meta">
-          {payload.crew?.length ? <div><b>人员</b>：{payload.crew.map((c) => (c.role || '') + '×' + (c.count ?? 1)).join('、')}</div> : null}
-          {payload.equipment?.length ? <div><b>器材</b>：{payload.equipment.join('、')}</div> : null}
-          {payload.locations?.length ? <div><b>场景</b>：{payload.locations.map((l) => l.name || '').join('、')}</div> : null}
+          {payload.crew?.length ? <div><b>{t('人员', 'Crew')}</b>：{payload.crew.map((c) => (c.role || '') + '×' + (c.count ?? 1)).join(t('、', ', '))}</div> : null}
+          {payload.equipment?.length ? <div><b>{t('器材', 'Gear')}</b>：{payload.equipment.join(t('、', ', '))}</div> : null}
+          {payload.locations?.length ? <div><b>{t('场景', 'Locations')}</b>：{payload.locations.map((l) => l.name || '').join(t('、', ', '))}</div> : null}
         </div>
       ) : null}
       <div className="panel-head">
-        <span>拍摄日（{days.length} 天 · {payload.shots_count ?? 0} 个镜头）</span>
-        <button className="panel-btn" onClick={downloadIcs}>下载日历（.ics）</button>
+        <span>{t('拍摄日', 'Shoot days')}（{days.length} {t('天', 'days')} · {payload.shots_count ?? 0} {t('个镜头', 'shots')}）</span>
+        <button className="panel-btn" data-filmy-download onClick={downloadIcs}>{t('下载日历（.ics）', 'Download calendar (.ics)')}</button>
       </div>
       <div className="table-scroll">
         <table className="sb-table">
           <thead>
-            <tr><th>Day</th><th>日期</th><th>时间</th><th>场次</th><th>要点</th></tr>
+            <tr><th>Day</th><th>{t('日期', 'Date')}</th><th>{t('时间', 'Time')}</th><th>{t('场次', 'Scenes')}</th><th>{t('要点', 'Notes')}</th></tr>
           </thead>
           <tbody>
             {days.map((d, i) => (
@@ -136,7 +139,7 @@ export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
         </table>
       </div>
       {payload.risks?.length ? (
-        <div className="schedule-risks"><b>风险与预案</b>：{payload.risks.map((r) => (r.risk || '') + '→' + (r.mitigation || '')).join('；')}</div>
+        <div className="schedule-risks"><b>{t('风险与预案', 'Risks')}</b>：{payload.risks.map((r) => (r.risk || '') + '→' + (r.mitigation || '')).join(t('；', '; '))}</div>
       ) : null}
     </div>
   )

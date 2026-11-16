@@ -2,14 +2,16 @@ import { forwardRef, useImperativeHandle, useRef, useState, type KeyboardEvent, 
 import { ArrowUp, Loader2, Paperclip, Square } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { API_BASE } from '../lib/transport'
+import { useI18n } from '../lib/i18n'
 import { mergeTranscript } from '../lib/voiceInputMerge'
 import { useVoiceInput } from '../hooks/useVoiceInput'
 import { MicButton } from './MicButton'
 
 export interface ComposerHandle {
-  /** 一键填入文本并聚焦（空态示例卡用）。 */
   fill: (text: string) => void
   focus: () => void
+  selectTool: (tool: string) => void
+  openRefs: () => void
 }
 
 export interface SendMeta {
@@ -27,31 +29,34 @@ interface ComposerProps {
 }
 
 const TOOL_CHIPS = [
-  { label: '找灵感', tool: 'inspiration' },
-  { label: '剧本检查/生成', tool: 'review' },
-  { label: '分镜建议/生成', tool: 'storyboard' },
-  { label: '拍摄计划', tool: 'schedule' },
+  { labelZh: '找灵感', labelEn: 'Inspiration', tool: 'inspiration', hintZh: '选个题材吧～', hintEn: 'Pick a genre~' },
+  { labelZh: '剧本检查/生成', labelEn: 'Script', tool: 'review', hintZh: '想写还是想查？', hintEn: 'Write or check?' },
+  { labelZh: '分镜建议/生成', labelEn: 'Storyboard', tool: 'storyboard', hintZh: '先给我剧本～', hintEn: 'Script first~' },
+  { labelZh: '拍摄计划', labelEn: 'Shooting plan', tool: 'schedule', hintZh: '说说你的档期～', hintEn: 'Your dates?' },
 ] as const
 
-const INSPIRATION_KINDS = ['电影', '电视剧', '长片', '短片', '竖屏短剧', '广告/TVC', '教程/产品演示', 'Vlog/美食', '动画']
+const INSPIRATION_KINDS = [
+  { value: '电影', zh: '电影', en: 'Film' },
+  { value: '电视剧', zh: '电视剧', en: 'TV series' },
+  { value: '长片', zh: '长片', en: 'Feature' },
+  { value: '短片', zh: '短片', en: 'Short' },
+  { value: '竖屏短剧', zh: '竖屏短剧', en: 'Vertical drama' },
+  { value: '广告/TVC', zh: '广告/TVC', en: 'Ad / TVC' },
+  { value: '教程/产品演示', zh: '教程/产品演示', en: 'Tutorial' },
+  { value: 'Vlog/美食', zh: 'Vlog/美食', en: 'Vlog / Food' },
+  { value: '动画', zh: '动画', en: 'Animation' },
+]
 
-const KIND_HINTS: Record<string, string> = {
-  电影: '地点 / 人物 / 情绪，例：香港 雨夜 出租车司机 孤独',
-  电视剧: '人物关系 / 时代 / 集数感，例：九十年代东北 工厂家庭 三代人',
-  长片: '真实题材 / 观察对象，例：一座即将拆迁的县城电影院',
-  短片: '一个概念 / 一个反转 / 一个瞬间，例：便利店最后一瓶牛奶',
-  竖屏短剧: '强钩子 / 爽点 / 身份反转，例：一睁眼回到 1998 年成了后妈',
-  '广告/TVC': '产品 / 卖点 / 目标人群 / 想给的感受，例：一款气泡水，想拍出夏天第一口的爽',
-  '教程/产品演示': '要演示的产品与功能，例：新手机的眼球追踪手势操作',
-  'Vlog/美食': '要拍的生活切片或美食，例：深夜街边一碗热汤面',
-  动画: '画风 / 世界观 / 一句话故事，例：水彩风的城市流浪猫',
-}
-
-const TOOL_LABELS: Record<string, string> = {
-  inspiration: '找灵感',
-  review: '剧本检查/生成',
-  storyboard: '分镜建议/生成',
-  schedule: '拍摄计划',
+const KIND_HINTS: Record<string, { zh: string; en: string }> = {
+  电影: { zh: '地点 / 人物 / 情绪，例：香港 雨夜 出租车司机 孤独', en: 'Place / character / mood, e.g. Hong Kong, rainy night, taxi driver' },
+  电视剧: { zh: '人物关系 / 时代 / 集数感，例：九十年代东北 工厂家庭 三代人', en: 'Relationships / era, e.g. 90s factory family across three generations' },
+  长片: { zh: '真实题材 / 观察对象，例：一座即将拆迁的县城电影院', en: 'Real subject, e.g. a county cinema about to be demolished' },
+  短片: { zh: '一个概念 / 一个反转 / 一个瞬间，例：便利店最后一瓶牛奶', en: 'One idea / one twist, e.g. the last bottle of milk in a store' },
+  竖屏短剧: { zh: '强钩子 / 爽点 / 身份反转，例：一睁眼回到 1998 年成了后妈', en: 'Strong hook / twist, e.g. waking up in 1998 as a stepmother' },
+  '广告/TVC': { zh: '产品 / 卖点 / 目标人群 / 想给的感受，例：一款气泡水，想拍出夏天第一口的爽', en: 'Product / selling point / audience, e.g. sparkling water, the first sip of summer' },
+  '教程/产品演示': { zh: '要演示的产品与功能，例：新手机的眼球追踪手势操作', en: 'Product & feature to demo, e.g. eye-tracking gestures on a new phone' },
+  'Vlog/美食': { zh: '要拍的生活切片或美食，例：深夜街边一碗热汤面', en: 'A slice of life or food, e.g. a hot noodle bowl on a late-night street' },
+  动画: { zh: '画风 / 世界观 / 一句话故事，例：水彩风的城市流浪猫', en: 'Art style / world / one-line story, e.g. watercolor city stray cat' },
 }
 
 /**
@@ -62,9 +67,11 @@ const TOOL_LABELS: Record<string, string> = {
  * 之后输入的内容默认归该功能（不再往输入框里写「找灵感：」字样）。
  */
 export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Composer(
-  { value, onChange, streaming, onSend, onStop, placeholder = '描述你的想法，或把剧本贴给我…' },
+  { value, onChange, streaming, onSend, onStop, placeholder },
   ref,
 ) {
+  const { lang } = useI18n()
+  const t = (zh: string, en: string) => (lang === 'zh' ? zh : en)
   const composing = useRef(false)
   const taRef = useRef<HTMLTextAreaElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -81,12 +88,29 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const [refMsg, setRefMsg] = useState('')
   const [refBusy, setRefBusy] = useState(false)
 
+  const say = (zh: string, en: string) => {
+    window.dispatchEvent(new CustomEvent('filmy:say', { detail: { zh, en } }))
+  }
+
   useImperativeHandle(ref, () => ({
     fill: (text: string) => {
       onChange(text)
       requestAnimationFrame(() => taRef.current?.focus())
     },
     focus: () => taRef.current?.focus(),
+    selectTool: (tool: string) => {
+      if (tool === 'inspiration') {
+        setActiveTool('inspiration')
+        setInspOpen(true)
+      } else {
+        setActiveTool(tool)
+      }
+      requestAnimationFrame(() => taRef.current?.focus())
+    },
+    openRefs: () => {
+      setRefOpen(true)
+      requestAnimationFrame(() => taRef.current?.focus())
+    },
   }))
 
   const voiceInput = useVoiceInput({
@@ -101,16 +125,14 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   }
 
   const submit = () => {
-    const t = (value || '').trim()
+    const text = (value || '').trim()
     if (streaming || voiceInput.status === 'recording') return
-    if (!t && !scriptFile && activeTool !== 'schedule') return
-    // 上传了剧本但没打字：直接回车按当前板块的默认动作执行
-    let outgoing = t || (activeTool === 'storyboard'
-      ? '根据这份剧本出分镜'
+    if (!text && !scriptFile && activeTool !== 'schedule') return
+    let outgoing = text || (activeTool === 'storyboard'
+      ? t('根据这份剧本出分镜', 'Generate a storyboard from this script')
       : activeTool === 'schedule'
-        ? '根据最近的分镜生成拍摄方案'
-        : '检查这份剧本，并告诉我冲突和修改建议')
-    // 上传过剧本时，把原文附在消息末尾（后端识别；输入框里不显示）
+        ? t('根据最近的分镜生成拍摄方案', 'Generate a shooting plan from the latest storyboard')
+        : t('检查这份剧本，并告诉我冲突和修改建议', 'Check this script and tell me the conflicts'))
     if (activeTool !== 'inspiration' && scriptFile) outgoing += '\n\n【上传剧本】\n' + scriptFile.text
     onSend(outgoing, { tool: activeTool, kind: inspKind })
     onChange('')
@@ -144,7 +166,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
       const res = await fetch((API_BASE ?? '') + '/api/script/parse', { method: 'POST', body: form })
       if (!res.ok) {
         const detail = await res.text()
-        throw new Error('解析失败：' + detail.slice(0, 140))
+        throw new Error(t('解析失败：', 'Parse failed: ') + detail.slice(0, 140))
       }
       const data = await res.json()
       setScriptFile({
@@ -153,7 +175,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         text: String(data.text ?? ''),
       })
     } catch (err) {
-      setUploadError(err instanceof Error ? err.message : '剧本上传失败')
+      setUploadError(err instanceof Error ? err.message : t('剧本上传失败', 'Upload failed'))
     } finally {
       setUploading(false)
       if (fileRef.current) fileRef.current.value = ''
@@ -162,7 +184,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
   const addReferenceFilm = async () => {
     if (!refUrl.trim() && !refTitle.trim()) {
-      setRefMsg('至少填链接或片名')
+      setRefMsg(t('至少填链接或片名', 'Enter a link or title'))
       return
     }
     setRefBusy(true)
@@ -177,19 +199,20 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         }),
       })
       const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.detail || '加入失败')
-      setRefMsg('已加入参考片：' + (data.film?.title ?? refTitle ?? refUrl) + (data.film?.style_summary ? ' · ' + data.film.style_summary : ''))
+      if (!res.ok) throw new Error(data.detail || t('加入失败', 'Failed'))
+      setRefMsg(t('已加入参考片：', 'Added: ') + (data.film?.title ?? refTitle ?? refUrl) + (data.film?.style_summary ? ' · ' + data.film.style_summary : ''))
       setRefUrl('')
       setRefTitle('')
       setRefMoods('')
     } catch (err) {
-      setRefMsg(err instanceof Error ? err.message : '加入失败')
+      setRefMsg(err instanceof Error ? err.message : t('加入失败', 'Failed'))
     } finally {
       setRefBusy(false)
     }
   }
 
-  const handleChip = (tool: string) => {
+  const handleChip = (tool: string, hintZh: string, hintEn: string) => {
+    say(hintZh, hintEn)
     if (tool === 'inspiration') {
       setActiveTool('inspiration')
       setInspOpen(true)
@@ -202,21 +225,30 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
       return
     }
     if (tool === 'storyboard' && !scriptFile) {
-      setUploadError('分镜需要先上传剧本：点左侧回形针上传 PDF/DOCX/TXT；或用「剧本检查/生成」先写一版。')
+      setUploadError(t('分镜需要先上传剧本：点左侧回形针上传 PDF/DOCX/TXT；或用「剧本检查/生成」先写一版。',
+        'Storyboard needs a script: upload PDF/DOCX/TXT with the paperclip, or write one first.'))
     }
     setActiveTool(tool)
     taRef.current?.focus()
   }
 
+  const kindLabel = (value: string) => {
+    const item = INSPIRATION_KINDS.find((k) => k.value === value)
+    return item ? (lang === 'zh' ? item.zh : item.en) : value
+  }
+
+  const kindHint = inspKind ? (KIND_HINTS[inspKind] ?? { zh: t('用一句话描述你想要的感觉', 'Describe the feeling in one line'), en: 'Describe the feeling in one line' }) : null
+
   const modeHint = activeTool === 'inspiration'
     ? inspKind
-      ? '正在找「' + inspKind + '」的灵感 · ' + (KIND_HINTS[inspKind] ?? '用一句话描述你想要的感觉')
-      : '找灵感：先选题材，再用一句话描述你想要的感觉'
-    : activeTool
-      ? activeTool === 'schedule'
-        ? '拍摄计划：可先说偏好（避开哪些日期 / 几天拍完 / 每天工时 / 地点限制），回车生成；直接回车 = 按默认排期'
-        : '当前功能：' + (TOOL_LABELS[activeTool] ?? activeTool) + (activeTool === 'review' || activeTool === 'storyboard' ? '（可先上传剧本）' : '')
-      : ''
+      ? t('正在找「' + kindLabel(inspKind) + '」的灵感 · ', 'Finding inspiration for ' + kindLabel(inspKind) + ' · ') + (lang === 'zh' ? kindHint?.zh : kindHint?.en)
+      : t('找灵感：先选题材，再用一句话描述你想要的感觉', 'Inspiration: pick a genre, then describe the feeling')
+    : activeTool === 'schedule'
+      ? t('拍摄计划：可先说偏好（避开哪些日期 / 几天拍完 / 每天工时 / 地点限制），回车生成；直接回车 = 按默认排期',
+        'Shooting plan: state preferences (dates to avoid / days / hours / locations), then Enter; empty Enter = default plan')
+      : activeTool
+        ? t('当前功能：', 'Active tool: ') + (TOOL_CHIPS.find((c) => c.tool === activeTool)?.labelZh ?? '') + t('（可先上传剧本）', ' (upload a script first)')
+        : ''
 
   return (
     <div className="composer-area">
@@ -225,28 +257,30 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           <button
             key={c.tool}
             className={cn('quick-chip', activeTool === c.tool && 'active')}
-            onClick={() => handleChip(c.tool)}
+            onClick={() => handleChip(c.tool, c.hintZh, c.hintEn)}
           >
-            {c.label}
+            {lang === 'zh' ? c.labelZh : c.labelEn}
           </button>
         ))}
-        <button className="quick-chip" onClick={() => setRefOpen((v) => !v)}>＋参考片</button>
+        <button className="quick-chip" onClick={() => setRefOpen((v) => !v)}>
+          {t('＋参考片', '+ Reference film')}
+        </button>
       </div>
 
       {inspOpen && (
         <div className="quick-chips kind-chips">
-          <span className="kind-label">先选题材：</span>
+          <span className="kind-label">{t('先选题材：', 'Pick a genre: ')}</span>
           {INSPIRATION_KINDS.map((k) => (
             <button
-              key={k}
-              className={cn('quick-chip', inspKind === k && 'active')}
+              key={k.value}
+              className={cn('quick-chip', inspKind === k.value && 'active')}
               onClick={() => {
-                setInspKind(k)
+                setInspKind(k.value)
                 setInspOpen(false)
                 taRef.current?.focus()
               }}
             >
-              {k}
+              {lang === 'zh' ? k.zh : k.en}
             </button>
           ))}
         </div>
@@ -254,17 +288,25 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
       {activeTool === 'schedule' && (
         <div className="quick-chips">
-          <span className="kind-label">快捷偏好：</span>
-          {['3天内拍完', '避开周末', '每天10小时', '夜戏集中', '日戏为主', '场地固定在一个地方'].map((pref) => (
+          <span className="kind-label">{t('快捷偏好：', 'Quick prefs: ')}</span>
+          {[
+            { zh: '3天内拍完', en: 'Within 3 days' },
+            { zh: '避开周末', en: 'Avoid weekends' },
+            { zh: '每天10小时', en: '10 hours/day' },
+            { zh: '夜戏集中', en: 'Night scenes' },
+            { zh: '日戏为主', en: 'Day scenes' },
+            { zh: '场地固定在一个地方', en: 'One location' },
+          ].map((pref) => (
             <button
-              key={pref}
+              key={pref.zh}
               className="quick-chip"
               onClick={() => {
-                onChange(value.trim() ? value.replace(/[，,\s]+$/, '') + '，' + pref : pref)
+                const text = lang === 'zh' ? pref.zh : pref.en
+                onChange(value.trim() ? value.replace(/[，,\s]+$/, '') + '，' + text : text)
                 taRef.current?.focus()
               }}
             >
-              {pref}
+              {lang === 'zh' ? pref.zh : pref.en}
             </button>
           ))}
         </div>
@@ -281,29 +323,32 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
               setInspOpen(false)
             }}
           >
-            退出该功能
+            {t('退出该功能', 'Exit')}
           </button>
         </div>
       )}
 
       {scriptFile && (
         <div className="composer-mode">
-          已上传剧本：{scriptFile.name}（{scriptFile.chars} 字）· 可直接回车开始分析
-          <button className="link-btn" onClick={() => setScriptFile(null)}>移除</button>
+          {t('已上传剧本：', 'Script: ')}{scriptFile.name}（{scriptFile.chars} {t('字', 'chars')}）· {t('可直接回车开始分析', 'Enter to analyze')}
+          <button className="link-btn" onClick={() => setScriptFile(null)}>{t('移除', 'Remove')}</button>
         </div>
       )}
 
       {refOpen && (
         <div className="ref-form">
-          <div className="ref-form-title">加入你想参考的电影（AI 会分析风格，并在后续推荐里贴近你的品味）</div>
-          <input className="ref-input" placeholder="链接（Bilibili / YouTube）" value={refUrl} onChange={(e) => setRefUrl(e.target.value)} />
-          <input className="ref-input" placeholder="片名（可不填，会自动抓取）" value={refTitle} onChange={(e) => setRefTitle(e.target.value)} />
-          <input className="ref-input" placeholder="情绪/标签（逗号分隔，可选）：压抑、长镜头、北欧" value={refMoods} onChange={(e) => setRefMoods(e.target.value)} />
+          <div className="ref-form-title">
+            {t('加入你想参考的电影（AI 会分析风格，并在后续推荐里贴近你的品味）',
+              'Add reference films (AI learns the style and tailors recommendations)')}
+          </div>
+          <input className="ref-input" placeholder={t('链接（Bilibili / YouTube）', 'Link (Bilibili / YouTube)')} value={refUrl} onChange={(e) => setRefUrl(e.target.value)} />
+          <input className="ref-input" placeholder={t('片名（可不填，会自动抓取）', 'Title (optional, auto-fetched)')} value={refTitle} onChange={(e) => setRefTitle(e.target.value)} />
+          <input className="ref-input" placeholder={t('情绪/标签（逗号分隔，可选）：压抑、长镜头、北欧', 'Moods/tags (optional): bleak, long take, Nordic')} value={refMoods} onChange={(e) => setRefMoods(e.target.value)} />
           <div className="ref-form-actions">
             <button className="panel-btn" onClick={() => void addReferenceFilm()} disabled={refBusy}>
-              {refBusy ? '分析中…' : '加入参考片'}
+              {refBusy ? t('分析中…', 'Analyzing…') : t('加入参考片', 'Add reference')}
             </button>
-            <button className="link-btn" onClick={() => setRefOpen(false)}>收起</button>
+            <button className="link-btn" onClick={() => setRefOpen(false)}>{t('收起', 'Close')}</button>
           </div>
           {refMsg && <div className="ref-msg">{refMsg}</div>}
         </div>
@@ -322,7 +367,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         <button
           type="button"
           className="attach-btn"
-          title="上传剧本（PDF / DOCX / TXT）"
+          title={t('上传剧本（PDF / DOCX / TXT）', 'Upload script (PDF / DOCX / TXT)')}
           disabled={streaming || uploading}
           onClick={() => fileRef.current?.click()}
         >
@@ -341,7 +386,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           ref={taRef}
           value={value}
           rows={1}
-          placeholder={inspKind ? '找「' + inspKind + '」的灵感：' + (KIND_HINTS[inspKind] ?? '描述你想要的感觉…') : placeholder}
+          placeholder={inspKind
+            ? t('找「' + kindLabel(inspKind) + '」的灵感：', 'Inspiration for ' + kindLabel(inspKind) + ': ') + (lang === 'zh' ? kindHint?.zh : kindHint?.en)
+            : (placeholder ?? t('描述你的想法，或把剧本贴给我…', 'Describe your idea, or paste a script…'))}
           onChange={(e) => {
             onChange(e.target.value)
             autoGrow()
@@ -349,17 +396,17 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           onKeyDown={onKeyDown}
           onCompositionStart={() => (composing.current = true)}
           onCompositionEnd={() => (composing.current = false)}
-          aria-label="消息输入框"
+          aria-label={t('消息输入框', 'Message input')}
         />
         {streaming ? (
-          <button type="button" className={cn('send-btn', 'stop')} onClick={onStop} title="停止生成">
+          <button type="button" className={cn('send-btn', 'stop')} onClick={onStop} title={t('停止生成', 'Stop')}>
             <Square size={15} fill="currentColor" />
           </button>
         ) : (
           <button
             type="submit"
             className={cn('send-btn', !value.trim() && !scriptFile && activeTool !== 'schedule' && 'disabled')}
-            title={scriptFile && !value.trim() ? '直接开始分析已上传剧本（Enter）' : '发送（Enter）'}
+            title={scriptFile && !value.trim() ? t('直接开始分析已上传剧本（Enter）', 'Analyze uploaded script (Enter)') : t('发送（Enter）', 'Send (Enter)')}
             disabled={!value.trim() && !scriptFile && activeTool !== 'schedule'}
           >
             <ArrowUp size={17} />
@@ -368,7 +415,8 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
       </form>
       {voiceInput.error && <div className="composer-error" role="alert">{voiceInput.error}</div>}
       <div className="composer-hint">
-        Enter 发送 · Shift+Enter 换行 · 点上方板块后输入内容默认归该功能 · 上传剧本后可直接回车开始分析
+        {t('Enter 发送 · Shift+Enter 换行 · 点上方板块后输入内容默认归该功能 · 上传剧本后可直接回车开始分析',
+          'Enter to send · Shift+Enter for newline · chips set the active tool · Enter analyzes an uploaded script')}
       </div>
     </div>
   )

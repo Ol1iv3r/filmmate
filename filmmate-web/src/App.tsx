@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Menu, Clapperboard } from 'lucide-react'
 import { Sidebar } from './components/Sidebar'
+import { useI18n } from './lib/i18n'
 import { ChatPanel } from './components/ChatPanel'
 import { createRepository, type ConversationMeta, type ConversationRepository } from './lib/conversations'
 import { uid } from './lib/utils'
@@ -11,6 +12,7 @@ import { uid } from './lib/utils'
  * 手动改名的标题不会被自动标题覆盖。
  */
 export default function App() {
+  const { lang, toggle, t } = useI18n()
   const repository = useMemo<ConversationRepository>(() => createRepository(), [])
   const [conversations, setConversations] = useState<ConversationMeta[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -129,13 +131,21 @@ export default function App() {
             <span>{activeTitle}</span>
           </div>
           <div className="topbar-right">
-            <span className="topbar-hint">深色影院模式 · 流式渲染 · 工具调用可视化</span>
+            <span className="topbar-hint">{t('深色影院模式 · 流式渲染 · 工具调用可视化', 'Dark cinema mode · Streaming · Tool calls visualized')}</span>
+            <button
+              className="lang-btn"
+              onClick={toggle}
+              title={t('切换为英文界面', 'Switch to Chinese')}
+              aria-label={t('切换为英文界面', 'Switch to Chinese')}
+            >
+              {lang === 'zh' ? 'EN' : '中文'}
+            </button>
           </div>
         </header>
 
         <div className="panel-wrap">
           {booting || !activeId ? (
-            <div className="booting">正在装载放映机…</div>
+            <div className="booting">{t('正在装载放映机…', 'Loading the projector…')}</div>
           ) : (
             <ChatPanel key={activeId} conversationId={activeId} onAutoTitle={handleAutoTitle} />
           )}

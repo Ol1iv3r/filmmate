@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useI18n } from '../../lib/i18n'
 
 interface InspiredFilm {
   id?: string
@@ -21,25 +22,26 @@ interface InspirationPayload {
 
 /** 找灵感结果：每部契合电影用 2x2 四格静帧展示，点击可放大。 */
 export function InspirationPanel({ payload }: { payload: InspirationPayload }) {
+  const { t } = useI18n()
   const films = payload.films ?? []
   const [zoom, setZoom] = useState<string | null>(null)
   if (!films.length) return null
   return (
     <div className="insp-panel">
       <div className="insp-head">
-        题材：{payload.kind ?? '—'}
-        {payload.idea ? '　｜　关键词：' + payload.idea : ''}
-        　（点击静帧可放大）
+        {t('题材：', 'Genre: ')}{payload.kind ?? '—'}
+        {payload.idea ? '　｜　' + t('关键词：', 'Keywords: ') + payload.idea : ''}
+        　{t('（点击静帧可放大）', '(click a still to zoom)')}
       </div>
       {films.map((f, i) => (
         <div className="insp-film" key={f.id ?? i}>
           <div className="insp-film-head">
-            <span className="insp-idx">契合电影 {i + 1}</span>
+            <span className="insp-idx">{t('契合电影', 'Matching film')} {i + 1}</span>
             《{f.title_zh ?? ''}》{f.year ?? ''}
             {f.duration ? '　' + f.duration : ''}
             {f.url && (
               <a className="link-btn" href={f.url} target="_blank" rel="noreferrer">
-                原片链接
+                {t('原片链接', 'Watch link')}
               </a>
             )}
           </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import { useI18n } from '../../lib/i18n'
 import {
   Loader2,
   CheckCircle2,
@@ -51,6 +52,7 @@ export function ToolCard({
   isLast: boolean
 }) {
   const meta = toolMeta(activity.toolName)
+  const { lang, t } = useI18n()
   const [open, setOpen] = useState(true)
   const [jsonOpen, setJsonOpen] = useState(false)
   const [now, setNow] = useState(Date.now())
@@ -88,7 +90,7 @@ export function ToolCard({
     >
       <button className="tool-card-head" onClick={() => setOpen((o) => !o)}>
         <span className="tool-icon">{iconFor(activity.toolName)}</span>
-        <span className="tool-name">{meta.label}</span>
+        <span className="tool-name">{lang === 'zh' ? meta.label : (meta.labelEn || meta.label)}</span>
         <code className="tool-fn">{activity.toolName}</code>
 
         {query.length > 0 && (
@@ -105,19 +107,19 @@ export function ToolCard({
           {running && (
             <>
               <Loader2 size={13} className="spin" />
-              <span className="status-text">检索中 · {formatMs(elapsed)}</span>
+              <span className="status-text">{t('处理中', 'Running')} · {formatMs(elapsed)}</span>
             </>
           )}
           {activity.state === 'done' && (
             <>
               <CheckCircle2 size={13} />
-              <span className="status-text">完成 · {formatMs(elapsed)}</span>
+              <span className="status-text">{t('完成', 'Done')} · {formatMs(elapsed)}</span>
             </>
           )}
           {activity.state === 'error' && (
             <>
               <XCircle size={13} />
-              <span className="status-text">失败</span>
+              <span className="status-text">{t('失败', 'Failed')}</span>
             </>
           )}
         </span>
@@ -132,7 +134,7 @@ export function ToolCard({
             <div className="tool-error-box">
               <XCircle size={14} />
               <div>
-                <div className="tool-error-title">检索失败</div>
+                <div className="tool-error-title">{t('检索失败', 'Failed')}</div>
                 <div className="tool-error-text">
                   {activity.errorText || '未知错误'}
                   {isLast && ' —— 已自动降级：改用本地镜头语言知识直接回答（不引用样本）。'}
@@ -145,7 +147,7 @@ export function ToolCard({
           {hasHits && (
             <div className="hits-wrap">
               <div className="hits-title">
-                命中 {activity.hits!.length} 个样本
+                {t('命中 ', 'Found ')}{activity.hits!.length}{t(' 个样本', ' samples')}
                 {activity.output !== undefined && (
                   <button className="link-btn json-toggle" onClick={() => setJsonOpen((o) => !o)}>
                     <FileJson size={12} />

@@ -138,7 +138,7 @@ def react_chat_body(body):
         if turns[index]["role"] == "user":
             meta = turns[index].get("metadata") or {}
             body = {"message": turns[index]["content"], "history": turns[:index]}
-            for key in ("tool", "kind", "storyboard", "script_text"):
+            for key in ("tool", "kind", "storyboard", "script_text", "lang"):
                 if meta.get(key) is not None:
                     body[key] = meta[key]
             return body
@@ -212,7 +212,7 @@ async def handle_qa(message: str, history: list, api_key: str):
     online = llm.available(api_key)
 
     if online:
-        msgs = [{"role": "system", "content": prompts.SYSTEM_QA_AGENT}]
+        msgs = [{"role": "system", "content": prompts.SYSTEM_QA_AGENT + tools.lang_hint()}]
         msgs += [{"role": m.get("role", "user"), "content": str(m.get("content", ""))} for m in history[-6:]]
         msgs.append({"role": "user", "content": message})
         try:
@@ -316,6 +316,8 @@ async def chat(req: Request):
     message = (body.get("message") or "").strip()
     script_text = (body.get("script_text") or "").strip()
     script_name = (body.get("script_name") or "").strip()
+    lang = (body.get("lang") or "zh").strip() or "zh"
+    tools.set_lang(lang)
     kind_hint = (body.get("kind") or "").strip() or None
     storyboard_payload = body.get("storyboard") if isinstance(body.get("storyboard"), dict) else None
     # React 前端上传剧本后，会把它附在消息末尾（【上传剧本】+ 原文）

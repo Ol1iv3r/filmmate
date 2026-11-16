@@ -5,7 +5,9 @@ import { createTransport } from '../lib/transport'
 import { createRepository, titleFromMessages, type ConversationRepository } from '../lib/conversations'
 import { MessageList, MessageSkeleton } from './MessageList'
 import { Composer, type ComposerHandle, type SendMeta } from './Composer'
-import { EmptyState } from './EmptyState'
+import { EmptyState, type HomeTool } from './EmptyState'
+import { Filmy } from './Filmy'
+import { useI18n } from '../lib/i18n'
 import { ErrorBanner } from './ErrorBanner'
 
 /**
@@ -84,13 +86,15 @@ function ChatInner({
   const chat = useChat({ id: conversationId, transport, messages: initial })
   const { messages, status, error, sendMessage, regenerate, stop, clearError } = chat
   const streaming = status === 'submitted' || status === 'streaming'
+  const { lang } = useI18n()
 
   const [composerText, setComposerText] = useState('')
   const composerRef = useRef<ComposerHandle>(null)
   const lastUserRef = useRef('')
 
-  const handlePickExample = useCallback((prompt: string) => {
-    composerRef.current?.fill(prompt)
+  const handleStartTool = useCallback((tool: HomeTool) => {
+    if (tool === 'refs') composerRef.current?.openRefs()
+    else composerRef.current?.selectTool(tool)
   }, [])
 
   const lastUser = useMemo(
@@ -139,7 +143,7 @@ function ChatInner({
       const outs = collectOutputs(messages)
       const lastScript = [...outs].reverse().find((o) => typeof o.script_text === 'string' && o.script_text)
       const lastStoryboard = [...outs].reverse().find((o) => Array.isArray(o.shots) && o.shots.length)
-      const metadata: Record<string, unknown> = { tool: meta?.tool ?? null, kind: meta?.kind ?? null }
+      const metadata: Record<string, unknown> = { tool: meta?.tool ?? null, kind: meta?.kind ?? null, lang }
       if (meta?.tool === 'storyboard' || meta?.tool === 'review' || (!meta?.tool && /分镜|剧本/.test(text))) {
         if (lastScript?.script_text) metadata.script_text = lastScript.script_text
       }
@@ -148,7 +152,7 @@ function ChatInner({
       }
       sendMessage({ text, metadata })
     },
-    [messages, sendMessage, collectOutputs],
+    [messages, sendMessage, collectOutputs, lang],
   )
 
   const handleRetry = useCallback(() => {
@@ -169,7 +173,7 @@ function ChatInner({
     <div className="chat-panel">
       {showEmpty ? (
         <div className="chat-scroll">
-          <EmptyState onPick={handlePickExample} />
+          <EmptyState onStartTool={handleStartTool} onOpenRefs={() => composerRef.current?.openRefs()} />
         </div>
       ) : (
         <MessageList
@@ -181,6 +185,8 @@ function ChatInner({
       )}
 
       {error && <ErrorBanner message={error.message} onRetry={handleRetry} onDismiss={clearError} />}
+
+      <Filmy thinking={streaming} />
 
       <Composer
         ref={composerRef}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { API_BASE } from '../../lib/transport'
+import { useI18n } from '../../lib/i18n'
 
 interface Logline {
   title?: string
@@ -18,6 +19,7 @@ interface ScriptPayload {
 
 /** 剧本结果：梗要 + 可滚动标准格式剧本 + 下载 PDF。 */
 export function ScriptPanel({ payload }: { payload: ScriptPayload }) {
+  const { t } = useI18n()
   const [busy, setBusy] = useState(false)
   const logline = payload.logline
   const script = payload.script_text ?? ''
@@ -51,17 +53,17 @@ export function ScriptPanel({ payload }: { payload: ScriptPayload }) {
       {logline && (
         <div className="logline-box">
           <div className="logline-title">
-            梗要　《{logline.title ?? '未命名'}》
+            {t('梗要', 'Logline')}　《{logline.title ?? '未命名'}》
             {logline.title_en ? '（' + logline.title_en + '）' : ''}
           </div>
-          {logline.theme && <div className="logline-theme">主题：{logline.theme}</div>}
+          {logline.theme && <div className="logline-theme">{t('主题：', 'Theme: ')}{logline.theme}</div>}
           {logline.summary && <div className="logline-summary">{logline.summary}</div>}
         </div>
       )}
       <div className="panel-head">
-        <span>标准格式剧本{payload.kind === 'script_check' ? '（原稿）' : ''}</span>
-        <button className="panel-btn" onClick={downloadPdf} disabled={busy}>
-          {busy ? '生成中…' : '下载 PDF'}
+        <span>{t('标准格式剧本', 'Standard format')}{payload.kind === 'script_check' ? t('（原稿）', ' (draft)') : ''}</span>
+        <button className="panel-btn" data-filmy-download onClick={downloadPdf} disabled={busy}>
+          {busy ? t('生成中…', 'Generating…') : t('下载 PDF', 'Download PDF')}
         </button>
       </div>
       <pre className="script-scroll">{script}</pre>

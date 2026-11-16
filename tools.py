@@ -246,6 +246,7 @@ async def review(text: str, api_key: str = None, case_ctx: str = "", refs: list 
             user_content = text
             if case_ctx:
                 user_content += f"\n\n以下是检索到的参考资料（案例 / 场面模式，审阅时可借鉴其中经验与常见问题）：\n{case_ctx}"
+            user_content += lang_hint()
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_REVIEW},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
@@ -1257,6 +1258,21 @@ def _kind_from_history(history):
     return None
 
 
+_LANG = "zh"
+
+
+def set_lang(lang) -> None:
+    global _LANG
+    _LANG = "en" if str(lang or "").lower().startswith("en") else "zh"
+
+
+def lang_hint() -> str:
+    if _LANG != "en":
+        return ""
+    return ("\n\nIMPORTANT: The user interface is English. Reply entirely in English "
+            "(all headings, explanations, loglines, dialogue). Keep JSON field names exactly as specified.")
+
+
 def llm_error_hint(exc: Exception) -> str:
     """把模型/额度错误翻译成用户能操作的提示。"""
     msg = str(exc or "")
@@ -1341,6 +1357,10 @@ def parse_inspiration_kind(message: str):
 
 
 def _kind_ask_text():
+    if _LANG == "en":
+        return ("Pick a genre first: " + " / ".join(KIND_CHOICES) + "\n\n"
+                "Then describe the feeling in one line (e.g. Hong Kong, rainy night, old buildings, loneliness). "
+                "I will only search real works in that genre and return style → theme → matching film (story + stills + link).")
     return (
         "先选一下你想找哪一类片的灵感：" + " / ".join(KIND_CHOICES) + "\n\n"
         "选好题材后，用一句话描述你想要的感觉（例如：香港、雨夜、旧楼、孤独、身份流动）。"
@@ -1352,29 +1372,56 @@ def _norm_title(text: str) -> str:
     return re.sub(r"[^\w\u4e00-\u9fff]+", "", (text or "").lower())
 
 
+KIND_EN = {
+    "电影": "Film", "电视剧": "TV series", "长片": "Feature", "短片": "Short",
+    "竖屏短剧": "Vertical drama", "广告/TVC": "Ad / TVC", "教程/产品演示": "Tutorial",
+    "Vlog/美食": "Vlog / Food", "动画": "Animation",
+}
+
+
 def _films_markdown(kind: str, idea: str, styles: list) -> str:
-    lines = [
-        f"**题材**：{kind}　｜　**关键词**：{idea or '（未填写，按题材代表作）'}",
-        "",
-    ]
+    en = _LANG == "en"
+    if en:
+        lines = [f"**Genre**: {KIND_EN.get(kind, kind)}　｜　**Keywords**: {idea or '(not given, using genre classics)'}", ""]
+    else:
+        lines = [f"**题材**：{kind}　｜　**关键词**：{idea or '（未填写，按题材代表作）'}", ""]
     for i, s in enumerate(styles, 1):
         film = s["film"]
-        lines.append(f"### 风格 {i}：{s['style_name']}")
-        lines.append(f"- **为什么契合「{idea or kind}」**：{s['why_fits']}")
-        lines.append(f"- **主题 {i}**：{s['theme']}")
-        lines.append(f"- **契合电影 {i}**：《{film.get('title_zh')}》（{film.get('year')}）　{film.get('duration') or ''}")
-        lines.append(f"  - 内容：{film.get('synopsis') or ''}")
+        title = film.get("title_zh")
+        year = film.get("year")
+        duration = film.get("duration") or ""
         moods = "/".join(film.get("moods") or [])
-        tags = "、".join((film.get("tags") or [])[:5])
-        lines.append(f"  - 情绪：{moods}　｜　标签：{tags}")
-        if film.get("url"):
-            lines.append(f"  - 原片：[{film.get('platform') or '原片'}链接]({film['url']})")
-        if s.get("film_reason"):
-            lines.append(f"  - 参考点：{s['film_reason']}")
+        tags = ", ".join((film.get("tags") or [])[:5]) if en else "、".join((film.get("tags") or [])[:5])
+        if en:
+            lines.append(f"### Style {i}: {s['style_name']}")
+            lines.append(f"- **Why it fits there**: {s['why_fits']}")
+            lines.append(f"- **Theme {i}**: {s['theme']}")
+            lines.append(f"- **Matching film {i}**: *{title}* ({year})　{duration}")
+            lines.append(f"  - Story: {film.get('synopsis') or ''}")
+            lines.append(f"  - Mood: {moods}　｜　Tags: {tags}")
+            if film.get("url"):
+                lines.append(f"  - Watch: [{film.get('platform') or 'link'}]({film['url']})")
+            if s.get("film_reason"):
+                lines.append(f"  - Reference point: {s['film_reason']}")
+        else:
+            lines.append(f"### 风格 {i}：{s['style_name']}")
+            lines.append(f"- **为什么契合「{idea or kind}」**：{s['why_fits']}")
+            lines.append(f"- **主题 {i}**：{s['theme']}")
+            lines.append(f"- **契合电影 {i}**：《{title}》（{year}）　{duration}")
+            lines.append(f"  - 内容：{film.get('synopsis') or ''}")
+            lines.append(f"  - 情绪：{moods}　｜　标签：{tags}")
+            if film.get("url"):
+                lines.append(f"  - 原片：[{film.get('platform') or '原片链接'}]({film['url']})")
+            if s.get("film_reason"):
+                lines.append(f"  - 参考点：{s['film_reason']}")
         lines.append("")
     lines.append("---")
-    lines.append("要不要我按 **主题 1** 先写一版剧本？回复「写剧本」即可（会先给一段话梗要 + 标准格式剧本）。")
-    lines.append("拿到剧本之后再回复「出分镜」，就能按剧本出分镜表。想换主题就回复「写剧本：主题名」。")
+    if en:
+        lines.append("Want me to write the script based on **Theme 1** first? Reply 'write script'. "
+                     "After the script, reply 'storyboard' for the shot list. To switch theme, reply 'write script: theme name'.")
+    else:
+        lines.append("要不要我按 **主题 1** 先写一版剧本？回复「写剧本」即可（会先给一段话梗要 + 标准格式剧本）。")
+        lines.append("拿到剧本之后再回复「出分镜」，就能按剧本出分镜表。想换主题就回复「写剧本：主题名」。")
     return "\n".join(lines)
 
 
@@ -1412,7 +1459,8 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None):
                 + ("【TVC 额外要求】每个 style 的 theme 必须点名：产品/品牌、目标人群、一句 slogan 方向；"
                    "why_fits 要说明视觉钩子如何服务产品卖点。\n\n" if kind == "广告/TVC" else "")
                 + (taste + "\n\n" if taste else "")
-                + "候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines))
+                + "候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines)
+                + lang_hint())
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_INSPIRATION_FILMS},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
@@ -1595,6 +1643,15 @@ def _norm_logline(data):
 
 
 def _script_intro(logline):
+    if _LANG == "en":
+        name = logline.get("title") or "Untitled"
+        en = f" ({logline['title_en']})" if logline.get("title_en") else ""
+        return (
+            f"### Logline\n**Title**: {name}{en}\n"
+            f"**Theme**: {logline.get('theme') or '—'}\n\n"
+            f"{logline.get('summary') or ''}\n\n"
+            "The full script is in the scrollable area below; click \"Download PDF\" for the formatted screenplay."
+        )
     name = logline.get("title") or "未命名"
     en = f"（{logline['title_en']}）" if logline.get("title_en") else ""
     return (
@@ -1655,10 +1712,10 @@ def _format_review(report) -> str:
     strengths = report.get("strengths") or []
     if strengths:
         lines.append("")
-        lines.append("**可保留的优点**：" + "；".join(str(x) for x in strengths[:4]))
+        lines.append(("**Strengths**: " if _LANG == "en" else "**可保留的优点**：") + "；".join(str(x) for x in strengths[:4]))
     if report.get("next_steps"):
         lines.append("")
-        lines.append("**下一步**：" + str(report["next_steps"]))
+        lines.append(("**Next steps**: " if _LANG == "en" else "**下一步**：") + str(report["next_steps"]))
     return "\n".join(lines)
 
 
@@ -1728,6 +1785,7 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
             f"主题：{theme}\n输出类型：{film_kind}\n类型与格式要求（必须遵守）：{guide}\n"
             + (("用户收藏的参考片（贴近其品味）：\n" + taste + "\n") if taste else "")
             + "请只输出这个类型该有的剧本/脚本格式，不要写成别的片种。"
+            + lang_hint()
         )
         # 第一步：只出梗要（小 JSON，避免截断）；第二步：正文单独出纯文本
         data = await llm.complete_json(
@@ -1739,7 +1797,7 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
         if not text:
             # 第二步：单独请求剧本文本（纯文本，不要 JSON）
             plain_system = ("你是职业编剧。直接输出标准格式的剧本/脚本正文，"
-                            "不要 JSON、不要 markdown 代码块、不要解释。")
+                            "不要 JSON、不要 markdown 代码块、不要解释。" + lang_hint())
             text = (await llm.complete(
                 [{"role": "system", "content": plain_system},
                  {"role": "user", "content": user_prompt + "\n请直接输出正文。"}],
@@ -1903,7 +1961,7 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
                 for b in blocks)
             user_prompt = (
                 "这是用户上传的剧本，请严格逐场出分镜，不能换故事：\n\n"
-                f"剧本全文：\n{script[:6500]}\n\n逐场信息（每一场都要覆盖）：\n{scene_text}")
+                f"剧本全文：\n{script[:6500]}\n\n逐场信息（每一场都要覆盖）：\n{scene_text}" + lang_hint())
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_STORYBOARD_SCRIPT},
                  {"role": "user", "content": user_prompt}],
@@ -1948,8 +2006,10 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
         "coverage_notes": notes, "mode": mode, "scene_count": len(scenes),
     }
     result["text"] = (_script_intro(logline)
-                      + f"\n\n分镜表（{len(shots)} 个镜头，覆盖剧本 {len(scenes)} 场）在下方，"
-                        "点「下载 CSV」可直接拿到表格。")
+                      + (f"\n\nThe storyboard ({len(shots)} shots covering {len(scenes)} scenes) is below; "
+                         "click \"Download CSV\" to get the table." if _LANG == "en" else
+                         f"\n\n分镜表（{len(shots)} 个镜头，覆盖剧本 {len(scenes)} 场）在下方，"
+                         "点「下载 CSV」可直接拿到表格。"))
     return result
 
 
@@ -1981,7 +2041,7 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
             user_prompt = (
                 f"当前日期：{today.date().isoformat()}\n"
                 f"用户偏好/限制（必须优先满足）：{pref or '（未特别说明，按常规安排）'}\n"
-                f"分镜表（共 {len(shots)} 镜）：\n" + "\n".join(shot_lines))
+                f"分镜表（共 {len(shots)} 镜）：\n" + "\n".join(shot_lines) + lang_hint())
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_SHOOTING_PLAN},
                  {"role": "user", "content": user_prompt}], api_key=api_key, temperature=0.4)
@@ -2016,18 +2076,22 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
         }]
         summary = summary or f"共 {len(shots)} 个镜头，集中在 1 天完成；先 master 后 coverage。"
 
-    lines = ["### 详细拍摄方案", "", f"**概述**：{summary or '按分镜表安排拍摄'}"]
+    if _LANG == "en":
+        lines = ["### Detailed shooting plan", "", f"**Overview**: {summary or 'Schedule based on the storyboard'}"]
+    else:
+        lines = ["### 详细拍摄方案", "", f"**概述**：{summary or '按分镜表安排拍摄'}"]
     if crew:
-        lines.append("**人员**：" + "；".join(
+        lines.append(("**Crew**: " if _LANG == "en" else "**人员**：") + "；".join(
             f"{c.get('role')}×{c.get('count', 1)}{('（' + str(c.get('note')) + '）') if c.get('note') else ''}"
             for c in crew[:8] if isinstance(c, dict)))
     if equipment:
-        lines.append("**器材**：" + "、".join(str(x) for x in equipment[:10]))
+        lines.append(("**Gear**: " if _LANG == "en" else "**器材**：") + "、".join(str(x) for x in equipment[:10]))
     if locations:
-        lines.append("**场景**：" + "；".join(
+        lines.append(("**Locations**: " if _LANG == "en" else "**场景**：") + "；".join(
             f"{l.get('name')}{('（' + str(l.get('note')) + '）') if l.get('note') else ''}"
             for l in locations[:8] if isinstance(l, dict)))
-    lines += ["", "| Day | 日期 | 时间 | 场次 | 要点 |", "|---|---|---|---|---|"]
+    lines += (["", "| Day | Date | Time | Scenes | Notes |", "|---|---|---|---|---|"] if _LANG == "en"
+              else ["", "| Day | 日期 | 时间 | 场次 | 要点 |", "|---|---|---|---|---|"])
     for d in days:
         if not isinstance(d, dict):
             continue
@@ -2035,11 +2099,12 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
             f"| Day {d.get('day')} | {d.get('date')} | {d.get('call')}-{d.get('wrap')} | "
             f"{'、'.join(str(x) for x in (d.get('scenes') or []))} | {d.get('notes', '')} |")
     if risks:
-        lines += ["", "**风险与预案**：" + "；".join(
+        lines += ["", ("**Risks**: " if _LANG == "en" else "**风险与预案**：") + "；".join(
             f"{r.get('risk')}→{r.get('mitigation')}" for r in risks[:6] if isinstance(r, dict))]
-    lines += ["", "确认档期后，点下方「下载日历（.ics）」可直接导入系统日历。"]
+    lines += ["", ("Once dates are confirmed, click \"Download calendar (.ics)\" below to import into your calendar." if _LANG == "en"
+                 else "确认档期后，点下方「下载日历（.ics）」可直接导入系统日历。")]
     if pref:
-        lines.insert(2, f"**你的偏好**：{pref}\n")
+        lines.insert(2, (f"**Your preferences**: {pref}\n" if _LANG == "en" else f"**你的偏好**：{pref}\n"))
     return {
         "kind": "schedule", "summary": summary, "crew": crew, "equipment": equipment,
         "locations": locations, "days": days, "risks": risks, "calendar": calendar,

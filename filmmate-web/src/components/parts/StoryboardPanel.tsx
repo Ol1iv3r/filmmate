@@ -1,3 +1,5 @@
+import { useI18n } from '../../lib/i18n'
+
 interface Logline {
   title?: string
   title_en?: string
@@ -34,6 +36,7 @@ function csvCell(value: unknown) {
 
 /** 分镜结果：梗要 + 可滚动分镜表 + 下载 CSV。 */
 export function StoryboardPanel({ payload }: { payload: StoryboardPayload }) {
+  const { t } = useI18n()
   const shots = payload.shots ?? []
   const logline = payload.logline
 
@@ -61,22 +64,22 @@ export function StoryboardPanel({ payload }: { payload: StoryboardPayload }) {
       {logline && (
         <div className="logline-box">
           <div className="logline-title">
-            梗要　《{logline.title ?? '未命名'}》
+            {t('梗要', 'Logline')}　《{logline.title ?? '未命名'}》
             {logline.title_en ? '（' + logline.title_en + '）' : ''}
           </div>
-          {logline.theme && <div className="logline-theme">主题：{logline.theme}</div>}
+          {logline.theme && <div className="logline-theme">{t('主题：', 'Theme: ')}{logline.theme}</div>}
           {logline.summary && <div className="logline-summary">{logline.summary}</div>}
         </div>
       )}
       <div className="panel-head">
-        <span>分镜表（{shots.length} 个镜头）</span>
-        <button className="panel-btn" onClick={downloadCsv}>下载 CSV</button>
+        <span>{t('分镜表', 'Storyboard')}{'（'}{shots.length}{t(' 个镜头）', ' shots)')}</span>
+        <button className="panel-btn" data-filmy-download onClick={downloadCsv}>{t('下载 CSV', 'Download CSV')}</button>
       </div>
       <div className="table-scroll">
         <table className="sb-table">
           <thead>
             <tr>
-              <th>#</th><th>场次</th><th>景别</th><th>机位</th><th>运镜</th><th>时长</th><th>画面</th><th>声音</th>
+              <th>#</th><th>{t('场次', 'Scene')}</th><th>{t('景别', 'Shot')}</th><th>{t('机位', 'Angle')}</th><th>{t('运镜', 'Move')}</th><th>{t('时长', 'Dur')}</th><th>{t('画面', 'Frame')}</th><th>{t('声音', 'Sound')}</th>
             </tr>
           </thead>
           <tbody>
