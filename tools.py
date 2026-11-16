@@ -35,38 +35,19 @@ def _has_any(text, words):
 
 
 def detect_tool(message: str):
-    """返回 tool 名:review / storyboard / rundown / schedule / inspiration / None(知识问答)。"""
-    msg = message.strip()
+    """返回 tool 名:review / storyboard / rundown / schedule / inspiration / None(知识问答)。
+
+    模糊识别：用户说「帮我想一个关于香港的短片」「写个香港的TVC剧本」也能猜中。
+    """
+    msg = (message or "").strip()
     if not msg:
         return None
-    # 找灵感：UI 下发了题材前缀 / 明确说了找灵感
-    if msg.startswith("【题材") or "找灵感" in msg:
-        return "inspiration"
-    # 剧本生成 / 改标准格式
-    if re.search(r"写剧本|生成剧本|剧本生成|改成标准|标准格式|改成剧本格式|整理成剧本", msg):
+    tool, _kind, _idea = guess_intent(msg)
+    if tool:
+        return tool
+    # 兜底：粘贴了长剧本 → 剧本检查
+    if len(msg) > 150 and (re.search(r"第\s*\d+\s*[场幕景]", msg) or re.search(r"scene\s*\d+", msg, re.I)):
         return "review"
-    # 用户确认主题后出分镜
-    if re.match(r"^\s*出\s*分镜", msg):
-        return "storyboard"
-    low = msg.lower()
-    # 1) 明确讨论剧本 + 检查类词 → 剧本检查
-    if _has_any(msg, ["剧本", "script", "稿子", "大纲", "梗概"]) and _has_any(msg, _REVIEW_WORDS):
-        return "review"
-    # 2) 粘贴了一大段疑似剧本(长文本、含场次/对白标记)→ 默认按剧本检查
-    if len(msg) > 150 and (re.search(r"第\s*\d+\s*[场幕景]", msg) or re.search(r"scene\s*\d+", low) or re.search(r"^\s*[^:]{1,8}[:：].+$", msg, re.M)):
-        return "review"
-    if _has_any(msg, _STORY_WORDS):
-        return "storyboard"
-    if _has_any(msg, _CASE_WORDS):
-        return "inspiration"
-    if _has_any(msg, _SCHEDULE_WORDS) and "日程" in msg:
-        return "schedule"
-    if _has_any(msg, _RUNDOWN_WORDS):
-        return "rundown"
-    if _has_any(msg, _SCHEDULE_WORDS):
-        return "schedule"
-    if _has_any(msg, _IDEA_WORDS):
-        return "inspiration"
     return None
 
 
@@ -1218,6 +1199,117 @@ KIND_CHOICES = ["电影", "电视剧", "长片", "短片", "竖屏短剧",
                 "广告/TVC", "教程/产品演示", "Vlog/美食", "动画"]
 _KIND_PREFIX = re.compile(r"^\s*【题材[:：]\s*([^】]{1,16})】\s*", re.S)
 
+KIND_GUIDE = {
+    "inspiration": {
+        "电影": "院线长片的气质：完整世界观、人物弧光、长片体量；主题要像一个能撑 100 分钟的故事。",
+        "电视剧": "剧集气质：单集 45 分钟、连续人物弧光、集末钩子；主题要有可持续的关系线。",
+        "长片": "独立/艺术/纪录长片：真实人物、观察式、作者表达；主题要落在真实处境上。",
+        "短片": "短片气质：6-15 分钟、一个概念/一个情绪转折；主题必须小而准。",
+        "竖屏短剧": "竖屏短剧：1-2 分钟/集、3 秒进冲突、强钩子、强反转；主题要能拆成很多小爽点。",
+        "广告/TVC": "广告/TVC：15/30/60 秒；必须围绕「产品/品牌 + 目标人群 + 一个洞察 + 视觉钩子 + 一句 slogan」来构思，主题是广告创意方向，不是剧情短片。",
+        "教程/产品演示": "教程/产品演示：围绕「功能 → 使用场景 → 步骤 → 结果」组织，主题是演示主线。",
+        "Vlog/美食": "Vlog/美食：真实体验/制作流程 + 人物状态；主题是一段可拍的生活切片。",
+        "动画": "动画：风格化世界观/无对白叙事/视觉比喻；主题要能用画面和动作讲完。",
+    },
+    "script": {
+        "电影": "写标准电影剧本：场号 + 内/外景 + 地点 + 时间；动作现在时；角色名单独一行、对白在其下；全片 12-20 场。",
+        "电视剧": "写单集电视剧剧本：场次标题格式同电影，单集 40-50 分钟，集末留钩子。",
+        "长片": "写纪录片/艺术长片脚本：场次 + 观察段落 + 访谈/旁白提示，不用虚构对白。",
+        "短片": "写 6-10 分钟短片剧本：场次标题格式同电影，10-14 场，结尾有反转或留白。",
+        "竖屏短剧": "写单集竖屏短剧剧本：1-2 分钟、3 秒进冲突、台词短、每 15 秒一个钩子；用「第1集」标注。",
+        "广告/TVC": "写广告脚本表，不是电影剧本：列「镜头/时长/画面/旁白或台词/字幕/音效」，总时长 30 秒（可附 15 秒版），最后给一句 slogan；必须写清产品与目标人群。",
+        "教程/产品演示": "写产品演示脚本：分步骤（步骤名 + 画面 + 口播 + 屏幕提示），总时长 60-180 秒。",
+        "Vlog/美食": "写 Vlog 脚本：分段落（开场/过程/细节/收尾），每段给画面、旁白、环境声与转场。",
+        "动画": "写动画短片剧本：场次标题 + 画面动作描述 + 必要旁白；可以无对白，强调视觉叙事。",
+    },
+}
+
+KIND_ALIASES = [
+    ("廣告/TVC", "广告/TVC"), ("广告/TVC", "广告/TVC"), ("TVC", "广告/TVC"), ("tvc", "广告/TVC"),
+    ("广告片", "广告/TVC"), ("廣告片", "广告/TVC"), ("广告", "广告/TVC"), ("廣告", "广告/TVC"),
+    ("教程", "教程/产品演示"), ("产品演示", "教程/产品演示"), ("產品演示", "教程/产品演示"),
+    ("Vlog", "Vlog/美食"), ("vlog", "Vlog/美食"), ("美食", "Vlog/美食"),
+    ("动画", "动画"), ("動畫", "动画"),
+    ("竖屏短剧", "竖屏短剧"), ("竖屏", "竖屏短剧"), ("短剧", "竖屏短剧"), ("短劇", "竖屏短剧"),
+    ("长片", "长片"), ("長片", "长片"), ("纪录片", "长片"), ("紀錄片", "长片"),
+    ("电视剧", "电视剧"), ("電視劇", "电视剧"), ("剧集", "电视剧"), ("劇集", "电视剧"),
+    ("微电影", "短片"), ("微電影", "短片"), ("短片", "短片"),
+    ("电影", "电影"), ("電影", "电影"),
+]
+
+
+def kind_from_text(text: str):
+    msg = text or ""
+    for alias, kind in KIND_ALIASES:
+        if alias in msg:
+            return kind
+    return None
+
+
+def _kind_from_history(history):
+    for turn in reversed(history or []):
+        if turn.get("role") != "assistant":
+            continue
+        content = str(turn.get("content", ""))
+        m = re.search(r"题材\*{0,2}\s*[:：]\s*([^\s｜|\n]+)", content)
+        if m:
+            return kind_from_text(m.group(1)) or m.group(1).strip()
+    return None
+
+
+def _taste_block():
+    try:
+        import personal_library
+        return personal_library.taste_context()
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def _theme_from_text(message: str, kind: str = None):
+    msg = (message or "").strip()
+    m = re.search(r"(?:关于|關於|围绕|圍繞)\s*([^的，。,.\n]{1,20}?)\s*的?(?:电影|電影|短片|广告|廣告|tvc|TVC|剧集|劇集|动画|動畫|片)", msg)
+    if m:
+        return m.group(1).strip()
+    cleaned = re.sub(r"^(?:帮我|幫我|请|請|给我|給我)?\s*(?:做|写|寫|拍|生成|出一个|出一個|来一个|來一個)\s*", "", msg)
+    cleaned = re.sub(r"^(?:一个|一個|一部|一支)?\s*", "", cleaned)
+    for alias, _ in KIND_ALIASES:
+        cleaned = cleaned.replace(alias, "")
+    cleaned = re.sub(r"(剧本|劇本)$", "", cleaned).strip(" ：:，,。.\n")
+    if len(cleaned) >= 2:
+        return cleaned
+    return ""
+
+
+def guess_intent(message: str):
+    """模糊意图识别：返回 (tool, kind, idea)。tool 可为 inspiration/review/storyboard/schedule/rundown/None。"""
+    msg = (message or "").strip()
+    if not msg:
+        return None, None, ""
+    low = msg.lower()
+    kind = kind_from_text(msg)
+    idea = _theme_from_text(msg, kind) if kind else ""
+    if re.search(r"拍摄计划|拍攝計劃|拍摄方案|拍攝方案|排期|場記|場記表|通告单|通告單|rundown|call sheet|拍几天|拍幾天", msg, re.I):
+        return "rundown" if re.search(r"rundown|call sheet", msg, re.I) else "schedule", kind, idea
+    if re.search(r"分镜头?建议|分镜头?生成|分镜|storyboard|shot list", msg):
+        return "storyboard", kind, idea
+    # 先判「写/生成/改剧本」类动作（否则「写一个关于香港的TVC剧本」会被误判成找灵感）
+    if re.search(r"(写|寫|生成|改|检查|檢查|优化|優化|审|審)[^，。,\n]{0,20}(剧本|劇本)"
+                 r"|剧本|劇本.{0,6}(检查|檢查|生成|改)|写剧本|寫劇本|生成剧本|生成劇本|剧本生成|劇本生成|改剧本|改劇本|"
+                 r"改标准|改標準|标准格式|標準格式", msg, re.I):
+        return "review", kind, idea
+    if re.search(r"灵感|靈感|想拍|想拍一个|想拍一個|帮我做|幫我做|做一个|做一個|来一个|來一個|关于.{0,12}(电影|電影|短片|广告|廣告|短片|剧|劇)|创意|創意|idea", msg, re.I):
+        return "inspiration", kind, idea
+    if re.search(r"剧本|劇本|script", msg, re.I):
+        if re.search(r"检查|檢查|冲突|衝突|漏洞|意见|意見|问题|問題|审|審|review", msg, re.I):
+            return "review", kind, idea
+        if len(msg) > 150:
+            return "review", kind, idea
+        return "inspiration", kind, idea
+    if re.search(r"拍摄计划|拍攝計劃|日程|排期|schedule", msg, re.I):
+        return "schedule", kind, idea
+    return None, kind, idea
+
+
 
 def parse_inspiration_kind(message: str):
     """解析题材：优先 UI 下发的【题材：电影】前缀；否则识别消息中出现的题材词。"""
@@ -1295,9 +1387,16 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None):
                     f"｜标签：{'、'.join((c.get('tags') or [])[:6])}"
                     f"｜地点线索：{'、'.join(c.get('place_hints') or [])}"
                     f"｜梗概：{c.get('synopsis')}")
+            kind_req = KIND_GUIDE["inspiration"].get(kind, "")
+            taste = _taste_block()
             user_content = (
-                f"用户想找的类型：{kind}\n用户描述的感觉/关键词：{idea or '（未填）'}\n\n"
-                "候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines))
+                f"用户想找的类型：{kind}\n"
+                f"该类型的创作要求（必须遵守，不许写成别的片种）：{kind_req}\n"
+                f"用户描述的感觉/关键词：{idea or '（未填）'}\n\n"
+                + ("【TVC 额外要求】每个 style 的 theme 必须点名：产品/品牌、目标人群、一句 slogan 方向；"
+                   "why_fits 要说明视觉钩子如何服务产品卖点。\n\n" if kind == "广告/TVC" else "")
+                + (taste + "\n\n" if taste else "")
+                + "候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines))
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_INSPIRATION_FILMS},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
@@ -1546,7 +1645,7 @@ def _format_review(report) -> str:
     return "\n".join(lines)
 
 
-async def script_tool(message: str, api_key: str = None, script_text: str = "", history: list = None):
+async def script_tool(message: str, api_key: str = None, script_text: str = "", history: list = None, kind: str = None):
     """剧本检查/生成：有剧本查冲突并问是否改标准格式；没剧本按主题生成。"""
     msg = (message or "").strip()
     script = (script_text or "").strip()
@@ -1595,6 +1694,8 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
         theme = m.group(1).strip()
     if not theme:
         theme = await _theme_from_history(history, msg)
+    if not theme:
+        theme = _theme_from_text(msg, kind)
     if not theme and len(msg) >= 8:
         theme = msg
     if not theme:
@@ -1603,16 +1704,24 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
     if not llm.available(api_key):
         return {"text": "剧本生成需要在线模型，当前模型不可用。", "mode": "offline"}
     try:
+        film_kind = kind or _kind_from_history(history) or kind_from_text(msg) or "短片"
+        guide = KIND_GUIDE["script"].get(film_kind, KIND_GUIDE["script"]["短片"])
+        taste = _taste_block()
+        user_prompt = (
+            f"主题：{theme}\n输出类型：{film_kind}\n类型与格式要求（必须遵守）：{guide}\n"
+            + (("用户收藏的参考片（贴近其品味）：\n" + taste + "\n") if taste else "")
+            + "请只输出这个类型该有的剧本/脚本格式，不要写成别的片种。"
+        )
         data = await llm.complete_json(
             [{"role": "system", "content": prompts.PROMPT_SCRIPT_GENERATE},
-             {"role": "user", "content": f"主题：{theme}\n请按这个主题写 6–8 分钟短片剧本。"}],
+             {"role": "user", "content": user_prompt}],
             api_key=api_key)
         logline = _norm_logline(data.get("logline"))
         text = str(data.get("script_text") or "").strip()
         if not text:
             raise ValueError("模型没有返回剧本正文")
-        return {"kind": "script", "logline": logline, "script_text": text,
-                "characters": data.get("characters") or [],
+        return {"kind": "script", "film_kind": film_kind, "logline": logline,
+                "script_text": text, "characters": data.get("characters") or [],
                 "text": _script_intro(logline) + "\n\n剧本生成好了！想改哪场直接说；要出分镜就回复「出分镜」。",
                 "mode": "online"}
     except Exception as e:  # noqa: BLE001
@@ -1620,8 +1729,132 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
         return {"text": "剧本生成失败了，稍后再试一次。", "mode": "offline"}
 
 
+_HEADING_RE = re.compile(r"^\s*(?:第\s*(\d+)\s*场[\s\.、:：-]*|(\d+)\s*[\.、]\s*)(.*)$")
+
+
+def split_script_scenes(text: str):
+    """兼容多种格式的剧本分场：1. 内景 便利店 - 深夜 / 第1场 内景 便利店 夜 / 内景 …"""
+    lines = (text or "").splitlines()
+    scenes, cur = [], None
+    for line in lines:
+        m = _HEADING_RE.match(line)
+        heading = None
+        if m:
+            rest = (m.group(3) or "").strip()
+            num = m.group(1) or m.group(2)
+            looks_location = bool(re.search(r"(内景|外景|INT\.?|EXT\.?|日|夜)", rest, re.I)) or len(rest) >= 2
+            if looks_location and rest and not rest.startswith(("：", ":")):
+                heading = (int(num), f"第{int(num)}场 {rest}")
+        if heading:
+            if cur:
+                scenes.append(cur)
+            cur = {"scene_no": heading[0], "heading": heading[1], "body": []}
+        elif cur is not None:
+            cur["body"].append(line)
+    if cur:
+        scenes.append(cur)
+    # 若标题里没写 内/外景 而正文第一行写了，合并进标题
+    for s in scenes:
+        body_lines = [x.strip() for x in s["body"] if x.strip()]
+        s["body_text"] = "\n".join(body_lines)
+        if body_lines and not re.search(r"(内景|外景|INT\.?|EXT\.?)", s["heading"], re.I):
+            first = body_lines[0]
+            if re.match(r"^\s*(内景|外景|INT\.?|EXT\.?)", first, re.I):
+                s["heading"] = s["heading"] + " " + first[:20]
+                s["body_text"] = "\n".join(body_lines[1:])
+        if not s["body_text"]:
+            s["body_text"] = "（此场无正文）"
+    # 重新编号，保证连续
+    for i, s in enumerate(scenes, 1):
+        s["scene_no"] = i
+        s["heading"] = re.sub(r"^第\d+场", f"第{i}场", s["heading"])
+    return scenes
+
+
+def _scene_blocks(script_text: str):
+    scenes = split_script_scenes(script_text)
+    blocks = []
+    for s in scenes[:14]:
+        dialogues = extract_dialogues(s["body_text"])
+        dlg = "；".join(f"{d[0]}：{d[1][:36]}" for d in dialogues[:3])
+        cast = [d[0] for d in dialogues[:5]]
+        blocks.append({
+            "scene_no": s["scene_no"], "heading": s["heading"],
+            "cast": "、".join(dict.fromkeys(cast)), "body": s["body_text"],
+            "dialogue": dlg, "scenes": scenes,
+        })
+    return scenes, blocks
+
+
+def _scene_keywords(scene):
+    body = scene.get("body_text", "")
+    words = re.findall(r"[\u4e00-\u9fff]{2,4}", body)
+    stop = {"一个", "他们", "自己", "什么", "然后", "时候", "这里", "那里", "已经", "没有", "开始", "慢慢", "看见", "抬头", "转身", "声音", "镜头"}
+    return [w for w in dict.fromkeys(words) if w not in stop][:24]
+
+
+def _rule_shots_from_scenes(scenes):
+    """规则分镜：严格按剧本场次生成 master + 对白 + 细节，保证与剧本一致。"""
+    shots = []
+    sid = 0
+    for scene in scenes:
+        no = scene["scene_no"]
+        heading = scene["heading"]
+        body = scene["body_text"]
+        dialogues = extract_dialogues(body)
+        sentences = [x.strip() for x in re.split(r"[。！？\n]", body) if x.strip()]
+        master = sentences[0][:80] if sentences else heading
+        sid += 1
+        shots.append({
+            "id": sid, "scene_no": no, "scene": heading,
+            "shot_type": "全景", "angle": "平视", "movement": "固定", "lens": "24mm",
+            "duration": "6s",
+            "description": f"全景交代{heading}：{master}",
+            "dialogue": "", "lighting": "现场实用光 + 一盏柔光补脸", "sound": "环境声铺底",
+            "purpose": "建立空间与人物位置", "transition": "切",
+        })
+        if dialogues:
+            name, line = dialogues[0][0], dialogues[0][1]
+            sid += 1
+            shots.append({
+                "id": sid, "scene_no": no, "scene": heading,
+                "shot_type": "近景", "angle": "过肩", "movement": "固定", "lens": "50mm",
+                "duration": "4s",
+                "description": f"{name}说「{line[:40]}」时的反应与表情，背景虚焦",
+                "dialogue": line[:60], "lighting": "主光偏侧，保留半张脸阴影", "sound": "对白为主，环境声压低",
+                "purpose": "推进这一场的信息与情绪", "transition": "切",
+            })
+        detail = sentences[-1][:80] if sentences else ""
+        sid += 1
+        shots.append({
+            "id": sid, "scene_no": no, "scene": heading,
+            "shot_type": "特写", "angle": "平视", "movement": "微推", "lens": "85mm",
+            "duration": "3s",
+            "description": f"细节特写：{detail or master}",
+            "dialogue": "", "lighting": "局部光，突出质感", "sound": "细节声放大",
+            "purpose": "收住这一场的情绪或信息点", "transition": "切",
+        })
+    return shots
+
+
+def _shots_match_scenes(shots, scenes):
+    if not shots:
+        return False
+    by_no = {s["scene_no"]: s for s in scenes}
+    matched = 0
+    for shot in shots:
+        scene = by_no.get(shot.get("scene_no"))
+        if not scene:
+            continue
+        keys = _scene_keywords(scene)
+        desc = shot.get("description", "") + shot.get("dialogue", "")
+        if any(k in desc for k in keys):
+            matched += 1
+    return matched >= max(2, int(len(shots) * 0.5))
+
+
 async def storyboard_tool(message: str, api_key: str = None, script_text: str = "", history: list = None):
-    """分镜建议/生成：必须先有剧本；输出梗要 + 分镜（前端可下载 CSV）。"""
+    """分镜建议/生成：必须先有剧本；严格按剧本逐场出分镜（避免内容和剧本对不上）。"""
     script = (script_text or "").strip()
     if not script:
         return {
@@ -1632,24 +1865,172 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
     if not looks_like_script(script):
         return {"text": "上传的内容看起来不像分场剧本（没找到场次/对白/场景标题），先确认一下剧本文件。",
                 "needs_script": True, "mode": "offline"}
+
+    scenes, blocks = _scene_blocks(script)
+    shots, notes, mode = [], "", "offline"
+    if llm.available(api_key) and scenes:
+        try:
+            scene_text = "\n\n".join(
+                f"【第{b['scene_no']}场】{b['heading']}\n人物：{b['cast'] or '—'}\n"
+                f"正文：{b['body'][:420]}" + (("\n对白：" + b["dialogue"]) if b["dialogue"] else "")
+                for b in blocks)
+            user_prompt = (
+                "这是用户上传的剧本，请严格逐场出分镜，不能换故事：\n\n"
+                f"剧本全文：\n{script[:6500]}\n\n逐场信息（每一场都要覆盖）：\n{scene_text}")
+            data = await llm.complete_json(
+                [{"role": "system", "content": prompts.PROMPT_STORYBOARD_SCRIPT},
+                 {"role": "user", "content": user_prompt}],
+                api_key=api_key, temperature=0.2)
+            raw_shots = data.get("shots") or []
+            normalized = []
+            for i, s in enumerate(raw_shots):
+                if not isinstance(s, dict):
+                    continue
+                try:
+                    scene_no = int(s.get("scene_no") or 0)
+                except (TypeError, ValueError):
+                    scene_no = 0
+                if not (1 <= scene_no <= len(scenes)):
+                    continue
+                normalized.append({
+                    "id": int(s.get("id", i + 1) or i + 1), "scene_no": scene_no,
+                    "scene": scenes[scene_no - 1]["heading"],
+                    "shot_type": str(s.get("shot_type", "中景")), "angle": str(s.get("angle", "平视")),
+                    "movement": str(s.get("movement", "固定")), "lens": str(s.get("lens", "")),
+                    "duration": str(s.get("duration", "4s")), "description": str(s.get("description", "")),
+                    "dialogue": str(s.get("dialogue", "")), "lighting": str(s.get("lighting", "")),
+                    "sound": str(s.get("sound", "")), "purpose": str(s.get("purpose", "")),
+                    "transition": str(s.get("transition", "切")),
+                })
+            notes = str(data.get("coverage_notes") or "")
+            if _shots_match_scenes(normalized, scenes):
+                shots = normalized
+                mode = "online"
+            else:
+                logger.warning("分镜与剧本内容不匹配，改用规则分镜")
+        except Exception as e:  # noqa: BLE001
+            logger.warning("在线分镜失败(%s),回退规则版", e)
+
+    if not shots:
+        shots = _rule_shots_from_scenes(scenes)
+        mode = "offline"
+
     logline = await _logline_for_script(script, api_key)
-    ctx, refs = await asyncio.to_thread(_build_context, "storyboard", script)
-    result = await storyboard(script, api_key, ctx, refs)
-    shots = result.get("shots") or []
-    result["logline"] = logline
-    result["kind"] = "storyboard"
+    result = {
+        "kind": "storyboard", "logline": logline, "shots": shots,
+        "coverage_notes": notes, "mode": mode, "scene_count": len(scenes),
+    }
     result["text"] = (_script_intro(logline)
-                      + f"\n\n分镜表（{len(shots)} 个镜头）在下方，点「下载 CSV」可直接拿到表格。")
+                      + f"\n\n分镜表（{len(shots)} 个镜头，覆盖剧本 {len(scenes)} 场）在下方，"
+                        "点「下载 CSV」可直接拿到表格。")
     return result
 
 
-async def run_tool(tool: str, message: str, api_key: str = None, history: list = None):
+async def schedule_tool(message: str, api_key: str = None, storyboard: dict = None, history: list = None):
+    """拍摄计划：根据最近一版分镜生成详细拍摄方案 + 可下载的日历事件。"""
+    import datetime as _dt
+    from datetime import timedelta
+
+    shots = []
+    if isinstance(storyboard, dict):
+        shots = storyboard.get("shots") or []
+    if not shots:
+        return {"text": "拍摄计划需要最近的一版分镜：请先用「分镜建议/生成」生成分镜，再点「拍摄计划」。",
+                "needs_storyboard": True, "mode": "offline"}
+    shots = shots[:40]
+    today = _dt.datetime.now().astimezone()
+    shot_lines = [
+        f"- 镜{s.get('id')}｜{s.get('scene')}｜{s.get('shot_type')}/{s.get('angle')}/{s.get('movement')}"
+        f"｜{s.get('duration')}｜{str(s.get('description'))[:60]}"
+        for s in shots
+    ]
+    summary, crew, equipment, locations, days, risks, calendar = "", [], [], [], [], [], []
+    mode = "offline"
+    if llm.available(api_key):
+        try:
+            user_prompt = (f"当前日期：{today.date().isoformat()}\n分镜表（共 {len(shots)} 镜）：\n"
+                           + "\n".join(shot_lines))
+            data = await llm.complete_json(
+                [{"role": "system", "content": prompts.PROMPT_SHOOTING_PLAN},
+                 {"role": "user", "content": user_prompt}], api_key=api_key, temperature=0.4)
+            summary = str(data.get("summary") or "")
+            crew = data.get("crew") or []
+            equipment = data.get("equipment") or []
+            locations = data.get("locations") or []
+            days = data.get("days") or []
+            risks = data.get("risks") or []
+            calendar = data.get("calendar") or []
+            if days:
+                mode = "online"
+        except Exception as e:  # noqa: BLE001
+            logger.warning("在线拍摄计划失败(%s),回退规则版", e)
+    if not days:
+        d1 = (today.date() + timedelta(days=1)).isoformat()
+        scenes = [s for s in dict.fromkeys(x.get("scene") for x in shots) if s]
+        days = [{
+            "day": 1, "date": d1, "call": "08:00", "wrap": "18:00",
+            "scenes": scenes,
+            "blocks": [
+                {"start": "08:00", "end": "09:00", "activity": "crew call / 器材与场景准备"},
+                {"start": "09:00", "end": "13:00", "activity": "上午：按场次拍 master + 主要 coverage"},
+                {"start": "13:00", "end": "14:00", "activity": "午饭"},
+                {"start": "14:00", "end": "18:00", "activity": "下午：补近景/特写与插入镜头"},
+            ],
+            "notes": "按场次分组拍摄，夜戏留到傍晚抢天光",
+        }]
+        calendar = [{
+            "title": "Day 1 拍摄", "start": d1 + "T09:00:00", "end": d1 + "T18:00:00",
+            "location": "待定", "description": "根据分镜生成的拍摄日",
+        }]
+        summary = summary or f"共 {len(shots)} 个镜头，集中在 1 天完成；先 master 后 coverage。"
+
+    lines = ["### 详细拍摄方案", "", f"**概述**：{summary or '按分镜表安排拍摄'}"]
+    if crew:
+        lines.append("**人员**：" + "；".join(
+            f"{c.get('role')}×{c.get('count', 1)}{('（' + str(c.get('note')) + '）') if c.get('note') else ''}"
+            for c in crew[:8] if isinstance(c, dict)))
+    if equipment:
+        lines.append("**器材**：" + "、".join(str(x) for x in equipment[:10]))
+    if locations:
+        lines.append("**场景**：" + "；".join(
+            f"{l.get('name')}{('（' + str(l.get('note')) + '）') if l.get('note') else ''}"
+            for l in locations[:8] if isinstance(l, dict)))
+    lines += ["", "| Day | 日期 | 时间 | 场次 | 要点 |", "|---|---|---|---|---|"]
+    for d in days:
+        if not isinstance(d, dict):
+            continue
+        lines.append(
+            f"| Day {d.get('day')} | {d.get('date')} | {d.get('call')}-{d.get('wrap')} | "
+            f"{'、'.join(str(x) for x in (d.get('scenes') or []))} | {d.get('notes', '')} |")
+    if risks:
+        lines += ["", "**风险与预案**：" + "；".join(
+            f"{r.get('risk')}→{r.get('mitigation')}" for r in risks[:6] if isinstance(r, dict))]
+    lines += ["", "确认档期后，点下方「下载日历（.ics）」可直接导入系统日历。"]
+    return {
+        "kind": "schedule", "summary": summary, "crew": crew, "equipment": equipment,
+        "locations": locations, "days": days, "risks": risks, "calendar": calendar,
+        "shots_count": len(shots), "mode": mode, "text": "\n".join(lines),
+    }
+
+
+
+async def run_tool(tool: str, message: str, api_key: str = None, history: list = None, kind: str = None):
     if tool == "cases":
         return await cases_tool(message, api_key)
     # 找灵感 v2：先确定题材（划库），只在对应题材的影片库里找片
     if tool == "inspiration":
-        kind, idea = parse_inspiration_kind(message)
-        return await inspiration_films(idea, api_key, kind)
+        prefix_match = _KIND_PREFIX.match(message or "")
+        prefix_kind = prefix_match.group(1).strip() if prefix_match else None
+        idea = (message[prefix_match.end():] if prefix_match else message or "").strip()
+        use_kind = kind or prefix_kind or kind_from_text(message)
+        if not prefix_kind:
+            extracted = _theme_from_text(idea, use_kind)
+            if extracted:
+                idea = extracted
+        idea = re.sub(r"^\s*找\s*灵\s*感\s*[:：]\s*", "", idea).strip()
+        return await inspiration_films(idea, api_key, use_kind)
+    if tool == "schedule":
+        return await schedule_tool(message, api_key, None, history)
     # 用户确认主题后出分镜
     if tool == "storyboard" and re.match(r"^\s*出\s*分镜", message or ""):
         return await storyboard_from_theme(message, history, api_key)

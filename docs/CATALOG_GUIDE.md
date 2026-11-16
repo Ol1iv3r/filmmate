@@ -175,3 +175,13 @@
 - 分镜建议/生成：强制先上传剧本；梗要（PROMPT_SCRIPT_LOG_LINE）+ 分镜；前端 StoryboardPanel 可下载 CSV。
 - 上传：回形针 → /api/script/parse → 原文随消息以【上传剧本】标记发给后端；PDF 导出走 /api/script/pdf（reportlab + STSong-Light）。
 - 找灵感结尾改为先问「要不要按主题 1 先写一版剧本？」（回复「写剧本」），写完后用户再回复「出分镜」。
+
+## 11. v6（2026-11-16 晚）：意图/板块/拍摄日历/参考片
+
+- 分镜一致性：tools.split_script_scenes + PROMPT_STORYBOARD_SCRIPT + 关键词校验 + _rule_shots_from_scenes 兜底。
+- 题材化：KIND_GUIDE（inspiration/script）+ 生成脚本时按 kind 输出对应格式（TVC 为广告脚本表）。
+- 模糊意图：tools.guess_intent（含 kind/idea 抽取），chat() 在无 metadata 时调用。
+- 板块模式：前端 Composer 的 activeTool + 消息 metadata（tool/kind/script_text/storyboard），后端 react_chat_body 解析。
+- 拍摄计划：schedule_tool（PROMPT_SHOOTING_PLAN）→ days/calendar；前端 SchedulePanel 生成 .ics。
+- 参考片：personal_library（Bilibili 带 cookie 抓元数据 / YouTube oEmbed）+ personal_api 模型风格分析 + taste_context 注入灵感/剧本提示词。
+- 每题材提示：Composer.KIND_HINTS。

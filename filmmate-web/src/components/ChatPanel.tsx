@@ -4,7 +4,7 @@ import type { ChatTransport, UIMessage } from 'ai'
 import { createTransport } from '../lib/transport'
 import { createRepository, titleFromMessages, type ConversationRepository } from '../lib/conversations'
 import { MessageList, MessageSkeleton } from './MessageList'
-import { Composer, type ComposerHandle } from './Composer'
+import { Composer, type ComposerHandle, type SendMeta } from './Composer'
 import { EmptyState } from './EmptyState'
 import { ErrorBanner } from './ErrorBanner'
 
@@ -120,12 +120,35 @@ function ChatInner({
     }
   }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const collectOutputs = useCallback((items: UIMessage[]) => {
+    const outs: Record<string, any>[] = []
+    for (const m of items) {
+      for (const part of m.parts as any[]) {
+        if (!part || typeof part !== 'object') continue
+        const output = part.output ?? part.result
+        if (output && typeof output === 'object') outs.push(output)
+      }
+    }
+    return outs
+  }, [])
+
   const handleSend = useCallback(
-    (text: string) => {
+    (text: string, meta?: SendMeta) => {
       lastUserRef.current = text
-      sendMessage({ text })
+      // 把「最近一次剧本/分镜」随消息带给后端，保证板块之间能接上
+      const outs = collectOutputs(messages)
+      const lastScript = [...outs].reverse().find((o) => typeof o.script_text === 'string' && o.script_text)
+      const lastStoryboard = [...outs].reverse().find((o) => Array.isArray(o.shots) && o.shots.length)
+      const metadata: Record<string, unknown> = { tool: meta?.tool ?? null, kind: meta?.kind ?? null }
+      if (meta?.tool === 'storyboard' || meta?.tool === 'review' || (!meta?.tool && /分镜|剧本/.test(text))) {
+        if (lastScript?.script_text) metadata.script_text = lastScript.script_text
+      }
+      if (meta?.tool === 'schedule' || (!meta?.tool && /拍摄计划|拍摄方案|排期/.test(text))) {
+        if (lastStoryboard) metadata.storyboard = lastStoryboard
+      }
+      sendMessage({ text, metadata })
     },
-    [sendMessage],
+    [messages, sendMessage, collectOutputs],
   )
 
   const handleRetry = useCallback(() => {

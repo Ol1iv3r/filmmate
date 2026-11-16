@@ -128,14 +128,19 @@ def react_chat_body(body):
         {"role": message["role"], "content": "\n".join(
             part["text"] for part in message["parts"]
             if isinstance(part, dict) and part.get("type") == "text" and isinstance(part.get("text"), str)
-        )}
+        ), "metadata": message.get("metadata") if isinstance(message.get("metadata"), dict) else {}}
         for message in messages
         if isinstance(message, dict) and message.get("role") in ("user", "assistant")
         and isinstance(message.get("parts"), list)
     ]
     for index in range(len(turns) - 1, -1, -1):
         if turns[index]["role"] == "user":
-            return {"message": turns[index]["content"], "history": turns[:index]}
+            meta = turns[index].get("metadata") or {}
+            body = {"message": turns[index]["content"], "history": turns[:index]}
+            for key in ("tool", "kind", "storyboard", "script_text"):
+                if meta.get(key) is not None:
+                    body[key] = meta[key]
+            return body
     return {}
 
 
@@ -239,11 +244,12 @@ async def handle_qa(message: str, history: list, api_key: str):
 # --------------------------------------------------------------------------
 # 创作工具(剧本检查/分镜/rundown/日程/灵感/案例)
 # --------------------------------------------------------------------------
-async def handle_tool(tool: str, message: str, api_key: str, script_text: str = "", script_name: str = "", history: list = None):
+async def handle_tool(tool: str, message: str, api_key: str, script_text: str = "", script_name: str = "",
+                      history: list = None, kind: str = None, storyboard: dict = None):
     # 只有剧本类任务才用上传文件覆盖输入；灵感/案例仍按用户当前输入检索
     script_tools = ("review", "storyboard", "rundown", "schedule")
     content = script_text if (script_text and tool in script_tools) else message
-    needs_script = tool in ("rundown", "schedule")
+    needs_script = tool in ("rundown",)
     if needs_script and len(content) < 40 and not re.search(r"第\s*\d+\s*[场幕景]", content):
         hint = (
             "请先上传剧本文件（PDF / DOCX / TXT），或在输入框里粘贴剧本全文，再点这个功能。\n\n"
@@ -255,11 +261,13 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
         return
 
     if tool == "review":
-        payload = await tools.script_tool(message, api_key, script_text, history)
+        payload = await tools.script_tool(message, api_key, script_text, history, kind=kind)
     elif tool == "storyboard":
         payload = await tools.storyboard_tool(message, api_key, script_text, history)
+    elif tool == "schedule":
+        payload = await tools.schedule_tool(message, api_key, storyboard, history)
     else:
-        payload = await tools.run_tool(tool, content, api_key, history=history)
+        payload = await tools.run_tool(tool, content, api_key, history=history, kind=kind)
     if script_name:
         payload["script_name"] = script_name
     yield "tool_data", {"tool": tool, "payload": payload}
@@ -283,6 +291,8 @@ async def chat(req: Request):
     message = (body.get("message") or "").strip()
     script_text = (body.get("script_text") or "").strip()
     script_name = (body.get("script_name") or "").strip()
+    kind_hint = (body.get("kind") or "").strip() or None
+    storyboard_payload = body.get("storyboard") if isinstance(body.get("storyboard"), dict) else None
     # React 前端上传剧本后，会把它附在消息末尾（【上传剧本】+ 原文）
     if "【上传剧本】" in message:
         head, _, uploaded = message.partition("【上传剧本】")
@@ -290,6 +300,13 @@ async def chat(req: Request):
         if not script_text:
             script_text = uploaded.strip()
     forced = (body.get("tool") or "").strip() or None
+    if not forced:
+        guessed_tool, guessed_kind, _idea = tools.guess_intent(message)
+        forced = guessed_tool
+        kind_hint = kind_hint or guessed_kind
+    elif kind_hint is None:
+        kind_hint, _idea = tools.parse_inspiration_kind(message)[0], ""
+        kind_hint = kind_hint or tools.guess_intent(message)[1]
     tool = forced or tools.detect_tool(message)
     api_key = (body.get("api_key") or "").strip()
     history = body.get("history") or []
@@ -309,7 +326,8 @@ async def chat(req: Request):
                 async for ev in handle_qa(message, history, api_key):
                     yield ev
             else:
-                async for ev in handle_tool(tool, message, api_key, script_text, script_name, history):
+                async for ev in handle_tool(tool, message, api_key, script_text, script_name, history,
+                                             kind=kind_hint, storyboard=storyboard_payload):
                     yield ev
             yield "done", {}
         except Exception as e:  # noqa: BLE001

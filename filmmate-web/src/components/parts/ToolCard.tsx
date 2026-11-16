@@ -18,6 +18,7 @@ import { RawJson } from './RawJson'
 import { InspirationPanel } from './InspirationPanel'
 import { ScriptPanel } from './ScriptPanel'
 import { StoryboardPanel } from './StoryboardPanel'
+import { SchedulePanel } from './SchedulePanel'
 
 function iconFor(toolName: string) {
   if (toolName.toLowerCase().includes('sample')) return <Search size={14} />
@@ -72,6 +73,7 @@ export function ToolCard({
     const o = output as Record<string, any>
     if (typeof o.script_text === 'string' && o.script_text) custom = <ScriptPanel payload={o} />
     else if (Array.isArray(o.shots) && o.shots.length) custom = <StoryboardPanel payload={o} />
+    else if (Array.isArray(o.days) && o.days.length) custom = <SchedulePanel payload={o} />
     else if (Array.isArray(o.films) && o.films.length) custom = <InspirationPanel payload={o} />
   }
 
