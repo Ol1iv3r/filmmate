@@ -59,3 +59,24 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 export function useI18n(): I18nContextValue {
   return useContext(I18nContext)
 }
+
+
+const EN_CMD = /(?:切换到|切换成|切换|切到|改成|改为|换成|换到|使用|用|说|讲|回答|回复|输出|生成|翻译成)\s*(?:英文|英语|english)|(?:英文|英语|english)\s*(?:回答|回复|输出|写|生成|模式)|switch\s+to\s+english|in\s+english|english\s+please|use\s+english/gi
+const ZH_CMD = /(?:切换到|切换成|切换|切到|改成|改为|换成|换到|使用|用|说|讲|回答|回复|输出|生成|翻译成)\s*(?:中文|汉语|chinese)|(?:中文|汉语|chinese)\s*(?:回答|回复|输出|写|生成|模式)|switch\s+to\s+chinese|in\s+chinese|chinese\s+please|use\s+chinese/gi
+
+/** 识别聊天里的「切换英文 / 用中文回答 / switch to English」等指令。 */
+export function detectLangCommand(text: string): Lang | null {
+  const value = text || ''
+  const last = (re: RegExp) => {
+    let end = -1
+    re.lastIndex = 0
+    let m: RegExpExecArray | null
+    while ((m = re.exec(value)) !== null) end = m.index + m[0].length
+    return end
+  }
+  const en = last(EN_CMD)
+  const zh = last(ZH_CMD)
+  if (en < 0 && zh < 0) return null
+  if (en >= 0 && zh >= 0) return en > zh ? 'en' : 'zh'
+  return en >= 0 ? 'en' : 'zh'
+}

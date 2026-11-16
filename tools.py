@@ -1258,6 +1258,46 @@ def _kind_from_history(history):
     return None
 
 
+_LANG_EN_CMD = re.compile(
+    r"(?:切换到|切换成|切换|切到|改成|改为|换成|换到|使用|用|说|讲|回答|回复|输出|生成|翻译成|翻譯成)\s*(?:英文|英语|English)"
+    r"|(?:英文|英语|English)\s*(?:回答|回复|输出|写|生成|模式)"
+    r"|switch\s+to\s+english|in\s+english|english\s+please|use\s+english",
+    re.I)
+_LANG_ZH_CMD = re.compile(
+    r"(?:切换到|切换成|切换|切到|改成|改为|换成|换到|使用|用|说|讲|回答|回复|输出|生成|翻译成|翻譯成)\s*(?:中文|汉语|漢語|Chinese)"
+    r"|(?:中文|汉语|漢語|Chinese)\s*(?:回答|回复|输出|写|生成|模式)"
+    r"|switch\s+to\s+chinese|in\s+chinese|chinese\s+please|use\s+chinese",
+    re.I)
+
+
+def detect_lang_command(message: str):
+    """识别「切换英文 / 用英文回答 / switch to English」等语言切换指令。"""
+    msg = message or ""
+    en = bool(_LANG_EN_CMD.search(msg))
+    zh = bool(_LANG_ZH_CMD.search(msg))
+    if not en and not zh:
+        return None
+    if en and zh:
+        # 两者都有时取「最后出现的指令」为目标语言
+        last_en = max(m.end() for m in _LANG_EN_CMD.finditer(msg))
+        last_zh = max(m.end() for m in _LANG_ZH_CMD.finditer(msg))
+        return "en" if last_en > last_zh else "zh"
+    return "en" if en else "zh"
+
+
+def strip_lang_command(message: str) -> str:
+    """去掉消息里的语言切换指令，保留真正的请求。"""
+    msg = message or ""
+    msg = _LANG_EN_CMD.sub("", msg)
+    msg = _LANG_ZH_CMD.sub("", msg)
+    msg = re.sub(r"^[，,。；;\s]+", "", msg).strip()
+    return msg or ""
+
+
+def is_lang_command_only(message: str) -> bool:
+    return bool(detect_lang_command(message)) and len(strip_lang_command(message)) <= 4
+
+
 _LANG = "zh"
 
 
@@ -1681,7 +1721,7 @@ async def _logline_for_script(script_text, api_key):
         try:
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_SCRIPT_LOG_LINE},
-                 {"role": "user", "content": script_text[:8000]}], api_key=api_key)
+                 {"role": "user", "content": script_text[:8000] + lang_hint()}], api_key=api_key)
             return _norm_logline(data)
         except Exception as e:  # noqa: BLE001
             logger.warning("梗要生成失败(%s)", e)
@@ -1787,25 +1827,29 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
             + "请只输出这个类型该有的剧本/脚本格式，不要写成别的片种。"
             + lang_hint()
         )
-        # 第一步：只出梗要（小 JSON，避免截断）；第二步：正文单独出纯文本
-        data = await llm.complete_json(
-            [{"role": "system", "content": prompts.PROMPT_SCRIPT_GENERATE},
-             {"role": "user", "content": user_prompt}],
-            api_key=api_key)
-        logline = _norm_logline(data.get("logline") or data)
-        text = str(data.get("script_text") or "").strip()
+        # 直接生成正文纯文本（比长 JSON 稳，英文剧本也不会被截断）；梗要再单独生成
+        plain_system = ("你是职业编剧。直接输出标准格式的剧本/脚本正文，"
+                        "不要 JSON、不要 markdown 代码块、不要解释。" + lang_hint())
+        text = ""
+        for _attempt in range(2):
+            try:
+                text = (await llm.complete(
+                    [{"role": "system", "content": plain_system},
+                     {"role": "user", "content": user_prompt + "\n请直接输出正文。"}],
+                    api_key=api_key)).strip()
+            except Exception as _e:  # noqa: BLE001
+                logger.warning("剧本正文生成失败(%s)", _e)
+                text = ""
+            if text:
+                break
         if not text:
-            # 第二步：单独请求剧本文本（纯文本，不要 JSON）
-            plain_system = ("你是职业编剧。直接输出标准格式的剧本/脚本正文，"
-                            "不要 JSON、不要 markdown 代码块、不要解释。" + lang_hint())
-            text = (await llm.complete(
-                [{"role": "system", "content": plain_system},
-                 {"role": "user", "content": user_prompt + "\n请直接输出正文。"}],
-                api_key=api_key)).strip()
-        if not text:
-            raise ValueError("模型没有返回剧本正文")
+            raise ValueError("模型没有返回剧本正文（已重试）")
+        logline = await _logline_for_script(text, api_key)
+        if not logline or not logline.get("title"):
+            logline = _norm_logline({"title": theme[:24] or ("Untitled" if _LANG == "en" else "未命名"),
+                                     "theme": theme, "summary": text[:120]})
         return {"kind": "script", "film_kind": film_kind, "logline": logline,
-                "script_text": text, "characters": data.get("characters") or [],
+                "script_text": text, "characters": [],
                 "text": _script_intro(logline) + "\n\n剧本生成好了！想改哪场直接说；要出分镜就回复「出分镜」。",
                 "mode": "online"}
     except Exception as e:  # noqa: BLE001

@@ -7,7 +7,7 @@ import { MessageList, MessageSkeleton } from './MessageList'
 import { Composer, type ComposerHandle, type SendMeta } from './Composer'
 import { EmptyState, type HomeTool } from './EmptyState'
 import { Filmy } from './Filmy'
-import { useI18n } from '../lib/i18n'
+import { useI18n, detectLangCommand } from '../lib/i18n'
 import { ErrorBanner } from './ErrorBanner'
 
 /**
@@ -86,7 +86,7 @@ function ChatInner({
   const chat = useChat({ id: conversationId, transport, messages: initial })
   const { messages, status, error, sendMessage, regenerate, stop, clearError } = chat
   const streaming = status === 'submitted' || status === 'streaming'
-  const { lang } = useI18n()
+  const { lang, setLang } = useI18n()
 
   const [composerText, setComposerText] = useState('')
   const composerRef = useRef<ComposerHandle>(null)
@@ -143,7 +143,14 @@ function ChatInner({
       const outs = collectOutputs(messages)
       const lastScript = [...outs].reverse().find((o) => typeof o.script_text === 'string' && o.script_text)
       const lastStoryboard = [...outs].reverse().find((o) => Array.isArray(o.shots) && o.shots.length)
-      const metadata: Record<string, unknown> = { tool: meta?.tool ?? null, kind: meta?.kind ?? null, lang }
+      // 聊天里说「切换英文 / switch to English」→ 立即切换界面语言并让后面都按新语言生成
+      const targetLang = detectLangCommand(text)
+      if (targetLang) setLang(targetLang)
+      const metadata: Record<string, unknown> = {
+        tool: meta?.tool ?? null,
+        kind: meta?.kind ?? null,
+        lang: targetLang ?? lang,
+      }
       if (meta?.tool === 'storyboard' || meta?.tool === 'review' || (!meta?.tool && /分镜|剧本/.test(text))) {
         if (lastScript?.script_text) metadata.script_text = lastScript.script_text
       }
@@ -152,7 +159,7 @@ function ChatInner({
       }
       sendMessage({ text, metadata })
     },
-    [messages, sendMessage, collectOutputs, lang],
+    [messages, sendMessage, collectOutputs, lang, setLang],
   )
 
   const handleRetry = useCallback(() => {

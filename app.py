@@ -326,6 +326,18 @@ async def chat(req: Request):
         message = head.strip()
         if not script_text:
             script_text = uploaded.strip()
+    # 聊天里的语言切换指令（切换英文 / switch to English…）
+    lang_cmd = tools.detect_lang_command(message)
+    lang_only = False
+    if lang_cmd:
+        lang = lang_cmd
+        tools.set_lang(lang)
+        lang_only = tools.is_lang_command_only(message)
+        if lang_only:
+            message = ""
+        else:
+            message = tools.strip_lang_command(message) or message
+
     forced = (body.get("tool") or "").strip() or None
     if not forced:
         guessed_tool, guessed_kind, _idea = tools.guess_intent(message)
@@ -341,7 +353,7 @@ async def chat(req: Request):
 
     async def gen():
         try:
-            if not message and not script_text:
+            if not message and not script_text and not lang_only:
                 yield "done", {}
                 return
             yield "start", {
@@ -349,6 +361,13 @@ async def chat(req: Request):
                 "label": tools.tool_labels().get(tool or "qa", "知识问答"),
                 "mode": "online" if online else "offline",
             }
+            if lang_only:
+                text = "好的，之后我都用英文回复。" if lang == "en" else "好的，之后我都用中文回复。"
+                for chunk in chunk_text(text):
+                    yield "delta", {"text": chunk}
+                    await asyncio.sleep(0.015)
+                yield "done", {}
+                return
             if tool is None:
                 async for ev in handle_qa(message, history, api_key):
                     yield ev
