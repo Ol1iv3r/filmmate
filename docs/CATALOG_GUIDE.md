@@ -194,3 +194,9 @@
 - 抽帧增加黑底字幕卡过滤（is_subtitle_card：dark>0.60 & skin<0.012 & edge>4），选帧后若 ≥5 张仍是字幕卡 → 判失败；已重配三傻/绿皮书、移除初代iPhone导览，当前 260 部 / 2600 帧。
 - Composer：上传剧本后空输入 + Enter 触发默认动作；按钮可用。
 - LLM 额度错误统一由 tools.llm_error_hint 翻译；handle_qa 失败回退 _qa_offline；找灵感/分镜/拍摄计划均有规则兜底；外层异常输出可读提示而不是英文报错。
+
+
+## 13. v8（2026-11-17）：DeepSeek 官方 API
+
+- .env: DEEPSEEK_API_KEY + DEEPSEEK_MODEL=deepseek-flash（官方仅支持 deepseek-flash / deepseek-v4-pro）。
+- 全链路 online 回归通过（灵感/剧本/分镜/拍摄计划），ms 真实回传。

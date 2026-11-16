@@ -571,3 +571,16 @@ python3 scripts/enrich_samples.py    # 重新从 _ref 样本生成富化数据
   - 拍摄计划：回退规则版拍摄日；
   - 写剧本：明确提示「模型额度已用尽，请更换 AI_GATEWAY_API_KEY / DEEPSEEK_API_KEY」。
   - 之前出现的 "The chat request failed" 现在会变成可读的原因提示，不会白屏。
+
+
+## v8 更新（2026-11-17）：切换 DeepSeek 官方 API
+
+- .env 改为使用 DEEPSEEK_API_KEY 直连 https://api.deepseek.com，provider 自动切到 deepseek；
+- DeepSeek 官方支持的模型名只有 deepseek-flash / deepseek-v4-pro（deepseek-v4.1-flash 不存在，会报 invalid_request_error）；当前使用 deepseek-flash；
+- 回归实测（全部 online）：
+  - 找灵感（电影+香港）：18.6s，重庆森林 / 甜蜜蜜 / 色，戒；
+  - 找灵感（广告/TVC）：19.7s，梦骑士 / 真美画像 / 雇佣车手；
+  - 写剧本（TVC）：19.8s，film_kind=广告/TVC，《最热的一单》1887 字广告脚本；
+  - 分镜：24.5s，3 场 13 镜，剧本关键词命中 13/13；
+  - 拍摄计划：30.2s，2 个拍摄日 + 2 条日历事件；
+  - 工具耗时显示真实毫秒（不再 0ms）。
