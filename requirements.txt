@@ -11,3 +11,6 @@ python-multipart>=0.0.9
 # sentence-transformers>=3,<6
 pypdf>=4.0
 python-docx>=1.1
+
+# 剧本导出 PDF（/api/script/pdf）
+reportlab>=4
