@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CalendarClock, Clapperboard, Lightbulb, Plus, ScrollText, Sparkles } from 'lucide-react'
 import { isMockMode } from '../lib/transport'
 import { useI18n } from '../lib/i18n'
+import { FilmyMark } from './FilmyMark'
 import { cn } from '../lib/utils'
 
 export type HomeTool = 'inspiration' | 'review' | 'storyboard' | 'schedule' | 'refs'
@@ -71,7 +72,7 @@ export function EmptyState({
     <div className="empty-state">
       <div className="hero hero-home">
         <div className="hero-logo">
-          <Clapperboard size={28} />
+          <FilmyMark size={46} />
         </div>
         <h2 className="hero-title">
           {lang === 'zh' ? '你的 AI 创作顾问' : 'Your AI film consultant'}
@@ -118,11 +119,7 @@ export function EmptyState({
             {lang === 'zh' ? '开始' : 'Start'}
           </button>
         </div>
-      ) : (
-        <div className="tool-brief tool-brief-empty">
-          {lang === 'zh' ? '点上面任意板块，看它怎么用。' : 'Tap a card above to see how it works.'}
-        </div>
-      )}
+      ) : null}
 
       {isMockMode && (
         <div className="mock-note">

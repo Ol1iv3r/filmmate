@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { MessageSquarePlus, Trash2, Pencil, Check, X, Clapperboard, PanelLeftClose } from 'lucide-react'
+import { MessageSquarePlus, Trash2, Pencil, Check, X, PanelLeftClose } from 'lucide-react'
+import { FilmyMark } from './FilmyMark'
 import type { ConversationMeta } from '../lib/conversations'
 import { cn, formatTimeAgo } from '../lib/utils'
 import { isMockMode } from '../lib/transport'
@@ -66,7 +67,7 @@ export function Sidebar({
         <div className="sidebar-head">
           <div className="brand">
             <span className="brand-logo">
-              <Clapperboard size={18} />
+              <FilmyMark size={22} />
             </span>
             <div className="brand-text">
               <span className="brand-name">Filmmate</span>

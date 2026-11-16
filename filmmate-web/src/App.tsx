@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Menu, Clapperboard } from 'lucide-react'
+import { Menu } from 'lucide-react'
+import { FilmyMark } from './components/FilmyMark'
 import { Sidebar } from './components/Sidebar'
 import { useI18n } from './lib/i18n'
 import { ChatPanel } from './components/ChatPanel'
@@ -127,7 +128,7 @@ export default function App() {
             <Menu size={17} />
           </button>
           <div className="topbar-title">
-            <Clapperboard size={14} className="topbar-logo" />
+            <FilmyMark size={20} className="topbar-logo" />
             <span>{activeTitle}</span>
           </div>
           <div className="topbar-right">

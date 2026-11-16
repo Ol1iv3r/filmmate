@@ -1638,3 +1638,128 @@ button {
 .filmy.on-download .filmy-body { pointer-events: none; animation: filmy-lying 2.4s ease-in-out infinite; }
 @keyframes filmy-lying { 0%, 100% { transform: rotate(-80deg); } 50% { transform: rotate(-76deg); } }
 
+
+
+/* ── Filmy v2：可爱版小跟班（走路 + 表情 + 指路） ── */
+.filmy-v2 {
+  right: auto !important;
+  bottom: auto !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  transition: left 1.15s cubic-bezier(.45, .05, .35, 1), top 1.15s cubic-bezier(.45, .05, .35, 1);
+  z-index: 60;
+  pointer-events: none;
+}
+.filmy-v2 .filmy-avatar {
+  pointer-events: auto;
+  cursor: pointer;
+  animation: filmy-bob 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .45));
+  transform-origin: 50% 100%;
+}
+.filmy-head, .filmy-torso { fill: #f5b84c; stroke: #20232b; stroke-width: 2.2; }
+.filmy-ear { fill: #f5b84c; stroke: #20232b; stroke-width: 2; }
+.filmy-blush { fill: rgba(240, 110, 110, .42); }
+.filmy-antenna { stroke: #20232b; stroke-width: 2; stroke-linecap: round; }
+.filmy-antenna-dot { fill: #f5b84c; stroke: #20232b; stroke-width: 1.6; }
+.filmy-hand { fill: none; stroke: #20232b; stroke-width: 2.2; stroke-linecap: round; }
+.filmy-leg { stroke: #20232b; stroke-width: 2.2; stroke-linecap: round; transform-box: fill-box; transform-origin: 50% 100%; }
+.filmy-shoe { fill: #20232b; }
+.filmy-shadow { fill: rgba(0, 0, 0, .35); }
+.filmy-thought { fill: #f5b84c; animation: filmy-thought 1.2s ease-in-out infinite; }
+@keyframes filmy-thought { 0%, 100% { opacity: .35; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-2px); } }
+@keyframes filmy-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+
+/* 走路：腿交替 + 身体摇摆 */
+.filmy-v2.is-walking .filmy-leg-a { animation: filmy-leg-a .3s ease-in-out infinite alternate; }
+.filmy-v2.is-walking .filmy-leg-b { animation: filmy-leg-b .3s ease-in-out infinite alternate; }
+@keyframes filmy-leg-a { from { transform: rotate(-16deg); } to { transform: rotate(16deg); } }
+@keyframes filmy-leg-b { from { transform: rotate(16deg); } to { transform: rotate(-16deg); } }
+.filmy-v2.is-walking .filmy-avatar { animation: filmy-waddle .3s ease-in-out infinite; }
+@keyframes filmy-waddle { 0%, 100% { transform: translateY(0) rotate(-2.5deg); } 50% { transform: translateY(-2px) rotate(2.5deg); } }
+
+/* 指路：手臂伸出并轻点 */
+.filmy-v2.is-pointing .filmy-hand-right { animation: filmy-point .75s ease-in-out infinite; transform-box: fill-box; transform-origin: left center; }
+@keyframes filmy-point { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-16deg) translateX(3px); } }
+
+/* 表情 */
+.filmy-avatar.expr-win { animation: filmy-celebrate .5s ease-in-out infinite; }
+@keyframes filmy-celebrate { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-7px) rotate(3deg); } }
+.filmy-avatar.expr-lose { animation: filmy-sad-sway 1.6s ease-in-out infinite; }
+@keyframes filmy-sad-sway { 0%, 100% { transform: rotate(-2deg) translateY(1px); } 50% { transform: rotate(2deg) translateY(2px); } }
+.filmy-avatar.expr-think { animation: filmy-think-sway 2.2s ease-in-out infinite; }
+@keyframes filmy-think-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.filmy-v2.point-left .filmy-avatar { transform: scaleX(-1); }
+
+/* 只有问候时才出现的对话气泡 */
+.filmy-say {
+  pointer-events: none;
+  position: relative;
+  background: #1b1f29;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  animation: brief-in .16s ease-out;
+}
+.filmy-say-tail {
+  position: absolute;
+  left: 14px;
+  bottom: -5px;
+  width: 8px;
+  height: 8px;
+  background: #1b1f29;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: rotate(45deg);
+}
+
+/* 石头剪刀布：全透明浮层，只有按钮 + 结果 */
+.filmy-rps-layer {
+  position: fixed;
+  left: 50%;
+  bottom: 224px;
+  transform: translateX(-50%);
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  pointer-events: none;
+}
+.filmy-rps-buttons { display: flex; gap: 14px; pointer-events: auto; }
+.filmy-rps-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .2);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: .16s;
+}
+.filmy-rps-btn:hover { transform: translateY(-3px) scale(1.06); border-color: #f5b84c; }
+.filmy-rps-btn.chosen { border-color: #f5b84c; background: rgba(245, 184, 76, .18); }
+.filmy-rps-result {
+  font-size: 12px;
+  color: #f5b84c;
+  background: rgba(0, 0, 0, .28);
+  padding: 3px 9px;
+  border-radius: 8px;
+}
+
+/* 品牌 logo */
+.filmy-mark { display: inline-block; vertical-align: middle; }
+.brand-logo .filmy-mark, .topbar-logo.filmy-mark { display: block; }
+
+
+/* 指路时不要挡住下载按钮的点击 */
+.filmy-v2.filmy-mode-download .filmy-avatar { pointer-events: none; }
+.filmy-v2.filmy-mode-download .filmy-say { display: none; }
