@@ -147,16 +147,15 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     }
   }, [applyTarget, computeTarget])
 
-  // 石头剪刀布浮层：对齐聊天内容区中线，避免盖住 Filmy
+  // 石头剪刀布浮层：固定在 Filmy 头顶正上方
   useEffect(() => {
     if (!rpsOpen) return
     const compute = () => {
-      const scroller = document.querySelector('.chat-scroll')
-      const rect = scroller ? scroller.getBoundingClientRect() : null
       const width = window.innerWidth
-      const center = rect ? rect.left + rect.width / 2 : width / 2
-      const left = Math.max(140, Math.min(width - 140, center))
-      setRpsPos({ left, top: Math.max(96, target.top - 148) })
+      setRpsPos({
+        left: Math.max(64, Math.min(width - 64, target.left + SIZE_W / 2)),
+        top: Math.max(8, target.top - 78),
+      })
     }
     compute()
     window.addEventListener('resize', compute)
@@ -187,13 +186,10 @@ export function Filmy({ thinking }: { thinking: boolean }) {
         setRpsOpen(false)
         setExpression('waiting')
       } else {
-        const scroller = document.querySelector('.chat-scroll')
-        const rect = scroller ? scroller.getBoundingClientRect() : null
         const width = window.innerWidth
-        const center = rect ? rect.left + rect.width / 2 : width / 2
         setRpsPos({
-          left: Math.max(140, Math.min(width - 140, center)),
-          top: Math.max(96, target.top - 148),
+          left: Math.max(64, Math.min(width - 64, target.left + SIZE_W / 2)),
+          top: Math.max(8, target.top - 78),
         })
         setRpsOpen(true)
         setExpression('think')
@@ -354,6 +350,11 @@ export function Filmy({ thinking }: { thinking: boolean }) {
             </svg>
           )}
 
+          {rpsResult && botIcon && (
+            <span className={cn('filmy-bot-hand', 'outcome-' + rpsResult.outcome)} aria-hidden>
+              {botIcon}
+            </span>
+          )}
           {rpsResult && (
             <span className={cn('filmy-win-fx', 'fx-' + rpsResult.outcome)} aria-hidden />
           )}
@@ -407,13 +408,6 @@ export function Filmy({ thinking }: { thinking: boolean }) {
               </button>
             ))}
           </div>
-          {rpsResult && (
-            <div className="filmy-rps-pair">
-              <span className="pair-user">{RPS.find((r) => r.key === rpsResult.me)?.icon}</span>
-              <span className="pair-dash" />
-              <span className={cn('pair-bot', 'outcome-' + rpsResult.outcome)}>{botIcon}</span>
-            </div>
-          )}
         </div>
       )}
     </>
