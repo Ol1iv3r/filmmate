@@ -1247,6 +1247,75 @@ def kind_from_text(text: str):
     return None
 
 
+def history_for_prompt(history, max_turns: int = 12, max_chars: int = 5200):
+    """给模型用的对话历史：最多 max_turns 条、总字符不超过 max_chars（从最新往旧取）。"""
+    out = []
+    used = 0
+    for turn in reversed(history or []):
+        role = turn.get("role")
+        content = str(turn.get("content") or "").strip()
+        if role not in ("user", "assistant") or not content:
+            continue
+        content = content[:1800]
+        if used + len(content) > max_chars and out:
+            break
+        out.append({"role": role, "content": content})
+        used += len(content)
+        if len(out) >= max_turns:
+            break
+    return list(reversed(out))
+
+
+def history_block(history, max_turns: int = 8, max_chars: int = 1600) -> str:
+    """给工具提示词用的对话上下文摘要。"""
+    turns = history_for_prompt(history, max_turns=max_turns, max_chars=max_chars)
+    if not turns:
+        return ""
+    lines = ["【对话上下文（供延续上文，勿重复已给过的内容）】"]
+    for turn in turns:
+        who = "用户" if turn["role"] == "user" else "助手"
+        lines.append(f"{who}：{turn['content'][:500]}")
+    return "\n".join(lines)
+
+
+def _idea_from_history(history) -> str:
+    for turn in reversed(history or []):
+        if turn.get("role") != "assistant":
+            continue
+        m = re.search(r"关键词\*{0,2}\s*[:：]\s*([^\n]+)", str(turn.get("content") or ""))
+        if m:
+            return m.group(1).strip()
+    return ""
+
+
+def _last_tool_from_history(history):
+    """从 assistant 文本标记猜测上一轮工具，用于「换一批/继续」这类追问。"""
+    for turn in reversed(history or []):
+        if turn.get("role") != "assistant":
+            continue
+        content = str(turn.get("content") or "")
+        if "### 梗要" in content or "剧本全文" in content:
+            return "review", _kind_from_history(history)
+        if "分镜表（" in content or "分镜表(" in content:
+            return "storyboard", None
+        if "详细拍摄方案" in content or "拍摄日" in content:
+            return "schedule", None
+        if "风格 1" in content and ("契合电影" in content or "**题材**" in content or "**关键词**" in content):
+            return "inspiration", _kind_from_history(history)
+    return None, None
+
+
+_CONTINUE_WORDS = re.compile(
+    r"^(?:再(?:来|换|给|出|做|生成|写)?(?:一|几|三|五|十)?(?:批|个|组|版|份|条)?|"
+    r"换(?:一批|一批吧|一组|一个|个|一版)|继续|接着|还有(?:吗|么|没有)|next|more|again|continue)[!！。？?~～\s]*$",
+    re.I)
+
+
+def is_continuation(message: str) -> bool:
+    msg = (message or "").strip()
+    return bool(msg) and len(msg) <= 12 and bool(_CONTINUE_WORDS.match(msg))
+
+
 def _kind_from_history(history):
     for turn in reversed(history or []):
         if turn.get("role") != "assistant":
@@ -1366,7 +1435,7 @@ def guess_intent(message: str):
         return "storyboard", kind, idea
     # 先判「写/生成/改剧本」类动作（否则「写一个关于香港的TVC剧本」会被误判成找灵感）
     if re.search(r"(写|寫|生成|改|检查|檢查|优化|優化|审|審)[^，。,\n]{0,20}(剧本|劇本)"
-                 r"|剧本|劇本.{0,6}(检查|檢查|生成|改)|写剧本|寫劇本|生成剧本|生成劇本|剧本生成|劇本生成|改剧本|改劇本|"
+                 r"|(?:剧本|劇本).{0,6}(?:检查|檢查|生成|改)|写剧本|寫劇本|生成剧本|生成劇本|剧本生成|劇本生成|改剧本|改劇本|"
                  r"改标准|改標準|标准格式|標準格式", msg, re.I):
         return "review", kind, idea
     if re.search(r"灵感|靈感|想拍|想拍一个|想拍一個|帮我做|幫我做|做一个|做一個|来一个|來一個|关于.{0,12}(电影|電影|短片|广告|廣告|短片|剧|劇)|创意|創意|idea", msg, re.I):
@@ -1376,6 +1445,9 @@ def guess_intent(message: str):
             return "review", kind, idea
         if len(msg) > 150:
             return "review", kind, idea
+        # 「这个剧本第一场发生了什么？」这类提问 → 交给问答（可引用当前剧本上下文）
+        if re.search(r"[?？]|吗|什么|怎么|为什么|哪裡|哪里|谁|多少|讲讲|说说|分析", msg):
+            return None, kind, idea
         return "inspiration", kind, idea
     if re.search(r"拍摄计划|拍攝計劃|日程|排期|schedule", msg, re.I):
         return "schedule", kind, idea
@@ -1465,7 +1537,7 @@ def _films_markdown(kind: str, idea: str, styles: list) -> str:
     return "\n".join(lines)
 
 
-async def inspiration_films(text: str, api_key: str = None, kind: str = None):
+async def inspiration_films(text: str, api_key: str = None, kind: str = None, history: list = None):
     """按题材划库的找灵感：只在该题材作品中检索，返回风格/主题/契合电影。"""
     import catalog as _catalog
 
@@ -1499,7 +1571,8 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None):
                 + ("【TVC 额外要求】每个 style 的 theme 必须点名：产品/品牌、目标人群、一句 slogan 方向；"
                    "why_fits 要说明视觉钩子如何服务产品卖点。\n\n" if kind == "广告/TVC" else "")
                 + (taste + "\n\n" if taste else "")
-                + "候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines)
+                + ("\n\n" + history_block(history) if history else "")
+                + "\n\n候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines)
                 + lang_hint())
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_INSPIRATION_FILMS},
@@ -2165,13 +2238,16 @@ async def run_tool(tool: str, message: str, api_key: str = None, history: list =
         prefix_match = _KIND_PREFIX.match(message or "")
         prefix_kind = prefix_match.group(1).strip() if prefix_match else None
         idea = (message[prefix_match.end():] if prefix_match else message or "").strip()
-        use_kind = kind or prefix_kind or kind_from_text(message)
+        use_kind = kind or prefix_kind or kind_from_text(message) or _kind_from_history(history)
         if not prefix_kind:
             extracted = _theme_from_text(idea, use_kind)
             if extracted:
                 idea = extracted
         idea = re.sub(r"^\s*找\s*灵\s*感\s*[:：]\s*", "", idea).strip()
-        return await inspiration_films(idea, api_key, use_kind)
+        # 「再换一批 / 继续」：沿用上一轮的关键词，而不是把指令当关键词
+        if is_continuation(message):
+            idea = _idea_from_history(history) or idea
+        return await inspiration_films(idea, api_key, use_kind, history=history)
     if tool == "schedule":
         return await schedule_tool(message, api_key, None, history)
     # 用户确认主题后出分镜

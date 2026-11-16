@@ -208,12 +208,26 @@ async def _qa_offline(message: str):
 # --------------------------------------------------------------------------
 
 
-async def handle_qa(message: str, history: list, api_key: str):
+async def handle_qa(message: str, history: list, api_key: str, script_text: str = "", storyboard: dict = None):
     online = llm.available(api_key)
 
     if online:
         msgs = [{"role": "system", "content": prompts.SYSTEM_QA_AGENT + tools.lang_hint()}]
-        msgs += [{"role": m.get("role", "user"), "content": str(m.get("content", ""))} for m in history[-6:]]
+        # 更长的上下文记忆：最近 12 条 / 约 5200 字
+        msgs += tools.history_for_prompt(history, max_turns=16, max_chars=7000)
+        # 把当前剧本/分镜作为可参考的上下文（用户上传或刚生成的结果）
+        context = []
+        if script_text:
+            context.append("【当前剧本上下文（用户上传或刚生成，回答时可直接引用）】\n" + script_text[:6000])
+        if isinstance(storyboard, dict) and storyboard.get("shots"):
+            lines = ["【当前分镜上下文】"]
+            for s in (storyboard.get("shots") or [])[:30]:
+                lines.append(
+                    f"镜{s.get('id')}｜{s.get('scene')}｜{s.get('shot_type')}/{s.get('angle')}/{s.get('movement')}"
+                    f"｜{s.get('duration')}｜{str(s.get('description'))[:60]}")
+            context.append("\n".join(lines))
+        if context:
+            msgs.append({"role": "system", "content": "\n\n".join(context)})
         msgs.append({"role": "user", "content": message})
         try:
             text, steps = await llm.chat_with_tools(msgs, api_key=api_key)
@@ -318,6 +332,7 @@ async def chat(req: Request):
     script_name = (body.get("script_name") or "").strip()
     lang = (body.get("lang") or "zh").strip() or "zh"
     tools.set_lang(lang)
+    history = body.get("history") or []
     kind_hint = (body.get("kind") or "").strip() or None
     storyboard_payload = body.get("storyboard") if isinstance(body.get("storyboard"), dict) else None
     # React 前端上传剧本后，会把它附在消息末尾（【上传剧本】+ 原文）
@@ -347,8 +362,16 @@ async def chat(req: Request):
         kind_hint, _idea = tools.parse_inspiration_kind(message)[0], ""
         kind_hint = kind_hint or tools.guess_intent(message)[1]
     tool = forced or tools.detect_tool(message)
+    # 用户带着剧本问「第X场发生了什么」→ 用问答，而不是重新找灵感
+    if tool == "inspiration" and script_text and not re.search(r"找灵感|换一批|参考片|题材|风格", message):
+        tool = None
+    # 「换一批 / 继续 / 再来几个」：沿用上一轮工具和题材
+    if tool is None and history and tools.is_continuation(message):
+        last_tool, last_kind = tools._last_tool_from_history(history)
+        if last_tool:
+            tool = last_tool
+            kind_hint = kind_hint or last_kind
     api_key = (body.get("api_key") or "").strip()
-    history = body.get("history") or []
     online = llm.available(api_key)
 
     async def gen():
@@ -369,7 +392,8 @@ async def chat(req: Request):
                 yield "done", {}
                 return
             if tool is None:
-                async for ev in handle_qa(message, history, api_key):
+                async for ev in handle_qa(message, history, api_key,
+                                          script_text=script_text, storyboard=storyboard_payload):
                     yield ev
             else:
                 async for ev in handle_tool(tool, message, api_key, script_text, script_name, history,

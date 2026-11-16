@@ -151,10 +151,11 @@ function ChatInner({
         kind: meta?.kind ?? null,
         lang: targetLang ?? lang,
       }
-      if (meta?.tool === 'storyboard' || meta?.tool === 'review' || (!meta?.tool && /分镜|剧本/.test(text))) {
+      if (meta?.tool === 'storyboard' || meta?.tool === 'review' || (!meta?.tool && /剧本|场次|角色|台词|梗要/.test(text))) {
         if (lastScript?.script_text) metadata.script_text = lastScript.script_text
       }
-      if (meta?.tool === 'schedule' || (!meta?.tool && /拍摄计划|拍摄方案|排期/.test(text))) {
+      if (meta?.tool === 'schedule' || (!meta?.tool && /分镜|镜头|机位|拍摄计划|拍摄方案|排期|档期/.test(text))) {
+        if (lastScript?.script_text) metadata.script_text = lastScript.script_text
         if (lastStoryboard) metadata.storyboard = lastStoryboard
       }
       sendMessage({ text, metadata })
