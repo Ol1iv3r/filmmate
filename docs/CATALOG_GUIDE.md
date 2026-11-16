@@ -200,3 +200,9 @@
 
 - .env: DEEPSEEK_API_KEY + DEEPSEEK_MODEL=deepseek-flash（官方仅支持 deepseek-flash / deepseek-v4-pro）。
 - 全链路 online 回归通过（灵感/剧本/分镜/拍摄计划），ms 真实回传。
+
+
+## 14. v9（2026-11-17）
+
+- 拍摄计划偏好：schedule_tool 把 message 作为 prefs 注入 PROMPT_SHOOTING_PLAN，payload 回传 preferences；Composer 点按钮进入偏好模式 + 快捷 chips；默认「根据最近的分镜生成拍摄方案」自动清空偏好。
+- 语音兜底：voice_input_api 402 映射 + /api/transcribe/status；useVoiceInput 增加浏览器 SpeechRecognition（zh-CN），quota/未配置时自动切换并 localStorage 记住。

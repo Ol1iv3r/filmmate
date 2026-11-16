@@ -1971,12 +1971,17 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
         f"｜{s.get('duration')}｜{str(s.get('description'))[:60]}"
         for s in shots
     ]
+    pref = (message or "").strip()
+    if re.fullmatch(r"根据最近的分镜[，,]?\s*生成(详细)?的?拍摄(方案|计划)", pref):
+        pref = ""
     summary, crew, equipment, locations, days, risks, calendar = "", [], [], [], [], [], []
     mode = "offline"
     if llm.available(api_key):
         try:
-            user_prompt = (f"当前日期：{today.date().isoformat()}\n分镜表（共 {len(shots)} 镜）：\n"
-                           + "\n".join(shot_lines))
+            user_prompt = (
+                f"当前日期：{today.date().isoformat()}\n"
+                f"用户偏好/限制（必须优先满足）：{pref or '（未特别说明，按常规安排）'}\n"
+                f"分镜表（共 {len(shots)} 镜）：\n" + "\n".join(shot_lines))
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_SHOOTING_PLAN},
                  {"role": "user", "content": user_prompt}], api_key=api_key, temperature=0.4)
@@ -2033,10 +2038,12 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
         lines += ["", "**风险与预案**：" + "；".join(
             f"{r.get('risk')}→{r.get('mitigation')}" for r in risks[:6] if isinstance(r, dict))]
     lines += ["", "确认档期后，点下方「下载日历（.ics）」可直接导入系统日历。"]
+    if pref:
+        lines.insert(2, f"**你的偏好**：{pref}\n")
     return {
         "kind": "schedule", "summary": summary, "crew": crew, "equipment": equipment,
         "locations": locations, "days": days, "risks": risks, "calendar": calendar,
-        "shots_count": len(shots), "mode": mode, "text": "\n".join(lines),
+        "shots_count": len(shots), "preferences": pref, "mode": mode, "text": "\n".join(lines),
     }
 
 

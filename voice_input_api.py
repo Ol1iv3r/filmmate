@@ -54,6 +54,17 @@ def _gateway_root(base_url: str) -> str:
     return base_url[: -len("/v1")] if base_url.endswith("/v1") else base_url
 
 
+@router.get("/transcribe/status")
+def transcribe_status():
+    """给前端判断：服务端是否配置了转写能力（浏览器识别兜底用）。"""
+    provider = _provider()
+    if provider is None:
+        return {"configured": False, "provider": None, "model": None,
+                "hint": "未配置转写密钥，前端可回退浏览器语音识别。"}
+    kind, _base, _key, model = provider
+    return {"configured": True, "provider": kind, "model": model, "hint": ""}
+
+
 @router.post("/transcribe")
 async def transcribe(file: UploadFile = File(...), language: str | None = Form(None)):
     provider = _provider()
@@ -114,6 +125,11 @@ async def transcribe(file: UploadFile = File(...), language: str | None = Form(N
     except httpx.HTTPError as exc:
         raise HTTPException(status_code=502, detail=f"无法连接转写服务:{exc}") from exc
 
+    if response.status_code == 402:
+        raise HTTPException(
+            status_code=402,
+            detail="转写额度已用尽（AI Gateway: budget exceeded）。已自动启用浏览器语音识别兜底：请再点一次麦克风，用 Chrome/Edge 录音即可；或给 .env 配置 OPENAI_API_KEY 恢复服务端转写。",
+        )
     if response.status_code in (401, 403):
         raise HTTPException(status_code=401, detail="转写服务密钥无效,请检查 .env 的 AI_GATEWAY_API_KEY")
     if response.status_code == 413:

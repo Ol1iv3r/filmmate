@@ -1,7 +1,7 @@
 import { Mic, MicOff } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { formatDuration } from '../lib/voiceInput'
-import type { VoiceInputStatus } from '../hooks/useVoiceInput'
+import type { VoiceInputEngine, VoiceInputStatus } from '../hooks/useVoiceInput'
 
 export interface MicButtonProps {
   status: VoiceInputStatus
@@ -10,6 +10,8 @@ export interface MicButtonProps {
   disabled?: boolean
   /** 环境不支持 MediaRecorder 时显示 MicOff 并禁用。 */
   supported?: boolean
+  /** server = whisper 接口；browser = 浏览器原生识别。 */
+  engine?: VoiceInputEngine
   onStart: () => void
   onStop: () => void
 }
@@ -24,6 +26,7 @@ export function MicButton({
   elapsedMs,
   disabled = false,
   supported = true,
+  engine = 'server',
   onStart,
   onStop,
 }: MicButtonProps) {
@@ -38,7 +41,9 @@ export function MicButton({
         ? '等待麦克风权限…'
         : status === 'transcribing'
           ? '转写中…'
-          : '语音输入（whisper-1）'
+          : engine === 'browser'
+            ? '语音输入（浏览器识别，无需 API）'
+            : '语音输入（whisper-1）'
 
   return (
     <button

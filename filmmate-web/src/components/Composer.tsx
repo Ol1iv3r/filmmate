@@ -103,7 +103,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const submit = () => {
     const t = (value || '').trim()
     if (streaming || voiceInput.status === 'recording') return
-    if (!t && !scriptFile) return
+    if (!t && !scriptFile && activeTool !== 'schedule') return
     // 上传了剧本但没打字：直接回车按当前板块的默认动作执行
     let outgoing = t || (activeTool === 'storyboard'
       ? '根据这份剧本出分镜'
@@ -198,8 +198,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     }
     if (tool === 'schedule') {
       setActiveTool('schedule')
-      // 拍摄计划：直接用「最近一版分镜」生成详细方案（由 ChatPanel 补 storyboard 数据）
-      onSend('根据最近的分镜，生成详细的拍摄方案', { tool: 'schedule' })
+      taRef.current?.focus()
       return
     }
     if (tool === 'storyboard' && !scriptFile) {
@@ -214,7 +213,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
       ? '正在找「' + inspKind + '」的灵感 · ' + (KIND_HINTS[inspKind] ?? '用一句话描述你想要的感觉')
       : '找灵感：先选题材，再用一句话描述你想要的感觉'
     : activeTool
-      ? '当前功能：' + (TOOL_LABELS[activeTool] ?? activeTool) + (activeTool === 'review' || activeTool === 'storyboard' ? '（可先上传剧本）' : '')
+      ? activeTool === 'schedule'
+        ? '拍摄计划：可先说偏好（避开哪些日期 / 几天拍完 / 每天工时 / 地点限制），回车生成；直接回车 = 按默认排期'
+        : '当前功能：' + (TOOL_LABELS[activeTool] ?? activeTool) + (activeTool === 'review' || activeTool === 'storyboard' ? '（可先上传剧本）' : '')
       : ''
 
   return (
@@ -246,6 +247,24 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
               }}
             >
               {k}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {activeTool === 'schedule' && (
+        <div className="quick-chips">
+          <span className="kind-label">快捷偏好：</span>
+          {['3天内拍完', '避开周末', '每天10小时', '夜戏集中', '日戏为主', '场地固定在一个地方'].map((pref) => (
+            <button
+              key={pref}
+              className="quick-chip"
+              onClick={() => {
+                onChange(value.trim() ? value.replace(/[，,\s]+$/, '') + '，' + pref : pref)
+                taRef.current?.focus()
+              }}
+            >
+              {pref}
             </button>
           ))}
         </div>
@@ -313,6 +332,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           status={voiceInput.status}
           elapsedMs={voiceInput.elapsedMs}
           supported={voiceInput.supported}
+          engine={voiceInput.engine}
           disabled={streaming}
           onStart={() => void voiceInput.start()}
           onStop={() => void voiceInput.stop()}
@@ -338,9 +358,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         ) : (
           <button
             type="submit"
-            className={cn('send-btn', !value.trim() && !scriptFile && 'disabled')}
+            className={cn('send-btn', !value.trim() && !scriptFile && activeTool !== 'schedule' && 'disabled')}
             title={scriptFile && !value.trim() ? '直接开始分析已上传剧本（Enter）' : '发送（Enter）'}
-            disabled={!value.trim() && !scriptFile}
+            disabled={!value.trim() && !scriptFile && activeTool !== 'schedule'}
           >
             <ArrowUp size={17} />
           </button>

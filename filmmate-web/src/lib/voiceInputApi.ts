@@ -22,6 +22,7 @@ export type TranscribeErrorCode =
   | 'AUTH'
   | 'RATE_LIMIT'
   | 'PROVIDER'
+  | 'QUOTA'
   | 'TIMEOUT'
   | 'NETWORK'
   | 'UNKNOWN'
@@ -62,6 +63,9 @@ async function mapHttpError(response: Response): Promise<TranscribeResult> {
   }
   if (response.status === 429) {
     return fail('RATE_LIMIT', detail || '转写请求过于频繁，请稍后重试。')
+  }
+  if (response.status === 402) {
+    return fail('QUOTA', detail || '转写额度已用尽，已切换浏览器语音识别兜底。')
   }
   if (response.status === 504) {
     return fail('TIMEOUT', detail || '转写超时，请重试。')
@@ -108,5 +112,34 @@ export async function transcribeAudio(blob: Blob, language?: string): Promise<Tr
     return fail('NETWORK', `无法连接转写服务：${(error as Error).message}`)
   } finally {
     window.clearTimeout(timer)
+  }
+}
+
+
+export interface TranscribeStatus {
+  configured: boolean
+  provider: string | null
+  model: string | null
+  hint?: string
+}
+
+/** 查询服务端是否配置了转写能力（决定是否直接用浏览器识别）。 */
+export async function getTranscribeStatus(): Promise<TranscribeStatus> {
+  const base = baseUrl()
+  if (base === undefined) {
+    return { configured: false, provider: null, model: null, hint: 'no base url' }
+  }
+  try {
+    const response = await fetch(base + '/api/transcribe/status')
+    if (!response.ok) return { configured: false, provider: null, model: null }
+    const data = (await response.json()) as TranscribeStatus
+    return {
+      configured: !!data.configured,
+      provider: data.provider ?? null,
+      model: data.model ?? null,
+      hint: data.hint,
+    }
+  } catch {
+    return { configured: false, provider: null, model: null }
   }
 }

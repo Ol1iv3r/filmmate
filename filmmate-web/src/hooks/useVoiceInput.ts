@@ -1,26 +1,21 @@
 /**
- * Phase 2：录音状态机。
+ * Phase 2：录音状态机 + 浏览器语音识别兜底。
  *
  *   idle -> requesting -> recording -> transcribing -> idle
  *
- * 职责：
- * - 持有 MediaStream / MediaRecorder，任何退出路径都释放麦克风
- * - 限制最短 / 最长录音时长
- * - 把音频交给 transcribeAudio()，把文字交回给调用方
- *
- * 组件只负责「把文字放进输入框」，本 hook 不碰草稿、不自动发送。
+ * 首选服务端 whisper（POST /api/transcribe）；当服务端额度用尽（402）或未配置密钥时，
+ * 自动切换到浏览器原生 SpeechRecognition（Chrome / Edge 可用），不需要任何 API Key。
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { formatDuration, isRecordingSupported, pickAudioMimeType } from '../lib/voiceInput'
-import { transcribeAudio } from '../lib/voiceInputApi'
+import { isRecordingSupported, pickAudioMimeType } from '../lib/voiceInput'
+import { getTranscribeStatus, transcribeAudio } from '../lib/voiceInputApi'
 
 export type VoiceInputStatus = 'idle' | 'requesting' | 'recording' | 'transcribing'
+export type VoiceInputEngine = 'server' | 'browser'
 
 export interface UseVoiceInputOptions {
-  /** 到点自动停止。whisper-1 上限 25 MB，32 kbps 约 90 分钟。 */
   maxDurationMs?: number
-  /** 低于这个时长的录音当作误触。 */
   minDurationMs?: number
   onTranscript?: (text: string) => void
 }
@@ -30,6 +25,7 @@ export interface VoiceInput {
   elapsedMs: number
   error: string | null
   supported: boolean
+  engine: VoiceInputEngine
   start: () => Promise<void>
   stop: () => Promise<string | null>
   cancel: () => void
@@ -37,6 +33,38 @@ export interface VoiceInput {
 }
 
 const MIN_AUDIO_BYTES = 512
+const ENGINE_KEY = 'filmmate.voice.engine'
+
+type SpeechRecognitionLike = {
+  lang: string
+  continuous: boolean
+  interimResults: boolean
+  maxAlternatives: number
+  start: () => void
+  stop: () => void
+  abort: () => void
+  onresult: ((event: any) => void) | null
+  onerror: ((event: any) => void) | null
+  onend: (() => void) | null
+}
+
+function getSpeechRecognition(): (new () => SpeechRecognitionLike) | null {
+  if (typeof window === 'undefined') return null
+  const w = window as any
+  return w.SpeechRecognition || w.webkitSpeechRecognition || null
+}
+
+function browserSRAvailable(): boolean {
+  return !!getSpeechRecognition()
+}
+
+function rememberEngine(engine: VoiceInputEngine) {
+  try {
+    window.localStorage.setItem(ENGINE_KEY, engine)
+  } catch {
+    /* localStorage 不可用就忽略 */
+  }
+}
 
 export function useVoiceInput({
   maxDurationMs = 120_000,
@@ -46,6 +74,7 @@ export function useVoiceInput({
   const [status, setStatus] = useState<VoiceInputStatus>('idle')
   const [elapsedMs, setElapsedMs] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [engine, setEngine] = useState<VoiceInputEngine>('server')
 
   const statusRef = useRef<VoiceInputStatus>('idle')
   const recorderRef = useRef<MediaRecorder | null>(null)
@@ -57,9 +86,38 @@ export function useVoiceInput({
   const resolveStopRef = useRef<((text: string | null) => void) | null>(null)
   const durationRef = useRef(0)
   const onTranscriptRef = useRef(onTranscript)
+  const browserModeRef = useRef(false)
+  const srRef = useRef<SpeechRecognitionLike | null>(null)
+  const srTextRef = useRef('')
+  const srResolveRef = useRef<((text: string | null) => void) | null>(null)
 
   onTranscriptRef.current = onTranscript
   statusRef.current = status
+
+  // 初始化：记忆上次切换结果；服务端未配置转写时直接用浏览器识别
+  useEffect(() => {
+    let remembered = ''
+    try {
+      remembered = window.localStorage.getItem(ENGINE_KEY) || ''
+    } catch {
+      /* ignore */
+    }
+    if (remembered === 'browser' && browserSRAvailable()) {
+      browserModeRef.current = true
+      setEngine('browser')
+    }
+    let cancelled = false
+    void getTranscribeStatus().then((info) => {
+      if (cancelled) return
+      if (!info.configured && browserSRAvailable()) {
+        browserModeRef.current = true
+        setEngine('browser')
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const clearTick = useCallback(() => {
     if (tickRef.current !== null) {
@@ -72,6 +130,14 @@ export function useVoiceInput({
     streamRef.current?.getTracks().forEach((track) => track.stop())
     streamRef.current = null
     recorderRef.current = null
+  }, [])
+
+  const switchToBrowser = useCallback((reason: string) => {
+    if (!browserSRAvailable()) return
+    browserModeRef.current = true
+    setEngine('browser')
+    rememberEngine('browser')
+    setError(reason + ' 已切换到浏览器语音识别（Chrome/Edge），请再点一次麦克风。')
   }, [])
 
   const finish = useCallback(
@@ -98,7 +164,11 @@ export function useVoiceInput({
       try {
         const result = await transcribeAudio(blob)
         if (!result.ok) {
-          setError(result.message)
+          if (result.code === 'QUOTA') {
+            switchToBrowser(result.message)
+          } else {
+            setError(result.message)
+          }
           resolve?.(null)
           return
         }
@@ -107,19 +177,124 @@ export function useVoiceInput({
         onTranscriptRef.current?.(result.text)
         resolve?.(result.text)
       } catch (unknownError) {
-        setError(`转写失败：${(unknownError as Error).message}`)
+        setError('转写失败：' + (unknownError as Error).message)
         resolve?.(null)
       } finally {
         setStatus('idle')
         setElapsedMs(0)
       }
     },
-    [minDurationMs],
+    [minDurationMs, switchToBrowser],
   )
+
+  const startBrowser = useCallback(() => {
+    const SR = getSpeechRecognition()
+    if (!SR) {
+      setError('当前浏览器不支持语音识别，建议用 Chrome / Edge。')
+      setStatus('idle')
+      return
+    }
+    setError(null)
+    setStatus('requesting')
+    let rec: SpeechRecognitionLike
+    try {
+      rec = new SR()
+    } catch (unknownError) {
+      setError('无法启动浏览器语音识别：' + (unknownError as Error).message)
+      setStatus('idle')
+      return
+    }
+    srRef.current = rec
+    srTextRef.current = ''
+    rec.lang = 'zh-CN'
+    rec.continuous = false
+    rec.interimResults = false
+    rec.maxAlternatives = 1
+    rec.onresult = (event: any) => {
+      try {
+        let text = ''
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          const item = event.results[i]
+          text += item[0]?.transcript ?? ''
+        }
+        srTextRef.current = (srTextRef.current + text).trim()
+      } catch {
+        /* ignore */
+      }
+    }
+    rec.onerror = (event: any) => {
+      const code = String(event?.error ?? 'unknown')
+      if (code === 'aborted') return
+      clearTick()
+      setStatus('idle')
+      setElapsedMs(0)
+      if (code === 'not-allowed' || code === 'service-not-allowed') {
+        setError('浏览器麦克风权限被拒绝，请在浏览器设置里允许本站使用麦克风。')
+      } else if (code === 'no-speech') {
+        setError('没有听到声音，请再试一次。')
+      } else {
+        setError('浏览器语音识别失败：' + code)
+      }
+      const resolve = srResolveRef.current
+      srResolveRef.current = null
+      resolve?.(null)
+    }
+    rec.onend = () => {
+      clearTick()
+      srRef.current = null
+      setStatus('idle')
+      setElapsedMs(0)
+      const text = (srTextRef.current || '').trim()
+      const resolve = srResolveRef.current
+      srResolveRef.current = null
+      if (text) {
+        setError(null)
+        onTranscriptRef.current?.(text)
+        resolve?.(text)
+      } else {
+        if (!cancelRef.current) setError('没有识别出文字，请再试一次。')
+        resolve?.(null)
+      }
+    }
+    startedAtRef.current = Date.now()
+    tickRef.current = setInterval(() => {
+      const elapsed = Date.now() - startedAtRef.current
+      setElapsedMs(elapsed)
+      if (elapsed >= maxDurationMs) {
+        clearTick()
+        try {
+          rec.stop()
+        } catch {
+          /* ignore */
+        }
+      }
+    }, 200)
+    try {
+      rec.start()
+    } catch (unknownError) {
+      clearTick()
+      setStatus('idle')
+      setError('无法启动浏览器语音识别：' + (unknownError as Error).message)
+      return
+    }
+    setStatus('recording')
+  }, [clearTick, maxDurationMs])
 
   const start = useCallback(async () => {
     if (statusRef.current !== 'idle') return
+
+    if (browserModeRef.current && browserSRAvailable()) {
+      startBrowser()
+      return
+    }
     if (!isRecordingSupported()) {
+      if (browserSRAvailable()) {
+        browserModeRef.current = true
+        setEngine('browser')
+        rememberEngine('browser')
+        startBrowser()
+        return
+      }
       setError('当前环境不支持录音。')
       return
     }
@@ -140,13 +315,12 @@ export function useVoiceInput({
           ? '麦克风权限被拒绝，请在系统设置中允许本应用使用麦克风。'
           : name === 'NotFoundError'
             ? '找不到麦克风设备。'
-            : `无法打开麦克风：${(unknownError as Error).message}`,
+            : '无法打开麦克风：' + (unknownError as Error).message,
       )
       setStatus('idle')
       return
     }
 
-    // 权限弹窗期间用户已经取消。
     if (cancelRef.current) {
       stream.getTracks().forEach((track) => track.stop())
       setStatus('idle')
@@ -164,7 +338,7 @@ export function useVoiceInput({
       )
     } catch (unknownError) {
       stream.getTracks().forEach((track) => track.stop())
-      setError(`无法初始化录音器：${(unknownError as Error).message}`)
+      setError('无法初始化录音器：' + (unknownError as Error).message)
       setStatus('idle')
       return
     }
@@ -185,7 +359,7 @@ export function useVoiceInput({
     }
     recorder.onerror = (event) => {
       const message = (event as unknown as { error?: Error }).error?.message ?? '未知错误'
-      setError(`录音中断：${message}`)
+      setError('录音中断：' + message)
     }
 
     recorder.start(250)
@@ -199,9 +373,26 @@ export function useVoiceInput({
         void stopRef.current()
       }
     }, 200)
-  }, [clearTick, finish, maxDurationMs, releaseStream])
+  }, [clearTick, finish, maxDurationMs, releaseStream, startBrowser])
 
   const stop = useCallback((): Promise<string | null> => {
+    const sr = srRef.current
+    if (sr) {
+      durationRef.current = Date.now() - startedAtRef.current
+      return new Promise<string | null>((resolve) => {
+        srResolveRef.current = resolve
+        try {
+          sr.stop()
+        } catch {
+          clearTick()
+          srRef.current = null
+          setStatus('idle')
+          setElapsedMs(0)
+          resolve(null)
+        }
+      })
+    }
+
     const recorder = recorderRef.current
     if (!recorder || recorder.state === 'inactive') return Promise.resolve(null)
 
@@ -227,6 +418,18 @@ export function useVoiceInput({
   const cancel = useCallback(() => {
     cancelRef.current = true
     clearTick()
+    const sr = srRef.current
+    if (sr) {
+      try {
+        sr.abort()
+      } catch {
+        /* ignore */
+      }
+      srRef.current = null
+      setStatus('idle')
+      setElapsedMs(0)
+      return
+    }
     const recorder = recorderRef.current
     if (recorder && recorder.state !== 'inactive') {
       try {
@@ -241,7 +444,7 @@ export function useVoiceInput({
     setElapsedMs(0)
   }, [clearTick, releaseStream])
 
-  // Esc 取消当前录音（与 Electron 版一致）。
+  // Esc 取消当前录音。
   useEffect(() => {
     if (status !== 'recording') return
     const onKeyDown = (event: KeyboardEvent) => {
@@ -259,6 +462,11 @@ export function useVoiceInput({
     return () => {
       cancelRef.current = true
       if (tickRef.current !== null) clearInterval(tickRef.current)
+      try {
+        srRef.current?.abort()
+      } catch {
+        /* ignore */
+      }
       const recorder = recorderRef.current
       if (recorder && recorder.state !== 'inactive') {
         try {
@@ -275,7 +483,8 @@ export function useVoiceInput({
     status,
     elapsedMs,
     error,
-    supported: isRecordingSupported(),
+    supported: isRecordingSupported() || browserSRAvailable(),
+    engine,
     start,
     stop,
     cancel,

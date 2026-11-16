@@ -32,6 +32,7 @@ interface SchedulePayload {
   risks?: { risk?: string; mitigation?: string }[]
   calendar?: CalendarEvent[]
   shots_count?: number
+  preferences?: string
   text?: string
 }
 
@@ -103,6 +104,7 @@ export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
 
   return (
     <div className="schedule-panel">
+      {payload.preferences && <div className="schedule-pref">已按你的偏好安排：{payload.preferences}</div>}
       {payload.summary && <div className="logline-box"><div className="logline-title">拍摄方案</div><div className="logline-summary">{payload.summary}</div></div>}
       {(payload.crew?.length || payload.equipment?.length) ? (
         <div className="schedule-meta">
