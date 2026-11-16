@@ -351,11 +351,14 @@ async def legacy_index():
 
 @app.get("/catalog")
 async def catalog_page():
-    """影视灵感目录画廊（250+ 部 / 每部 10 张静帧）。"""
+    """影视灵感目录画廊（261 部 / 每部 10 张静帧）。"""
     page = STATIC_DIR / "catalog.html"
     if not page.exists():
         return FileResponse(STATIC_DIR / "index.html")
-    return FileResponse(page)
+    # 画廊里的静帧用 frames/catalog/... 相对路径；加 <base> 让 /catalog 下也能正确指向 /static/
+    html = await asyncio.to_thread(page.read_text, encoding="utf-8")
+    html = html.replace("<head>", '<head><base href="/static/">', 1)
+    return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
 if __name__ == "__main__":
