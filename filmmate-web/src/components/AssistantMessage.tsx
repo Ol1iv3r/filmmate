@@ -7,6 +7,7 @@ import { useI18n } from '../lib/i18n'
 import { Markdown } from './Markdown'
 import { ToolCard } from './parts/ToolCard'
 import { ReasoningBlock } from './parts/ReasoningBlock'
+import { FilmyMark } from './FilmyMark'
 
 /**
  * 一条 assistant 消息：text / tool-call / reasoning 混排。
@@ -80,7 +81,9 @@ export function AssistantMessage({
 
   return (
     <div className="msg assistant">
-      <div className="msg-avatar">🎬</div>
+      <div className="msg-avatar filmy-avatar-mini" title="Filmy">
+        <FilmyMark size={26} />
+      </div>
       <div className="msg-body">
         <div className="assistant-parts">
           {orderedViews.map((v, i) => {

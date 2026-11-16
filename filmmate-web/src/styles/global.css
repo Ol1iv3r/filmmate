@@ -1763,3 +1763,94 @@ button {
 /* 指路时不要挡住下载按钮的点击 */
 .filmy-v2.filmy-mode-download .filmy-avatar { pointer-events: none; }
 .filmy-v2.filmy-mode-download .filmy-say { display: none; }
+
+
+/* ── Filmy v3：参考黄色方块小人（无脚/更简约/2D） ── */
+.filmy-v2 .filmy-avatar {
+  position: relative;
+  animation: filmy-bob 2.8s ease-in-out infinite;
+}
+.filmy-body { fill: #f5d23c; stroke: #20232b; stroke-width: 2.4; }
+.filmy-hair path { fill: #20232b; }
+.filmy-leg { fill: #f5d23c; stroke: #20232b; stroke-width: 2.2; transform-box: fill-box; transform-origin: 50% 0%; }
+.filmy-eye-white { fill: #fff; }
+.filmy-pupil { fill: #20232b; }
+.filmy-blush { fill: #e8483f; opacity: .92; }
+.filmy-v2.is-walking .filmy-leg-a { animation: filmy-leg-a .3s ease-in-out infinite alternate; }
+.filmy-v2.is-walking .filmy-leg-b { animation: filmy-leg-b .3s ease-in-out infinite alternate; }
+
+/* 指路箭头（无文字） */
+.filmy-pointer {
+  position: absolute;
+  top: 38px;
+  font-size: 15px;
+  color: #f5b84c;
+  text-shadow: 0 0 8px rgba(245, 210, 60, .7);
+  animation: filmy-arrow .65s ease-in-out infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+.filmy-pointer.to-right { right: -12px; transform: scaleX(-1); }
+.filmy-pointer.to-left { left: -12px; }
+@keyframes filmy-arrow { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* 生成时小头像 */
+.msg-avatar.filmy-avatar-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 210, 60, .1);
+  border: 1px solid rgba(245, 210, 60, .35);
+  overflow: hidden;
+}
+
+/* 石头剪刀布：围绕 Filmy 展开的透明特效 */
+.filmy-rps-layer.filmy-rps-v2 {
+  bottom: auto !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  background: transparent;
+  pointer-events: none;
+  z-index: 70;
+  transform: translateX(-50%);
+  transition: left .6s cubic-bezier(.45, .05, .35, 1), top .6s cubic-bezier(.45, .05, .35, 1);
+}
+.filmy-rps-v2::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 96px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(245, 210, 60, .18), rgba(245, 210, 60, 0) 70%);
+  filter: blur(5px);
+  pointer-events: none;
+}
+.filmy-rps-v2 .filmy-rps-buttons { display: flex; gap: 18px; pointer-events: auto; position: relative; }
+.filmy-rps-v2 .filmy-rps-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  font-size: 27px;
+  line-height: 1;
+  background: rgba(15, 17, 22, .35);
+  border: 1.5px solid rgba(245, 210, 60, .7);
+  box-shadow: 0 0 22px rgba(245, 210, 60, .25);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform .16s, border-color .16s;
+  animation: rps-pop .4s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+.filmy-rps-v2 .filmy-rps-btn:hover { transform: translateY(-4px) scale(1.08); border-color: #f5d23c; }
+.filmy-rps-v2 .filmy-rps-btn.chosen { border-color: #f5d23c; background: rgba(245, 210, 60, .22); }
+@keyframes rps-pop { from { opacity: 0; transform: scale(.35) translateY(12px); } to { opacity: 1; transform: none; } }
+.filmy-rps-v2 .filmy-rps-result {
+  font-size: 12px;
+  color: #f5d23c;
+  background: rgba(0, 0, 0, .3);
+  padding: 3px 9px;
+  border-radius: 8px;
+  position: relative;
+}
+

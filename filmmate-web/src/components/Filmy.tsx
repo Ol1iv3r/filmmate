@@ -18,8 +18,8 @@ interface RpsResult {
   outcome: 'win' | 'lose' | 'tie'
 }
 
-const SIZE_W = 78
-const SIZE_H = 100
+const SIZE_W = 76
+const SIZE_H = 96
 const WALK_MS = 1150
 
 const GREETINGS = [
@@ -38,10 +38,10 @@ const RPS = [
 function defaultTarget(): Target {
   const w = typeof window === 'undefined' ? 1200 : window.innerWidth
   const h = typeof window === 'undefined' ? 800 : window.innerHeight
-  return { left: Math.max(8, w - 108), top: Math.max(8, h - 300), mode: 'idle', side: 'right' }
+  return { left: Math.max(8, w - 104), top: Math.max(8, h - 300), mode: 'idle', side: 'right' }
 }
 
-/** Filmy：会走路、会摆表情的 2D 小跟班。 */
+/** Filmy：参考黄色方块小人设计的 2D 极简小跟班。 */
 export function Filmy({ thinking }: { thinking: boolean }) {
   const { lang } = useI18n()
   const [target, setTarget] = useState<Target>(defaultTarget)
@@ -50,17 +50,14 @@ export function Filmy({ thinking }: { thinking: boolean }) {
   const [bubble, setBubble] = useState<string | null>(null)
   const [rpsOpen, setRpsOpen] = useState(false)
   const [rpsResult, setRpsResult] = useState<RpsResult | null>(null)
-  const [walkSide, setWalkSide] = useState<'left' | 'right'>('right')
 
   const targetRef = useRef<Target>(defaultTarget())
   const movingTimer = useRef<number | null>(null)
   const bubbleTimer = useRef<number | null>(null)
   const expressionTimer = useRef<number | null>(null)
   const thinkingRef = useRef(thinking)
-  const rpsOpenRef = useRef(false)
 
   thinkingRef.current = thinking
-  rpsOpenRef.current = rpsOpen
 
   const setExpressionFor = useCallback((next: Expression, ms = 0) => {
     setExpression(next)
@@ -82,6 +79,18 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     const w = window.innerWidth
     const h = window.innerHeight
     if (thinkingRef.current) {
+      // 和正在生成的 assistant 消息头像待在一起
+      const avatars = Array.from(document.querySelectorAll('.msg.assistant .msg-avatar')) as HTMLElement[]
+      const anchor = avatars[avatars.length - 1]
+      if (anchor) {
+        const r = anchor.getBoundingClientRect()
+        return {
+          left: Math.max(8, Math.min(w - SIZE_W - 8, Math.round(r.left - SIZE_W - 6))),
+          top: Math.max(8, Math.round(r.top - 22)),
+          mode: 'think',
+          side: 'right',
+        }
+      }
       return {
         left: Math.max(8, Math.round(w / 2 - SIZE_W / 2)),
         top: Math.max(8, Math.round(h - 336)),
@@ -96,15 +105,15 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     })
     if (visible) {
       const r = visible.getBoundingClientRect()
-      const left = Math.max(8, Math.min(w - SIZE_W - 8, Math.round(r.left - 46)))
+      const left = Math.max(8, Math.min(w - SIZE_W - 8, Math.round(r.left - 44)))
       return {
         left,
-        top: Math.max(8, Math.round(r.top - 58)),
+        top: Math.max(8, Math.round(r.top - 54)),
         mode: 'download',
         side: r.left + r.width / 2 > w / 2 ? 'right' : 'left',
       }
     }
-    return { left: Math.max(8, w - 108), top: Math.max(8, h - 300), mode: 'idle', side: 'right' }
+    return { left: Math.max(8, w - 104), top: Math.max(8, h - 300), mode: 'idle', side: 'right' }
   }, [])
 
   const applyTarget = useCallback((next: Target, immediate = false) => {
@@ -112,12 +121,8 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     const changed = prev.left !== next.left || prev.top !== next.top || prev.mode !== next.mode
     if (!changed) return
     targetRef.current = next
-    if (next.mode === 'download') setWalkSide(next.side === 'right' ? 'right' : 'left')
-    if (immediate) {
-      setTarget(next)
-      return
-    }
     setTarget(next)
+    if (immediate) return
     setMoving(true)
     if (movingTimer.current !== null) window.clearTimeout(movingTimer.current)
     movingTimer.current = window.setTimeout(() => {
@@ -127,7 +132,6 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     }, WALK_MS)
   }, [setExpressionFor])
 
-  // 初始定位 + 尺寸/滚动/定时扫描
   useEffect(() => {
     applyTarget(computeTarget(), true)
     const update = () => applyTarget(computeTarget())
@@ -142,7 +146,6 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     }
   }, [applyTarget, computeTarget])
 
-  // 思考状态：走到中间、摆思考表情；结束后恢复
   useEffect(() => {
     if (thinking) {
       setExpression('think')
@@ -186,60 +189,27 @@ export function Filmy({ thinking }: { thinking: boolean }) {
   }
 
   const mouthFor = () => {
-    switch (expression) {
-      case 'happy':
-      case 'win':
-        return <path d="M30 45 Q38 53 46 45" fill="none" stroke="#20232b" strokeWidth="2.4" strokeLinecap="round" />
-      case 'lose':
-        return <path d="M31 48 Q38 42 45 48" fill="none" stroke="#20232b" strokeWidth="2.4" strokeLinecap="round" />
-      case 'tie':
-        return <path d="M31 46 Q35 49 38 46 Q41 43 45 46" fill="none" stroke="#20232b" strokeWidth="2.2" strokeLinecap="round" />
-      case 'think':
-        return <ellipse cx="38" cy="46" rx="3.2" ry="2.6" fill="#20232b" />
-      default:
-        return <path d="M32 45 Q38 49 44 45" fill="none" stroke="#20232b" strokeWidth="2.2" strokeLinecap="round" />
-    }
-  }
-
-  // 眼睛（带高光/表情）
-  const eyesFor = () => {
-    if (expression === 'win') {
-      return (
-        <>
-          <path d="M23 34 L26 31 L29 34 L26 37 Z" fill="#20232b" />
-          <path d="M47 34 L50 31 L53 34 L50 37 Z" fill="#20232b" />
-        </>
-      )
-    }
     if (expression === 'lose') {
-      return (
-        <>
-          <path d="M23 33 Q26 36 29 33" fill="none" stroke="#20232b" strokeWidth="2" strokeLinecap="round" />
-          <path d="M47 33 Q50 36 53 33" fill="none" stroke="#20232b" strokeWidth="2" strokeLinecap="round" />
-        </>
-      )
+      return <path d="M29 50 Q38 42 47 50" fill="none" stroke="#20232b" strokeWidth="3.6" strokeLinecap="round" />
+    }
+    if (expression === 'tie') {
+      return <path d="M29 47 Q33.5 51 38 47 Q42.5 43 47 47" fill="none" stroke="#20232b" strokeWidth="3" strokeLinecap="round" />
+    }
+    if (expression === 'think') {
+      return <ellipse cx="38" cy="48" rx="3.4" ry="2.8" fill="#20232b" />
     }
     return (
-      <>
-        <circle cx="26" cy="34" r="4.6" fill="#fff8ea" />
-        <circle cx="50" cy="34" r="4.6" fill="#fff8ea" />
-        <circle
-          cx={expression === 'think' ? 27.4 : expression === 'tie' ? 27 : 26}
-          cy={expression === 'think' ? 33 : 34}
-          r="2.6"
-          fill="#20232b"
-        />
-        <circle
-          cx={expression === 'think' ? 51.4 : expression === 'tie' ? 51 : 50}
-          cy={expression === 'think' ? 33 : 34}
-          r="2.6"
-          fill="#20232b"
-        />
-        <circle cx={expression === 'think' ? 28.2 : 26.9} cy={expression === 'think' ? 32.2 : 33.2} r=".8" fill="#fff" />
-        <circle cx={expression === 'think' ? 52.2 : 50.9} cy={expression === 'think' ? 32.2 : 33.2} r=".8" fill="#fff" />
-      </>
+      <path
+        d={expression === 'win' || expression === 'happy' ? 'M29 45 Q38 56 47 45' : 'M30 45 Q38 52 46 45'}
+        fill="none"
+        stroke="#20232b"
+        strokeWidth="3.6"
+        strokeLinecap="round"
+      />
     )
   }
+
+  const eyeOffsetY = expression === 'think' ? -2 : expression === 'lose' ? 1.5 : 0
 
   return (
     <>
@@ -261,49 +231,67 @@ export function Filmy({ thinking }: { thinking: boolean }) {
         )}
 
         <div className={cn('filmy-avatar', 'expr-' + expression)} onClick={onAvatarClick} role="button" aria-label="Filmy">
-          <svg viewBox="0 0 76 100" width="72" height="94" aria-hidden>
-            <ellipse className="filmy-shadow" cx="38" cy="95" rx="17" ry="3" />
+          {target.mode === 'download' && !moving && (
+            <span className={cn('filmy-pointer', target.side === 'left' ? 'to-left' : 'to-right')} aria-hidden>
+              ◀
+            </span>
+          )}
+          <svg viewBox="0 0 76 100" width="70" height="92" aria-hidden>
+            <ellipse className="filmy-shadow" cx="38" cy="95" rx="15" ry="2.8" />
 
-            {/* 腿 + 鞋（走路时交替） */}
+            {/* 腿：两条黄色小短腿，无脚 */}
             <g className="filmy-legs">
-              <path className="filmy-leg filmy-leg-a" d="M28 78 L28 88" />
-              <path className="filmy-leg filmy-leg-b" d="M48 78 L48 88" />
-              <ellipse className="filmy-shoe filmy-shoe-a" cx="28" cy="90" rx="5" ry="2.6" />
-              <ellipse className="filmy-shoe filmy-shoe-b" cx="48" cy="90" rx="5" ry="2.6" />
+              <rect className="filmy-leg filmy-leg-a" x="27" y="72" width="9" height="20" rx="4.5" />
+              <rect className="filmy-leg filmy-leg-b" x="41" y="72" width="9" height="20" rx="4.5" />
             </g>
 
-            {/* 身体 */}
-            <rect className="filmy-torso" x="20" y="58" width="36" height="24" rx="12" />
-            {/* 手 */}
-            <path className="filmy-hand filmy-hand-left" d="M21 68 Q12 70 11 76" />
-            <path className={cn('filmy-hand', 'filmy-hand-right', target.mode === 'download' && !moving && 'arm-point')} d="M55 68 Q64 70 66 76" />
+            {/* 黑色三撮头发 */}
+            <g className="filmy-hair">
+              <path d="M22 26 Q18 8 31 5 Q26 14 31 26" />
+              <path d="M33 26 Q34 7 47 6 Q38 14 42 26" />
+              <path d="M44 26 Q52 10 57 20 Q52 22 50 26" />
+            </g>
 
-            {/* 天线 */}
-            <path className="filmy-antenna" d="M38 12 L38 4" />
-            <circle className="filmy-antenna-dot" cx="38" cy="3.2" r="2.6" />
+            {/* 黄色方块身体 */}
+            <rect className="filmy-body" x="13" y="24" width="50" height="50" rx="11" />
 
-            {/* 头 */}
-            <rect className="filmy-head" x="14" y="14" width="48" height="44" rx="20" />
-            <circle className="filmy-ear" cx="13" cy="34" r="5" />
-            <circle className="filmy-ear" cx="63" cy="34" r="5" />
-            <ellipse className="filmy-blush" cx="19" cy="43" rx="4" ry="2.3" />
-            <ellipse className="filmy-blush" cx="57" cy="43" rx="4" ry="2.3" />
-            {eyesFor()}
+            {/* 眼睛：白底 + 黑色 S 形瞳孔 */}
+            <g className="filmy-eyes">
+              <ellipse className="filmy-eye-white" cx="27" cy="44" rx="7" ry="9" />
+              <ellipse className="filmy-eye-white" cx="49" cy="44" rx="7" ry="9" />
+              <path
+                className="filmy-pupil"
+                transform={'translate(0 ' + eyeOffsetY + ')'}
+                d="M24 40 Q31 39 31 44 Q31 49 25 48 Q28 46 28 44 Q28 42 24 40 Z"
+              />
+              <path
+                className="filmy-pupil"
+                transform={'translate(0 ' + eyeOffsetY + ')'}
+                d="M46 40 Q53 39 53 44 Q53 49 47 48 Q50 46 50 44 Q50 42 46 40 Z"
+              />
+            </g>
+
+            {/* 腮红 */}
+            <circle className="filmy-blush" cx="18" cy="53" r="4.4" />
+            <circle className="filmy-blush" cx="58" cy="53" r="4.4" />
+
             {mouthFor()}
-            {expression === 'think' && (
-              <circle className="filmy-thought" cx="58" cy="15" r="2.2" />
-            )}
           </svg>
         </div>
       </div>
 
       {rpsOpen && thinking && (
-        <div className="filmy-rps-layer" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="filmy-rps-layer filmy-rps-v2"
+          style={{ left: target.left + SIZE_W / 2, top: Math.max(70, target.top - 76) }}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="filmy-rps-buttons">
-            {RPS.map((item) => (
+            {RPS.map((item, i) => (
               <button
                 key={item.key}
                 className={cn('filmy-rps-btn', rpsResult?.me === item.key && 'chosen')}
+                style={{ animationDelay: (i * 70) + 'ms' }}
                 onClick={() => playRps(item.key)}
                 title={lang === 'zh' ? item.zh : item.en}
               >
