@@ -3,7 +3,7 @@ import { useI18n } from '../lib/i18n'
 import { cn } from '../lib/utils'
 
 type Mode = 'idle' | 'think' | 'download'
-type Expression = 'idle' | 'happy' | 'waiting' | 'think' | 'win' | 'lose' | 'tie'
+type Expression = 'idle' | 'happy' | 'waiting' | 'think' | 'win' | 'lose' | 'cry' | 'tie'
 
 interface Target {
   left: number
@@ -185,12 +185,16 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     const outcome: RpsResult['outcome'] =
       me === bot ? 'tie' : (me === 'rock' && bot === 'scissors') || (me === 'scissors' && bot === 'paper') || (me === 'paper' && bot === 'rock') ? 'win' : 'lose'
     setRpsResult({ me, bot, outcome })
-    setExpressionFor(outcome === 'win' ? 'win' : outcome === 'lose' ? 'lose' : 'tie', 0)
+    // outcome 是「用户」的胜负：用户赢 → Filmy 哭；Filmy 赢 → 开心
+    setExpressionFor(outcome === 'win' ? 'cry' : outcome === 'lose' ? 'win' : 'tie', 0)
   }
 
   const botIcon = rpsResult ? RPS.find((r) => r.key === rpsResult.bot)?.icon : null
 
   const mouthFor = () => {
+    if (expression === 'cry') {
+      return <path d="M29 61 Q38 51 47 61" fill="none" stroke="#20232b" strokeWidth="3.4" strokeLinecap="round" />
+    }
     if (expression === 'lose') {
       return <path d="M29 58 Q38 50 47 58" fill="none" stroke="#20232b" strokeWidth="3.4" strokeLinecap="round" />
     }
@@ -233,6 +237,16 @@ export function Filmy({ thinking }: { thinking: boolean }) {
         <>
           <path d="M22 44 L26 40 L30 44 L26 48 Z" fill="#20232b" />
           <path d="M46 44 L50 40 L54 44 L50 48 Z" fill="#20232b" />
+        </>
+      )
+    }
+    if (expression === 'cry') {
+      return (
+        <>
+          <path d="M22 45 Q26 41 30 45" fill="none" stroke="#20232b" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M46 45 Q50 41 54 45" fill="none" stroke="#20232b" strokeWidth="2.2" strokeLinecap="round" />
+          <circle className="filmy-tear filmy-tear-a" cx="21" cy="51" r="2.6" />
+          <circle className="filmy-tear filmy-tear-b" cx="55" cy="51" r="2.6" />
         </>
       )
     }

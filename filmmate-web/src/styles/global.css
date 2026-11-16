@@ -1923,3 +1923,29 @@ button {
 }
 .filmy-rps-v2 .filmy-rps-btn:hover { transform: translateY(-2px); border-color: rgba(245, 210, 60, .7); background: rgba(245, 210, 60, .08); }
 .filmy-rps-v2 .filmy-rps-btn.chosen { border-color: rgba(245, 210, 60, .9); background: rgba(245, 210, 60, .12); }
+
+/* Filmy v13: emoji centered above avatar + crying when user wins */
+.filmy-bot-hand {
+  left: 50% !important;
+  right: auto !important;
+  top: -24px !important;
+  transform: translateX(-50%);
+  animation: filmy-bot-pop-center .32s cubic-bezier(.34, 1.56, .64, 1);
+}
+@keyframes filmy-bot-pop-center {
+  from { opacity: 0; transform: translate(-50%, 6px) scale(.4); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+.filmy-v2 .filmy-avatar.expr-cry { animation: filmy-cry-sway 1.4s ease-in-out infinite; }
+@keyframes filmy-cry-sway {
+  0%, 100% { transform: rotate(-2deg) translateY(1px); }
+  50% { transform: rotate(2deg) translateY(2px); }
+}
+.filmy-tear { fill: #7cc7ff; opacity: .95; }
+.filmy-tear-a { animation: filmy-tear-drop 1.1s ease-in infinite; }
+.filmy-tear-b { animation: filmy-tear-drop 1.1s ease-in .35s infinite; }
+@keyframes filmy-tear-drop {
+  0% { opacity: 0; transform: translateY(-2px) scale(.8); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(8px) scale(1); }
+}
