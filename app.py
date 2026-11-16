@@ -239,7 +239,7 @@ async def handle_qa(message: str, history: list, api_key: str):
 # --------------------------------------------------------------------------
 # 创作工具(剧本检查/分镜/rundown/日程/灵感/案例)
 # --------------------------------------------------------------------------
-async def handle_tool(tool: str, message: str, api_key: str, script_text: str = "", script_name: str = ""):
+async def handle_tool(tool: str, message: str, api_key: str, script_text: str = "", script_name: str = "", history: list = None):
     # 只有剧本类任务才用上传文件覆盖输入；灵感/案例仍按用户当前输入检索
     script_tools = ("review", "storyboard", "rundown", "schedule")
     content = script_text if (script_text and tool in script_tools) else message
@@ -263,7 +263,7 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
             await asyncio.sleep(0.015)
         return
 
-    payload = await tools.run_tool(tool, content, api_key)
+    payload = await tools.run_tool(tool, content, api_key, history=history)
     if script_name:
         payload["script_name"] = script_name
     yield "tool_data", {"tool": tool, "payload": payload}
@@ -307,7 +307,7 @@ async def chat(req: Request):
                 async for ev in handle_qa(message, history, api_key):
                     yield ev
             else:
-                async for ev in handle_tool(tool, message, api_key, script_text, script_name):
+                async for ev in handle_tool(tool, message, api_key, script_text, script_name, history):
                     yield ev
             yield "done", {}
         except Exception as e:  # noqa: BLE001

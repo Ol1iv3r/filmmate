@@ -39,6 +39,12 @@ def detect_tool(message: str):
     msg = message.strip()
     if not msg:
         return None
+    # 找灵感：UI 下发了题材前缀 / 明确说了找灵感
+    if msg.startswith("【题材") or "找灵感" in msg:
+        return "inspiration"
+    # 用户确认主题后出分镜
+    if re.match(r"^\s*出\s*分镜", msg):
+        return "storyboard"
     low = msg.lower()
     # 1) 明确讨论剧本 + 检查类词 → 剧本检查
     if _has_any(msg, ["剧本", "script", "稿子", "大纲", "梗概"]) and _has_any(msg, _REVIEW_WORDS):
@@ -1202,12 +1208,252 @@ def _build_context(tool: str, message: str):
     return "\n\n".join(p for p in parts if p), refs
 
 
-async def run_tool(tool: str, message: str, api_key: str = None):
+# --------------------------------------------------------------------------
+# 找灵感 v2：先选题材（划库）→ 只在对应库里找片 → 风格 / 主题 / 契合电影
+# --------------------------------------------------------------------------
+KIND_CHOICES = ["电影", "电视剧", "长片", "短片", "竖屏短剧",
+                "广告/TVC", "教程/产品演示", "Vlog/美食", "动画"]
+_KIND_PREFIX = re.compile(r"^\s*【题材[:：]\s*([^】]{1,16})】\s*", re.S)
+
+
+def parse_inspiration_kind(message: str):
+    """解析题材：优先 UI 下发的【题材：电影】前缀；否则识别消息中出现的题材词。"""
+    msg = message or ""
+    m = _KIND_PREFIX.match(msg)
+    if m:
+        rest = re.sub(r"^\s*找\s*灵\s*感\s*[:：]\s*", "", msg[m.end():])
+        return m.group(1).strip(), rest.strip()
+    for kind in sorted(KIND_CHOICES, key=len, reverse=True):
+        if kind in msg:
+            return kind, msg.strip()
+    return None, re.sub(r"^\s*找\s*灵\s*感\s*[:：]\s*", "", msg).strip()
+
+
+def _kind_ask_text():
+    return (
+        "先选一下你想找哪一类片的灵感：" + " / ".join(KIND_CHOICES) + "\n\n"
+        "选好题材后，用一句话描述你想要的感觉（例如：香港、雨夜、旧楼、孤独、身份流动）。"
+        "我会只在你选的题材库里找真实作品，再给你「风格 → 主题 → 契合电影（内容 + 静帧 + 原片链接）」。"
+    )
+
+
+def _norm_title(text: str) -> str:
+    return re.sub(r"[^\w\u4e00-\u9fff]+", "", (text or "").lower())
+
+
+def _films_markdown(kind: str, idea: str, styles: list) -> str:
+    lines = [
+        f"**题材**：{kind}　｜　**关键词**：{idea or '（未填写，按题材代表作）'}",
+        "",
+    ]
+    for i, s in enumerate(styles, 1):
+        film = s["film"]
+        lines.append(f"### 风格 {i}：{s['style_name']}")
+        lines.append(f"- **为什么契合「{idea or kind}」**：{s['why_fits']}")
+        lines.append(f"- **主题 {i}**：{s['theme']}")
+        lines.append(f"- **契合电影 {i}**：《{film.get('title_zh')}》（{film.get('year')}）　{film.get('duration') or ''}")
+        lines.append(f"  - 内容：{film.get('synopsis') or ''}")
+        moods = "/".join(film.get("moods") or [])
+        tags = "、".join((film.get("tags") or [])[:5])
+        lines.append(f"  - 情绪：{moods}　｜　标签：{tags}")
+        imgs = " ".join(f"![]({f})" for f in (film.get("frames") or [])[:3])
+        if imgs:
+            lines.append(f"  - 静帧：{imgs}")
+        if film.get("url"):
+            lines.append(f"  - 原片：[{film.get('platform') or '原片'}链接]({film['url']})")
+        if s.get("film_reason"):
+            lines.append(f"  - 参考点：{s['film_reason']}")
+        lines.append("")
+    lines.append("---")
+    lines.append("要不要我按 **主题 1** 出一份完整分镜？回复「出分镜」即可；想换别的主题，回复「出分镜：主题名」。")
+    return "\n".join(lines)
+
+
+async def inspiration_films(text: str, api_key: str = None, kind: str = None):
+    """按题材划库的找灵感：只在该题材作品中检索，返回风格/主题/契合电影。"""
+    import catalog as _catalog
+
+    if not kind or kind not in KIND_CHOICES:
+        return {"text": _kind_ask_text(), "need_kind": True,
+                "kind_options": KIND_CHOICES, "mode": "offline"}
+    idea = (text or "").strip()
+    cands = _catalog.semantic_candidates(idea, kind, k=8)
+    if not cands:
+        return {"text": f"「{kind}」题材库里暂时没有可用作品，换一类试试？",
+                "need_kind": True, "kind_options": KIND_CHOICES, "mode": "offline"}
+
+    styles = []
+    if llm.available(api_key):
+        try:
+            film_lines = []
+            for c in cands:
+                film_lines.append(
+                    f"- 《{c['title_zh']}》（{c.get('year')}，{c.get('duration')}）"
+                    f"｜情绪：{'/'.join(c.get('moods') or [])}"
+                    f"｜类型：{'/'.join(c.get('genre') or [])}"
+                    f"｜标签：{'、'.join((c.get('tags') or [])[:6])}"
+                    f"｜地点线索：{'、'.join(c.get('place_hints') or [])}"
+                    f"｜梗概：{c.get('synopsis')}")
+            user_content = (
+                f"用户想找的类型：{kind}\n用户描述的感觉/关键词：{idea or '（未填）'}\n\n"
+                "候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines))
+            data = await llm.complete_json(
+                [{"role": "system", "content": prompts.PROMPT_INSPIRATION_FILMS},
+                 {"role": "user", "content": user_content[:9000]}], api_key=api_key)
+            by_title = {_norm_title(c["title_zh"]): c for c in cands}
+            for s in data.get("styles") or []:
+                if not isinstance(s, dict):
+                    continue
+                wanted = _norm_title(str(s.get("film_title", "")))
+                film = by_title.get(wanted)
+                if film is None:
+                    for key, value in by_title.items():
+                        if key and wanted and (key in wanted or wanted in key):
+                            film = value
+                            break
+                if film is None or any(x["film"] is film for x in styles):
+                    continue
+                styles.append({
+                    "style_name": str(s.get("style_name", "")).strip() or "风格",
+                    "why_fits": str(s.get("why_fits", "")).strip(),
+                    "theme": str(s.get("theme", "")).strip(),
+                    "film_reason": str(s.get("film_reason", "")).strip(),
+                    "film": film,
+                })
+                if len(styles) >= 3:
+                    break
+        except Exception as e:  # noqa: BLE001
+            logger.warning("在线找灵感失败(%s),回退规则版", e)
+            styles = []
+
+    if not styles:  # 离线 / 模型失败：用检索到的真实影片套一组风格模板
+        templates = [
+            ("城市潮湿的夜行气质", "把空间、湿度与人物距离放在同一条街上，用夜与雨水连接人物"),
+            ("关系里的克制张力", "把关系放进具体空间，让沉默与空镜承担情绪"),
+            ("空间与身份的错位", "用旧楼、走廊、窗口这些空间写身份的变化"),
+        ]
+        for c, (name, wh) in zip(cands[:3], templates):
+            if idea:
+                why = f"你写到的「{idea}」在空间、湿度与人物距离上，和这部片的影像气质同频；{wh}"
+            else:
+                why = f"这部片是「{kind}」里最能代表这种气质的作品之一；{wh}"
+            styles.append({
+                "style_name": name, "why_fits": why,
+                "theme": "一个人回到熟悉的旧城区，发现记忆里的人都换了身份，"
+                         "他必须在留下与离开之间做一次决定。",
+                "film_reason": "同题材下，这部片的影像与叙事气质最接近这个主题",
+                "film": c,
+            })
+        mode = "offline"
+    else:
+        mode = "online"
+
+    text_out = _films_markdown(kind, idea, styles)
+    return {
+        "kind": kind, "idea": idea,
+        "styles": [{k: v for k, v in s.items() if k != "film"} for s in styles],
+        "films": [s["film"] for s in styles],
+        "text": text_out, "mode": mode, "kind_options": KIND_CHOICES,
+    }
+
+
+def _fallback_theme_storyboard(theme: str):
+    """离线兜底：按主题给一份通用的 8 镜分镜（不依赖模型）。"""
+    brief = (theme or "")[:60]
+    template = [
+        ("远景", "平视", "固定", "12s",
+         f"环境建立：与「{brief}」相关的空间在雨/夜色里显出轮廓，人物从画面边缘进入", "", "现场环境声铺底，不加音乐"),
+        ("中景", "平视", "跟", "6s", "镜头跟人物穿过通道或门口，前景有遮挡，交代他与这个空间的关系", "", "脚步与呼吸声"),
+        ("近景", "过肩", "固定", "4s", "人物停下，目光落在某个物件或另一个人身上，背景保持虚焦", "", "环境声压低，留出对白空间"),
+        ("特写", "俯拍", "固定", "3s", "手部动作：触碰、拿起或放下关键道具", "", "道具声放大"),
+        ("中景", "平视", "固定", "5s", "两人不同框的对峙或沉默，靠画外音建立距离", "（按主题写一句台词）", "只留空间混响"),
+        ("近景", "平视", "微推", "4s", "情绪转折点：人物表情变化，镜头慢慢推近", "", "音乐第一次进入"),
+        ("全景", "俯拍", "固定", "6s", "空间关系揭示：人物在大空间里显得很小", "", "音乐延续"),
+        ("特写", "平视", "固定", "5s", "收尾意象：与开头呼应的道具/光线/水痕，留白", "", "只剩环境声"),
+    ]
+    shots = []
+    for i, (shot_type, angle, movement, duration, desc, dialogue, sound) in enumerate(template, 1):
+        shots.append({
+            "id": i, "scene": f"第{i}场", "shot_type": shot_type, "angle": angle,
+            "movement": movement, "lens": "", "duration": duration,
+            "description": desc, "dialogue": dialogue,
+            "lighting": "按主题统一光比，保留现场实用光", "sound": sound,
+            "purpose": "推进主题与人物关系", "transition": "切",
+        })
+    return shots
+
+
+async def storyboard_from_theme(message: str, history: list = None, api_key: str = None):
+    """用户确认主题后，按该主题出完整分镜。"""
+    theme = ""
+    m = re.match(r"^\s*出\s*分镜\s*[:：]\s*(.+)$", message or "", re.S)
+    if m:
+        theme = m.group(1).strip()
+    if not theme:
+        for turn in reversed(history or []):
+            if turn.get("role") != "assistant":
+                continue
+            mm = re.search(r"主题\s*1\s*\*{0,2}\s*[:：]\s*([^\n]+)", str(turn.get("content", "")))
+            if mm:
+                theme = mm.group(1).strip()
+                break
+    if not theme:
+        return {"text": "想按哪个主题出分镜？回复「出分镜：主题名」就行。", "mode": "offline"}
+
+    shots, notes, mode = [], "", "offline"
+    if llm.available(api_key):
+        try:
+            user_content = f"主题：{theme}\n类型：短片（6–8 分钟），请按这个主题出 8–10 个镜头。"
+            data = await llm.complete_json(
+                [{"role": "system", "content": prompts.PROMPT_STORYBOARD_THEME},
+                 {"role": "user", "content": user_content[:4000]}], api_key=api_key)
+            for i, s in enumerate((data.get("shots") or [])[:10]):
+                if not isinstance(s, dict):
+                    continue
+                shots.append({
+                    "id": int(s.get("id", i + 1) or i + 1),
+                    "scene": str(s.get("scene", "")), "shot_type": str(s.get("shot_type", "中景")),
+                    "angle": str(s.get("angle", "平视")), "movement": str(s.get("movement", "固定")),
+                    "lens": str(s.get("lens", "")), "duration": str(s.get("duration", "4s")),
+                    "description": str(s.get("description", "")),
+                    "dialogue": str(s.get("dialogue", "")),
+                    "lighting": str(s.get("lighting", "")), "sound": str(s.get("sound", "")),
+                    "purpose": str(s.get("purpose", "")), "transition": str(s.get("transition", "切")),
+                })
+            notes = str(data.get("coverage_notes", ""))
+            if shots:
+                mode = "online"
+        except Exception as e:  # noqa: BLE001
+            logger.warning("在线分镜失败(%s),回退规则版", e)
+    if not shots:
+        shots = _fallback_theme_storyboard(theme)
+
+    lines = [f"### 分镜（主题：{theme}）", "",
+             "| # | 场景 | 景别/机位/运镜 | 时长 | 画面 | 声音 |",
+             "|---|---|---|---|---|---|"]
+    for s in shots:
+        lines.append(
+            f"| {s.get('id')} | {s.get('scene', '')} | {s.get('shot_type', '')}/{s.get('angle', '')}/"
+            f"{s.get('movement', '')} | {s.get('duration', '')} | {s.get('description', '')} | {s.get('sound', '')} |")
+    if notes:
+        lines += ["", f"**整体方向**：{notes}"]
+    return {"shots": shots, "coverage_notes": notes, "mode": mode,
+            "theme": theme, "text": "\n".join(lines)}
+
+
+async def run_tool(tool: str, message: str, api_key: str = None, history: list = None):
     if tool == "cases":
         return await cases_tool(message, api_key)
+    # 找灵感 v2：先确定题材（划库），只在对应题材的影片库里找片
+    if tool == "inspiration":
+        kind, idea = parse_inspiration_kind(message)
+        return await inspiration_films(idea, api_key, kind)
+    # 用户确认主题后出分镜
+    if tool == "storyboard" and re.match(r"^\s*出\s*分镜", message or ""):
+        return await storyboard_from_theme(message, history, api_key)
     # 创作类工具先检索资料（案例/场面/镜头/通告单），注入提示词或附到结果
     ctx, refs = "", []
-    if tool in ("review", "storyboard", "rundown", "schedule", "inspiration"):
+    if tool in ("review", "storyboard", "rundown", "schedule"):
         ctx, refs = await asyncio.to_thread(_build_context, tool, message)
     if tool == "review":
         return await review(message, api_key, ctx, refs)
@@ -1217,14 +1463,6 @@ async def run_tool(tool: str, message: str, api_key: str = None):
         return await rundown(message, api_key, ctx, refs)
     if tool == "schedule":
         return await schedule(message, api_key, ctx, refs)
-    if tool == "inspiration":
-        # 真实影片目录（250 部 / 每部 10 张静帧）：按灵感检索相似作品，注入提示词
-        try:
-            import catalog as _catalog
-            catalog_ctx = _catalog.prompt_block(message, k=5)
-        except Exception:  # noqa: BLE001
-            catalog_ctx = ""
-        return await inspiration(message, api_key, ctx, refs, catalog_ctx=catalog_ctx)
     raise ValueError(f"未知工具: {tool}")
 
 

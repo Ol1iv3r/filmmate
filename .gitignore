@@ -46,3 +46,6 @@ data/sample-index/
 
 # 一键启动日志
 start.log
+
+# Office 临时锁文件
+~$*

@@ -156,3 +156,12 @@
     .venv/bin/python scripts/strict_clean.py --apply      # 清空 + 自动重新匹配
     .venv/bin/python scripts/add_catalog_rows.py CSV路径  # 合并外部补充片单
     .venv/bin/python scripts/build_catalog.py export      # 重新导出表格/HTML
+
+
+## 9. 在「找灵感」里怎么用这个库（v3）
+
+- 入口：聊天输入区第一个 chip「找灵感」→ 选题材 → 描述感觉（例如「香港、雨夜、孤独」）。
+- 检索：catalog.py 的 semantic_candidates(idea, kind) 只在该题材内检索，且带地点线索（香港→甜蜜蜜/花样年华/重庆森林/英雄本色；台北→一一/悲情城市/大佛普拉斯…），保证「选电影就只给电影」。
+- 产出结构：风格（为什么契合）→ 主题（从零构思）→ 契合电影（内容 + 3 张静帧 + 原片链接），最多 3 组。
+- 下一步：模型会反问是否出完整分镜；用户回复「出分镜」后，用 prompts.PROMPT_STORYBOARD_THEME 生成 8–10 镜分镜表。
+- 相关文件：catalog.py（PLACE_HINTS / semantic_candidates）、tools.py（inspiration_films / storyboard_from_theme）、prompts.py（PROMPT_INSPIRATION_FILMS / PROMPT_STORYBOARD_THEME）、filmmate-web/src/components/Composer.tsx（题材选择 UI）。

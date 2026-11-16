@@ -1396,3 +1396,30 @@ button {
     max-width: 88%;
   }
 }
+
+/* ── 找灵感：题材选择 + 输出里的静帧图片 ── */
+.kind-chips { margin-top: -4px; }
+.kind-label { font-size: 12px; color: var(--text-dim, #8b9bb4); margin-right: 2px; }
+.composer-mode {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #5eead4;
+  padding: 6px 10px;
+  border: 1px dashed rgba(94, 234, 212, 0.35);
+  border-radius: 8px;
+  background: rgba(94, 234, 212, 0.06);
+}
+.markdown img {
+  max-width: 220px;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 6px 8px 2px 0;
+  vertical-align: top;
+}
+.markdown h3 {
+  margin-top: 18px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}

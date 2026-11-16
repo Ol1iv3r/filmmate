@@ -473,3 +473,27 @@ python3 scripts/enrich_samples.py    # 重新从 _ref 样本生成富化数据
   - static/frames/catalog/：2610 张静帧
 - **检索接口**：catalog.py 的 kind_options() / search() / suggest() / prompt_block()；tools.py 的灵感工具已接入，会基于真实作品生成创作思路；
 - **重建/复核**：scripts/build_catalog.py（resolve / frames / export）、scripts/strict_clean.py（错链复核）、scripts/add_catalog_rows.py（合并外部片单）。
+
+
+## 🎯 找灵感 v2：先选题材 → 只在对应库里找片 → 风格 / 主题 / 电影 → 确认出分镜
+
+「找灵感」现在是入口第一个按钮，流程：
+
+1. 点击 **找灵感** → 先选题材（电影 / 电视剧 / 长片 / 短片 / 竖屏短剧 / 广告/TVC / 教程 / Vlog / 动画）；
+2. 用一句话描述你想要的感觉（例：香港、雨夜、旧楼、孤独、身份流动）；
+3. 后端只在**你选的题材库**里检索真实作品（不会把短片/剧集的例子塞进电影灵感），再用模型生成：
+   - 风格 1（为什么契合「香港」）
+   - 主题 1（从零构思的可拍主题：人物 + 处境 + 冲突）
+   - 契合电影 1（内容 + 3 张静帧 + 原片链接）
+   - 风格 2 / 主题 2 / 电影 2（若有），最多到 3；
+4. 最后反问「要不要按主题 1 出完整分镜？」→ 回复 **出分镜**（或「出分镜：主题名」）→ 输出对应主题的完整分镜表（8–10 个镜头：景别/机位/运镜/时长/画面/声音）。
+
+实现位置：
+
+- 前端：filmmate-web/src/components/Composer.tsx（题材选择 + 在消息前注入【题材：xxx】）
+- 后端：tools.py 的 inspiration_films / storyboard_from_theme、catalog.py 的 semantic_candidates（含城市/地点线索）、prompts.py 的 PROMPT_INSPIRATION_FILMS / PROMPT_STORYBOARD_THEME
+- 接口：POST /api/chat（React UIMessage 与旧版 SSE 两种格式都支持）；未选题材时会先返回「请先选题材」
+- 自测：
+  - 电影 + 香港 → 只会返回 电影 类目（甜蜜蜜 / 花样年华 / 重庆森林）
+  - 短片 + 孤独 → 只会返回 短片 类目（小城二月 / 她和她的猫 / 地方守护神）
+  - 回复「出分镜」→ 按上一轮「主题 1」生成 8–10 镜分镜

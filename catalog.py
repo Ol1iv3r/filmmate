@@ -230,3 +230,113 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ─────────────────────────── 灵感检索（按题材划分库） ───────────────────────────
+# 人工补充的「地点/城市」线索：让「香港、台北、巴黎」这类关键词能命中对的片子
+PLACE_HINTS = {
+    "甜蜜蜜": ["香港", "移民", "九十年代"],
+    "花样年华": ["香港", "上海人", "六十年代"],
+    "重庆森林": ["香港", "重庆大厦", "都市"],
+    "英雄本色": ["香港", "黑帮", "枪战"],
+    "色，戒": ["香港", "上海", "民国"],
+    "一一": ["台北", "台湾", "中产家庭"],
+    "悲情城市": ["台湾", "九份", "二二八"],
+    "血观音": ["台湾", "高雄", "官商"],
+    "阳光普照": ["台湾", "家庭"],
+    "大佛普拉斯": ["台湾", "底层"],
+    "苏州河": ["上海", "娄烨"],
+    "小武": ["汾阳", "山西", "县城"],
+    "三峡好人": ["奉节", "三峡", "山西"],
+    "让子弹飞": ["民国", "四川", "鹅城"],
+    "罗马": ["墨西哥", "七十年代"],
+    "天堂电影院": ["西西里", "意大利"],
+    "天使爱美丽": ["巴黎", "蒙马特"],
+    "绿皮书": ["美国南方", "公路"],
+    "寄生虫": ["首尔", "阶级"],
+    "小偷家族": ["东京", "底层"],
+    "步履不停": ["镰仓", "日本"],
+    "那年夏天，宁静的海": ["日本", "海边"],
+    "花火": ["日本", "警察"],
+    "无人知晓": ["东京", "儿童"],
+    "雾中风景": ["希腊", "公路"],
+    "都灵之马": ["匈牙利", "荒原"],
+    "乡愁": ["意大利", "俄罗斯"],
+    "镜子": ["俄罗斯", "乡村"],
+    "七封印": ["中世纪", "瑞典"],
+    "筋疲力尽": ["巴黎", "新浪潮"],
+    "四百击": ["巴黎", "新浪潮"],
+    "八部半": ["意大利", "电影圈"],
+    "蓝": ["法国", "蓝色"],
+    "迁徙的鸟": ["自然", "鸟"],
+    "海洋": ["海洋", "自然"],
+    "故乡之光": ["智利", "沙漠"],
+    "灰色花园": ["美国", "母女"],
+    "人生果实": ["日本", "田园"],
+    "寿司之神": ["东京", "寿司"],
+    "高三": ["中国", "高考"],
+    "归途列车": ["中国", "春运"],
+    "看见台湾": ["台湾", "航拍"],
+    "四个春天": ["贵州", "家庭"],
+    "我的章鱼老师": ["南非", "海洋"],
+}
+
+MOOD_HINTS = {
+    "孤独": ["孤独", "疏离"], "压抑": ["压抑", "窒息"], "温暖": ["温暖", "治愈"],
+    "爱情": ["爱情", "浪漫"], "悬疑": ["悬疑", "谜"], "青春": ["青春", "成长"],
+}
+
+
+def _haystack(t):
+    return " ".join([
+        t.get("title_zh", ""), t.get("title_en", ""), " ".join(t.get("tags") or []),
+        " ".join(t.get("genre") or []), " ".join(t.get("moods") or []), t.get("synopsis", ""),
+    ]).lower()
+
+
+def semantic_candidates(idea="", kind=None, k=8):
+    """按用户的关键词/感觉，在指定题材（kind）里挑真实作品；不够时用同题材作品补足。"""
+    idea = (idea or "").strip()
+    low = idea.lower()
+    tokens = [t for t in rag.tokenize(idea) if len(t) >= 2]
+    titles = [t for t in _load() if (not kind or t["kind"] == kind)]
+    scored = []
+    for t in titles:
+        hay = _haystack(t)
+        score = 0.0
+        for tok in tokens:
+            if tok in hay:
+                score += 3.0
+        for tag in t.get("tags") or []:
+            if len(tag) >= 2 and tag.lower() in low:
+                score += 5.0
+        for hint in PLACE_HINTS.get(t.get("title_zh"), []):
+            if len(hint) >= 2 and hint in idea:
+                score += 6.0
+        for genre in t.get("genre") or []:
+            if len(genre) >= 2 and genre in idea:
+                score += 2.5
+        for mood in t.get("moods") or []:
+            if len(mood) >= 2 and mood in idea:
+                score += 2.0
+        if score > 0:
+            scored.append((score, t))
+    scored.sort(key=lambda item: (-item[0], item[1].get("id", "")))
+    picked = [t for _, t in scored[:k]]
+    if len(picked) < 3:  # 关键词检索不到时，用同题材里最有代表性的作品兜底
+        extra = [t for t in titles if t not in picked]
+        extra.sort(key=lambda t: (t.get("link_confidence") != "高", -len(t.get("tags") or [])))
+        picked += extra[: max(0, 3 - len(picked))]
+    out = []
+    for t in picked[:k]:
+        out.append({
+            "id": t.get("id"), "kind": t.get("kind"),
+            "title_zh": t.get("title_zh"), "title_en": t.get("title_en"),
+            "year": t.get("year"), "duration": t.get("duration"),
+            "genre": t.get("genre"), "moods": t.get("moods"), "tags": t.get("tags"),
+            "synopsis": t.get("synopsis"), "url": t.get("url"), "platform": t.get("platform"),
+            "frames": (t.get("frames") or [])[:3],
+            "place_hints": PLACE_HINTS.get(t.get("title_zh"), []),
+        })
+    return out
+
