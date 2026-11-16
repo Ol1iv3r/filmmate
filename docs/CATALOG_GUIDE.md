@@ -110,7 +110,7 @@
 - 新增 4 个类目：广告/TVC、教程/产品演示、Vlog/美食、动画；
 - 链接策略：Bilibili 优先；YouTube 原生内容（苹果/特斯拉官方片、美食 Vlog、广告等）走 YouTube：
   yt-dlp 检索 → 校验标题/时长 → 解析 YouTube 官方 storyboard 拼图抽 10 张静帧；
-- 当前 262 条中：Bilibili 231 条、YouTube 31 条（表格「平台」列可筛）。
+- 当前 261 条中：Bilibili 231 条、YouTube 31 条（表格「平台」列可筛）。
 
 ### 8.2 错链纠正（scripts/strict_clean.py）
 
