@@ -23,6 +23,9 @@ data/conversations/*
 data/library/*
 !data/library/*.json
 data/library/_draft_*.json
+# 影视目录的策展源片单（脚本可据此复现 catalog.json）
+!data/catalog_src/
+!data/catalog_src/*.json
 
 # 系统文件
 .DS_Store

@@ -457,3 +457,19 @@ python3 scripts/enrich_samples.py    # 重新从 _ref 样本生成富化数据
 - 聊天上下文保留最近 6 轮；B 站链接可能随平台下架失效，需重新跑
   `scripts/build_scripted_films.py` 校验；
 - 航拍等法规信息以官方发布为准。
+
+
+## 🎞 影视灵感目录（Catalog：可看原片 + 每部 10 张静帧）
+
+给「用户灵感 → 选题材 → LLM 生成创作思路 → 推荐相似作品」用的影片库：
+
+- **规模**：262 部 / 9 类（电影、电视剧、长片、短片、竖屏短剧、广告/TVC、教程/产品演示、Vlog/美食、动画），每部 10 张代表性静帧，共 2620 张；
+- **链接**：每条原片链接生成时实测可播放（Bilibili view + storyboard 双校验；YouTube 走 yt-dlp + 官方 storyboard），表格带「链接可信度 / 匹配视频 / UP主 / 核验时间」便于复核；
+- **打开方式**：启动 Filmmate 后访问 http://127.0.0.1:8000/catalog（或 /static/catalog.html），支持按种类/情绪筛选、关键词搜索、点图放大、一键跳原片；
+- **文件**：
+  - data/library/catalog.json：机器可读总库（含 bvid、10 张静帧路径与时间码、标签、可信度）
+  - docs/film_catalog.xlsx / .csv / FILM_CATALOG.md：编号-种类-中文名-英文名-年份-时长-情绪-内容梗概-Tag-原片链接（+ 静帧列）
+  - docs/catalog.html + static/catalog.html：画廊
+  - static/frames/catalog/：2620 张静帧
+- **检索接口**：catalog.py 的 kind_options() / search() / suggest() / prompt_block()；tools.py 的灵感工具已接入，会基于真实作品生成创作思路；
+- **重建/复核**：scripts/build_catalog.py（resolve / frames / export）、scripts/strict_clean.py（错链复核）、scripts/add_catalog_rows.py（合并外部片单）。

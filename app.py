@@ -349,6 +349,15 @@ async def legacy_index():
     return FileResponse(STATIC_DIR / "index.html")
 
 
+@app.get("/catalog")
+async def catalog_page():
+    """影视灵感目录画廊（250+ 部 / 每部 10 张静帧）。"""
+    page = STATIC_DIR / "catalog.html"
+    if not page.exists():
+        return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(page)
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host=config.HOST, port=config.PORT, log_level="info")

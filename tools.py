@@ -1108,12 +1108,15 @@ def offline_inspiration(topic: str = "", refs: list = None):
     return out
 
 
-async def inspiration(text: str, api_key: str = None, case_ctx: str = "", refs: list = None):
+async def inspiration(text: str, api_key: str = None, case_ctx: str = "", refs: list = None,
+                      catalog_ctx: str = ""):
     if llm.available(api_key):
         try:
             user_content = text[:2000] or "随机"
             if case_ctx:
                 user_content += f"\n\n参考资料（案例 / 场面模式 / 视频样本节奏，可作为灵感参照）：\n{case_ctx}"
+            if catalog_ctx:
+                user_content += "\n\n" + catalog_ctx
             data = await llm.complete_json(
                 [{"role": "system", "content": prompts.PROMPT_INSPIRATION},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
@@ -1215,7 +1218,13 @@ async def run_tool(tool: str, message: str, api_key: str = None):
     if tool == "schedule":
         return await schedule(message, api_key, ctx, refs)
     if tool == "inspiration":
-        return await inspiration(message, api_key, ctx, refs)
+        # 真实影片目录（250 部 / 每部 10 张静帧）：按灵感检索相似作品，注入提示词
+        try:
+            import catalog as _catalog
+            catalog_ctx = _catalog.prompt_block(message, k=5)
+        except Exception:  # noqa: BLE001
+            catalog_ctx = ""
+        return await inspiration(message, api_key, ctx, refs, catalog_ctx=catalog_ctx)
     raise ValueError(f"未知工具: {tool}")
 
 

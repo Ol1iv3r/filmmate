@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Filmmate 影视灵感目录 · __COUNT__ 部 / __FRAMES__ 张静帧</title>
+<style>
+:root{--bg:#0b0f17;--card:#141b27;--line:#243044;--txt:#e5eaf2;--sub:#8b9bb4;--accent:#5eead4;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{padding:28px 32px 12px;border-bottom:1px solid var(--line)}
+h1{margin:0 0 6px;font-size:22px}
+.sub{color:var(--sub);font-size:13px}
+.toolbar{position:sticky;top:0;z-index:8;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 32px;background:rgba(11,15,23,.94);border-bottom:1px solid var(--line)}
+.toolbar input{flex:1 1 260px;min-width:200px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:#0f1520;color:var(--txt)}
+.toolbar select{padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:#0f1520;color:var(--txt)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:#0f1520;color:var(--sub);cursor:pointer;font-size:13px}
+.tab.on{background:var(--accent);color:#06251f;border-color:var(--accent);font-weight:600}
+#count{color:var(--sub);font-size:12px;margin-left:auto}
+main{padding:20px 32px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(560px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;overflow:hidden}
+.head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.id{font:600 12px/1 ui-monospace,monospace;color:var(--accent);background:#0e2b27;padding:4px 7px;border-radius:6px}
+.kind{font-size:11px;color:var(--sub);border:1px solid var(--line);padding:2px 6px;border-radius:5px}
+.title{font-size:17px;font-weight:700;margin:0}
+.title em{font-style:normal;font-weight:400;color:var(--sub);font-size:13px;margin-left:6px}
+.meta{color:var(--sub);font-size:12px}
+.frames{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:10px 0}
+.frames img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;background:#0a0e15;cursor:zoom-in;transition:transform .15s}
+.frames img:hover{transform:scale(1.03)}
+.frames.vertical img{aspect-ratio:9/16;object-fit:contain}
+p.syn{color:#c7d2e1;font-size:13px;margin:8px 0}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.tag{font-size:11px;color:#a9b8cf;background:#0f1520;border:1px solid var(--line);padding:2px 7px;border-radius:999px}
+.tag.mood{color:#fbbf24;border-color:#4a3a16;background:#241c0a}
+.foot{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:12px;color:var(--sub)}
+.watch{color:#06251f;background:var(--accent);padding:6px 12px;border-radius:8px;text-decoration:none;font-weight:600;font-size:12px}
+.watch:hover{filter:brightness(1.08)}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:99;cursor:zoom-out}
+#lb img{max-width:92vw;max-height:92vh;border-radius:6px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Filmmate 影视灵感目录</h1>
+  <div class="sub">__COUNT__ 部作品（电影 / 电视剧 / 长片 / 短片 / 竖屏短剧）· 每部 10 张代表性静帧 · 原片链接生成时实检 · 生成于 __TIME__</div>
+</header>
+<div class="toolbar">
+  <div class="tabs" id="tabs"></div>
+  <select id="mood"><option value="">全部情绪</option></select>
+  <input id="q" placeholder="搜索片名 / 梗概 / Tag（例：暴雨夜 出租车 陌生人）">
+  <span id="count"></span>
+</div>
+<main id="grid"></main>
+<div id="lb"><img alt=""></div>
+<script>
+const DATA = __DATA__;
+const KIND_ORDER = Array.from(new Set(DATA.map(function(d){ return d.kind; })));
+let state = {kind:"", mood:"", q:""};
+const grid = document.getElementById("grid");
+const tabs = document.getElementById("tabs");
+const moodSel = document.getElementById("mood");
+const qInput = document.getElementById("q");
+const countEl = document.getElementById("count");
+
+const kinds = KIND_ORDER.filter(function(k){ return DATA.some(function(d){ return d.kind === k; }); });
+var tabHtml = '<div class="tab on" data-kind="">全部</div>';
+kinds.forEach(function(k){
+  var n = DATA.filter(function(d){ return d.kind === k; }).length;
+  tabHtml += '<div class="tab" data-kind="' + k + '">' + k + ' ' + n + '</div>';
+});
+tabs.innerHTML = tabHtml;
+const moods = Array.from(new Set(DATA.flatMap(function(d){ return d.moods; }))).sort();
+moods.forEach(function(m){ moodSel.innerHTML += '<option value="' + m + '">' + m + '</option>'; });
+
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+  });
+}
+
+function card(d){
+  var vertical = d.frames.some(function(f){ return (f.h||0) > (f.w||0); });
+  var imgs = d.frames.map(function(f){
+    return '<img loading="lazy" src="' + f.src + '" data-full="' + f.src + '" alt="' + esc(d.title_zh) + ' 静帧">';
+  }).join("");
+  var moodTags = d.moods.map(function(m){ return '<span class="tag mood">' + esc(m) + '</span>'; }).join("");
+  var tags = d.tags.map(function(t){ return '<span class="tag">' + esc(t) + '</span>'; }).join("");
+  return '<article class="card" id="' + d.id + '" data-kind="' + d.kind + '">'
+    + '<div class="head"><span class="id">' + d.id + '</span><span class="kind">' + d.kind + '</span>'
+    + '<h2 class="title">' + esc(d.title_zh) + '<em>' + esc(d.title_en) + '</em></h2>'
+    + '<span class="meta">' + (d.year || "") + ' · ' + esc(d.duration) + '</span></div>'
+    + '<div class="frames' + (vertical ? " vertical" : "") + '">' + imgs + '</div>'
+    + '<p class="syn">' + esc(d.synopsis) + '</p>'
+    + '<div class="tags">' + moodTags + tags + '</div>'
+    + '<div class="foot"><a class="watch" href="' + d.url + '" target="_blank" rel="noopener">▶ 去 B 站看原片</a>'
+    + '<span>' + esc(d.video_title).slice(0, 42) + '</span><span>静帧 ' + d.frames.length + ' 张</span></div>'
+    + '</article>';
+}
+
+function render(){
+  var q = state.q.trim().toLowerCase();
+  var shown = 0;
+  var html = "";
+  DATA.forEach(function(d){
+    var hay = (d.title_zh + d.title_en + d.synopsis + d.tags.join(" ") + d.genre.join(" ") + d.moods.join(" ")).toLowerCase();
+    var ok = (!state.kind || d.kind === state.kind)
+      && (!state.mood || d.moods.indexOf(state.mood) >= 0)
+      && (!q || q.split(/\s+/).every(function(t){ return hay.indexOf(t) >= 0; }));
+    if (ok) { shown++; html += card(d); }
+  });
+  grid.innerHTML = html;
+  countEl.textContent = "显示 " + shown + " / " + DATA.length + " 部";
+  Array.prototype.forEach.call(document.querySelectorAll(".frames img"), function(img){
+    img.onclick = function(){
+      var lb = document.getElementById("lb");
+      lb.querySelector("img").src = img.dataset.full;
+      lb.style.display = "flex";
+    };
+  });
+}
+document.getElementById("lb").onclick = function(e){ e.currentTarget.style.display = "none"; };
+tabs.onclick = function(e){
+  var t = e.target.closest(".tab");
+  if(!t) return;
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(x){ x.classList.toggle("on", x === t); });
+  state.kind = t.dataset.kind; render(); window.scrollTo({top:0,behavior:"smooth"});
+};
+moodSel.onchange = function(){ state.mood = moodSel.value; render(); };
+qInput.oninput = function(){ state.q = qInput.value; render(); };
+render();
+</script>
+</body>
+</html>
