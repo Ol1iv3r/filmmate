@@ -23,6 +23,11 @@ export function AssistantMessage({
   onRegenerate: () => void
 }) {
   const views = messageToViews(message)
+  // 板块（工具结果卡片）统一放到回答文字之后
+  const orderedViews = [
+    ...views.filter((v) => v.kind === 'text'),
+    ...views.filter((v) => v.kind !== 'text'),
+  ]
   const firstSeen = useRef(new Map<string, number>())
   const finishSeen = useRef(new Map<string, number>())
   const [speaking, setSpeaking] = useState(false)
@@ -76,7 +81,7 @@ export function AssistantMessage({
       <div className="msg-avatar">🎬</div>
       <div className="msg-body">
         <div className="assistant-parts">
-          {views.map((v, i) => {
+          {orderedViews.map((v, i) => {
             if (v.kind === 'text') {
               return <Markdown key={i} text={v.text} />
             }
@@ -91,7 +96,7 @@ export function AssistantMessage({
                 activity={activity}
                 firstSeenAt={seenAt(key)}
                 doneAtFallback={doneAt(key, activity.state !== 'running')}
-                isLast={i === views.length - 1}
+                isLast={i === orderedViews.length - 1}
               />
             )
           })}

@@ -102,8 +102,14 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
   const submit = () => {
     const t = (value || '').trim()
-    if (!t || streaming || voiceInput.status === 'recording') return
-    let outgoing = t
+    if (streaming || voiceInput.status === 'recording') return
+    if (!t && !scriptFile) return
+    // 上传了剧本但没打字：直接回车按当前板块的默认动作执行
+    let outgoing = t || (activeTool === 'storyboard'
+      ? '根据这份剧本出分镜'
+      : activeTool === 'schedule'
+        ? '根据最近的分镜生成拍摄方案'
+        : '检查这份剧本，并告诉我冲突和修改建议')
     // 上传过剧本时，把原文附在消息末尾（后端识别；输入框里不显示）
     if (activeTool !== 'inspiration' && scriptFile) outgoing += '\n\n【上传剧本】\n' + scriptFile.text
     onSend(outgoing, { tool: activeTool, kind: inspKind })
@@ -263,7 +269,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
       {scriptFile && (
         <div className="composer-mode">
-          已上传剧本：{scriptFile.name}（{scriptFile.chars} 字）
+          已上传剧本：{scriptFile.name}（{scriptFile.chars} 字）· 可直接回车开始分析
           <button className="link-btn" onClick={() => setScriptFile(null)}>移除</button>
         </div>
       )}
@@ -330,14 +336,19 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             <Square size={15} fill="currentColor" />
           </button>
         ) : (
-          <button type="submit" className={cn('send-btn', !value.trim() && 'disabled')} title="发送（Enter）" disabled={!value.trim()}>
+          <button
+            type="submit"
+            className={cn('send-btn', !value.trim() && !scriptFile && 'disabled')}
+            title={scriptFile && !value.trim() ? '直接开始分析已上传剧本（Enter）' : '发送（Enter）'}
+            disabled={!value.trim() && !scriptFile}
+          >
             <ArrowUp size={17} />
           </button>
         )}
       </form>
       {voiceInput.error && <div className="composer-error" role="alert">{voiceInput.error}</div>}
       <div className="composer-hint">
-        Enter 发送 · Shift+Enter 换行 · 点上方板块后，输入内容默认归该功能
+        Enter 发送 · Shift+Enter 换行 · 点上方板块后输入内容默认归该功能 · 上传剧本后可直接回车开始分析
       </div>
     </div>
   )

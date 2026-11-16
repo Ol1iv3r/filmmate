@@ -185,3 +185,12 @@
 - 拍摄计划：schedule_tool（PROMPT_SHOOTING_PLAN）→ days/calendar；前端 SchedulePanel 生成 .ics。
 - 参考片：personal_library（Bilibili 带 cookie 抓元数据 / YouTube oEmbed）+ personal_api 模型风格分析 + taste_context 注入灵感/剧本提示词。
 - 每题材提示：Composer.KIND_HINTS。
+
+
+## 12. v7（2026-11-16 深夜）
+
+- AssistantMessage 排序：text 在前、tool 卡片在后（板块在回答末尾）。
+- 后端 handle_tool 记录 _tool_t0 并回传 payload.ms（ToolCard 不再恒 0ms）。
+- 抽帧增加黑底字幕卡过滤（is_subtitle_card：dark>0.60 & skin<0.012 & edge>4），选帧后若 ≥5 张仍是字幕卡 → 判失败；已重配三傻/绿皮书、移除初代iPhone导览，当前 260 部 / 2600 帧。
+- Composer：上传剧本后空输入 + Enter 触发默认动作；按钮可用。
+- LLM 额度错误统一由 tools.llm_error_hint 翻译；handle_qa 失败回退 _qa_offline；找灵感/分镜/拍摄计划均有规则兜底；外层异常输出可读提示而不是英文报错。

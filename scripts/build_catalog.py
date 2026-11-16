@@ -797,6 +797,14 @@ def extract_stills(bili, bvid, cid, out_dir, count=10, expected_sec=None):
     if not scored:
         return []
 
+    def is_subtitle_card(feat):
+        # 黑底 + 字幕：画面几乎全黑、几乎无肤色、边缘强（文字）
+        return feat["dark"] > 0.60 and feat["skin"] < 0.012 and feat["edge"] > 4
+
+    filtered = {k: v for k, v in scored.items() if not is_subtitle_card(v["feat"])}
+    if len(filtered) >= count * 3:
+        scored = filtered
+
     selected, used = [], []
     for plan in plans:
         cands = [s for s in scored.values()
@@ -859,6 +867,10 @@ def extract_stills(bili, bvid, cid, out_dir, count=10, expected_sec=None):
     if not frames:
         return []
 
+    # 兜底：选出的 10 张里大多数仍是黑底字幕卡 → 这个上传不是电影画面，判定失败
+    cards = sum(1 for item, _ in frames if is_subtitle_card(item["feat"]))
+    if cards >= 5:
+        return []
     crop = detect_crop_box([f for _, f in frames])
     out_dir.mkdir(parents=True, exist_ok=True)
     results = []

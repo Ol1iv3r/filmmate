@@ -1,8 +1,8 @@
 {
  "name": "Filmmate 影视灵感目录（B 站原片 + 10 张静帧）",
  "description": "按「编号-种类-中文名-英文名-年份-时长-情绪-内容梗概-Tag-原片链接」组织的 250 部可观看作品库，每部 10 张代表性静帧，用于「灵感→题材→创作思路→相似片推荐」。",
- "generated_at": "2026-11-16T18:12:04+08:00",
- "count": 261,
+ "generated_at": "2026-11-16T20:23:21+08:00",
+ "count": 260,
  "by_kind": {
   "电影": 32,
   "电视剧": 35,
@@ -10,7 +10,7 @@
   "短片": 50,
   "竖屏短剧": 50,
   "广告/TVC": 17,
-  "教程/产品演示": 7,
+  "教程/产品演示": 6,
   "Vlog/美食": 16,
   "动画": 9
  },
@@ -205,183 +205,6 @@
   {
    "id": "D002",
    "kind": "电影",
-   "title_zh": "三傻大闹宝莱坞",
-   "title_en": "3 Idiots",
-   "year": 2009,
-   "duration": "2小时51分",
-   "runtime_min": 171.0,
-   "episodes": null,
-   "moods": [
-    "热血",
-    "欢乐",
-    "成长"
-   ],
-   "genre": [
-    "喜剧",
-    "剧情",
-    "青春"
-   ],
-   "synopsis": "印度皇家工程学院的填鸭式教育里，新生兰彻不背课本、只问为什么，带着两个室友用法子怼教授、追校长的女儿；十年后好友在寻找失踪的兰彻，一路翻出当年那些荒唐又动人的旧账。",
-   "tags": [
-    "印度",
-    "教育",
-    "友情",
-    "歌舞",
-    "阿米尔·汗",
-    "反内卷"
-   ],
-   "bvid": "BV15f4y117Ed",
-   "url": "https://www.bilibili.com/video/BV15f4y117Ed",
-   "platform": "Bilibili",
-   "video_title": "学习英语《三傻大闹宝莱坞》",
-   "video_duration_sec": 10350,
-   "owner": "账号已注销",
-   "play": 426395,
-   "page_count": 1,
-   "match_score": 0.993,
-   "link_confidence": "高",
-   "frame_distinct": 10,
-   "frame_quality": "高",
-   "verified_at": "2026-11-15T15:20:03+08:00",
-   "frames": [
-    "/static/frames/catalog/BV15f4y117Ed/01.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/02.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/03.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/04.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/05.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/06.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/07.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/08.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/09.jpg",
-    "/static/frames/catalog/BV15f4y117Ed/10.jpg"
-   ],
-   "frame_meta": [
-    {
-     "n": 1,
-     "path": "/static/frames/catalog/BV15f4y117Ed/01.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/01.jpg",
-     "time_sec": 1424,
-     "timecode": "00:23:44",
-     "score": 0.5957,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 2,
-     "path": "/static/frames/catalog/BV15f4y117Ed/02.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/02.jpg",
-     "time_sec": 2242,
-     "timecode": "00:37:22",
-     "score": 0.5988,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 3,
-     "path": "/static/frames/catalog/BV15f4y117Ed/03.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/03.jpg",
-     "time_sec": 3351,
-     "timecode": "00:55:51",
-     "score": 0.5715,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 4,
-     "path": "/static/frames/catalog/BV15f4y117Ed/04.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/04.jpg",
-     "time_sec": 4219,
-     "timecode": "01:10:19",
-     "score": 0.5871,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 5,
-     "path": "/static/frames/catalog/BV15f4y117Ed/05.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/05.jpg",
-     "time_sec": 4554,
-     "timecode": "01:15:54",
-     "score": 0.6004,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 6,
-     "path": "/static/frames/catalog/BV15f4y117Ed/06.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/06.jpg",
-     "time_sec": 5697,
-     "timecode": "01:34:57",
-     "score": 0.5975,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 7,
-     "path": "/static/frames/catalog/BV15f4y117Ed/07.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/07.jpg",
-     "time_sec": 6792,
-     "timecode": "01:53:12",
-     "score": 0.5856,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 8,
-     "path": "/static/frames/catalog/BV15f4y117Ed/08.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/08.jpg",
-     "time_sec": 7590,
-     "timecode": "02:06:30",
-     "score": 0.6051,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 9,
-     "path": "/static/frames/catalog/BV15f4y117Ed/09.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/09.jpg",
-     "time_sec": 8640,
-     "timecode": "02:24:00",
-     "score": 0.6002,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 10,
-     "path": "/static/frames/catalog/BV15f4y117Ed/10.jpg",
-     "file": "static/frames/catalog/BV15f4y117Ed/10.jpg",
-     "time_sec": 9123,
-     "timecode": "02:32:03",
-     "score": 0.5427,
-     "size": [
-      320,
-      180
-     ]
-    }
-   ],
-   "frame_dir": "static/frames/catalog/BV15f4y117Ed"
-  },
-  {
-   "id": "D003",
-   "kind": "电影",
    "title_zh": "让子弹飞",
    "title_en": "Let the Bullets Fly",
    "year": 2010,
@@ -555,6 +378,183 @@
     }
    ],
    "frame_dir": "static/frames/catalog/BV1Xs4y1X74u"
+  },
+  {
+   "id": "D003",
+   "kind": "电影",
+   "title_zh": "三傻大闹宝莱坞",
+   "title_en": "3 Idiots",
+   "year": 2009,
+   "duration": "2小时51分",
+   "runtime_min": 171.0,
+   "episodes": null,
+   "moods": [
+    "热血",
+    "欢乐",
+    "成长"
+   ],
+   "genre": [
+    "喜剧",
+    "剧情",
+    "青春"
+   ],
+   "synopsis": "印度皇家工程学院的填鸭式教育里，新生兰彻不背课本、只问为什么，带着两个室友用法子怼教授、追校长的女儿；十年后好友在寻找失踪的兰彻，一路翻出当年那些荒唐又动人的旧账。",
+   "tags": [
+    "印度",
+    "教育",
+    "友情",
+    "歌舞",
+    "阿米尔·汗",
+    "反内卷"
+   ],
+   "bvid": "BV1o92fBVEkW",
+   "url": "https://www.bilibili.com/video/BV1o92fBVEkW",
+   "platform": "Bilibili",
+   "video_title": "三傻大闹宝莱坞（国语）",
+   "video_duration_sec": 10044,
+   "owner": "蓝枫籽",
+   "play": 180438,
+   "page_count": 1,
+   "match_score": 0.985,
+   "link_confidence": "高",
+   "frame_distinct": 10,
+   "frame_quality": "高",
+   "verified_at": "2026-11-16T20:22:13+08:00",
+   "frames": [
+    "/static/frames/catalog/BV1o92fBVEkW/01.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/02.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/03.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/04.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/05.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/06.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/07.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/08.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/09.jpg",
+    "/static/frames/catalog/BV1o92fBVEkW/10.jpg"
+   ],
+   "frame_meta": [
+    {
+     "n": 1,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/01.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/01.jpg",
+     "time_sec": 1219,
+     "timecode": "00:20:19",
+     "score": 2.4735,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 2,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/02.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/02.jpg",
+     "time_sec": 1965,
+     "timecode": "00:32:45",
+     "score": 2.3581,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 3,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/03.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/03.jpg",
+     "time_sec": 2917,
+     "timecode": "00:48:37",
+     "score": 2.5685,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 4,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/04.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/04.jpg",
+     "time_sec": 4280,
+     "timecode": "01:11:20",
+     "score": 2.6462,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 5,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/05.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/05.jpg",
+     "time_sec": 4706,
+     "timecode": "01:18:26",
+     "score": 2.5123,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 6,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/06.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/06.jpg",
+     "time_sec": 5582,
+     "timecode": "01:33:02",
+     "score": 2.5849,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 7,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/07.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/07.jpg",
+     "time_sec": 6505,
+     "timecode": "01:48:25",
+     "score": 2.423,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 8,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/08.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/08.jpg",
+     "time_sec": 7595,
+     "timecode": "02:06:35",
+     "score": 2.4029,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 9,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/09.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/09.jpg",
+     "time_sec": 8485,
+     "timecode": "02:21:25",
+     "score": 2.0776,
+     "size": [
+      960,
+      480
+     ]
+    },
+    {
+     "n": 10,
+     "path": "/static/frames/catalog/BV1o92fBVEkW/10.jpg",
+     "file": "static/frames/catalog/BV1o92fBVEkW/10.jpg",
+     "time_sec": 9025,
+     "timecode": "02:30:25",
+     "score": 2.6155,
+     "size": [
+      960,
+      480
+     ]
+    }
+   ],
+   "frame_dir": "static/frames/catalog/BV1o92fBVEkW"
   },
   {
    "id": "D004",
@@ -736,183 +736,6 @@
   {
    "id": "D005",
    "kind": "电影",
-   "title_zh": "绿皮书",
-   "title_en": "Green Book",
-   "year": 2018,
-   "duration": "2小时10分",
-   "runtime_min": 130.0,
-   "episodes": null,
-   "moods": [
-    "温暖",
-    "欢乐",
-    "成长"
-   ],
-   "genre": [
-    "剧情",
-    "喜剧",
-    "历史"
-   ],
-   "synopsis": "1962年，意大利裔保镖托尼失业后被黑人钢琴家谢利利雇去当司机，载着他去种族隔离的南方巡演；一个满口粗话的白人混混和一个端着架子的音乐家，在公路上互相看不惯，也互相救了一命。",
-   "tags": [
-    "种族隔离",
-    "公路片",
-    "钢琴",
-    "奥斯卡最佳影片",
-    "真实故事",
-    "友情"
-   ],
-   "bvid": "BV1oC4y1h7De",
-   "url": "https://www.bilibili.com/video/BV1oC4y1h7De",
-   "platform": "Bilibili",
-   "video_title": "学习英语《绿皮书》",
-   "video_duration_sec": 7923,
-   "owner": "账号已注销",
-   "play": 64336,
-   "page_count": 1,
-   "match_score": 0.976,
-   "link_confidence": "高",
-   "frame_distinct": 10,
-   "frame_quality": "高",
-   "verified_at": "2026-11-15T15:19:57+08:00",
-   "frames": [
-    "/static/frames/catalog/BV1oC4y1h7De/01.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/02.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/03.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/04.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/05.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/06.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/07.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/08.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/09.jpg",
-    "/static/frames/catalog/BV1oC4y1h7De/10.jpg"
-   ],
-   "frame_meta": [
-    {
-     "n": 1,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/01.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/01.jpg",
-     "time_sec": 728,
-     "timecode": "00:12:08",
-     "score": 0.5461,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 2,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/02.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/02.jpg",
-     "time_sec": 1495,
-     "timecode": "00:24:55",
-     "score": 0.5488,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 3,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/03.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/03.jpg",
-     "time_sec": 2110,
-     "timecode": "00:35:10",
-     "score": 0.579,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 4,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/04.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/04.jpg",
-     "time_sec": 3353,
-     "timecode": "00:55:53",
-     "score": 0.5853,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 5,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/05.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/05.jpg",
-     "time_sec": 3595,
-     "timecode": "00:59:55",
-     "score": 0.5773,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 6,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/06.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/06.jpg",
-     "time_sec": 4418,
-     "timecode": "01:13:38",
-     "score": 0.5711,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 7,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/07.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/07.jpg",
-     "time_sec": 5403,
-     "timecode": "01:30:03",
-     "score": 0.5792,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 8,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/08.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/08.jpg",
-     "time_sec": 5458,
-     "timecode": "01:30:58",
-     "score": 0.5767,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 9,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/09.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/09.jpg",
-     "time_sec": 6216,
-     "timecode": "01:43:36",
-     "score": 0.5873,
-     "size": [
-      320,
-      180
-     ]
-    },
-    {
-     "n": 10,
-     "path": "/static/frames/catalog/BV1oC4y1h7De/10.jpg",
-     "file": "static/frames/catalog/BV1oC4y1h7De/10.jpg",
-     "time_sec": 6993,
-     "timecode": "01:56:33",
-     "score": 0.5818,
-     "size": [
-      320,
-      180
-     ]
-    }
-   ],
-   "frame_dir": "static/frames/catalog/BV1oC4y1h7De"
-  },
-  {
-   "id": "D006",
-   "kind": "电影",
    "title_zh": "悲情城市",
    "title_en": "A City of Sadness",
    "year": 1989,
@@ -1085,6 +908,183 @@
     }
    ],
    "frame_dir": "static/frames/catalog/BV1SpZ7BCECr"
+  },
+  {
+   "id": "D006",
+   "kind": "电影",
+   "title_zh": "绿皮书",
+   "title_en": "Green Book",
+   "year": 2018,
+   "duration": "2小时10分",
+   "runtime_min": 130.0,
+   "episodes": null,
+   "moods": [
+    "温暖",
+    "欢乐",
+    "成长"
+   ],
+   "genre": [
+    "剧情",
+    "喜剧",
+    "历史"
+   ],
+   "synopsis": "1962年，意大利裔保镖托尼失业后被黑人钢琴家谢利利雇去当司机，载着他去种族隔离的南方巡演；一个满口粗话的白人混混和一个端着架子的音乐家，在公路上互相看不惯，也互相救了一命。",
+   "tags": [
+    "种族隔离",
+    "公路片",
+    "钢琴",
+    "奥斯卡最佳影片",
+    "真实故事",
+    "友情"
+   ],
+   "bvid": "BV1nMY9zpE7T",
+   "url": "https://www.bilibili.com/video/BV1nMY9zpE7T",
+   "platform": "Bilibili",
+   "video_title": "某瓣9.1分，人生必看电影之一，奥斯卡最佳影片《绿皮书》。",
+   "video_duration_sec": 8199,
+   "owner": "梦入少年时",
+   "play": 21135,
+   "page_count": 1,
+   "match_score": 0.967,
+   "link_confidence": "高",
+   "frame_distinct": 10,
+   "frame_quality": "高",
+   "verified_at": "2026-11-16T20:23:12+08:00",
+   "frames": [
+    "/static/frames/catalog/BV1nMY9zpE7T/01.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/02.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/03.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/04.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/05.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/06.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/07.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/08.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/09.jpg",
+    "/static/frames/catalog/BV1nMY9zpE7T/10.jpg"
+   ],
+   "frame_meta": [
+    {
+     "n": 1,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/01.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/01.jpg",
+     "time_sec": 1311,
+     "timecode": "00:21:51",
+     "score": 2.6497,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 2,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/02.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/02.jpg",
+     "time_sec": 1630,
+     "timecode": "00:27:10",
+     "score": 2.6496,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 3,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/03.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/03.jpg",
+     "time_sec": 2537,
+     "timecode": "00:42:17",
+     "score": 2.5203,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 4,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/04.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/04.jpg",
+     "time_sec": 3178,
+     "timecode": "00:52:58",
+     "score": 2.5975,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 5,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/05.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/05.jpg",
+     "time_sec": 3839,
+     "timecode": "01:03:59",
+     "score": 2.2627,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 6,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/06.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/06.jpg",
+     "time_sec": 4712,
+     "timecode": "01:18:32",
+     "score": 2.6481,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 7,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/07.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/07.jpg",
+     "time_sec": 4910,
+     "timecode": "01:21:50",
+     "score": 2.3247,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 8,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/08.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/08.jpg",
+     "time_sec": 5942,
+     "timecode": "01:39:02",
+     "score": 2.5986,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 9,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/09.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/09.jpg",
+     "time_sec": 6482,
+     "timecode": "01:48:02",
+     "score": 2.3831,
+     "size": [
+      960,
+      540
+     ]
+    },
+    {
+     "n": 10,
+     "path": "/static/frames/catalog/BV1nMY9zpE7T/10.jpg",
+     "file": "static/frames/catalog/BV1nMY9zpE7T/10.jpg",
+     "time_sec": 7490,
+     "timecode": "02:04:50",
+     "score": 2.6402,
+     "size": [
+      960,
+      540
+     ]
+    }
+   ],
+   "frame_dir": "static/frames/catalog/BV1nMY9zpE7T"
   },
   {
    "id": "D007",
@@ -40894,180 +40894,6 @@
   {
    "id": "U004",
    "kind": "教程/产品演示",
-   "title_zh": "初代iPhone使用导览",
-   "title_en": "iPhone Guided Tour",
-   "year": 2007,
-   "duration": "25分钟",
-   "runtime_min": 25.0,
-   "episodes": null,
-   "moods": [
-    "冷峻",
-    "怀旧",
-    "庄严"
-   ],
-   "genre": [
-    "产品演示"
-   ],
-   "synopsis": "苹果工程师在极简布景下向全球用户细致拆解初代触控智能手机的全新交互逻辑。从多点触控屏幕的手势滑动到音乐播放与网页浏览，演示者全面展示了改变移动通讯历史的操作革新。",
-   "tags": [
-    "产品演示",
-    "教程",
-    "开箱",
-    "品牌",
-    "视觉"
-   ],
-   "bvid": "ytvTy61AP__e8",
-   "url": "https://www.youtube.com/watch?v=vTy61AP__e8",
-   "platform": "YouTube",
-   "video_title": "First iPhone. A Guided Tour by Apple",
-   "video_duration_sec": 1480,
-   "owner": "Altitude.gr",
-   "play": 0,
-   "page_count": 1,
-   "match_score": 0.72,
-   "link_confidence": "中",
-   "frame_distinct": 9,
-   "frame_quality": "高",
-   "verified_at": "2026-11-16T17:52:45+08:00",
-   "frames": [
-    "/static/frames/catalog/ytvTy61AP__e8/01.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/02.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/03.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/04.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/05.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/06.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/07.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/08.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/09.jpg",
-    "/static/frames/catalog/ytvTy61AP__e8/10.jpg"
-   ],
-   "frame_meta": [
-    {
-     "n": 1,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/01.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/01.jpg",
-     "time_sec": 182,
-     "timecode": "00:03:02",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 2,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/02.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/02.jpg",
-     "time_sec": 309,
-     "timecode": "00:05:09",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 3,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/03.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/03.jpg",
-     "time_sec": 436,
-     "timecode": "00:07:16",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 4,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/04.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/04.jpg",
-     "time_sec": 563,
-     "timecode": "00:09:23",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 5,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/05.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/05.jpg",
-     "time_sec": 691,
-     "timecode": "00:11:31",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 6,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/06.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/06.jpg",
-     "time_sec": 818,
-     "timecode": "00:13:38",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 7,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/07.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/07.jpg",
-     "time_sec": 945,
-     "timecode": "00:15:45",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 8,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/08.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/08.jpg",
-     "time_sec": 1073,
-     "timecode": "00:17:53",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 9,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/09.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/09.jpg",
-     "time_sec": 1200,
-     "timecode": "00:20:00",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    },
-    {
-     "n": 10,
-     "path": "/static/frames/catalog/ytvTy61AP__e8/10.jpg",
-     "file": "static/frames/catalog/ytvTy61AP__e8/10.jpg",
-     "time_sec": 1327,
-     "timecode": "00:22:07",
-     "score": 0.0,
-     "size": [
-      480,
-      270
-     ]
-    }
-   ],
-   "frame_dir": "static/frames/catalog/ytvTy61AP__e8"
-  },
-  {
-   "id": "U005",
-   "kind": "教程/产品演示",
    "title_zh": "Tesla Optimus第二代人形机器人功能演示",
    "title_en": "Tesla Optimus Gen 2",
    "year": 2023,
@@ -41240,7 +41066,7 @@
    "frame_dir": "static/frames/catalog/ytcpraXaw7dyc"
   },
   {
-   "id": "U006",
+   "id": "U005",
    "kind": "教程/产品演示",
    "title_zh": "DJI Ronin 4D四轴电影摄影机装配教学",
    "title_en": "DJI Ronin 4D Setup Guide",
@@ -41414,7 +41240,7 @@
    "frame_dir": "static/frames/catalog/ytVqg5o4nFM3o"
   },
   {
-   "id": "U007",
+   "id": "U006",
    "kind": "教程/产品演示",
    "title_zh": "Leica M10旁轴相机结构与操作演示",
    "title_en": "Leica M10 Hands-on Guide",

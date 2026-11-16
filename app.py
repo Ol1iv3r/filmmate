@@ -13,6 +13,7 @@ import asyncio
 import json
 import logging
 import re
+import time
 from contextlib import asynccontextmanager
 from uuid import uuid4
 
@@ -164,47 +165,8 @@ async def health():
 # --------------------------------------------------------------------------
 # 领域问答:在线 = 模型自主调用检索工具(Agent);离线 = 规则路由 + 直接检索
 # --------------------------------------------------------------------------
-async def handle_qa(message: str, history: list, api_key: str):
-    online = llm.available(api_key)
-
-    if online:
-        msgs = [{"role": "system", "content": prompts.SYSTEM_QA_AGENT}]
-        msgs += [{"role": m.get("role", "user"), "content": str(m.get("content", ""))} for m in history[-6:]]
-        msgs.append({"role": "user", "content": message})
-        text, steps = await llm.chat_with_tools(msgs, api_key=api_key)
-        yield "steps", {"steps": steps}
-        # 依据模型调用过的工具,补发引用(前端展示资料/案例来源)
-        for st in steps:
-            if st["tool"] == "search_knowledge" and st["query"]:
-                hits = rag.retrieve(st["query"], k=3)
-                yield "citations", {"kind": "knowledge", "items": [
-                    {"title": h["title"], "category": h["category"]} for h in hits]}
-            elif st["tool"] == "search_cases" and st["query"]:
-                cases = case_store.search_cases(st["query"], k=3)
-                yield "citations", {"kind": "cases", "items": [
-                    {"id": c["id"], "title": c["title"], "type": c["type"], "genre": c["genre"],
-                     "logline": c["logline"], "score": c["score"]} for c in cases]}
-            elif st["tool"] == "search_scenes" and st["query"]:
-                scenes = library.search_scenes(st["query"], k=3)
-                yield "citations", {"kind": "scenes", "items": [
-                    {"title": s["name_zh"], "category": s["dramatic_function"],
-                     "score": s["score"]} for s in scenes]}
-            elif st["tool"] == "search_shots" and st["query"]:
-                shots = library.search_shots(st["query"], k=3)
-                yield "citations", {"kind": "shots", "items": [
-                    {"title": s["name_zh"], "category": f"{s['size']}/{s['angle']}/{s['movement']}",
-                     "score": s["score"]} for s in shots]}
-            elif st["tool"] == "search_stripboards" and st["query"]:
-                templates = library.search_templates(st["query"], k=2)
-                yield "citations", {"kind": "stripboards", "items": [
-                    {"title": t["name"], "category": f"{t['type']}·{t['shoot_days']}天",
-                     "score": t["score"]} for t in templates]}
-        for chunk in chunk_text(text):
-            yield "delta", {"text": chunk}
-            await asyncio.sleep(0.02)
-        return
-
-    # ---------- 离线模式 ----------
+async def _qa_offline(message: str):
+    # ---------- 离线模式（无模型 / 额度不足时兜底） ----------
     low = message.lower().strip()
     if re.fullmatch(r"(hi|hello|hey|你好|哈喽|嗨|喂|在吗|good\s+(morning|afternoon|evening))[!！。 ]*", low):
         text = ("你好!我是 Filmmate,你的影视创作助理。我可以:检查剧本漏洞、给分镜建议、"
@@ -244,8 +206,62 @@ async def handle_qa(message: str, history: list, api_key: str):
 # --------------------------------------------------------------------------
 # 创作工具(剧本检查/分镜/rundown/日程/灵感/案例)
 # --------------------------------------------------------------------------
+
+
+async def handle_qa(message: str, history: list, api_key: str):
+    online = llm.available(api_key)
+
+    if online:
+        msgs = [{"role": "system", "content": prompts.SYSTEM_QA_AGENT}]
+        msgs += [{"role": m.get("role", "user"), "content": str(m.get("content", ""))} for m in history[-6:]]
+        msgs.append({"role": "user", "content": message})
+        try:
+            text, steps = await llm.chat_with_tools(msgs, api_key=api_key)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("在线问答失败(%s)，回退离线检索", exc)
+            yield "steps", {"steps": []}
+            yield "delta", {"text": "（模型暂时不可用：" + tools.llm_error_hint(exc) + "，先用本地知识库回答）\n\n"}
+            async for ev in _qa_offline(message):
+                yield ev
+            return
+        yield "steps", {"steps": steps}
+        for st in steps:
+            if st["tool"] == "search_knowledge" and st["query"]:
+                hits = rag.retrieve(st["query"], k=3)
+                yield "citations", {"kind": "knowledge", "items": [
+                    {"title": h["title"], "category": h["category"]} for h in hits]}
+            elif st["tool"] == "search_cases" and st["query"]:
+                cases = case_store.search_cases(st["query"], k=3)
+                yield "citations", {"kind": "cases", "items": [
+                    {"id": c["id"], "title": c["title"], "type": c["type"], "genre": c["genre"],
+                     "logline": c["logline"], "score": c["score"]} for c in cases]}
+            elif st["tool"] == "search_scenes" and st["query"]:
+                scenes = library.search_scenes(st["query"], k=3)
+                yield "citations", {"kind": "scenes", "items": [
+                    {"title": s["name_zh"], "category": s["dramatic_function"],
+                     "score": s["score"]} for s in scenes]}
+            elif st["tool"] == "search_shots" and st["query"]:
+                shots = library.search_shots(st["query"], k=3)
+                yield "citations", {"kind": "shots", "items": [
+                    {"title": s["name_zh"], "category": f"{s['size']}/{s['angle']}/{s['movement']}",
+                     "score": s["score"]} for s in shots]}
+            elif st["tool"] == "search_stripboards" and st["query"]:
+                templates = library.search_templates(st["query"], k=2)
+                yield "citations", {"kind": "stripboards", "items": [
+                    {"title": t["name"], "category": f"{t['type']}·{t['shoot_days']}天",
+                     "score": t["score"]} for t in templates]}
+        for chunk in chunk_text(text):
+            yield "delta", {"text": chunk}
+            await asyncio.sleep(0.02)
+        return
+
+    async for ev in _qa_offline(message):
+        yield ev
+
+
 async def handle_tool(tool: str, message: str, api_key: str, script_text: str = "", script_name: str = "",
                       history: list = None, kind: str = None, storyboard: dict = None):
+    _tool_t0 = time.time()
     # 只有剧本类任务才用上传文件覆盖输入；灵感/案例仍按用户当前输入检索
     script_tools = ("review", "storyboard", "rundown", "schedule")
     content = script_text if (script_text and tool in script_tools) else message
@@ -270,6 +286,10 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
         payload = await tools.run_tool(tool, content, api_key, history=history, kind=kind)
     if script_name:
         payload["script_name"] = script_name
+    try:
+        payload.setdefault("ms", max(1, int((time.time() - _tool_t0) * 1000)))
+    except Exception:  # noqa: BLE001
+        pass
     yield "tool_data", {"tool": tool, "payload": payload}
     if payload.get("steps"):
         yield "steps", {"steps": payload["steps"]}
@@ -337,8 +357,12 @@ async def chat(req: Request):
             yield "done", {}
         except Exception as e:  # noqa: BLE001
             logger.exception("请求处理失败")
-            error_message = "The chat request failed. Check the server log and try again." if react else str(e)
-            yield "error", {"message": error_message}
+            hint = tools.llm_error_hint(e)
+            friendly = "连接/模型出错了：" + hint
+            for chunk in chunk_text(friendly):
+                yield "delta", {"text": chunk}
+                await asyncio.sleep(0.01)
+            yield "error", {"message": hint if react else str(e)}
 
     headers = {"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
     if react:

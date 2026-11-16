@@ -1257,6 +1257,22 @@ def _kind_from_history(history):
     return None
 
 
+def llm_error_hint(exc: Exception) -> str:
+    """把模型/额度错误翻译成用户能操作的提示。"""
+    msg = str(exc or "")
+    if "402" in msg or "budget" in msg.lower() or "quota" in msg.lower():
+        return ("模型额度已用尽（Vercel AI Gateway: budget exceeded）。"
+                "请在项目 .env 里更换 AI_GATEWAY_API_KEY（或设置 DEEPSEEK_API_KEY），"
+                "然后重启服务：.venv/bin/python app.py。")
+    if "401" in msg or "invalid api key" in msg.lower():
+        return "模型 API Key 无效（401），请在 .env 检查 AI_GATEWAY_API_KEY / DEEPSEEK_API_KEY。"
+    if "429" in msg or "rate limit" in msg.lower():
+        return "模型请求太频繁（429），等一分钟再试。"
+    if "timeout" in msg.lower():
+        return "模型响应超时，重试一次或把剧本拆短。"
+    return "模型调用失败：" + msg[:160]
+
+
 def _taste_block():
     try:
         import personal_library
@@ -1525,6 +1541,7 @@ async def storyboard_from_theme(message: str, history: list = None, api_key: str
                 mode = "online"
         except Exception as e:  # noqa: BLE001
             logger.warning("在线分镜失败(%s),回退规则版", e)
+            notes = notes or ("（在线分镜不可用：" + llm_error_hint(e) + "；已用规则版分镜）")
     if not shots:
         shots = _fallback_theme_storyboard(theme)
 
@@ -1712,12 +1729,21 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
             + (("用户收藏的参考片（贴近其品味）：\n" + taste + "\n") if taste else "")
             + "请只输出这个类型该有的剧本/脚本格式，不要写成别的片种。"
         )
+        # 第一步：只出梗要（小 JSON，避免截断）；第二步：正文单独出纯文本
         data = await llm.complete_json(
             [{"role": "system", "content": prompts.PROMPT_SCRIPT_GENERATE},
              {"role": "user", "content": user_prompt}],
             api_key=api_key)
-        logline = _norm_logline(data.get("logline"))
+        logline = _norm_logline(data.get("logline") or data)
         text = str(data.get("script_text") or "").strip()
+        if not text:
+            # 第二步：单独请求剧本文本（纯文本，不要 JSON）
+            plain_system = ("你是职业编剧。直接输出标准格式的剧本/脚本正文，"
+                            "不要 JSON、不要 markdown 代码块、不要解释。")
+            text = (await llm.complete(
+                [{"role": "system", "content": plain_system},
+                 {"role": "user", "content": user_prompt + "\n请直接输出正文。"}],
+                api_key=api_key)).strip()
         if not text:
             raise ValueError("模型没有返回剧本正文")
         return {"kind": "script", "film_kind": film_kind, "logline": logline,
@@ -1726,7 +1752,8 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
                 "mode": "online"}
     except Exception as e:  # noqa: BLE001
         logger.warning("剧本生成失败(%s)", e)
-        return {"text": "剧本生成失败了，稍后再试一次。", "mode": "offline"}
+        hint = llm_error_hint(e)
+        return {"text": "剧本生成失败：" + hint, "mode": "offline", "error_hint": hint}
 
 
 _HEADING_RE = re.compile(r"^\s*(?:第\s*(\d+)\s*场[\s\.、:：-]*|(\d+)\s*[\.、]\s*)(.*)$")
