@@ -1854,3 +1854,72 @@ button {
   position: relative;
 }
 
+
+/* ── Filmy v12：等待表情 / 迷你透明 RPS / 风格小手 / 极简胜负特效 ── */
+.filmy-v2 .filmy-avatar.expr-waiting { animation: filmy-wait 3.4s ease-in-out infinite; }
+@keyframes filmy-wait { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(1.5px) rotate(1deg); } }
+
+/* Filmy 风格的小手（指向下载按钮） */
+.filmy-pointer-hand {
+  position: absolute;
+  top: 34px;
+  z-index: 3;
+  animation: filmy-hand-poke .8s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35));
+  pointer-events: none;
+}
+.filmy-pointer-hand.to-right { right: -27px; }
+.filmy-pointer-hand.to-left { left: -27px; transform: scaleX(-1); }
+@keyframes filmy-hand-poke { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+
+/* 下载时上方的小气泡 */
+.filmy-download-say { font-size: 11.5px; padding: 5px 9px; margin-bottom: 2px; }
+
+/* 小 emoji：Filmy 出的手势 */
+.filmy-bot-hand {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  font-size: 18px;
+  line-height: 1;
+  z-index: 4;
+  animation: filmy-bot-pop .32s cubic-bezier(.34, 1.56, .64, 1);
+  pointer-events: none;
+}
+@keyframes filmy-bot-pop { from { opacity: 0; transform: scale(.4) translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* 极简胜负小特效：一圈细线 + 一点点光，不炫酷 */
+.filmy-win-fx {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 54px;
+  height: 54px;
+  margin-left: -27px;
+  border-radius: 16px;
+  pointer-events: none;
+}
+.filmy-win-fx.fx-win { border: 1.5px solid rgba(245, 210, 60, .65); animation: filmy-win-ring .7s ease-out forwards; }
+.filmy-win-fx.fx-tie { border: 1.5px dashed rgba(255, 255, 255, .35); animation: filmy-win-ring .7s ease-out forwards; }
+.filmy-win-fx.fx-lose { border: 1.5px solid rgba(160, 168, 184, .35); animation: filmy-win-ring .7s ease-out forwards; }
+@keyframes filmy-win-ring {
+  from { opacity: .9; transform: scale(.6); }
+  to { opacity: 0; transform: scale(1.5); }
+}
+
+/* 石头剪刀布：非常小的透明按钮 */
+.filmy-rps-v2::before { display: none; }
+.filmy-rps-v2 .filmy-rps-buttons { gap: 10px; }
+.filmy-rps-v2 .filmy-rps-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 17px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: none;
+  backdrop-filter: none;
+  opacity: .9;
+}
+.filmy-rps-v2 .filmy-rps-btn:hover { transform: translateY(-2px); border-color: rgba(245, 210, 60, .7); background: rgba(245, 210, 60, .08); }
+.filmy-rps-v2 .filmy-rps-btn.chosen { border-color: rgba(245, 210, 60, .9); background: rgba(245, 210, 60, .12); }

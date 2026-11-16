@@ -3,7 +3,7 @@ import { useI18n } from '../lib/i18n'
 import { cn } from '../lib/utils'
 
 type Mode = 'idle' | 'think' | 'download'
-type Expression = 'idle' | 'happy' | 'think' | 'win' | 'lose' | 'tie'
+type Expression = 'idle' | 'happy' | 'waiting' | 'think' | 'win' | 'lose' | 'tie'
 
 interface Target {
   left: number
@@ -64,7 +64,7 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     if (expressionTimer.current !== null) window.clearTimeout(expressionTimer.current)
     if (ms > 0) {
       expressionTimer.current = window.setTimeout(() => {
-        setExpression(thinkingRef.current ? 'think' : 'idle')
+        setExpression(thinkingRef.current ? 'waiting' : 'idle')
       }, ms)
     }
   }, [])
@@ -148,7 +148,7 @@ export function Filmy({ thinking }: { thinking: boolean }) {
 
   useEffect(() => {
     if (thinking) {
-      setExpression('think')
+      setExpression('waiting')
       setRpsOpen(false)
       setRpsResult(null)
       applyTarget(computeTarget())
@@ -162,8 +162,13 @@ export function Filmy({ thinking }: { thinking: boolean }) {
 
   const onAvatarClick = () => {
     if (thinking) {
-      setRpsOpen((open) => !open)
-      if (!rpsOpen) setExpression('think')
+      if (rpsOpen) {
+        setRpsOpen(false)
+        setExpression('waiting')
+      } else {
+        setRpsOpen(true)
+        setExpression('think')
+      }
       return
     }
     if (rpsOpen) {
@@ -183,33 +188,82 @@ export function Filmy({ thinking }: { thinking: boolean }) {
     setExpressionFor(outcome === 'win' ? 'win' : outcome === 'lose' ? 'lose' : 'tie', 0)
   }
 
-  const rpsName = (key: string) => {
-    const item = RPS.find((r) => r.key === key)
-    return item ? (lang === 'zh' ? item.zh : item.en) : '?'
-  }
+  const botIcon = rpsResult ? RPS.find((r) => r.key === rpsResult.bot)?.icon : null
 
   const mouthFor = () => {
     if (expression === 'lose') {
-      return <path d="M29 50 Q38 42 47 50" fill="none" stroke="#20232b" strokeWidth="3.6" strokeLinecap="round" />
+      return <path d="M29 58 Q38 50 47 58" fill="none" stroke="#20232b" strokeWidth="3.4" strokeLinecap="round" />
     }
     if (expression === 'tie') {
-      return <path d="M29 47 Q33.5 51 38 47 Q42.5 43 47 47" fill="none" stroke="#20232b" strokeWidth="3" strokeLinecap="round" />
+      return <path d="M29 56 Q33.5 60 38 56 Q42.5 52 47 56" fill="none" stroke="#20232b" strokeWidth="2.8" strokeLinecap="round" />
+    }
+    if (expression === 'waiting') {
+      return <path d="M31 57 L45 57" fill="none" stroke="#20232b" strokeWidth="3" strokeLinecap="round" />
     }
     if (expression === 'think') {
-      return <ellipse cx="38" cy="48" rx="3.4" ry="2.8" fill="#20232b" />
+      return <ellipse cx="38" cy="57" rx="3.2" ry="2.6" fill="#20232b" />
     }
     return (
       <path
-        d={expression === 'win' || expression === 'happy' ? 'M29 45 Q38 56 47 45' : 'M30 45 Q38 52 46 45'}
+        d={expression === 'win' || expression === 'happy' ? 'M28 54 Q38 66 48 54' : 'M30 55 Q38 63 46 55'}
         fill="none"
         stroke="#20232b"
-        strokeWidth="3.6"
+        strokeWidth="3.4"
         strokeLinecap="round"
       />
     )
   }
 
-  const eyeOffsetY = expression === 'think' ? -2 : expression === 'lose' ? 1.5 : 0
+  const eyesFor = () => {
+    if (expression === 'waiting') {
+      // 等待：半睁眼 + 看向一侧，和思考/开心都不同
+      return (
+        <>
+          <ellipse className="filmy-eye-white small" cx="27" cy="44" rx="6.6" ry="5.2" />
+          <ellipse className="filmy-eye-white small" cx="49" cy="44" rx="6.6" ry="5.2" />
+          <circle cx="29.2" cy="45" r="3.1" fill="#20232b" />
+          <circle cx="51.2" cy="45" r="3.1" fill="#20232b" />
+          <circle cx="30.4" cy="43.8" r=".9" fill="#fff" />
+          <circle cx="52.4" cy="43.8" r=".9" fill="#fff" />
+        </>
+      )
+    }
+    if (expression === 'win') {
+      return (
+        <>
+          <path d="M22 44 L26 40 L30 44 L26 48 Z" fill="#20232b" />
+          <path d="M46 44 L50 40 L54 44 L50 48 Z" fill="#20232b" />
+        </>
+      )
+    }
+    if (expression === 'lose') {
+      return (
+        <>
+          <path d="M22 43 Q26 47 30 43" fill="none" stroke="#20232b" strokeWidth="2" strokeLinecap="round" />
+          <path d="M46 43 Q50 47 54 43" fill="none" stroke="#20232b" strokeWidth="2" strokeLinecap="round" />
+        </>
+      )
+    }
+    const offY = expression === 'think' ? -2 : 0
+    return (
+      <>
+        <ellipse className="filmy-eye-white" cx="27" cy="44" rx="7" ry="8.6" />
+        <ellipse className="filmy-eye-white" cx="49" cy="44" rx="7" ry="8.6" />
+        <path
+          className="filmy-pupil"
+          transform={'translate(0 ' + offY + ')'}
+          d="M24 40 Q31 39 31 44 Q31 49 25 48 Q28 46 28 44 Q28 42 24 40 Z"
+        />
+        <path
+          className="filmy-pupil"
+          transform={'translate(0 ' + offY + ')'}
+          d="M46 40 Q53 39 53 44 Q53 49 47 48 Q50 46 50 44 Q50 42 46 40 Z"
+        />
+      </>
+    )
+  }
+
+  const showHand = target.mode === 'download' && !moving
 
   return (
     <>
@@ -218,7 +272,7 @@ export function Filmy({ thinking }: { thinking: boolean }) {
           'filmy filmy-v2',
           'filmy-mode-' + target.mode,
           moving && 'is-walking',
-          target.mode === 'download' && !moving && 'is-pointing',
+          showHand && 'is-pointing',
           target.side === 'left' && 'point-left',
         )}
         style={{ left: target.left, top: target.top }}
@@ -229,13 +283,45 @@ export function Filmy({ thinking }: { thinking: boolean }) {
             <span className="filmy-say-tail" />
           </div>
         )}
+        {showHand && (
+          <div className="filmy-say filmy-download-say">
+            {lang === 'zh' ? '点这里下载～' : 'Download here~'}
+            <span className="filmy-say-tail" />
+          </div>
+        )}
 
-        <div className={cn('filmy-avatar', 'expr-' + expression)} onClick={onAvatarClick} role="button" aria-label="Filmy">
-          {target.mode === 'download' && !moving && (
-            <span className={cn('filmy-pointer', target.side === 'left' ? 'to-left' : 'to-right')} aria-hidden>
-              ◀
+        <div
+          className={cn('filmy-avatar', 'expr-' + expression)}
+          onClick={onAvatarClick}
+          role="button"
+          aria-label="Filmy"
+        >
+          {/* Filmy 风格的小手：黄色圆角方块手，指向下载按钮 */}
+          {showHand && (
+            <svg
+              className={cn('filmy-pointer-hand', target.side === 'left' ? 'to-left' : 'to-right')}
+              viewBox="0 0 48 30"
+              width="36"
+              height="23"
+              aria-hidden
+            >
+              <rect x="2" y="8" width="18" height="15" rx="5" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
+              <rect x="17" y="6" width="22" height="13" rx="6" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
+              <rect x="32" y="8" width="14" height="8" rx="4" fill="#f5d23c" stroke="#20232b" strokeWidth="2" />
+              <path d="M8 8 L8 14" stroke="#20232b" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          )}
+
+          {/* 石头剪刀布：小 emoji 展示 Filmy 出了什么 */}
+          {rpsResult && botIcon && (
+            <span className={cn('filmy-bot-hand', 'outcome-' + rpsResult.outcome)} aria-hidden>
+              {botIcon}
             </span>
           )}
+          {rpsResult && (
+            <span className={cn('filmy-win-fx', 'fx-' + rpsResult.outcome)} aria-hidden />
+          )}
+
           <svg viewBox="0 0 76 100" width="70" height="92" aria-hidden>
             <ellipse className="filmy-shadow" cx="38" cy="95" rx="15" ry="2.8" />
 
@@ -255,25 +341,11 @@ export function Filmy({ thinking }: { thinking: boolean }) {
             {/* 黄色方块身体 */}
             <rect className="filmy-body" x="13" y="24" width="50" height="50" rx="11" />
 
-            {/* 眼睛：白底 + 黑色 S 形瞳孔 */}
-            <g className="filmy-eyes">
-              <ellipse className="filmy-eye-white" cx="27" cy="44" rx="7" ry="9" />
-              <ellipse className="filmy-eye-white" cx="49" cy="44" rx="7" ry="9" />
-              <path
-                className="filmy-pupil"
-                transform={'translate(0 ' + eyeOffsetY + ')'}
-                d="M24 40 Q31 39 31 44 Q31 49 25 48 Q28 46 28 44 Q28 42 24 40 Z"
-              />
-              <path
-                className="filmy-pupil"
-                transform={'translate(0 ' + eyeOffsetY + ')'}
-                d="M46 40 Q53 39 53 44 Q53 49 47 48 Q50 46 50 44 Q50 42 46 40 Z"
-              />
-            </g>
+            {eyesFor()}
 
             {/* 腮红 */}
-            <circle className="filmy-blush" cx="18" cy="53" r="4.4" />
-            <circle className="filmy-blush" cx="58" cy="53" r="4.4" />
+            <circle className="filmy-blush" cx="18" cy="55" r="4.3" />
+            <circle className="filmy-blush" cx="58" cy="55" r="4.3" />
 
             {mouthFor()}
           </svg>
@@ -283,7 +355,7 @@ export function Filmy({ thinking }: { thinking: boolean }) {
       {rpsOpen && thinking && (
         <div
           className="filmy-rps-layer filmy-rps-v2"
-          style={{ left: target.left + SIZE_W / 2, top: Math.max(70, target.top - 76) }}
+          style={{ left: target.left + SIZE_W / 2, top: Math.max(60, target.top - 58) }}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="filmy-rps-buttons">
@@ -299,15 +371,6 @@ export function Filmy({ thinking }: { thinking: boolean }) {
               </button>
             ))}
           </div>
-          {rpsResult && (
-            <div className="filmy-rps-result">
-              {lang === 'zh'
-                ? 'Filmy 出了 ' + RPS.find((r) => r.key === rpsResult.bot)?.icon + ' ' + rpsName(rpsResult.bot) + ' · ' +
-                  (rpsResult.outcome === 'win' ? '你赢啦' : rpsResult.outcome === 'lose' ? '我赢啦' : '平局')
-                : 'Filmy played ' + rpsName(rpsResult.bot) + ' · ' +
-                  (rpsResult.outcome === 'win' ? 'you win' : rpsResult.outcome === 'lose' ? 'I win' : 'tie')}
-            </div>
-          )}
         </div>
       )}
     </>
