@@ -42,6 +42,9 @@ def detect_tool(message: str):
     # 找灵感：UI 下发了题材前缀 / 明确说了找灵感
     if msg.startswith("【题材") or "找灵感" in msg:
         return "inspiration"
+    # 剧本生成 / 改标准格式
+    if re.search(r"写剧本|生成剧本|剧本生成|改成标准|标准格式|改成剧本格式|整理成剧本", msg):
+        return "review"
     # 用户确认主题后出分镜
     if re.match(r"^\s*出\s*分镜", msg):
         return "storyboard"
@@ -1256,16 +1259,14 @@ def _films_markdown(kind: str, idea: str, styles: list) -> str:
         moods = "/".join(film.get("moods") or [])
         tags = "、".join((film.get("tags") or [])[:5])
         lines.append(f"  - 情绪：{moods}　｜　标签：{tags}")
-        imgs = " ".join(f"![]({f})" for f in (film.get("frames") or [])[:3])
-        if imgs:
-            lines.append(f"  - 静帧：{imgs}")
         if film.get("url"):
             lines.append(f"  - 原片：[{film.get('platform') or '原片'}链接]({film['url']})")
         if s.get("film_reason"):
             lines.append(f"  - 参考点：{s['film_reason']}")
         lines.append("")
     lines.append("---")
-    lines.append("要不要我按 **主题 1** 出一份完整分镜？回复「出分镜」即可；想换别的主题，回复「出分镜：主题名」。")
+    lines.append("要不要我按 **主题 1** 先写一版剧本？回复「写剧本」即可（会先给一段话梗要 + 标准格式剧本）。")
+    lines.append("拿到剧本之后再回复「出分镜」，就能按剧本出分镜表。想换主题就回复「写剧本：主题名」。")
     return "\n".join(lines)
 
 
@@ -1439,6 +1440,207 @@ async def storyboard_from_theme(message: str, history: list = None, api_key: str
         lines += ["", f"**整体方向**：{notes}"]
     return {"shots": shots, "coverage_notes": notes, "mode": mode,
             "theme": theme, "text": "\n".join(lines)}
+
+
+
+# --------------------------------------------------------------------------
+# 剧本检查/生成：没剧本→按主题生成（梗要 + 标准格式剧本）；有剧本→查冲突+问是否改格式
+# --------------------------------------------------------------------------
+_SCRIPT_HEAD = re.compile(r"(第\s*\d+\s*[场幕]|^\s*\d+\s*[\.、]\s*(?:内|外)景|INT\.|EXT\.)", re.M)
+
+
+def looks_like_script(text: str) -> bool:
+    if not text or len(text) < 120:
+        return False
+    hits = 0
+    if re.search(r"第\s*\d+\s*[场幕]", text):
+        hits += 2
+    if re.search(r"^\s*\d+\s*[\.、]\s*(?:内|外)景", text, re.M):
+        hits += 2
+    if re.search(r"(内景|外景|INT\.|EXT\.)", text, re.I):
+        hits += 1
+    if re.search(r"^[^\s：:]{1,10}[：:].{2,}$", text, re.M):
+        hits += 1
+    if re.search(r"[（(](夜|日|清晨|傍晚|深夜|黄昏|黎明)[）)]", text):
+        hits += 1
+    if re.search(r"[-—]\s*(?:夜|日|清晨|傍晚|深夜|黄昏|黎明)", text):
+        hits += 1
+    return hits >= 2
+
+
+def _norm_logline(data):
+    d = data or {}
+    return {
+        "title": str(d.get("title") or "未命名").strip(),
+        "title_en": str(d.get("title_en") or "").strip(),
+        "theme": str(d.get("theme") or "").strip(),
+        "summary": str(d.get("summary") or "").strip(),
+    }
+
+
+def _script_intro(logline):
+    name = logline.get("title") or "未命名"
+    en = f"（{logline['title_en']}）" if logline.get("title_en") else ""
+    return (
+        f"### 梗要\n**片名**：{name}{en}\n"
+        f"**主题**：{logline.get('theme') or '—'}\n\n"
+        f"{logline.get('summary') or ''}\n\n"
+        "剧本全文在下方可滚动区域；点「下载 PDF」可以拿到标准格式剧本。"
+    )
+
+
+async def _theme_from_history(history, message):
+    for turn in reversed(history or []):
+        if turn.get("role") != "assistant":
+            continue
+        content = str(turn.get("content", ""))
+        m = re.search(r"主题\s*1\s*\*{0,2}\s*[:：]\s*([^\n]+)", content)
+        if m:
+            return m.group(1).strip()
+        m = re.search(r"主题\s*[：:]\s*([^\n]+)", content)
+        if m:
+            return m.group(1).strip()
+    return ""
+
+
+async def _logline_for_script(script_text, api_key):
+    if llm.available(api_key):
+        try:
+            data = await llm.complete_json(
+                [{"role": "system", "content": prompts.PROMPT_SCRIPT_LOG_LINE},
+                 {"role": "user", "content": script_text[:8000]}], api_key=api_key)
+            return _norm_logline(data)
+        except Exception as e:  # noqa: BLE001
+            logger.warning("梗要生成失败(%s)", e)
+    first = (script_text.strip().splitlines() or ["未命名剧本"])[0][:40]
+    return {"title": first or "未命名剧本", "title_en": "", "theme": "",
+            "summary": script_text.strip()[:120].replace("\n", " ") + "…"}
+
+
+def _format_review(report) -> str:
+    """把 review() 的结构化结果转成给人看的文字。"""
+    if not isinstance(report, dict):
+        return ""
+    if report.get("text"):
+        return str(report["text"])
+    lines = []
+    if report.get("summary"):
+        lines.append("**总评**：" + str(report["summary"]))
+    issues = report.get("issues") or []
+    if issues:
+        lines.append("")
+        lines.append("**发现的问题**：")
+        for it in issues[:8]:
+            if not isinstance(it, dict):
+                continue
+            lines.append(
+                f"- [{it.get('severity', '中')}] {it.get('location', '')}："
+                f"{it.get('problem', '')}（建议：{it.get('suggestion', '')}）")
+    strengths = report.get("strengths") or []
+    if strengths:
+        lines.append("")
+        lines.append("**可保留的优点**：" + "；".join(str(x) for x in strengths[:4]))
+    if report.get("next_steps"):
+        lines.append("")
+        lines.append("**下一步**：" + str(report["next_steps"]))
+    return "\n".join(lines)
+
+
+async def script_tool(message: str, api_key: str = None, script_text: str = "", history: list = None):
+    """剧本检查/生成：有剧本查冲突并问是否改标准格式；没剧本按主题生成。"""
+    msg = (message or "").strip()
+    script = (script_text or "").strip()
+    msg = re.sub(r"^(?:剧本检查[/／]?生成|剧本检查|剧本生成|写剧本)\s*[:：]?\s*", "", msg)
+
+    if script:
+        if not looks_like_script(script):
+            return {
+                "text": "这份内容看起来不像分场剧本（没找到场次标题、内/外景或对白）。"
+                        "可以点输入区的回形针上传 PDF / DOCX / TXT，或直接粘贴「第1场 内景 便利店 夜」这种格式。",
+                "needs_script": True, "mode": "offline",
+            }
+        if re.search(r"改成标准|标准格式|改成剧本格式|整理成剧本|重排格式", msg):
+            if not llm.available(api_key):
+                return {"text": "改格式需要在线模型，当前模型不可用。", "mode": "offline"}
+            try:
+                data = await llm.complete_json(
+                    [{"role": "system", "content": prompts.PROMPT_SCRIPT_REFORMAT},
+                     {"role": "user", "content": script[:12000]}], api_key=api_key)
+                logline = _norm_logline(data.get("logline"))
+                text = str(data.get("script_text") or "").strip() or script
+                return {"kind": "script", "logline": logline, "script_text": text,
+                        "text": _script_intro(logline) + "\n\n已按标准电影剧本格式整理。",
+                        "mode": "online"}
+            except Exception as e:  # noqa: BLE001
+                logger.warning("剧本改格式失败(%s)", e)
+                return {"text": "改格式失败了，稍后再试一次。", "mode": "offline"}
+        # 冲突检查
+        ctx, refs = await asyncio.to_thread(_build_context, "review", script)
+        report = await review(script, api_key, ctx, refs)
+        report_text = _format_review(report).strip()
+        summary = (
+            f"剧本已识别（约 {len(script)} 字）。先做冲突与问题检查：\n\n"
+            f"{report_text[:3500] if report_text else '（未生成检查报告）'}\n\n---\n"
+            "要不要我把这份剧本改成**标准电影剧本格式**（场次标题 / 动作 / 角色与对白分行）？"
+            "回复「改成标准格式」即可；改完可以下载 PDF。"
+        )
+        return {"kind": "script_check", "logline": None, "script_text": script,
+                "findings": report.get("findings") or [], "text": summary,
+                "mode": report.get("mode", "offline")}
+
+    # 没剧本：按主题生成
+    theme = ""
+    m = re.search(r"写剧本\s*[:：]\s*(.+)", msg, re.S)
+    if m:
+        theme = m.group(1).strip()
+    if not theme:
+        theme = await _theme_from_history(history, msg)
+    if not theme and len(msg) >= 8:
+        theme = msg
+    if not theme:
+        return {"text": "写剧本需要先有一个主题：可以先用「找灵感」得到主题，或直接回复「写剧本：你的主题」。",
+                "needs_theme": True, "mode": "offline"}
+    if not llm.available(api_key):
+        return {"text": "剧本生成需要在线模型，当前模型不可用。", "mode": "offline"}
+    try:
+        data = await llm.complete_json(
+            [{"role": "system", "content": prompts.PROMPT_SCRIPT_GENERATE},
+             {"role": "user", "content": f"主题：{theme}\n请按这个主题写 6–8 分钟短片剧本。"}],
+            api_key=api_key)
+        logline = _norm_logline(data.get("logline"))
+        text = str(data.get("script_text") or "").strip()
+        if not text:
+            raise ValueError("模型没有返回剧本正文")
+        return {"kind": "script", "logline": logline, "script_text": text,
+                "characters": data.get("characters") or [],
+                "text": _script_intro(logline) + "\n\n剧本生成好了！想改哪场直接说；要出分镜就回复「出分镜」。",
+                "mode": "online"}
+    except Exception as e:  # noqa: BLE001
+        logger.warning("剧本生成失败(%s)", e)
+        return {"text": "剧本生成失败了，稍后再试一次。", "mode": "offline"}
+
+
+async def storyboard_tool(message: str, api_key: str = None, script_text: str = "", history: list = None):
+    """分镜建议/生成：必须先有剧本；输出梗要 + 分镜（前端可下载 CSV）。"""
+    script = (script_text or "").strip()
+    if not script:
+        return {
+            "text": "分镜需要先有剧本。\n\n点输入区的回形针上传 PDF / DOCX / TXT，或把剧本贴在输入框里，"
+                    "再点「分镜建议/生成」。\n（如果还没剧本，可以先用「找灵感」定主题，再用「剧本检查/生成」写一版剧本。）",
+            "needs_script": True, "mode": "offline",
+        }
+    if not looks_like_script(script):
+        return {"text": "上传的内容看起来不像分场剧本（没找到场次/对白/场景标题），先确认一下剧本文件。",
+                "needs_script": True, "mode": "offline"}
+    logline = await _logline_for_script(script, api_key)
+    ctx, refs = await asyncio.to_thread(_build_context, "storyboard", script)
+    result = await storyboard(script, api_key, ctx, refs)
+    shots = result.get("shots") or []
+    result["logline"] = logline
+    result["kind"] = "storyboard"
+    result["text"] = (_script_intro(logline)
+                      + f"\n\n分镜表（{len(shots)} 个镜头）在下方，点「下载 CSV」可直接拿到表格。")
+    return result
 
 
 async def run_tool(tool: str, message: str, api_key: str = None, history: list = None):

@@ -419,6 +419,30 @@ export const TOOL_META: Record<string, ToolMeta> = {
     isSearch: true,
     queryOf: (input) => (isRecord(input) ? str(input.query ?? input.keywords ?? '') : ''),
   },
+  inspiration: {
+    label: '找灵感',
+    labelEn: 'Find inspiration',
+    isSearch: false,
+    queryOf: (input) => (isRecord(input) ? str(input.idea ?? '') : ''),
+  },
+  review: {
+    label: '剧本检查/生成',
+    labelEn: 'Script check / generate',
+    isSearch: false,
+    queryOf: () => '',
+  },
+  storyboard: {
+    label: '分镜建议/生成',
+    labelEn: 'Storyboard',
+    isSearch: false,
+    queryOf: () => '',
+  },
+  schedule: {
+    label: '拍摄计划',
+    labelEn: 'Schedule',
+    isSearch: false,
+    queryOf: () => '',
+  },
 }
 
 export function toolMeta(toolName: string): ToolMeta {

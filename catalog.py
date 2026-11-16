@@ -335,7 +335,7 @@ def semantic_candidates(idea="", kind=None, k=8):
             "year": t.get("year"), "duration": t.get("duration"),
             "genre": t.get("genre"), "moods": t.get("moods"), "tags": t.get("tags"),
             "synopsis": t.get("synopsis"), "url": t.get("url"), "platform": t.get("platform"),
-            "frames": (t.get("frames") or [])[:3],
+            "frames": (t.get("frames") or [])[:4],
             "place_hints": PLACE_HINTS.get(t.get("title_zh"), []),
         })
     return out

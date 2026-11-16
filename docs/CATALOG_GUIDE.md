@@ -165,3 +165,13 @@
 - 产出结构：风格（为什么契合）→ 主题（从零构思）→ 契合电影（内容 + 3 张静帧 + 原片链接），最多 3 组。
 - 下一步：模型会反问是否出完整分镜；用户回复「出分镜」后，用 prompts.PROMPT_STORYBOARD_THEME 生成 8–10 镜分镜表。
 - 相关文件：catalog.py（PLACE_HINTS / semantic_candidates）、tools.py（inspiration_films / storyboard_from_theme）、prompts.py（PROMPT_INSPIRATION_FILMS / PROMPT_STORYBOARD_THEME）、filmmate-web/src/components/Composer.tsx（题材选择 UI）。
+
+
+## 10. 四板块 v3（2026-11-16 晚）
+
+- 顺序：找灵感 → 剧本检查/生成 → 分镜建议/生成 → 拍摄计划（React 与旧版入口都改了）。
+- 找灵感：输出里的静帧改为 2x2 四格（payload.films[].frames 取 4 张），前端 InspirationPanel 渲染网格 + 点击放大；正文不再插图片 markdown，避免排版错位。
+- 剧本检查/生成：有剧本→冲突检查→问是否改标准格式→可下载 PDF；无剧本→按主题生成梗要+标准格式剧本（PROMPT_SCRIPT_GENERATE）；前端 ScriptPanel 用可滚动区域展示，梗要卡片在上方。
+- 分镜建议/生成：强制先上传剧本；梗要（PROMPT_SCRIPT_LOG_LINE）+ 分镜；前端 StoryboardPanel 可下载 CSV。
+- 上传：回形针 → /api/script/parse → 原文随消息以【上传剧本】标记发给后端；PDF 导出走 /api/script/pdf（reportlab + STSong-Light）。
+- 找灵感结尾改为先问「要不要按主题 1 先写一版剧本？」（回复「写剧本」），写完后用户再回复「出分镜」。

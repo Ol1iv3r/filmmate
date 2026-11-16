@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   Loader2,
   CheckCircle2,
@@ -15,6 +15,9 @@ import { toolMeta, toolQuery, tryParseJson } from '../../lib/contract'
 import { cn, formatMs } from '../../lib/utils'
 import { HitRow } from './HitRow'
 import { RawJson } from './RawJson'
+import { InspirationPanel } from './InspirationPanel'
+import { ScriptPanel } from './ScriptPanel'
+import { StoryboardPanel } from './StoryboardPanel'
 
 function iconFor(toolName: string) {
   if (toolName.toLowerCase().includes('sample')) return <Search size={14} />
@@ -61,6 +64,16 @@ export function ToolCard({
   const elapsed = activity.ms ?? (doneAtFallback ?? activity.finishedAt ?? now) - firstSeenAt
   const query = queryWords(activity)
   const hasHits = !!activity.hits && activity.hits.length > 0
+
+  // 剧本 / 分镜 / 找灵感：用专用面板展示（可滚动、可下载、四格静帧）
+  let custom: ReactNode = null
+  const output = activity.output as Record<string, unknown> | undefined
+  if (output && typeof output === 'object') {
+    const o = output as Record<string, any>
+    if (typeof o.script_text === 'string' && o.script_text) custom = <ScriptPanel payload={o} />
+    else if (Array.isArray(o.shots) && o.shots.length) custom = <StoryboardPanel payload={o} />
+    else if (Array.isArray(o.films) && o.films.length) custom = <InspirationPanel payload={o} />
+  }
 
   return (
     <div
@@ -144,8 +157,11 @@ export function ToolCard({
             </div>
           )}
 
+          {/* 剧本 / 分镜 / 找灵感专用面板 */}
+          {custom}
+
           {/* 非检索工具 / 没有 hit 可解析：只给原始 JSON */}
-          {!hasHits && activity.output !== undefined && (
+          {!hasHits && !custom && activity.output !== undefined && (
             <RawJson title="工具返回结果" data={activity.output} />
           )}
 

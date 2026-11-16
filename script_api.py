@@ -6,7 +6,8 @@
 import io
 import re
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Body, File, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
 
 router = APIRouter(prefix="/api", tags=["script"])
 
@@ -101,3 +102,60 @@ async def parse_script(file: UploadFile = File(...)):
         "truncated": truncated,
         "text": text,
     }
+
+
+# --------------------------------------------------------------------------
+# 剧本导出 PDF：前端把剧本全文 POST 过来，服务端生成 PDF（中文用 CID 字体）
+# --------------------------------------------------------------------------
+@router.post("/script/pdf")
+async def script_pdf(payload: dict = Body(...)):
+    text = str(payload.get("text") or "").strip()
+    title = str(payload.get("title") or "剧本").strip() or "剧本"
+    if not text:
+        raise HTTPException(status_code=400, detail="剧本内容是空的")
+    try:
+        from reportlab.lib.pagesizes import A4
+        from reportlab.pdfbase import pdfmetrics
+        from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+        from reportlab.pdfgen import canvas
+    except ImportError:
+        raise HTTPException(status_code=503, detail="服务端缺少 reportlab，无法导出 PDF")
+    from urllib.parse import quote
+
+    buf = io.BytesIO()
+    try:
+        pdfmetrics.registerFont(UnicodeCIDFont("STSong-Light"))
+        font = "STSong-Light"
+    except Exception:  # noqa: BLE001
+        font = "Helvetica"
+    page_w, page_h = A4
+    left, top, line_h, max_chars = 52, page_h - 56, 18, 44
+    pdf = canvas.Canvas(buf, pagesize=A4)
+    pdf.setFont(font, 14)
+    pdf.drawString(left, top, title[:40])
+    pdf.setFont(font, 10.5)
+    y = top - 30
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        if not line:
+            y -= line_h
+            if y < 60:
+                pdf.showPage()
+                pdf.setFont(font, 10.5)
+                y = top
+            continue
+        while line:
+            chunk, line = line[:max_chars], line[max_chars:]
+            if y < 60:
+                pdf.showPage()
+                pdf.setFont(font, 10.5)
+                y = top
+            pdf.drawString(left, y, chunk)
+            y -= line_h
+    pdf.save()
+    buf.seek(0)
+    filename = quote((title if title.endswith(".pdf") else title + ".pdf"))
+    return StreamingResponse(
+        buf, media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{filename}"})
+

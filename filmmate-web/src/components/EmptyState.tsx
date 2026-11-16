@@ -38,7 +38,7 @@ export function EmptyState({ onPick }: { onPick: (prompt: string) => void }) {
           你的 AI 创作顾问<span className="hero-dot">.</span>
         </h2>
         <p className="hero-sub">
-          把想法或剧本交给我 —— 找灵感 → 查剧本漏洞 → 出分镜 → 排 Rundown → 规划日程，
+          把想法或剧本交给我 —— 找灵感 → 剧本检查/生成 → 分镜建议/生成 → 拍摄计划，
           每个回答都有真实影片样本做依据。
         </p>
         <div className="hero-capabilities">

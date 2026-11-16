@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState, type KeyboardEvent, type FormEvent } from 'react'
-import { ArrowUp, Square } from 'lucide-react'
+import { ArrowUp, Loader2, Paperclip, Square } from 'lucide-react'
 import { cn } from '../lib/utils'
+import { API_BASE } from '../lib/transport'
 import { mergeTranscript } from '../lib/voiceInputMerge'
 import { useVoiceInput } from '../hooks/useVoiceInput'
 import { MicButton } from './MicButton'
@@ -32,8 +33,38 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 ) {
   const composing = useRef(false)
   const taRef = useRef<HTMLTextAreaElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
   const [inspOpen, setInspOpen] = useState(false)
   const [inspKind, setInspKind] = useState<string | null>(null)
+  const [scriptFile, setScriptFile] = useState<{ name: string; chars: number; text: string } | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+
+  const onPickFile = async (file: File | undefined) => {
+    if (!file) return
+    setUploadError('')
+    setUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      const res = await fetch((API_BASE ?? '') + '/api/script/parse', { method: 'POST', body: form })
+      if (!res.ok) {
+        const detail = await res.text()
+        throw new Error('解析失败：' + detail.slice(0, 140))
+      }
+      const data = await res.json()
+      setScriptFile({
+        name: data.filename ?? file.name,
+        chars: Number(data.chars ?? (data.text ?? '').length),
+        text: String(data.text ?? ''),
+      })
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : '剧本上传失败')
+    } finally {
+      setUploading(false)
+      if (fileRef.current) fileRef.current.value = ''
+    }
+  }
 
   // Phase 2 语音输入（voice input）：录音状态机放在输入区本地，
   // 转写结果只并入草稿，永不自动发送。
@@ -63,7 +94,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     const t = value.trim()
     if (!t || streaming || voiceInput.status === 'recording') return
     // 找灵感：把用户选的题材随消息一起发给后端（后端用它划分库）
-    const outgoing = inspKind ? `【题材：${inspKind}】\n${t}` : t
+    let outgoing = inspKind ? `【题材：${inspKind}】\n${t}` : t
+    // 上传过剧本时，把原文附在消息末尾（后端识别后再做检查/改格式/分镜）
+    if (!inspKind && scriptFile) outgoing += '\n\n【上传剧本】\n' + scriptFile.text
     onSend(outgoing)
     onChange('')
     setInspKind(null)
@@ -92,7 +125,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   return (
     <div className="composer-area">
       <div className="quick-chips">
-        {['找灵感', '出分镜', '分镜建议', '剧本检查', 'Rundown'].map((c) => (
+        {['找灵感', '剧本检查/生成', '分镜建议/生成', '拍摄计划'].map((c) => (
           <button
             key={c}
             className="quick-chip"
@@ -103,12 +136,15 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
                 taRef.current?.focus()
                 return
               }
-              if (c === '出分镜') {
-                onChange('出分镜：')
-                taRef.current?.focus()
-                return
+              if (c === '分镜建议/生成' && !scriptFile) {
+                setUploadError('分镜需要先上传剧本：点左侧回形针上传 PDF/DOCX/TXT')
               }
-              onChange(`${c}：`)
+              if (c === '剧本检查/生成' && !scriptFile) {
+                onChange('写剧本：')
+              } else {
+                onChange(`${c}：`)
+              }
+              taRef.current?.focus()
             }}
           >
             {c}
@@ -138,7 +174,30 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           正在找「{inspKind}」的灵感 · 用一句话描述感觉（地点 / 情绪 / 场景），例：香港 雨夜 旧楼 孤独
         </div>
       )}
+      {scriptFile && (
+        <div className="composer-mode">
+          已上传剧本：{scriptFile.name}（{scriptFile.chars} 字）
+          <button className="link-btn" onClick={() => setScriptFile(null)}>移除</button>
+        </div>
+      )}
+      {uploadError && <div className="composer-error" role="alert">{uploadError}</div>}
       <form className="composer" onSubmit={onSubmit}>
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".pdf,.docx,.txt,.md,.markdown,.fountain"
+          style={{ display: 'none' }}
+          onChange={(e) => void onPickFile(e.target.files?.[0])}
+        />
+        <button
+          type="button"
+          className="attach-btn"
+          title="上传剧本（PDF / DOCX / TXT）"
+          disabled={streaming || uploading}
+          onClick={() => fileRef.current?.click()}
+        >
+          {uploading ? <Loader2 size={15} className="spin" /> : <Paperclip size={15} />}
+        </button>
         <MicButton
           status={voiceInput.status}
           elapsedMs={voiceInput.elapsedMs}

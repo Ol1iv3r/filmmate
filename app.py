@@ -243,27 +243,23 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
     # 只有剧本类任务才用上传文件覆盖输入；灵感/案例仍按用户当前输入检索
     script_tools = ("review", "storyboard", "rundown", "schedule")
     content = script_text if (script_text and tool in script_tools) else message
-    needs_script = tool in ("review", "rundown", "schedule")
+    needs_script = tool in ("rundown", "schedule")
     if needs_script and len(content) < 40 and not re.search(r"第\s*\d+\s*[场幕景]", content):
         hint = (
             "请先上传剧本文件（PDF / DOCX / TXT），或在输入框里粘贴剧本全文，再点这个功能。\n\n"
-            "支持的格式：PDF、DOCX、TXT、Markdown、Fountain；单文件 ≤ 15 MB。\n"
-            "上传后我会读取场次、对白和动作描述，再据此检查/分镜/排通告单。"
+            "支持的格式：PDF、DOCX、TXT、Markdown、Fountain；单文件 ≤ 15 MB。"
         )
         for chunk in chunk_text(hint):
             yield "delta", {"text": chunk}
             await asyncio.sleep(0.01)
         return
-    if tool == "review" and not script_name and len(content) < 60 and not re.search(r"[:：]", content):
-        text = ("请把要检查的剧本或大纲贴给我(最好包含场次和对白),例如:\n\n"
-                "第1场 天台 夜\n小明:今晚的月亮真圆。\n小红:嗯,和去年一样。\n\n"
-                "我会从情节漏洞、时间线、人物动机、对白、结构等方面给出审阅报告。")
-        for chunk in chunk_text(text):
-            yield "delta", {"text": chunk}
-            await asyncio.sleep(0.015)
-        return
 
-    payload = await tools.run_tool(tool, content, api_key, history=history)
+    if tool == "review":
+        payload = await tools.script_tool(message, api_key, script_text, history)
+    elif tool == "storyboard":
+        payload = await tools.storyboard_tool(message, api_key, script_text, history)
+    else:
+        payload = await tools.run_tool(tool, content, api_key, history=history)
     if script_name:
         payload["script_name"] = script_name
     yield "tool_data", {"tool": tool, "payload": payload}
@@ -287,6 +283,12 @@ async def chat(req: Request):
     message = (body.get("message") or "").strip()
     script_text = (body.get("script_text") or "").strip()
     script_name = (body.get("script_name") or "").strip()
+    # React 前端上传剧本后，会把它附在消息末尾（【上传剧本】+ 原文）
+    if "【上传剧本】" in message:
+        head, _, uploaded = message.partition("【上传剧本】")
+        message = head.strip()
+        if not script_text:
+            script_text = uploaded.strip()
     forced = (body.get("tool") or "").strip() or None
     tool = forced or tools.detect_tool(message)
     api_key = (body.get("api_key") or "").strip()
