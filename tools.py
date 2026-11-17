@@ -1798,8 +1798,34 @@ _SCRIPT_HEAD = re.compile(r"(第\s*\d+\s*[场幕]|^\s*\d+\s*[\.、]\s*(?:内|外
 
 
 def looks_like_script(text: str) -> bool:
+    """Detect Chinese or English screenplay text, not generic prose."""
     if not text or len(text) < 40:
         return False
+
+    # English screenplay signals: scene headings, character cues, parentheticals, transitions.
+    scene_re = re.compile(
+        r"^\s*(?:\d+[.)]\s*)?(?:INT\.?|EXT\.?|INT\.?/EXT\.?|I/E\.?)\s+\S",
+        re.M | re.I,
+    )
+    english_scenes = len(scene_re.findall(text))
+    lines = [line.strip() for line in text.splitlines()]
+    english_cues = 0
+    for i, line in enumerate(lines):
+        if not line or len(line) > 32 or not line.isupper():
+            continue
+        if re.match(r"^(?:INT|EXT|I/E|第\s*\d+\s*[场幕])", line, re.I):
+            continue
+        if i > 0 and lines[i - 1] and not scene_re.match(lines[i - 1]):
+            continue
+        if any(lines[j].strip() for j in range(i + 1, min(len(lines), i + 4))):
+            english_cues += 1
+    english_parentheticals = sum(1 for line in lines if line.startswith("(") and line.endswith(")"))
+    english_transitions = len(re.findall(r"^(?:CUT TO:|FADE (?:IN|OUT)|DISSOLVE TO:|SMASH CUT TO:)", text, re.M | re.I))
+    if english_scenes >= 1 and (english_cues >= 1 or english_parentheticals >= 1 or english_transitions >= 1):
+        return True
+    if english_scenes >= 2:
+        return True
+
     hits = 0
     if re.search(r"第\s*\d+\s*[场幕]", text):
         hits += 2
@@ -2022,21 +2048,35 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
 
 
 _HEADING_RE = re.compile(r"^\s*(?:第\s*(\d+)\s*场[\s\.、:：-]*|(\d+)\s*[\.、]\s*)(.*)$")
+_EN_HEADING_RE = re.compile(r"^\s*(?:(\d+)\s*[.)]\s*)?((?:INT|EXT|I/E)\.?\s+.*)$", re.I)
+
+
+def _scene_heading_text(num: int, rest: str) -> str:
+    if re.match(r"^(?:INT|EXT|I/E)\.?\s", rest, re.I):
+        return rest.upper()
+    return f"Scene {num} {rest}" if _LANG == "en" else f"第{num}场 {rest}"
 
 
 def split_script_scenes(text: str):
-    """兼容多种格式的剧本分场：1. 内景 便利店 - 深夜 / 第1场 内景 便利店 夜 / 内景 …"""
+    """兼容中英文剧本分场：1. 内景 … / 第1场 … / INT. … / EXT. …"""
     lines = (text or "").splitlines()
     scenes, cur = [], None
     for line in lines:
         m = _HEADING_RE.match(line)
+        en = _EN_HEADING_RE.match(line)
         heading = None
+        if en:
+            rest = (en.group(2) or "").strip()
+            num = en.group(1)
+            n = int(num) if num else (scenes[-1]["scene_no"] + 1 if scenes else 1)
+            if rest:
+                heading = (n, _scene_heading_text(n, rest))
         if m:
             rest = (m.group(3) or "").strip()
             num = m.group(1) or m.group(2)
             looks_location = bool(re.search(r"(内景|外景|INT\.?|EXT\.?|日|夜)", rest, re.I)) or len(rest) >= 2
             if looks_location and rest and not rest.startswith(("：", ":")):
-                heading = (int(num), f"Scene {int(num)} {rest}" if _LANG == "en" else f"第{int(num)}场 {rest}")
+                heading = (int(num), _scene_heading_text(int(num), rest))
         if heading:
             if cur:
                 scenes.append(cur)
