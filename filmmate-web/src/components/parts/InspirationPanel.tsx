@@ -11,6 +11,7 @@ interface InspiredFilm {
   url?: string
   platform?: string
   frames?: string[]
+  source?: string
 }
 
 interface InspirationPayload {
@@ -22,7 +23,7 @@ interface InspirationPayload {
 
 /** 找灵感结果：每部契合电影用 2x2 四格静帧展示，点击可放大。 */
 export function InspirationPanel({ payload }: { payload: InspirationPayload }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const films = payload.films ?? []
   const [zoom, setZoom] = useState<string | null>(null)
   if (!films.length) return null
@@ -37,7 +38,13 @@ export function InspirationPanel({ payload }: { payload: InspirationPayload }) {
         <div className="insp-film" key={f.id ?? i}>
           <div className="insp-film-head">
             <span className="insp-idx">{t('契合电影', 'Matching film')} {i + 1}</span>
-            《{f.title_zh ?? ''}》{f.year ?? ''}
+            {f.source === 'personal' && (
+              <span className="insp-ref-badge">{t('你收藏的参考片', 'Saved reference')}</span>
+            )}
+            {lang === 'en'
+              ? `“${f.title_en ?? f.title_zh ?? ''}”`
+              : `《${f.title_zh ?? ''}》`}
+            {f.year ? ` (${f.year})` : ''}
             {f.duration ? '　' + f.duration : ''}
             {f.url && (
               <a className="link-btn" href={f.url} target="_blank" rel="noreferrer">

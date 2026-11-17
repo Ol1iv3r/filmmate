@@ -119,6 +119,14 @@ def add_film(url: str, title: str = "", moods=None, script_text: str = "", scrip
             frames = frame_lib.extract_frames(bvid, count=6)
         except Exception:  # noqa: BLE001
             frames = []
+    if not frames and ytid:
+        try:
+            import frames as frame_lib
+            frames = frame_lib.extract_video_frames(url, f"yt-{ytid}", count=6)
+        except Exception:  # noqa: BLE001
+            frames = []
+    if not frames and meta.get("cover"):
+        frames = [meta["cover"]]
 
     entry = {
         "id": bvid or f"personal-{int(datetime.now().timestamp())}",
@@ -173,6 +181,28 @@ def _fetch_youtube(vid: str):
     }
 
 
+def update_visual(film_id: str, summary: str = "", tags=None, beats=None):
+    data = _load()
+    for film in data.get("films", []):
+        if film.get("id") == film_id:
+            film["visual_summary"] = (summary or "").strip()[:600]
+            film["visual_tags"] = [str(t).strip() for t in (tags or []) if str(t).strip()][:12]
+            film["visual_beats"] = [str(t).strip() for t in (beats or []) if str(t).strip()][:8]
+            _save(data)
+            return True
+    return False
+
+
+def update_frames(film_id: str, frames=None):
+    data = _load()
+    for film in data.get("films", []):
+        if film.get("id") == film_id:
+            film["frames"] = [str(x) for x in (frames or []) if str(x)]
+            _save(data)
+            return True
+    return False
+
+
 def update_style(film_id: str, summary: str = "", tags=None):
     data = _load()
     for film in data.get("films", []):
@@ -191,6 +221,7 @@ def taste_profile(limit: int = 10) -> dict:
     moods: list[str] = []
     tags: list[str] = []
     summaries: list[str] = []
+    visual: list[str] = []
     for f in films:
         for value in f.get("moods") or []:
             value = str(value).strip()
@@ -202,7 +233,14 @@ def taste_profile(limit: int = 10) -> dict:
                 tags.append(value)
         if f.get("style_summary"):
             summaries.append(str(f["style_summary"]).strip())
-    return {"titles": titles, "moods": moods, "tags": tags, "summaries": summaries}
+        if f.get("visual_summary"):
+            visual.append(str(f["visual_summary"]).strip())
+        for value in f.get("visual_tags") or []:
+            value = str(value).strip()
+            if value and value not in tags:
+                tags.append(value)
+    return {"titles": titles, "moods": moods, "tags": tags, "summaries": summaries,
+            "visual": visual}
 
 
 def taste_context(limit: int = 10, lang: str = "zh") -> str:
@@ -219,6 +257,8 @@ def taste_context(limit: int = 10, lang: str = "zh") -> str:
             parts.append(("标签：" if not en else "Tags: ") + ("、".join(f["style_tags"]) if not en else ", ".join(f["style_tags"])))
         if f.get("moods"):
             parts.append(("情绪：" if not en else "Moods: ") + ("/".join(f["moods"])))
+        if f.get("visual_summary"):
+            parts.append(("画面：" if not en else "On screen: ") + f["visual_summary"])
         if f.get("style_summary"):
             parts.append(f["style_summary"])
         if f.get("url"):

@@ -82,7 +82,7 @@ Legend: **✅ implemented and exercised** · **— not implemented**
 | **Structured output + export** | ✅ | Review findings, script reader, shot list, shooting days and inspiration stills each have a dedicated panel. Storyboard → CSV, script → PDF, shooting plan → `.ics`. |
 | **Offline / failure resilience** | ✅ | Each tool has a local twin where a meaningful one exists; model errors fall back automatically; JSON is repaired/retried; errors are translated into readable messages. Script generation and reformatting intentionally require the model. |
 | **Script upload** | ✅ | PDF / DOCX / TXT / Markdown / Fountain up to 15 MB; parsed server-side; 200,000-character cap; text is never written to disk as a file. Pressing Enter on an empty composer analyses the uploaded script. |
-| **Personal reference library** | ✅ | Add a Bilibili/YouTube link; Filmmate fetches title, cover, duration and owner, extracts stills where possible, and uses the saved films as a taste profile in later inspiration and script prompts. |
+| **Personal reference library** | ✅ | Add one or multiple Bilibili/YouTube links; Filmmate fetches metadata, extracts real stills (Bilibili preview sprites, or a sampled video for YouTube), and runs a Vercel AI Gateway vision model over the frames to describe what happens. Saved references become a strong taste profile and the first matching films in later inspiration. |
 | **Conversation persistence** | ✅ | One JSON file per conversation through the optional FastAPI store, with atomic writes, per-conversation locks, schema versioning and corrupt-file quarantine. The default client uses `localStorage`; set `VITE_REMOTE_CONVERSATIONS=1` to use the server store. |
 | **Context memory** | ✅ | The QA path receives up to 16 messages / ~7,000 characters, plus the current script (first 6,000 characters) and a compact storyboard summary (first 30 shots). Follow-ups such as “another batch” inherit the previous tool and genre. |
 | **Security and limits** | ✅ | Provider keys live in `.env` on the server and are not stored in the browser; CORS is restricted; uploads, transcripts and output length are capped; conversation ids are validated before they reach the filesystem. |
@@ -125,17 +125,23 @@ The priority is **per-request key → direct DeepSeek → Vercel AI Gateway → 
 
 The Gateway is a model API, not a vector database. Retrieval remains local: JSON libraries plus BM25 or optional dense vectors. Provider keys stay in the server-side `.env`; the browser never receives them.
 
+### 2.6 Reference-frame understanding (Vercel AI Gateway vision)
+
+When a user saves a reference film, Filmmate extracts real stills from the link and sends up to four frames to a vision-capable Gateway model. The model returns a scene-level description, beat list and visual tags; these are stored on the reference and used in inspiration/script prompts and in the `why it fits` copy. The default is the Gateway chat model; set `GATEWAY_VISION_MODEL=google/gemini-2.5-flash` (or another vision model) to override it.
+
+This is deliberately **frame-based** rather than full-video ingestion: it is cheap, works with Bilibili/YouTube links that a model cannot fetch directly, and still answers what is visible — subjects, actions, setting, light, mood. If a full video-capable model is configured, the same interface can be extended to send the MP4 file part; the current production path uses sampled frames.
+
 ---
 
 ## 3. The five workflows
 
 | Step | Entry point | Input | Output | Main implementation |
 |---|---|---|---|---|
-| **Find inspiration** | `Find inspiration` chip → choose genre → describe a feeling | Genre + a place/mood/keywords (e.g. “Hong Kong, rainy night, loneliness”) | 2–3 “style → theme → matching film” sets, 2×2 stills, original-film link, then an offer to write the script | `tools.inspiration_films`, `catalog.semantic_candidates`, `PROMPT_INSPIRATION_FILMS` |
+| **Find inspiration** | `Find inspiration` chip → choose genre → describe a feeling | Genre + a place/mood/keywords (e.g. “Hong Kong, rainy night, loneliness”) | “Style → theme → matching film” sets, 2×2 stills and links; saved reference films are guaranteed as matching films 1..N (and matching film 1 is always the newest saved reference) | `tools.inspiration_films`, `catalog.semantic_candidates`, `PROMPT_INSPIRATION_FILMS` |
 | **Check / write a script** | `Script check / write` chip or paperclip | Uploaded script, or a theme | Coverage report, or a logline + standard-format screenplay; optional reformat and PDF | `tools.script_tool`, `PROMPT_REVIEW`, `PROMPT_SCRIPT_REFORMAT`, `PROMPT_SCRIPT_LOG_LINE`, `/api/script/pdf` |
 | **Storyboard** | `Storyboard` chip | A script (required) | Scene-by-scene shot list (3 shots per scene in the offline rule path; 8–20 in the online prompt), coverage notes, CSV | `tools.storyboard_tool`, `split_script_scenes`, `PROMPT_STORYBOARD_SCRIPT` |
 | **Shooting plan** | `Shooting plan` chip | The most recent storyboard + preferences | Crew, gear, locations, shooting days, risks, `.ics` calendar | `tools.schedule_tool`, `PROMPT_SHOOTING_PLAN`, `SchedulePanel` |
-| **+ Reference film** | `+ Reference film` | Bilibili/YouTube link, optional title and moods | Saved film with metadata, stills and a taste profile used by later prompts | `personal_library.py`, `/api/library/personal` |
+| **+ Reference film** | `+ Reference film` | One or more Bilibili/YouTube links, optional title and moods | Saved films with metadata, extracted stills, a vision description and a taste profile; inspiration puts these films first | `personal_library.py`, `frames.py`, `/api/library/personal` |
 
 ### A typical demo path
 
@@ -421,7 +427,7 @@ AI Chatbot/
 ├── chat_storage_langchain.py       # reserved LangChain adapter; not imported
 ├── personal_library.py             # saved reference films and taste context
 ├── personal_api.py                 # /api/library/personal routes
-├── frames.py                       # Bilibili preview-frame extraction helper
+├── frames.py                       # Bilibili sprite + yt-dlp/ffmpeg reference-frame extraction
 ├── requirements.txt                # Python dependencies
 ├── .env.example                    # backend configuration template
 ├── start.command                   # macOS one-click launcher
@@ -575,6 +581,7 @@ Create `.env` from `.env.example` in the repository root. The frontend has its o
 | `AI_GATEWAY_API_KEY` | empty | Vercel AI Gateway key (chat fallback and Whisper). |
 | `AI_GATEWAY_BASE_URL` | `https://ai-gateway.vercel.sh/v1` | Gateway base URL; chat uses `/chat/completions`, voice uses the v4 transcription endpoint. |
 | `GATEWAY_CHAT_MODEL` | `google/gemini-4-hydrogen` | Chat model when Gateway is used. |
+| `GATEWAY_VISION_MODEL` | `GATEWAY_CHAT_MODEL` | Vision model for reference-frame analysis; use a model that accepts image parts. |
 | `OPENAI_API_KEY` | empty | Direct OpenAI key for transcription. |
 | `TRANSCRIBE_MODEL` | auto | `openai/whisper-1` for Gateway; `whisper-1` for OpenAI. |
 | `TRANSCRIBE_LANGUAGE` | auto | Optional ISO code, e.g. `zh`, `en`. |

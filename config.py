@@ -26,6 +26,8 @@ LLM_MAX_TOKENS = int(os.environ.get("LLM_MAX_TOKENS", "2000"))
 
 # 聊天模型统一入口：优先直连 DeepSeek；没有 DeepSeek key 时用 Vercel AI Gateway
 GATEWAY_CHAT_MODEL = os.environ.get("GATEWAY_CHAT_MODEL", "google/gemini-4-hydrogen").strip()
+GATEWAY_VISION_MODEL = (os.environ.get("GATEWAY_VISION_MODEL", "").strip()
+                        or GATEWAY_CHAT_MODEL)
 
 # 语音转写配置(Phase 2):whisper-1,走 Vercel AI Gateway 或直连 OpenAI
 AI_GATEWAY_API_KEY = os.environ.get("AI_GATEWAY_API_KEY", "").strip()

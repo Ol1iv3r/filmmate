@@ -296,3 +296,94 @@ async def chat_with_tools(messages, api_key: str = None, max_steps: int = 3):
     if len(final) < 2:
         final = "（模型这次没有给出正文，可能是工具调用格式异常。请重试，或把问题拆小一点。）"
     return final, steps
+
+# --------------------------------------------------------------------------
+# Vision / reference-frame understanding via Vercel AI Gateway
+# --------------------------------------------------------------------------
+def vision_available() -> bool:
+    return bool(config.AI_GATEWAY_API_KEY)
+
+
+def _image_data_url(source: str) -> str:
+    """Turn a local /static path or remote image URL into a data URL."""
+    import base64
+    import mimetypes
+    from pathlib import Path
+    import urllib.request
+
+    source = str(source or "").strip()
+    if source.startswith("data:"):
+        return source
+    if source.startswith(("http://", "https://")):
+        req = urllib.request.Request(source, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            raw = resp.read()
+            mime = resp.headers.get("Content-Type") or "image/jpeg"
+    else:
+        path = Path(source)
+        if source.startswith("/static/") or not path.is_absolute():
+            path = config.BASE_DIR / source.lstrip("/")
+        raw = path.read_bytes()
+        mime = mimetypes.guess_type(path.name)[0] or "image/jpeg"
+    return f"data:{mime};base64," + base64.b64encode(raw).decode("ascii")
+
+
+async def analyze_reference_frames(images, title: str = "", lang: str = "en", timeout: float = 45.0) -> dict:
+    """Ask a Gateway vision model what is visible in sampled reference frames.
+
+    Returns {"summary": str, "beats": [str], "visual_tags": [str], "style_summary": str}.
+    Raises if the Gateway key/model is unavailable, so callers can keep the add.
+    """
+    if not config.AI_GATEWAY_API_KEY:
+        raise RuntimeError("AI_GATEWAY_API_KEY is not configured")
+    if not images:
+        raise ValueError("no frames to analyze")
+    selected = [str(x) for x in images if str(x).strip()][:4]
+    en = lang == "en"
+    prompt = (
+        "These are sampled frames from a reference film. Describe what is actually visible: "
+        "subjects, actions, setting, camera distance, light and mood. Do not invent plot beyond the frames. "
+        "Return JSON only: {\"summary\": \"one paragraph of what happens across the frames\", "
+        "\"beats\": [\"beat 1\", \"beat 2\"], \"visual_tags\": [\"tag 1\", \"tag 2\"], "
+        "\"style_summary\": \"one sentence on visual texture and mood\"}." if en else
+        "这些是参考影片的抽样静帧。只描述画面里真实可见的内容：人物、动作、环境、景别、光线与情绪，不要编造静帧之外的剧情。"
+        "只输出 JSON：{\"summary\": \"跨这些静帧发生了什么\", \"beats\": [\"节拍1\", \"节拍2\"], "
+        "\"visual_tags\": [\"标签1\", \"标签2\"], \"style_summary\": \"一句话视觉质感与情绪\"}。"
+    )
+    content = [{"type": "text", "text": prompt}]
+    for src in selected:
+        content.append({"type": "image_url", "image_url": {"url": _image_data_url(src)}})
+    body = {
+        "model": config.GATEWAY_VISION_MODEL,
+        "messages": [{"role": "user", "content": content}],
+        "temperature": 0.2,
+        "max_tokens": 1300,
+    }
+    url = config.AI_GATEWAY_BASE_URL.rstrip("/") + "/chat/completions"
+    headers = {"Authorization": f"Bearer {config.AI_GATEWAY_API_KEY}", "Content-Type": "application/json"}
+    last_error = None
+    for attempt_images in (selected, selected[:2]):
+        body["messages"][0]["content"] = [content[0]] + [
+            {"type": "image_url", "image_url": {"url": _image_data_url(src)}} for src in attempt_images
+        ]
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            resp = await client.post(url, json=body, headers=headers)
+            if resp.status_code != 200:
+                last_error = RuntimeError(f"Gateway vision {resp.status_code}: {resp.text[:300]}")
+                continue
+            data = resp.json()
+        message = (data.get("choices") or [{}])[0].get("message", {})
+        text = message.get("content", "")
+        if isinstance(text, list):
+            text = "".join(str(part.get("text", "")) for part in text if isinstance(part, dict))
+        try:
+            result = _extract_json(str(text))
+        except ValueError as exc:
+            last_error = exc
+            continue
+        result.setdefault("summary", "")
+        result.setdefault("beats", [])
+        result.setdefault("visual_tags", [])
+        result.setdefault("style_summary", "")
+        return result
+    raise last_error or RuntimeError("vision model returned no usable JSON")

@@ -106,6 +106,25 @@ async def add_personal(body: AddFilm):
             except Exception as exc:  # noqa: BLE001
                 return {"ok": False, "url": url, "error": _error_text(exc, body.lang)}
             entry = await _analyze_style(entry, body.lang)
+            if entry.get("frames"):
+                try:
+                    import llm
+                    if llm.vision_available():
+                        visual = await asyncio.wait_for(
+                            llm.analyze_reference_frames(entry["frames"], entry.get("title", ""), lang=body.lang),
+                            timeout=40,
+                        )
+                        personal_library.update_visual(
+                            entry["id"],
+                            str(visual.get("summary") or ""),
+                            visual.get("visual_tags") or [],
+                            visual.get("beats") or [],
+                        )
+                        entry = next((f for f in personal_library.list_films() if f.get("id") == entry["id"]), entry)
+                        entry["analyzed"] = bool(entry.get("style_summary"))
+                        entry["visual_analyzed"] = True
+                except Exception:  # noqa: BLE001
+                    entry["visual_analyzed"] = False
             return {"ok": True, "url": url, "film": entry}
 
     results = await asyncio.gather(*(add_one(url) for url in urls))

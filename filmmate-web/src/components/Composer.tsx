@@ -194,7 +194,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     setRefBusy(true)
     setRefMsg('')
     const controller = new AbortController()
-    const timer = window.setTimeout(() => controller.abort(), 75_000)
+    const timer = window.setTimeout(() => controller.abort(), 120_000)
     try {
       const res = await fetch((API_BASE ?? '') + '/api/library/personal', {
         method: 'POST',

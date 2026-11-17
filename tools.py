@@ -1545,6 +1545,7 @@ def _films_markdown(kind: str, idea: str, styles: list) -> str:
         film = s["film"]
         title = film.get("title_zh")
         year = film.get("year")
+        personal = film.get("source") == "personal"
         duration = film.get("duration") or ""
         moods = "/".join(film.get("moods") or [])
         tags = ", ".join((film.get("tags") or [])[:5]) if en else "、".join((film.get("tags") or [])[:5])
@@ -1552,7 +1553,10 @@ def _films_markdown(kind: str, idea: str, styles: list) -> str:
             lines.append(f"### Style {i}: {s['style_name']}")
             lines.append(f"- **Why it fits there**: {s['why_fits']}")
             lines.append(f"- **Theme {i}**: {s['theme']}")
-            lines.append(f"- **Matching film {i}**: *{title}* ({year})　{duration}")
+            if personal:
+                lines.append(f"- **Matching film {i}**: *{title}* — **your saved reference**　{duration}")
+            else:
+                lines.append(f"- **Matching film {i}**: *{title}* ({year})　{duration}")
             lines.append(f"  - Story: {film.get('synopsis') or ''}")
             lines.append(f"  - Mood: {moods}　｜　Tags: {tags}")
             if film.get("url"):
@@ -1563,7 +1567,10 @@ def _films_markdown(kind: str, idea: str, styles: list) -> str:
             lines.append(f"### 风格 {i}：{s['style_name']}")
             lines.append(f"- **为什么契合「{idea or kind}」**：{s['why_fits']}")
             lines.append(f"- **主题 {i}**：{s['theme']}")
-            lines.append(f"- **契合电影 {i}**：《{title}》（{year}）　{duration}")
+            if personal:
+                lines.append(f"- **契合电影 {i}**：《{title}》（你收藏的参考片）　{duration}")
+            else:
+                lines.append(f"- **契合电影 {i}**：《{title}》（{year}）　{duration}")
             lines.append(f"  - 内容：{film.get('synopsis') or ''}")
             lines.append(f"  - 情绪：{moods}　｜　标签：{tags}")
             if film.get("url"):
@@ -1581,6 +1588,54 @@ def _films_markdown(kind: str, idea: str, styles: list) -> str:
     return "\n".join(lines)
 
 
+def _personal_film_card(film: dict) -> dict:
+    """Convert a saved personal reference into the Inspiration panel film shape."""
+    title = str(film.get("title") or "未命名参考片")
+    frames = [str(x) for x in (film.get("frames") or []) if str(x)]
+    if not frames and film.get("cover"):
+        frames = [str(film["cover"])]
+    return {
+        "id": f"personal:{film.get('id')}",
+        "kind": "Saved reference" if _LANG == "en" else "收藏参考片",
+        "title_zh": title,
+        "title_en": title,
+        "year": "",
+        "duration": film.get("duration") or "",
+        "genre": [],
+        "moods": film.get("moods") or [],
+        "tags": (film.get("visual_tags") or film.get("style_tags") or [])[:8],
+        "synopsis": (film.get("visual_summary") or film.get("style_summary")
+                     or ("Saved reference film." if _LANG == "en" else "你收藏的参考片。")),
+        "url": film.get("url") or "",
+        "platform": film.get("platform") or "",
+        "frames": frames[:4],
+        "source": "personal",
+        "personal_id": film.get("id"),
+    }
+
+
+def _reference_style(film: dict, idea: str) -> dict:
+    """Deterministic style block so the user's first matching film is always their reference."""
+    card = _personal_film_card(film)
+    en = _LANG == "en"
+    title = card["title_zh"]
+    tags = card.get("tags") or []
+    visual = str(film.get("visual_summary") or film.get("style_summary") or "").strip()
+    style_name = " / ".join(tags[:2]) if tags else ("Saved reference texture" if en else "收藏参考片")
+    if en:
+        why = (f"This is one of your saved references. Its actual frames show: {visual} "
+               f"Your keywords \"{idea or 'the current idea'}\" connect to its space, people and visual rhythm.")
+        theme = (f"A character formed by the world of {title} has to choose what to keep and what to leave behind.")
+        reason = "This is one of your saved reference films; its extracted stills are shown directly below."
+    else:
+        why = (f"这是你收藏的参考片，静帧里实际发生的是：{visual} "
+               f"你的关键词「{idea or '当前想法'}」与它的空间、人物和视觉节奏直接相连。")
+        theme = f"一个被《{title}》的世界塑造的人，必须在留下与离开之间做一次选择。"
+        reason = "这是你收藏的参考片，下方直接展示从链接中截取的静帧。"
+    return {"style_name": style_name, "why_fits": why, "theme": theme,
+            "film_reason": reason, "film": card}
+
+
 async def inspiration_films(text: str, api_key: str = None, kind: str = None, history: list = None):
     """按题材划库的找灵感：只在该题材作品中检索，返回风格/主题/契合电影。"""
     import catalog as _catalog
@@ -1589,13 +1644,17 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
         return {"text": _kind_ask_text(), "need_kind": True,
                 "kind_options": KIND_CHOICES, "mode": "offline"}
     idea = (text or "").strip()
+    refs = []
     try:
         import personal_library
         taste_profile = personal_library.taste_profile()
+        refs = list(reversed(personal_library.list_films()))[:8]
     except Exception:  # noqa: BLE001
         taste_profile = {}
+        refs = []
+    ref_cards = [_personal_film_card(f) for f in refs]
     cands = _catalog.semantic_candidates(idea, kind, k=8, lang=_LANG, taste=taste_profile)
-    if not cands:
+    if not cands and not refs:
         return {"text": f"「{kind}」题材库里暂时没有可用作品，换一类试试？",
                 "need_kind": True, "kind_options": KIND_CHOICES, "mode": "offline"}
 
@@ -1603,6 +1662,20 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
     if llm.available(api_key):
         try:
             film_lines = []
+            for ref_index, card in enumerate(ref_cards, 1):
+                source = next((f for f in refs if f"personal:{f.get('id')}" == card["id"]), {})
+                visual = str(source.get("visual_summary") or source.get("style_summary") or "").strip()
+                film_lines.append(
+                    (f"- [SAVED REFERENCE {ref_index} - MUST BE MATCHING FILM {ref_index}] {card['title_zh']}"
+                     f" | Visual: {visual}"
+                     f" | Moods: {', '.join(card.get('moods') or [])}"
+                     f" | Tags: {', '.join((card.get('tags') or [])[:6])}")
+                    if _LANG == "en" else
+                    (f"- 【收藏参考片 {ref_index} — 必须是契合电影 {ref_index}】《{card['title_zh']}》"
+                     f"｜画面：{visual}"
+                     f"｜情绪：{'/'.join(card.get('moods') or [])}"
+                     f"｜标签：{'、'.join((card.get('tags') or [])[:6])}")
+                )
             for c in cands:
                 if _LANG == "en":
                     film_lines.append(
@@ -1637,6 +1710,14 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
                    ("参考片优先级：以上收藏参考片是最强的风格锚点；每个风格、主题和选片都必须与其影像质感、情绪和母题一致；"
                     "如果用户描述冲突，优先参考片并说明如何融合。\n\n")
                    if taste else "")
+                + (("SAVED REFERENCE RULE: The user's saved reference films below are mandatory matching films. "
+                    "Matching film 1 MUST be SAVED REFERENCE 1. If there are 3 or more saved references, "
+                    "matching films 1..N MUST be all saved references in the listed order. "
+                    "Do not replace them with catalog films; use their exact titles.\n\n")
+                   if refs and _LANG == "en" else
+                   ("收藏参考片规则：下方收藏参考片是必须出现的契合电影，契合电影 1 必须是收藏参考片 1；"
+                    "如果有 3 条或以上收藏参考片，契合电影 1..N 必须按顺序使用全部收藏参考片，不能换成目录影片；片名逐字一致。\n\n")
+                   if refs else "")
                 + ("\n\n" + history_block(history) if history else "")
                 + "\n\n候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines)
                 + lang_hint())
@@ -1645,7 +1726,7 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
             data = await llm.complete_json(
                 [{"role": "system", "content": system_prompt},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
-            by_title = {_norm_title(c["title_zh"]): c for c in cands}
+            by_title = {_norm_title(c["title_zh"]): c for c in (ref_cards + cands)}
             for s in data.get("styles") or []:
                 if not isinstance(s, dict):
                     continue
@@ -1706,6 +1787,21 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
         mode = "offline"
     else:
         mode = "online"
+
+    if refs:
+        reference_styles = []
+        for film in refs:
+            card = _personal_film_card(film)
+            matched = next((x for x in styles if x["film"].get("id") == card["id"]), None)
+            if matched is not None:
+                reference_styles.append({**matched, "film": card})
+            else:
+                reference_styles.append(_reference_style(film, idea))
+        if len(reference_styles) >= 3:
+            styles = reference_styles
+        else:
+            others = [x for x in styles if x["film"].get("id") not in {c["id"] for c in ref_cards}]
+            styles = reference_styles + others[:3 - len(reference_styles)]
 
     kind_label = KIND_EN.get(kind, kind) if _LANG == "en" else kind
     text_out = _films_markdown(kind, idea, styles)
