@@ -1,5 +1,7 @@
 # Filmmate 电影数据库（剧本 + 原片）
 
+> English version: [`FILM_DATABASE_EN.md`](FILM_DATABASE_EN.md)
+
 > 导出时间：2026-11-13T21:10:21+08:00　｜　共 **16 部**。
 > 每部片都同时有 scriptslug 剧本（页面 + PDF）与 Bilibili 原片；链接状态为导出时实时核验。
 

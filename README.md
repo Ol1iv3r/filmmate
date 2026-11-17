@@ -111,6 +111,20 @@ The course brief mentions a “fine-tuned large language model”, so this repos
 
 > **Status:** this project implements domain adaptation through RAG and prompting, not weight fine-tuning. If the course brief requires a trained checkpoint, add the training/evaluation artefacts or present this as the implemented alternative, and state the difference clearly.
 
+### 2.5 LLM providers: DeepSeek and Vercel AI Gateway
+
+Filmmate has two interchangeable chat routes, both using an OpenAI-compatible `/chat/completions` contract:
+
+| Route | When it is used | Configuration |
+|---|---|---|
+| **Direct DeepSeek** (preferred) | `DEEPSEEK_API_KEY` is set | `DEEPSEEK_BASE_URL=https://api.deepseek.com`, `DEEPSEEK_MODEL=deepseek-flash` |
+| **Vercel AI Gateway** | No DeepSeek key, but `AI_GATEWAY_API_KEY` is set | `AI_GATEWAY_BASE_URL=https://ai-gateway.vercel.sh/v1`, `GATEWAY_CHAT_MODEL=...` |
+| **Offline** | Neither key is available, or a call fails | Local retrieval + rule/template fallbacks |
+
+The priority is **per-request key → direct DeepSeek → Vercel AI Gateway → offline**. Both routes support tool calling; the Gateway route is also the same key used for server-side Whisper transcription. Voice uses a different Gateway endpoint (`POST /v4/ai/transcription-model` with base64 JSON), **not** `/v1/audio/transcriptions`, which does not exist on the Gateway.
+
+The Gateway is a model API, not a vector database. Retrieval remains local: JSON libraries plus BM25 or optional dense vectors. Provider keys stay in the server-side `.env`; the browser never receives them.
+
 ---
 
 ## 3. The five workflows
@@ -329,6 +343,7 @@ FastAPI (app.py)
         │
         ▼
 DeepSeek chat completions (OpenAI-compatible, httpx)
+  ├─ direct DeepSeek OR Vercel AI Gateway (/chat/completions)
   └─ on failure: per-tool offline fallback + readable error
         │
         ▼
@@ -490,7 +505,8 @@ AI Chatbot/
 │   ├── Filmmate_Feature_Description_and_Implementation.pdf
 │   ├── DATA_SCHEMA.md              # data fields and quality rules
 │   ├── FILM_CATALOG.md             # catalog documentation
-│   ├── FILM_DATABASE.md            # script+film database documentation
+│   ├── FILM_DATABASE.md            # script+film database documentation (Chinese)
+│   ├── FILM_DATABASE_EN.md         # English edition of the 16-film database
 │   ├── CATALOG_GUIDE.md            # how to rebuild/verify the catalog
 │   └── screenshots/                # README and report screenshots
 │
@@ -532,7 +548,7 @@ The root Python directory is the production backend. The `static/` HTML/JS clien
 - **Generated content** (scripts, shot lists, schedules) is presented as a suggestion and is never merged into the verified library.
 - **Stills** are platform preview frames, not full-resolution screenshots. They are low resolution by design and are used for inspiration only.
 
-Full field definitions are in [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md). The feature report is in [`docs/FEATURES_AND_IMPLEMENTATION.md`](docs/FEATURES_AND_IMPLEMENTATION.md), with a Word/PDF version under [`docs/`](docs/).
+Full field definitions are in [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md). The English version of the 16-film screenplay + original-film database is [`docs/FILM_DATABASE_EN.md`](docs/FILM_DATABASE_EN.md); the Chinese source is [`docs/FILM_DATABASE.md`](docs/FILM_DATABASE.md). The feature report is in [`docs/FEATURES_AND_IMPLEMENTATION.md`](docs/FEATURES_AND_IMPLEMENTATION.md), with a Word/PDF version under [`docs/`](docs/).
 
 ---
 
@@ -546,6 +562,7 @@ Create `.env` from `.env.example` in the repository root. The frontend has its o
 | `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` | Any OpenAI-compatible chat endpoint, including a fine-tuned deployment. |
 | `DEEPSEEK_MODEL` | `deepseek-chat` in `config.py`; `deepseek-flash` in the submitted `.env` | Chat model id. Use a model the provider currently publishes. |
 | `AI_GATEWAY_API_KEY` | empty | Vercel AI Gateway key (chat fallback and Whisper). |
+| `AI_GATEWAY_BASE_URL` | `https://ai-gateway.vercel.sh/v1` | Gateway base URL; chat uses `/chat/completions`, voice uses the v4 transcription endpoint. |
 | `GATEWAY_CHAT_MODEL` | `google/gemini-4-hydrogen` | Chat model when Gateway is used. |
 | `OPENAI_API_KEY` | empty | Direct OpenAI key for transcription. |
 | `TRANSCRIBE_MODEL` | auto | `openai/whisper-1` for Gateway; `whisper-1` for OpenAI. |
