@@ -20,6 +20,7 @@ import rag
 
 ROOT = Path(__file__).resolve().parent
 CATALOG_FILE = ROOT / "data" / "library" / "catalog.json"
+CATALOG_EN_FILE = ROOT / "data" / "library" / "catalog_en.json"
 KIND_ORDER = ["电影", "电视剧", "长片", "短片", "竖屏短剧",
               "广告/TVC", "教程/产品演示", "Vlog/美食", "动画"]
 KIND_DESC = {
@@ -46,19 +47,27 @@ MOODS = ["压抑", "孤独", "荒诞", "黑色幽默", "温暖", "治愈", "心�
 _cache = {}
 
 
-def _load():
-    if "titles" not in _cache:
-        if not CATALOG_FILE.exists():
-            _cache["titles"] = []
+def _load(lang="zh"):
+    """Load the catalogue for the requested language.
+
+    English falls back to Chinese if catalog_en.json is absent or incomplete,
+    so a partially translated file never breaks the app.
+    """
+    use_en = lang == "en" and CATALOG_EN_FILE.exists()
+    key = "titles_en" if use_en else "titles"
+    if key not in _cache:
+        path = CATALOG_EN_FILE if use_en else CATALOG_FILE
+        if not path.exists():
+            _cache[key] = []
         else:
-            data = json.loads(CATALOG_FILE.read_text(encoding="utf-8"))
-            _cache["titles"] = data.get("titles") or []
-        _cache["by_id"] = {t["id"]: t for t in _cache["titles"]}
-    return _cache["titles"]
+            data = json.loads(path.read_text(encoding="utf-8"))
+            _cache[key] = data.get("titles") or []
+        _cache[f"by_id_{'en' if use_en else 'zh'}"] = {t["id"]: t for t in _cache[key]}
+    return _cache[key]
 
 
-def stats():
-    titles = _load()
+def stats(lang="zh"):
+    titles = _load(lang)
     by_kind = {}
     for t in titles:
         by_kind[t["kind"]] = by_kind.get(t["kind"], 0) + 1
@@ -66,16 +75,16 @@ def stats():
             "frames": sum(len(t.get("frames") or []) for t in titles)}
 
 
-def kind_options():
+def kind_options(lang="zh"):
     """给 UI/LLM 的「先选题材」选项。"""
-    by_kind = stats()["by_kind"]
+    by_kind = stats(lang)["by_kind"]
     return [{"kind": k, "count": by_kind.get(k, 0), "description": KIND_DESC[k]}
             for k in KIND_ORDER if by_kind.get(k)]
 
 
-def genre_options(kind=None):
+def genre_options(kind=None, lang="zh"):
     from collections import Counter
-    titles = _load()
+    titles = _load(lang)
     if kind:
         titles = [t for t in titles if t["kind"] == kind]
     return [{"genre": g, "count": n} for g, n in Counter(
@@ -117,9 +126,9 @@ def _overlap_reasons(t, query, tokens):
     return hits[:3]
 
 
-def search(query, kind=None, k=8, min_score=0.5):
+def search(query, kind=None, k=8, min_score=0.5, lang="zh"):
     """按灵感描述检索相似作品（BM25 + 情绪命中加权）。"""
-    titles = _load()
+    titles = _load(lang)
     if not titles or not (query or "").strip():
         return []
     tokens = _query_terms(query)
@@ -155,9 +164,9 @@ def search(query, kind=None, k=8, min_score=0.5):
     return ranked[:k]
 
 
-def similar(title_id, k=6):
-    titles = _load()
-    base = _cache["by_id"].get(title_id)
+def similar(title_id, k=6, lang="zh"):
+    titles = _load(lang)
+    base = _cache[f"by_id_{'en' if lang == 'en' else 'zh'}"].get(title_id)
     if not base:
         return []
     return [x for x in search(" ".join(base.get("tags") or []) + " " + base.get("synopsis", ""),
@@ -294,12 +303,12 @@ def _haystack(t):
     ]).lower()
 
 
-def semantic_candidates(idea="", kind=None, k=8):
+def semantic_candidates(idea="", kind=None, k=8, lang="zh"):
     """按用户的关键词/感觉，在指定题材（kind）里挑真实作品；不够时用同题材作品补足。"""
     idea = (idea or "").strip()
     low = idea.lower()
     tokens = [t for t in rag.tokenize(idea) if len(t) >= 2]
-    titles = [t for t in _load() if (not kind or t["kind"] == kind)]
+    titles = [t for t in _load(lang) if (not kind or t["kind"] == kind)]
     scored = []
     for t in titles:
         hay = _haystack(t)
@@ -310,7 +319,8 @@ def semantic_candidates(idea="", kind=None, k=8):
         for tag in t.get("tags") or []:
             if len(tag) >= 2 and tag.lower() in low:
                 score += 5.0
-        for hint in PLACE_HINTS.get(t.get("title_zh"), []):
+        place_hints = [] if lang == "en" else PLACE_HINTS.get(t.get("title_zh"), [])
+        for hint in place_hints:
             if len(hint) >= 2 and hint in idea:
                 score += 6.0
         for genre in t.get("genre") or []:
@@ -329,14 +339,17 @@ def semantic_candidates(idea="", kind=None, k=8):
         picked += extra[: max(0, 3 - len(picked))]
     out = []
     for t in picked[:k]:
+        english = lang == "en"
         out.append({
-            "id": t.get("id"), "kind": t.get("kind"),
-            "title_zh": t.get("title_zh"), "title_en": t.get("title_en"),
+            "id": t.get("id"),
+            "kind": t.get("kind_en") if english else t.get("kind"),
+            "title_zh": t.get("title_en") if english else t.get("title_zh"),
+            "title_en": t.get("title_en"),
             "year": t.get("year"), "duration": t.get("duration"),
             "genre": t.get("genre"), "moods": t.get("moods"), "tags": t.get("tags"),
             "synopsis": t.get("synopsis"), "url": t.get("url"), "platform": t.get("platform"),
             "frames": (t.get("frames") or [])[:4],
-            "place_hints": PLACE_HINTS.get(t.get("title_zh"), []),
+            "place_hints": [] if english else PLACE_HINTS.get(t.get("title_zh"), []),
         })
     return out
 

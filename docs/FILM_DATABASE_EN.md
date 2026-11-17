@@ -3,7 +3,7 @@
 > Exported: 2026-11-13T21:10:21+08:00 · **16 films**.
 > Every film has both a scriptslug screenplay (page + PDF) and a Bilibili copy. Link status was verified at export time.
 >
-> Chinese source: [`FILM_DATABASE.md`](FILM_DATABASE.md).
+> Chinese source: [`FILM_DATABASE.md`](FILM_DATABASE.md). Machine-readable CSV: [`film_database_en.csv`](film_database_en.csv).
 
 | # | Title | Year | Runtime | Moods | Bilibili | Screenplay |
 |---|---|---|---|---|---|---|

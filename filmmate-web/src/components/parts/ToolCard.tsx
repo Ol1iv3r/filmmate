@@ -136,8 +136,8 @@ export function ToolCard({
               <div>
                 <div className="tool-error-title">{t('检索失败', 'Failed')}</div>
                 <div className="tool-error-text">
-                  {activity.errorText || '未知错误'}
-                  {isLast && ' —— 已自动降级：改用本地镜头语言知识直接回答（不引用样本）。'}
+                  {activity.errorText || t('未知错误', 'Unknown error')}
+                  {isLast && t(' —— 已自动降级：改用本地镜头语言知识直接回答（不引用样本）。', ' — automatically degraded: answering from local shot-language knowledge (no samples cited).')}
                 </div>
               </div>
             </div>
@@ -151,7 +151,7 @@ export function ToolCard({
                 {activity.output !== undefined && (
                   <button className="link-btn json-toggle" onClick={() => setJsonOpen((o) => !o)}>
                     <FileJson size={12} />
-                    {jsonOpen ? '收起原始 JSON' : '原始 JSON'}
+                    {jsonOpen ? t('收起原始 JSON', 'Hide raw JSON') : t('原始 JSON', 'Raw JSON')}
                   </button>
                 )}
               </div>
@@ -166,15 +166,15 @@ export function ToolCard({
 
           {/* 非检索工具 / 没有 hit 可解析：只给原始 JSON */}
           {!hasHits && !custom && activity.output !== undefined && (
-            <RawJson title="工具返回结果" data={activity.output} />
+            <RawJson title={t('工具返回结果', 'Tool result')} data={activity.output} />
           )}
 
           {/* 输入参数折叠区（命中区展开时藏在 jsonOpen 里，避免重复） */}
           {activity.input !== undefined && !hasHits && (
-            <RawJson title="调用参数" data={activity.input} />
+            <RawJson title={t('调用参数', 'Call parameters')} data={activity.input} />
           )}
           {jsonOpen && activity.input !== undefined && (
-            <RawJson title="调用参数" data={activity.input} />
+            <RawJson title={t('调用参数', 'Call parameters')} data={activity.input} />
           )}
           {jsonOpen && activity.output !== undefined && (
             <RawJson title="完整输出" data={activity.output} defaultOpen />

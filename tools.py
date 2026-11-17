@@ -1225,6 +1225,18 @@ KIND_GUIDE = {
     },
 }
 
+KIND_GUIDE_EN = {
+    "电影": "Feature-film sensibility: a complete world, a character arc, feature length; the theme should sustain about 100 minutes.",
+    "电视剧": "Series sensibility: 45-minute episodes, ongoing character arcs, end-of-episode hooks; the theme needs a sustainable relationship line.",
+    "长片": "Independent/art/documentary feature: real people, observational, authored; the theme should sit in a real situation.",
+    "短片": "Short-film sensibility: 6-15 minutes, one idea or one emotional turn; the theme must be small and precise.",
+    "竖屏短剧": "Vertical drama: 1-2 minutes per episode, conflict within 3 seconds, strong hooks and reversals; the theme must break into small payoffs.",
+    "广告/TVC": "Ad/TVC: 15/30/60 seconds; build around product/brand + audience + one insight + a visual hook + a slogan. The theme is a creative direction, not a plot short.",
+    "教程/产品演示": "Tutorial/product demo: organise around function -> use case -> steps -> result; the theme is the demo through-line.",
+    "Vlog/美食": "Vlog/food: real experience or process + human presence; the theme is a shootable slice of life.",
+    "动画": "Animation: stylised world, wordless storytelling or visual metaphor; the theme must be tellable through images and action.",
+}
+
 KIND_ALIASES = [
     ("廣告/TVC", "广告/TVC"), ("广告/TVC", "广告/TVC"), ("TVC", "广告/TVC"), ("tvc", "广告/TVC"),
     ("广告片", "广告/TVC"), ("廣告片", "广告/TVC"), ("广告", "广告/TVC"), ("廣告", "广告/TVC"),
@@ -1379,7 +1391,9 @@ def lang_hint() -> str:
     if _LANG != "en":
         return ""
     return ("\n\nIMPORTANT: The user interface is English. Reply entirely in English "
-            "(all headings, explanations, loglines, dialogue). Keep JSON field names exactly as specified.")
+            "(all headings, explanations, loglines, dialogue). Translate any Chinese source metadata, "
+            "synopses or tags that you quote into English; keep film titles in their original language "
+            "and add the English title where known. Keep JSON field names exactly as specified.")
 
 
 def llm_error_hint(exc: Exception) -> str:
@@ -1545,7 +1559,7 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
         return {"text": _kind_ask_text(), "need_kind": True,
                 "kind_options": KIND_CHOICES, "mode": "offline"}
     idea = (text or "").strip()
-    cands = _catalog.semantic_candidates(idea, kind, k=8)
+    cands = _catalog.semantic_candidates(idea, kind, k=8, lang=_LANG)
     if not cands:
         return {"text": f"「{kind}」题材库里暂时没有可用作品，换一类试试？",
                 "need_kind": True, "kind_options": KIND_CHOICES, "mode": "offline"}
@@ -1555,14 +1569,24 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
         try:
             film_lines = []
             for c in cands:
-                film_lines.append(
-                    f"- 《{c['title_zh']}》（{c.get('year')}，{c.get('duration')}）"
-                    f"｜情绪：{'/'.join(c.get('moods') or [])}"
-                    f"｜类型：{'/'.join(c.get('genre') or [])}"
-                    f"｜标签：{'、'.join((c.get('tags') or [])[:6])}"
-                    f"｜地点线索：{'、'.join(c.get('place_hints') or [])}"
-                    f"｜梗概：{c.get('synopsis')}")
-            kind_req = KIND_GUIDE["inspiration"].get(kind, "")
+                if _LANG == "en":
+                    film_lines.append(
+                        f"- {c['title_zh']} ({c.get('year')}, {c.get('duration')})"
+                        f" | Moods: {'/'.join(c.get('moods') or [])}"
+                        f" | Genres: {'/'.join(c.get('genre') or [])}"
+                        f" | Tags: {', '.join((c.get('tags') or [])[:6])}"
+                        f" | Place hints: {', '.join(c.get('place_hints') or [])}"
+                        f" | Synopsis: {c.get('synopsis')}")
+                else:
+                    film_lines.append(
+                        f"- 《{c['title_zh']}》（{c.get('year')}，{c.get('duration')}）"
+                        f"｜情绪：{'/'.join(c.get('moods') or [])}"
+                        f"｜类型：{'/'.join(c.get('genre') or [])}"
+                        f"｜标签：{'、'.join((c.get('tags') or [])[:6])}"
+                        f"｜地点线索：{'、'.join(c.get('place_hints') or [])}"
+                        f"｜梗概：{c.get('synopsis')}")
+            kind_req = (KIND_GUIDE_EN.get(kind, "") if _LANG == "en"
+                        else KIND_GUIDE["inspiration"].get(kind, ""))
             taste = _taste_block()
             user_content = (
                 f"用户想找的类型：{kind}\n"
@@ -1591,7 +1615,7 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
                 if film is None or any(x["film"] is film for x in styles):
                     continue
                 styles.append({
-                    "style_name": str(s.get("style_name", "")).strip() or "风格",
+                    "style_name": str(s.get("style_name", "")).strip() or ("Style" if _LANG == "en" else "风格"),
                     "why_fits": str(s.get("why_fits", "")).strip(),
                     "theme": str(s.get("theme", "")).strip(),
                     "film_reason": str(s.get("film_reason", "")).strip(),
@@ -1604,30 +1628,45 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
             styles = []
 
     if not styles:  # 离线 / 模型失败：用检索到的真实影片套一组风格模板
-        templates = [
-            ("城市潮湿的夜行气质", "把空间、湿度与人物距离放在同一条街上，用夜与雨水连接人物"),
-            ("关系里的克制张力", "把关系放进具体空间，让沉默与空镜承担情绪"),
-            ("空间与身份的错位", "用旧楼、走廊、窗口这些空间写身份的变化"),
-        ]
+        if _LANG == "en":
+            templates = [
+                ("A humid, nocturnal city texture", "Put space, humidity and human distance on the same street, and connect the characters through night and rain"),
+                ("Restrained tension inside a relationship", "Place the relationship in a concrete space and let silence and empty frames carry the emotion"),
+                ("Displacement between space and identity", "Use old buildings, corridors and windows to write the change in identity"),
+            ]
+        else:
+            templates = [
+                ("城市潮湿的夜行气质", "把空间、湿度与人物距离放在同一条街上，用夜与雨水连接人物"),
+                ("关系里的克制张力", "把关系放进具体空间，让沉默与空镜承担情绪"),
+                ("空间与身份的错位", "用旧楼、走廊、窗口这些空间写身份的变化"),
+            ]
         for c, (name, wh) in zip(cands[:3], templates):
-            if idea:
-                why = f"你写到的「{idea}」在空间、湿度与人物距离上，和这部片的影像气质同频；{wh}"
+            if _LANG == "en":
+                why = (f"Your phrase \"{idea}\" shares the same texture of space, humidity and human distance; {wh}"
+                       if idea else f"This is one of the strongest examples of that texture in {KIND_EN.get(kind, kind)}; {wh}")
+                theme = ("A person returns to a familiar old neighbourhood and finds that everyone they remember has changed identity; "
+                         "they must decide whether to stay or leave.")
+                reason = "Within the same genre, this film's images and narrative texture are closest to the theme."
             else:
-                why = f"这部片是「{kind}」里最能代表这种气质的作品之一；{wh}"
+                why = (f"你写到的「{idea}」在空间、湿度与人物距离上，和这部片的影像气质同频；{wh}"
+                       if idea else f"这部片是「{kind}」里最能代表这种气质的作品之一；{wh}")
+                theme = ("一个人回到熟悉的旧城区，发现记忆里的人都换了身份，"
+                         "他必须在留下与离开之间做一次决定。")
+                reason = "同题材下，这部片的影像与叙事气质最接近这个主题"
             styles.append({
                 "style_name": name, "why_fits": why,
-                "theme": "一个人回到熟悉的旧城区，发现记忆里的人都换了身份，"
-                         "他必须在留下与离开之间做一次决定。",
-                "film_reason": "同题材下，这部片的影像与叙事气质最接近这个主题",
+                "theme": theme,
+                "film_reason": reason,
                 "film": c,
             })
         mode = "offline"
     else:
         mode = "online"
 
+    kind_label = KIND_EN.get(kind, kind) if _LANG == "en" else kind
     text_out = _films_markdown(kind, idea, styles)
     return {
-        "kind": kind, "idea": idea,
+        "kind": kind_label, "idea": idea,
         "styles": [{k: v for k, v in s.items() if k != "film"} for s in styles],
         "films": [s["film"] for s in styles],
         "text": text_out, "mode": mode, "kind_options": KIND_CHOICES,
@@ -1792,8 +1831,12 @@ async def _theme_from_history(history, message):
 async def _logline_for_script(script_text, api_key):
     if llm.available(api_key):
         try:
+            system_prompt = prompts.PROMPT_SCRIPT_LOG_LINE
+            if _LANG == "en":
+                system_prompt += ("\n\nWrite every value in English. The title may be an English title; "
+                                  "do not return Chinese headings or a Chinese logline.")
             data = await llm.complete_json(
-                [{"role": "system", "content": prompts.PROMPT_SCRIPT_LOG_LINE},
+                [{"role": "system", "content": system_prompt},
                  {"role": "user", "content": script_text[:8000] + lang_hint()}], api_key=api_key)
             return _norm_logline(data)
         except Exception as e:  # noqa: BLE001
@@ -1946,7 +1989,7 @@ def split_script_scenes(text: str):
             num = m.group(1) or m.group(2)
             looks_location = bool(re.search(r"(内景|外景|INT\.?|EXT\.?|日|夜)", rest, re.I)) or len(rest) >= 2
             if looks_location and rest and not rest.startswith(("：", ":")):
-                heading = (int(num), f"第{int(num)}场 {rest}")
+                heading = (int(num), f"Scene {int(num)} {rest}" if _LANG == "en" else f"第{int(num)}场 {rest}")
         if heading:
             if cur:
                 scenes.append(cur)
@@ -1965,11 +2008,14 @@ def split_script_scenes(text: str):
                 s["heading"] = s["heading"] + " " + first[:20]
                 s["body_text"] = "\n".join(body_lines[1:])
         if not s["body_text"]:
-            s["body_text"] = "（此场无正文）"
+            s["body_text"] = "(no scene body)" if _LANG == "en" else "（此场无正文）"
     # 重新编号，保证连续
     for i, s in enumerate(scenes, 1):
         s["scene_no"] = i
-        s["heading"] = re.sub(r"^第\d+场", f"第{i}场", s["heading"])
+        if _LANG == "en":
+            s["heading"] = re.sub(r"^Scene \d+", f"Scene {i}", s["heading"])
+        else:
+            s["heading"] = re.sub(r"^第\d+场", f"第{i}场", s["heading"])
     return scenes
 
 
@@ -1991,8 +2037,10 @@ def _scene_blocks(script_text: str):
 def _scene_keywords(scene):
     body = scene.get("body_text", "")
     words = re.findall(r"[\u4e00-\u9fff]{2,4}", body)
-    stop = {"一个", "他们", "自己", "什么", "然后", "时候", "这里", "那里", "已经", "没有", "开始", "慢慢", "看见", "抬头", "转身", "声音", "镜头"}
-    return [w for w in dict.fromkeys(words) if w not in stop][:24]
+    words += re.findall(r"[A-Za-z]{4,}", body)
+    stop = {"一个", "他们", "自己", "什么", "然后", "时候", "这里", "那里", "已经", "没有", "开始", "慢慢", "看见", "抬头", "转身", "声音", "镜头",
+            "with", "that", "this", "from", "have", "they", "their", "there", "into", "about", "then", "when"}
+    return [w for w in dict.fromkeys(words) if w.lower() not in stop][:24]
 
 
 def _rule_shots_from_scenes(scenes):
@@ -2049,10 +2097,35 @@ def _shots_match_scenes(shots, scenes):
         if not scene:
             continue
         keys = _scene_keywords(scene)
-        desc = shot.get("description", "") + shot.get("dialogue", "")
-        if any(k in desc for k in keys):
+        desc = (shot.get("description", "") + shot.get("dialogue", "")).lower()
+        if any(k.lower() in desc for k in keys):
             matched += 1
     return matched >= max(2, int(len(shots) * 0.5))
+
+
+SHOT_EN = {
+    "远景": "Long Shot", "全景": "Full Shot", "中景": "Medium Shot", "近景": "Close-up",
+    "特写": "Close-up", "大特写": "Extreme Close-up",
+}
+ANGLE_EN = {
+    "平视": "Eye-level", "俯拍": "High angle", "仰拍": "Low angle", "鸟瞰": "Overhead",
+    "过肩": "Over-the-shoulder", "荷兰角": "Dutch angle",
+}
+MOVE_EN = {
+    "固定": "Static", "推": "Push in", "拉": "Pull out", "摇": "Pan", "移": "Tracking",
+    "手持": "Handheld", "稳定器跟随": "Gimbal follow",
+}
+
+
+def _localize_shot(shot: dict) -> dict:
+    """Translate the controlled shot vocabulary when the UI is English."""
+    if _LANG != "en":
+        return shot
+    out = dict(shot)
+    out["shot_type"] = SHOT_EN.get(str(out.get("shot_type", "")), out.get("shot_type"))
+    out["angle"] = ANGLE_EN.get(str(out.get("angle", "")), out.get("angle"))
+    out["movement"] = MOVE_EN.get(str(out.get("movement", "")), out.get("movement"))
+    return out
 
 
 async def storyboard_tool(message: str, api_key: str = None, script_text: str = "", history: list = None):
@@ -2079,8 +2152,12 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
             user_prompt = (
                 "这是用户上传的剧本，请严格逐场出分镜，不能换故事：\n\n"
                 f"剧本全文：\n{script[:6500]}\n\n逐场信息（每一场都要覆盖）：\n{scene_text}" + lang_hint())
+            system_prompt = prompts.PROMPT_STORYBOARD_SCRIPT
+            if _LANG == "en":
+                system_prompt += ("\n\nIMPORTANT: Write every textual field in English: scene descriptions, "
+                                  "lighting, sound, purpose and transition. Keep the script's scene headings as given.")
             data = await llm.complete_json(
-                [{"role": "system", "content": prompts.PROMPT_STORYBOARD_SCRIPT},
+                [{"role": "system", "content": system_prompt},
                  {"role": "user", "content": user_prompt}],
                 api_key=api_key, temperature=0.2)
             raw_shots = data.get("shots") or []
@@ -2116,6 +2193,7 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
     if not shots:
         shots = _rule_shots_from_scenes(scenes)
         mode = "offline"
+    shots = [_localize_shot(s) for s in shots]
 
     logline = await _logline_for_script(script, api_key)
     result = {

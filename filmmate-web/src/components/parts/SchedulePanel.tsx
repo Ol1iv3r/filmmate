@@ -48,7 +48,7 @@ function icsEscape(value: string | undefined): string {
   return (value || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n')
 }
 
-function buildIcs(payload: SchedulePayload): string {
+function buildIcs(payload: SchedulePayload, lang: "zh" | "en" = "zh"): string {
   const events: CalendarEvent[] = []
   if (Array.isArray(payload.calendar) && payload.calendar.length) {
     events.push(...payload.calendar)
@@ -58,7 +58,7 @@ function buildIcs(payload: SchedulePayload): string {
       const start = d.date + 'T' + (d.call || '09:00') + ':00'
       const end = d.date + 'T' + (d.wrap || '18:00') + ':00'
       events.push({
-        title: 'Day ' + (d.day ?? '') + ' 拍摄',
+        title: 'Day ' + (d.day ?? '') + (lang === 'en' ? ' shooting' : ' 拍摄'),
         start, end, location: '',
         description: (d.scenes ?? []).join('；') + (d.notes ? '\n' + d.notes : ''),
       })
@@ -78,7 +78,7 @@ function buildIcs(payload: SchedulePayload): string {
     lines.push('DTSTAMP:' + stamp)
     if (ev.start) lines.push('DTSTART:' + icsTime(ev.start) + (ev.start.length <= 10 ? '' : ''))
     if (ev.end) lines.push('DTEND:' + icsTime(ev.end))
-    lines.push('SUMMARY:' + icsEscape(ev.title || '拍摄日'))
+    lines.push('SUMMARY:' + icsEscape(ev.title || (lang === 'en' ? 'Shooting day' : '拍摄日')))
     if (ev.location) lines.push('LOCATION:' + icsEscape(ev.location))
     if (ev.description) lines.push('DESCRIPTION:' + icsEscape(ev.description))
     lines.push('END:VEVENT')
@@ -89,16 +89,16 @@ function buildIcs(payload: SchedulePayload): string {
 
 /** 拍摄计划：详细方案 + 拍摄日 + 下载日历（.ics）。 */
 export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const days = payload.days ?? []
   if (!days.length && !payload.summary) return null
 
   const downloadIcs = () => {
-    const blob = new Blob([buildIcs(payload)], { type: 'text/calendar;charset=utf-8' })
+    const blob = new Blob([buildIcs(payload, lang)], { type: 'text/calendar;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = '拍摄计划.ics'
+    a.download = lang === 'en' ? 'shooting-plan.ics' : '拍摄计划.ics'
     document.body.appendChild(a)
     a.click()
     a.remove()

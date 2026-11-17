@@ -36,12 +36,14 @@ function csvCell(value: unknown) {
 
 /** 分镜结果：梗要 + 可滚动分镜表 + 下载 CSV。 */
 export function StoryboardPanel({ payload }: { payload: StoryboardPayload }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const shots = payload.shots ?? []
   const logline = payload.logline
 
   const downloadCsv = () => {
-    const headers = ['镜号', '场次', '景别', '机位', '运镜', '焦段', '时长', '画面', '台词', '光线', '声音', '目的', '转场']
+    const headers = lang === 'en'
+      ? ['Shot', 'Scene', 'Size', 'Angle', 'Movement', 'Lens', 'Duration', 'Frame', 'Dialogue', 'Lighting', 'Sound', 'Purpose', 'Transition']
+      : ['镜号', '场次', '景别', '机位', '运镜', '焦段', '时长', '画面', '台词', '光线', '声音', '目的', '转场']
     const rows = shots.map((s, i) => [
       s.id ?? i + 1, s.scene, s.shot_type, s.angle, s.movement, s.lens, s.duration,
       s.description, s.dialogue, s.lighting, s.sound, s.purpose, s.transition,
@@ -51,7 +53,7 @@ export function StoryboardPanel({ payload }: { payload: StoryboardPayload }) {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = '分镜表.csv'
+    a.download = lang === 'en' ? 'storyboard.csv' : '分镜表.csv'
     document.body.appendChild(a)
     a.click()
     a.remove()
@@ -64,8 +66,10 @@ export function StoryboardPanel({ payload }: { payload: StoryboardPayload }) {
       {logline && (
         <div className="logline-box">
           <div className="logline-title">
-            {t('梗要', 'Logline')}　《{logline.title ?? '未命名'}》
-            {logline.title_en ? '（' + logline.title_en + '）' : ''}
+            {t('梗要', 'Logline')}　{lang === 'en'
+              ? `“${logline.title ?? 'Untitled'}”`
+              : `《${logline.title ?? '未命名'}》`}
+            {logline.title_en && logline.title_en !== logline.title ? ` (${logline.title_en})` : ''}
           </div>
           {logline.theme && <div className="logline-theme">{t('主题：', 'Theme: ')}{logline.theme}</div>}
           {logline.summary && <div className="logline-summary">{logline.summary}</div>}

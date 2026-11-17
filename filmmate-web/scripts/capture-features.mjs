@@ -33,8 +33,13 @@ const shot = async (name) => {
   await page.screenshot({ path: resolve(shots, name), fullPage: false })
   console.log('saved', name)
 }
-const shotElement = async (name, locator) => {
+const shotElement = async (name, locator, clean = false) => {
+  if (clean) {
+    await page.evaluate(() => document.body.classList.add('capture-clean'))
+    await page.waitForTimeout(150)
+  }
   await locator.screenshot({ path: resolve(shots, name) })
+  if (clean) await page.evaluate(() => document.body.classList.remove('capture-clean'))
   console.log('saved', name)
 }
 const newChat = async () => {
@@ -52,6 +57,9 @@ try {
     await page.locator('.lang-btn').click()
   }
   await page.waitForFunction(() => document.documentElement.lang === 'en')
+  await page.addStyleTag({
+    content: 'body.capture-clean .topbar,body.capture-clean .composer-area,body.capture-clean .jump-bottom,body.capture-clean .filmy{display:none!important}',
+  })
 
   // Give the default conversation an English title for the home screenshot.
   const rename = page.locator('.conv-item.active .conv-actions button').first()
@@ -85,7 +93,7 @@ try {
   await page.locator('textarea').press('Enter')
   await page.waitForSelector('.storyboard-panel', { timeout: 60000 })
   await waitIdle()
-  await shotElement('feature-storyboard.png', page.locator('.tool-card').filter({ has: page.locator('.storyboard-panel') }).last())
+  await shotElement('feature-storyboard.png', page.locator('.tool-card').filter({ has: page.locator('.storyboard-panel') }).last(), true)
 
   // Shooting plan: latest storyboard + preferences -> days + .ics.
   await chip('Shooting plan').click()
@@ -93,7 +101,7 @@ try {
   await page.locator('textarea').press('Enter')
   await page.waitForSelector('.schedule-panel', { timeout: 60000 })
   await waitIdle()
-  await shotElement('feature-shooting-plan.png', page.locator('.tool-card').filter({ has: page.locator('.schedule-panel') }).last())
+  await shotElement('feature-shooting-plan.png', page.locator('.tool-card').filter({ has: page.locator('.schedule-panel') }).last(), true)
 
   // Reference-film form: the fifth workflow.
   await newChat()

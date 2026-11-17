@@ -70,7 +70,7 @@ Legend: **✅ implemented and exercised** · **— not implemented**
 | Feature | Status | How it is implemented |
 |---|---|---|
 | **Defined domain: Inspiration → Script → Storyboard → Shooting plan → + Reference film** | ✅ | Five entry chips share one conversation. Metadata carries the active tool, genre, latest script and latest storyboard between steps, so a result from one step becomes the input to the next. |
-| **English + Chinese** | ✅ | Chinese/English UI via `I18nProvider`; requests send `lang`; prompts generate in the selected language. Users can also type “switch to English” or “切换中文”; the interface and later answers follow, while film titles stay in their original form. |
+| **English + Chinese** | ✅ | Chinese/English UI via `I18nProvider`; requests send `lang`; prompts generate in the selected language. An English catalog (`data/library/catalog_en.json`) supplies English titles, synopses, moods and tags to the inspiration panel. Users can also type “switch to English” or “切换中文”. |
 | **Voice recognition** | ✅ | Browser microphone records audio; the server transcribes it with Whisper through Vercel AI Gateway (v4 JSON/base64) or OpenAI (multipart). If no key or quota is available, the client falls back to browser `SpeechRecognition` (Chrome/Edge). The transcript is inserted into the composer, never sent automatically. Answers can be read aloud with `SpeechSynthesis`. |
 | **2D Avatar “Filmy”** | ✅ | A self-contained SVG/CSS character. Filmy moves next to the assistant while it thinks, points at available PDF/CSV/ICS downloads, greets the user, reacts to clicks, and can play rock-paper-scissors during generation. All copy follows the UI language. |
 | **LLM (domain-adapted, API-based)** | ✅ | Hosted DeepSeek chat model over an OpenAI-compatible API, with retrieval-augmented generation, case-based prompt context, structured JSON contracts and agent tool calling. |
@@ -384,7 +384,7 @@ The same payload shape is used in both modes, so the React panels do not branch 
 
 ### 6.1 Interface gallery
 
-These screenshots are from the current React build with the English UI. They were captured without model calls for deterministic timing; the same panels render online. Generated text follows the request language, so a bilingual answer can contain Chinese content while the application chrome is English.
+These screenshots are from the current React build with the English UI and English catalog metadata. The film stills are original frames and may contain Chinese titles burned into the image; all generated captions, tags and panel text shown here are English.
 
 The home screen (above) exposes the five workflows: **Find inspiration**, **Script check / write**, **Storyboard**, **Shooting plan** and **+ Reference film**. Filmy sits at the bottom right.
 
@@ -442,7 +442,8 @@ AI Chatbot/
 │   │   ├── shots.json              # 60 shot patterns
 │   │   ├── stripboards.json        # 7 professional stripboard templates
 │   │   ├── samples_enriched.json   # 50 annotated videos / 504 shot segments
-│   │   └── catalog.json            # 260 titles and 2,600 still paths
+│   │   ├── catalog.json            # 260 Chinese titles and 2,600 still paths
+│   │   └── catalog_en.json         # English metadata used when lang=en
 │   ├── catalog_src/                # curated source lists used to rebuild catalog.json
 │   ├── personal/                   # user's reference films (local, gitignored)
 │   └── conversations/              # one JSON file per conversation (local, gitignored)
@@ -507,6 +508,8 @@ AI Chatbot/
 │   ├── FILM_CATALOG.md             # catalog documentation
 │   ├── FILM_DATABASE.md            # script+film database documentation (Chinese)
 │   ├── FILM_DATABASE_EN.md         # English edition of the 16-film database
+│   ├── film_catalog_en.csv         # English 260-title catalog export
+│   ├── film_database_en.csv        # English 16-film database export
 │   ├── CATALOG_GUIDE.md            # how to rebuild/verify the catalog
 │   └── screenshots/                # README and report screenshots
 │
@@ -521,6 +524,7 @@ AI Chatbot/
     ├── export_film_database.py     # database exports
     ├── strict_clean.py             # suspicious-link review
     ├── add_catalog_rows.py         # merge extra catalog rows
+    ├── translate_catalog.py        # rebuild the English catalog edition
     └── build_feature_docx.py       # rebuild the feature report DOCX
 ```
 
@@ -535,7 +539,7 @@ The root Python directory is the production backend. The `static/` HTML/JS clien
 | Knowledge entries | **198** | 78 base + 120 extended; filmmaking concepts, workflow, Hong Kong locations, safety |
 | Script + film pairs | **16** | Each has a scriptslug screenplay PDF and a playable Bilibili copy |
 | Verified short films | **78** | Bilibili metadata with `verified_at`; used as the case library fallback |
-| Catalog titles | **260** | Nine genres; 2,600 stills |
+| Catalog titles | **260** | Nine genres; 2,600 stills; `catalog_en.json` provides an English edition of the metadata |
 | Scene patterns | **40** | Dramatic function, beats, staging, lighting, sound, page eighths, shoot minutes |
 | Shot patterns | **60** | Size, angle, movement, lens, purpose, pitfalls |
 | Stripboard templates | **7** | Single-day ad, product demo, MV, multi-day short, documentary, corporate, feature |
@@ -548,7 +552,14 @@ The root Python directory is the production backend. The `static/` HTML/JS clien
 - **Generated content** (scripts, shot lists, schedules) is presented as a suggestion and is never merged into the verified library.
 - **Stills** are platform preview frames, not full-resolution screenshots. They are low resolution by design and are used for inspiration only.
 
-Full field definitions are in [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md). The English version of the 16-film screenplay + original-film database is [`docs/FILM_DATABASE_EN.md`](docs/FILM_DATABASE_EN.md); the Chinese source is [`docs/FILM_DATABASE.md`](docs/FILM_DATABASE.md). The feature report is in [`docs/FEATURES_AND_IMPLEMENTATION.md`](docs/FEATURES_AND_IMPLEMENTATION.md), with a Word/PDF version under [`docs/`](docs/).
+Full field definitions are in [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md). English database exports:
+
+- [`docs/film_catalog_en.csv`](docs/film_catalog_en.csv) — 260-title catalog with English titles, moods, tags, synopses and links. Bilibili uploader handles remain in their original language.
+- [`docs/film_database_en.csv`](docs/film_database_en.csv) — 16-film screenplay + original-film database.
+- [`docs/FILM_DATABASE_EN.md`](docs/FILM_DATABASE_EN.md) — readable English edition of the 16-film database; Chinese source: [`docs/FILM_DATABASE.md`](docs/FILM_DATABASE.md).
+- [`data/library/catalog_en.json`](data/library/catalog_en.json) — runtime English metadata used by the inspiration panel when `lang=en`.
+
+The feature report is in [`docs/FEATURES_AND_IMPLEMENTATION.md`](docs/FEATURES_AND_IMPLEMENTATION.md), with a Word/PDF version under [`docs/`](docs/).
 
 ---
 
