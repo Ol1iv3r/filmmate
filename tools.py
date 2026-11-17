@@ -2139,8 +2139,42 @@ def _rule_shots_from_scenes(scenes):
         heading = scene["heading"]
         body = scene["body_text"]
         dialogues = extract_dialogues(body)
-        sentences = [x.strip() for x in re.split(r"[。！？\n]", body) if x.strip()]
-        master = sentences[0][:80] if sentences else heading
+        sentences = [x.strip() for x in re.split(r"[。！？.!?\n]", body) if x.strip()]
+        master = (sentences[0][:100] if sentences else heading) or heading
+        detail = (sentences[-1][:100] if sentences else master) or master
+        if _LANG == "en":
+            sid += 1
+            shots.append({
+                "id": sid, "scene_no": no, "scene": heading,
+                "shot_type": "Full Shot", "angle": "Eye-level", "movement": "Static", "lens": "24mm",
+                "duration": "6s",
+                "description": f"Establish {heading}: {master}",
+                "dialogue": "", "lighting": "Practical location light with a soft fill on the face",
+                "sound": "Location ambience under the dialogue",
+                "purpose": "Establish the space and the characters' positions", "transition": "Cut",
+            })
+            if dialogues:
+                name, line = dialogues[0][0], dialogues[0][1]
+                sid += 1
+                shots.append({
+                    "id": sid, "scene_no": no, "scene": heading,
+                    "shot_type": "Medium Shot", "angle": "Over-the-shoulder", "movement": "Static", "lens": "50mm",
+                    "duration": "4s",
+                    "description": f"{name} says \"{line[:50]}\" — reaction and expression, background soft",
+                    "dialogue": line[:80], "lighting": "Side key, leaving half the face in shadow",
+                    "sound": "Dialogue forward, ambience pulled down",
+                    "purpose": "Carry the scene's information and emotional turn", "transition": "Cut",
+                })
+            sid += 1
+            shots.append({
+                "id": sid, "scene_no": no, "scene": heading,
+                "shot_type": "Close-up", "angle": "Eye-level", "movement": "Slow push in", "lens": "85mm",
+                "duration": "3s",
+                "description": f"Detail insert: {detail}",
+                "dialogue": "", "lighting": "Local light to bring out texture",
+                "sound": "Detail sound lifted", "purpose": "Land the scene's emotional or information beat", "transition": "Cut",
+            })
+            continue
         sid += 1
         shots.append({
             "id": sid, "scene_no": no, "scene": heading,
@@ -2161,7 +2195,6 @@ def _rule_shots_from_scenes(scenes):
                 "dialogue": line[:60], "lighting": "主光偏侧，保留半张脸阴影", "sound": "对白为主，环境声压低",
                 "purpose": "推进这一场的信息与情绪", "transition": "切",
             })
-        detail = sentences[-1][:80] if sentences else ""
         sid += 1
         shots.append({
             "id": sid, "scene_no": no, "scene": heading,
@@ -2172,7 +2205,6 @@ def _rule_shots_from_scenes(scenes):
             "purpose": "收住这一场的情绪或信息点", "transition": "切",
         })
     return shots
-
 
 def _shots_match_scenes(shots, scenes):
     if not shots:
