@@ -1598,8 +1598,10 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
                 + ("\n\n" + history_block(history) if history else "")
                 + "\n\n候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines)
                 + lang_hint())
+            system_prompt = (prompts.PROMPT_INSPIRATION_FILMS_EN if _LANG == "en"
+                             else prompts.PROMPT_INSPIRATION_FILMS)
             data = await llm.complete_json(
-                [{"role": "system", "content": prompts.PROMPT_INSPIRATION_FILMS},
+                [{"role": "system", "content": system_prompt},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
             by_title = {_norm_title(c["title_zh"]): c for c in cands}
             for s in data.get("styles") or []:
