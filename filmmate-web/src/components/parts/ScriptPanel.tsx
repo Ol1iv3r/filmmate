@@ -19,7 +19,7 @@ interface ScriptPayload {
 
 /** 剧本结果：梗要 + 可滚动标准格式剧本 + 下载 PDF。 */
 export function ScriptPanel({ payload }: { payload: ScriptPayload }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const [busy, setBusy] = useState(false)
   const logline = payload.logline
   const script = payload.script_text ?? ''
@@ -31,14 +31,14 @@ export function ScriptPanel({ payload }: { payload: ScriptPayload }) {
       const res = await fetch((API_BASE ?? '') + '/api/script/pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: logline?.title ?? '剧本', text: script }),
+        body: JSON.stringify({ title: logline?.title ?? (lang === 'en' ? 'Screenplay' : '剧本'), text: script }),
       })
-      if (!res.ok) throw new Error('PDF 生成失败')
+      if (!res.ok) throw new Error(t('PDF 生成失败', 'PDF generation failed'))
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = (logline?.title ?? '剧本') + '.pdf'
+      a.download = (logline?.title ?? (lang === 'en' ? 'screenplay' : '剧本')) + '.pdf'
       document.body.appendChild(a)
       a.click()
       a.remove()
@@ -53,8 +53,10 @@ export function ScriptPanel({ payload }: { payload: ScriptPayload }) {
       {logline && (
         <div className="logline-box">
           <div className="logline-title">
-            {t('梗要', 'Logline')}　《{logline.title ?? '未命名'}》
-            {logline.title_en ? '（' + logline.title_en + '）' : ''}
+            {t('梗要', 'Logline')}　{lang === 'en'
+              ? `“${logline.title ?? 'Untitled'}”`
+              : `《${logline.title ?? '未命名'}》`}
+            {logline.title_en && logline.title_en !== logline.title ? ` (${logline.title_en})` : ''}
           </div>
           {logline.theme && <div className="logline-theme">{t('主题：', 'Theme: ')}{logline.theme}</div>}
           {logline.summary && <div className="logline-summary">{logline.summary}</div>}

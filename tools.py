@@ -18,6 +18,11 @@ import sample_search
 
 logger = logging.getLogger("tools")
 
+
+def _t(zh: str, en: str) -> str:
+    """Pick a user-facing string for the active UI language."""
+    return en if _LANG == "en" else zh
+
 # --------------------------------------------------------------------------
 # 意图识别(关键词规则,零延迟;前端快捷按钮可强制指定工具)
 # --------------------------------------------------------------------------
@@ -247,8 +252,14 @@ async def review(text: str, api_key: str = None, case_ctx: str = "", refs: list 
             if case_ctx:
                 user_content += f"\n\n以下是检索到的参考资料（案例 / 场面模式，审阅时可借鉴其中经验与常见问题）：\n{case_ctx}"
             user_content += lang_hint()
+            system_prompt = prompts.PROMPT_REVIEW
+            if _LANG == "en":
+                system_prompt += ("\n\nIMPORTANT: Write every JSON string in English, including type, "
+                                  "severity, location, problem, suggestion and production risks. "
+                                  "Use High/Medium/Low for severity and 'Scene N' for locations. "
+                                  "Do not return Chinese text.")
             data = await llm.complete_json(
-                [{"role": "system", "content": prompts.PROMPT_REVIEW},
+                [{"role": "system", "content": system_prompt},
                  {"role": "user", "content": user_content[:9000]}], api_key=api_key)
             data = _normalize_review(data)
             data["mode"] = "online"
@@ -269,13 +280,24 @@ def _normalize_review(data: dict):
         "score": max(0, min(10, int(data.get("score", 7) or 7))),
         "issues": [], "strengths": [], "next_steps": str(data.get("next_steps", "")),
     }
+    severity_en = {"高": "High", "中": "Medium", "低": "Low"}
+    type_en = {"情节漏洞": "Plot hole", "逻辑矛盾": "Logical contradiction", "人物动机": "Character motivation",
+               "时间线": "Timeline", "连贯性": "Continuity", "对白": "Dialogue", "节奏": "Pacing",
+               "结构": "Structure", "制作可行性": "Production feasibility", "其他": "Other"}
     for it in data.get("issues", []) or []:
         if not isinstance(it, dict):
             continue
+        severity = str(it.get("severity", "中"))
+        location = str(it.get("location", "全文"))
+        issue_type = str(it.get("type", "其他"))
+        if _LANG == "en":
+            severity = severity_en.get(severity, severity)
+            location = re.sub(r"第\s*(\d+)\s*场", r"Scene \1", location)
+            issue_type = type_en.get(issue_type, issue_type)
         out["issues"].append({
-            "type": str(it.get("type", "其他")),
-            "severity": str(it.get("severity", "中")),
-            "location": str(it.get("location", "全文")),
+            "type": issue_type,
+            "severity": severity,
+            "location": location,
             "quote": str(it.get("quote", "")),
             "problem": str(it.get("problem", "")),
             "suggestion": str(it.get("suggestion", "")),
@@ -285,9 +307,12 @@ def _normalize_review(data: dict):
     risks = []
     for r in data.get("production_risks", []) or []:
         if isinstance(r, dict) and r.get("risk"):
+            severity = str(r.get("severity", "中"))
+            if _LANG == "en":
+                severity = severity_en.get(severity, severity)
             risks.append({
                 "risk": str(r["risk"]),
-                "severity": str(r.get("severity", "中")),
+                "severity": severity,
                 "mitigation": str(r.get("mitigation", "")),
             })
     out["production_risks"] = risks[:4]
@@ -1400,16 +1425,21 @@ def llm_error_hint(exc: Exception) -> str:
     """把模型/额度错误翻译成用户能操作的提示。"""
     msg = str(exc or "")
     if "402" in msg or "budget" in msg.lower() or "quota" in msg.lower():
-        return ("模型额度已用尽（Vercel AI Gateway: budget exceeded）。"
-                "请在项目 .env 里更换 AI_GATEWAY_API_KEY（或设置 DEEPSEEK_API_KEY），"
-                "然后重启服务：.venv/bin/python app.py。")
+        return _t("模型额度已用尽（Vercel AI Gateway: budget exceeded）。"
+                  "请在项目 .env 里更换 AI_GATEWAY_API_KEY（或设置 DEEPSEEK_API_KEY），"
+                  "然后重启服务：.venv/bin/python app.py。",
+                  "The model quota is exhausted (Vercel AI Gateway: budget exceeded). "
+                  "Replace AI_GATEWAY_API_KEY in .env (or set DEEPSEEK_API_KEY), then restart: .venv/bin/python app.py.")
     if "401" in msg or "invalid api key" in msg.lower():
-        return "模型 API Key 无效（401），请在 .env 检查 AI_GATEWAY_API_KEY / DEEPSEEK_API_KEY。"
+        return _t("模型 API Key 无效（401），请在 .env 检查 AI_GATEWAY_API_KEY / DEEPSEEK_API_KEY。",
+                  "The model API key is invalid (401). Check AI_GATEWAY_API_KEY / DEEPSEEK_API_KEY in .env.")
     if "429" in msg or "rate limit" in msg.lower():
-        return "模型请求太频繁（429），等一分钟再试。"
+        return _t("模型请求太频繁（429），等一分钟再试。",
+                  "The model is rate-limited (429). Wait a minute and retry.")
     if "timeout" in msg.lower():
-        return "模型响应超时，重试一次或把剧本拆短。"
-    return "模型调用失败：" + msg[:160]
+        return _t("模型响应超时，重试一次或把剧本拆短。",
+                  "The model timed out. Retry once, or shorten the script.")
+    return _t("模型调用失败：", "Model call failed: ") + msg[:160]
 
 
 def _taste_block():
@@ -1799,7 +1829,7 @@ def _norm_logline(data):
 def _script_intro(logline):
     if _LANG == "en":
         name = logline.get("title") or "Untitled"
-        en = f" ({logline['title_en']})" if logline.get("title_en") else ""
+        en = f" ({logline['title_en']})" if logline.get("title_en") and logline["title_en"] != name else ""
         return (
             f"### Logline\n**Title**: {name}{en}\n"
             f"**Theme**: {logline.get('theme') or '—'}\n\n"
@@ -1807,7 +1837,7 @@ def _script_intro(logline):
             "The full script is in the scrollable area below; click \"Download PDF\" for the formatted screenplay."
         )
     name = logline.get("title") or "未命名"
-    en = f"（{logline['title_en']}）" if logline.get("title_en") else ""
+    en = f"（{logline['title_en']}）" if logline.get("title_en") and logline["title_en"] != name else ""
     return (
         f"### 梗要\n**片名**：{name}{en}\n"
         f"**主题**：{logline.get('theme') or '—'}\n\n"
@@ -1856,17 +1886,18 @@ def _format_review(report) -> str:
         return str(report["text"])
     lines = []
     if report.get("summary"):
-        lines.append("**总评**：" + str(report["summary"]))
+        lines.append(_t("**总评**：", "**Overall**: ") + str(report["summary"]))
     issues = report.get("issues") or []
     if issues:
         lines.append("")
-        lines.append("**发现的问题**：")
+        lines.append(_t("**发现的问题**：", "**Issues found**:"))
         for it in issues[:8]:
             if not isinstance(it, dict):
                 continue
             lines.append(
-                f"- [{it.get('severity', '中')}] {it.get('location', '')}："
-                f"{it.get('problem', '')}（建议：{it.get('suggestion', '')}）")
+                f"- [{it.get('severity', '中')}] {it.get('location', '')}" + _t("：", ": ")
+                + f"{it.get('problem', '')}" + _t("（建议：", " (suggestion: ")
+                + f"{it.get('suggestion', '')}" + _t("）", ")"))
     strengths = report.get("strengths") or []
     if strengths:
         lines.append("")
@@ -1886,13 +1917,16 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
     if script:
         if not looks_like_script(script):
             return {
-                "text": "这份内容看起来不像分场剧本（没找到场次标题、内/外景或对白）。"
-                        "可以点输入区的回形针上传 PDF / DOCX / TXT，或直接粘贴「第1场 内景 便利店 夜」这种格式。",
+                "text": _t(
+                    "这份内容看起来不像分场剧本（没找到场次标题、内/外景或对白）。"
+                    "可以点输入区的回形针上传 PDF / DOCX / TXT，或直接粘贴「第1场 内景 便利店 夜」这种格式。",
+                    "This does not look like a scene-based screenplay (no scene headings, INT/EXT markers or dialogue). "
+                    "Upload a PDF / DOCX / TXT with the paperclip, or paste a format such as 'Scene 1 INT. STORE - NIGHT'."),
                 "needs_script": True, "mode": "offline",
             }
         if re.search(r"改成标准|标准格式|改成剧本格式|整理成剧本|重排格式", msg):
             if not llm.available(api_key):
-                return {"text": "改格式需要在线模型，当前模型不可用。", "mode": "offline"}
+                return {"text": _t("改格式需要在线模型，当前模型不可用。", "Reformatting requires the online model, which is currently unavailable."), "mode": "offline"}
             try:
                 data = await llm.complete_json(
                     [{"role": "system", "content": prompts.PROMPT_SCRIPT_REFORMAT},
@@ -1900,21 +1934,30 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
                 logline = _norm_logline(data.get("logline"))
                 text = str(data.get("script_text") or "").strip() or script
                 return {"kind": "script", "logline": logline, "script_text": text,
-                        "text": _script_intro(logline) + "\n\n已按标准电影剧本格式整理。",
+                        "text": _script_intro(logline) + _t("\n\n已按标准电影剧本格式整理。", "\n\nReformatted in standard screenplay layout."),
                         "mode": "online"}
             except Exception as e:  # noqa: BLE001
                 logger.warning("剧本改格式失败(%s)", e)
-                return {"text": "改格式失败了，稍后再试一次。", "mode": "offline"}
+                return {"text": _t("改格式失败了，稍后再试一次。", "Reformatting failed; please try again."), "mode": "offline"}
         # 冲突检查
         ctx, refs = await asyncio.to_thread(_build_context, "review", script)
         report = await review(script, api_key, ctx, refs)
         report_text = _format_review(report).strip()
-        summary = (
-            f"剧本已识别（约 {len(script)} 字）。先做冲突与问题检查：\n\n"
-            f"{report_text[:3500] if report_text else '（未生成检查报告）'}\n\n---\n"
-            "要不要我把这份剧本改成**标准电影剧本格式**（场次标题 / 动作 / 角色与对白分行）？"
-            "回复「改成标准格式」即可；改完可以下载 PDF。"
-        )
+        if _LANG == "en":
+            summary = (
+                f"Script recognised (~{len(script)} characters). First, a conflict and issue check:\n\n"
+                f"{report_text[:3500] if report_text else '(no review report generated)'}\n\n---\n"
+                "Would you like me to reformat this script into **standard screenplay format** "
+                "(scene headings / action / character and dialogue on separate lines)? "
+                "Reply **reformat**; the result can be downloaded as a PDF."
+            )
+        else:
+            summary = (
+                f"剧本已识别（约 {len(script)} 字）。先做冲突与问题检查：\n\n"
+                f"{report_text[:3500] if report_text else '（未生成检查报告）'}\n\n---\n"
+                "要不要我把这份剧本改成**标准电影剧本格式**（场次标题 / 动作 / 角色与对白分行）？"
+                "回复「改成标准格式」即可；改完可以下载 PDF。"
+            )
         return {"kind": "script_check", "logline": None, "script_text": script,
                 "findings": report.get("findings") or [], "text": summary,
                 "mode": report.get("mode", "offline")}
@@ -1931,10 +1974,10 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
     if not theme and len(msg) >= 8:
         theme = msg
     if not theme:
-        return {"text": "写剧本需要先有一个主题：可以先用「找灵感」得到主题，或直接回复「写剧本：你的主题」。",
+        return {"text": _t("写剧本需要先有一个主题：可以先用「找灵感」得到主题，或直接回复「写剧本：你的主题」。", "Writing a script needs a theme: use **Find inspiration** first, or reply **write script: your theme**."),
                 "needs_theme": True, "mode": "offline"}
     if not llm.available(api_key):
-        return {"text": "剧本生成需要在线模型，当前模型不可用。", "mode": "offline"}
+        return {"text": _t("剧本生成需要在线模型，当前模型不可用。", "Script generation requires the online model, which is currently unavailable."), "mode": "offline"}
     try:
         film_kind = kind or _kind_from_history(history) or kind_from_text(msg) or "短片"
         guide = KIND_GUIDE["script"].get(film_kind, KIND_GUIDE["script"]["短片"])
@@ -1968,12 +2011,14 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
                                      "theme": theme, "summary": text[:120]})
         return {"kind": "script", "film_kind": film_kind, "logline": logline,
                 "script_text": text, "characters": [],
-                "text": _script_intro(logline) + "\n\n剧本生成好了！想改哪场直接说；要出分镜就回复「出分镜」。",
+                "text": _script_intro(logline) + _t(
+                    "\n\n剧本生成好了！想改哪场直接说；要出分镜就回复「出分镜」。",
+                    "\n\nYour script is ready. Tell me which scene to change, or reply **storyboard** for a shot list."),
                 "mode": "online"}
     except Exception as e:  # noqa: BLE001
         logger.warning("剧本生成失败(%s)", e)
         hint = llm_error_hint(e)
-        return {"text": "剧本生成失败：" + hint, "mode": "offline", "error_hint": hint}
+        return {"text": _t("剧本生成失败：", "Script generation failed: ") + hint, "mode": "offline", "error_hint": hint}
 
 
 _HEADING_RE = re.compile(r"^\s*(?:第\s*(\d+)\s*场[\s\.、:：-]*|(\d+)\s*[\.、]\s*)(.*)$")
@@ -2135,12 +2180,16 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
     script = (script_text or "").strip()
     if not script:
         return {
-            "text": "分镜需要先有剧本。\n\n点输入区的回形针上传 PDF / DOCX / TXT，或把剧本贴在输入框里，"
-                    "再点「分镜建议/生成」。\n（如果还没剧本，可以先用「找灵感」定主题，再用「剧本检查/生成」写一版剧本。）",
+            "text": _t(
+                "分镜需要先有剧本。\n\n点输入区的回形针上传 PDF / DOCX / TXT，或把剧本贴在输入框里，"
+                "再点「分镜建议/生成」。\n（如果还没剧本，可以先用「找灵感」定主题，再用「剧本检查/生成」写一版剧本。）",
+                "A storyboard needs a script. Upload a PDF / DOCX / TXT with the paperclip, or paste the script into the composer, then choose **Storyboard**.\n"
+                "(If you do not have a script yet, use **Find inspiration** for a theme, then **Script check / write** to draft one.)"),
             "needs_script": True, "mode": "offline",
         }
     if not looks_like_script(script):
-        return {"text": "上传的内容看起来不像分场剧本（没找到场次/对白/场景标题），先确认一下剧本文件。",
+        return {"text": _t("上传的内容看起来不像分场剧本（没找到场次/对白/场景标题），先确认一下剧本文件。",
+                           "The upload does not look like a scene-based screenplay (no scene headings, dialogue or scene titles); please check the file."),
                 "needs_script": True, "mode": "offline"}
 
     scenes, blocks = _scene_blocks(script)
@@ -2219,13 +2268,15 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
     if isinstance(storyboard, dict):
         shots = storyboard.get("shots") or []
     if not shots:
-        return {"text": "拍摄计划需要最近的一版分镜：请先用「分镜建议/生成」生成分镜，再点「拍摄计划」。",
+        return {"text": _t("拍摄计划需要最近的一版分镜：请先用「分镜建议/生成」生成分镜，再点「拍摄计划」。", "The shooting plan needs the latest storyboard: generate a storyboard first, then choose **Shooting plan**."),
                 "needs_storyboard": True, "mode": "offline"}
     shots = shots[:40]
     today = _dt.datetime.now().astimezone()
     shot_lines = [
-        f"- 镜{s.get('id')}｜{s.get('scene')}｜{s.get('shot_type')}/{s.get('angle')}/{s.get('movement')}"
-        f"｜{s.get('duration')}｜{str(s.get('description'))[:60]}"
+        (f"- Shot {s.get('id')} | {s.get('scene')} | {s.get('shot_type')}/{s.get('angle')}/{s.get('movement')}"
+         f" | {s.get('duration')} | {str(s.get('description'))[:60]}") if _LANG == "en" else
+        (f"- 镜{s.get('id')}｜{s.get('scene')}｜{s.get('shot_type')}/{s.get('angle')}/{s.get('movement')}"
+         f"｜{s.get('duration')}｜{str(s.get('description'))[:60]}")
         for s in shots
     ]
     pref = (message or "").strip()
@@ -2260,18 +2311,19 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
             "day": 1, "date": d1, "call": "08:00", "wrap": "18:00",
             "scenes": scenes,
             "blocks": [
-                {"start": "08:00", "end": "09:00", "activity": "crew call / 器材与场景准备"},
-                {"start": "09:00", "end": "13:00", "activity": "上午：按场次拍 master + 主要 coverage"},
-                {"start": "13:00", "end": "14:00", "activity": "午饭"},
-                {"start": "14:00", "end": "18:00", "activity": "下午：补近景/特写与插入镜头"},
+                {"start": "08:00", "end": "09:00", "activity": _t("crew call / 器材与场景准备", "Crew call / equipment and location prep")},
+                {"start": "09:00", "end": "13:00", "activity": _t("上午：按场次拍 master + 主要 coverage", "Morning: shoot masters + main coverage by scene")},
+                {"start": "13:00", "end": "14:00", "activity": _t("午饭", "Lunch")},
+                {"start": "14:00", "end": "18:00", "activity": _t("下午：补近景/特写与插入镜头", "Afternoon: close-ups, inserts and pickups")},
             ],
-            "notes": "按场次分组拍摄，夜戏留到傍晚抢天光",
+            "notes": _t("按场次分组拍摄，夜戏留到傍晚抢天光", "Group by scene; keep night scenes for the late-afternoon light"),
         }]
         calendar = [{
-            "title": "Day 1 拍摄", "start": d1 + "T09:00:00", "end": d1 + "T18:00:00",
-            "location": "待定", "description": "根据分镜生成的拍摄日",
+            "title": _t("Day 1 拍摄", "Day 1 shoot"), "start": d1 + "T09:00:00", "end": d1 + "T18:00:00",
+            "location": _t("待定", "TBD"), "description": _t("根据分镜生成的拍摄日", "Shooting day generated from the storyboard"),
         }]
-        summary = summary or f"共 {len(shots)} 个镜头，集中在 1 天完成；先 master 后 coverage。"
+        summary = summary or (_t(f"共 {len(shots)} 个镜头，集中在 1 天完成；先 master 后 coverage。",
+                                f"{len(shots)} shots in one day; masters first, then coverage."))
 
     if _LANG == "en":
         lines = ["### Detailed shooting plan", "", f"**Overview**: {summary or 'Schedule based on the storyboard'}"]

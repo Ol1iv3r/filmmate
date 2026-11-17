@@ -167,9 +167,14 @@ async def health():
 # --------------------------------------------------------------------------
 async def _qa_offline(message: str):
     # ---------- 离线模式（无模型 / 额度不足时兜底） ----------
+    en = tools._LANG == "en"
     low = message.lower().strip()
     if re.fullmatch(r"(hi|hello|hey|你好|哈喽|嗨|喂|在吗|good\s+(morning|afternoon|evening))[!！。 ]*", low):
-        text = ("你好!我是 Filmmate,你的影视创作助理。我可以:检查剧本漏洞、给分镜建议、"
+        text = ("Hi, I'm Filmmate, your film-making assistant. I can check a script, suggest a storyboard, "
+                "build a Rundown or shooting plan, find references, or answer questions about shot language, "
+                "lighting, sound and editing. Where would you like to start?"
+                if en else
+                "你好!我是 Filmmate,你的影视创作助理。我可以:检查剧本漏洞、给分镜建议、"
                 "排拍摄 Rundown、规划拍摄日程、找参考案例,或回答镜头语言/灯光/收音/剪辑等专业问题。想从哪里开始?")
         yield "steps", {"steps": []}
         for chunk in chunk_text(text):
@@ -177,7 +182,8 @@ async def _qa_offline(message: str):
             await asyncio.sleep(0.015)
         return
     if re.search(r"谢谢|多谢|thank", low):
-        text = "不客气!随时把你的剧本或想法发给我,继续打磨你的作品。"
+        text = ("You're welcome. Send me a script or an idea whenever you're ready."
+                if en else "不客气!随时把你的剧本或想法发给我,继续打磨你的作品。")
         yield "steps", {"steps": []}
         for chunk in chunk_text(text):
             yield "delta", {"text": chunk}
@@ -190,13 +196,17 @@ async def _qa_offline(message: str):
     if hits:
         yield "citations", {"kind": "knowledge", "items": [
             {"title": h["title"], "category": h["category"]} for h in hits]}
-        lines = [f"关于「{q}」,知识库检索到这些内容:"]
+        lines = [f"About \"{q}\", the knowledge base returned:" if en else f"关于「{q}」,知识库检索到这些内容:"]
         for h in hits:
             lines.append(f"\n**{h['title']}**({h['category']})\n{h['content']}")
-        lines.append("\n(离线演示模式:回答直接来自本地知识库;接入 API 后由大模型基于检索结果组织语言、综合多个条目。)")
+        lines.append("\n(Offline demo: this answer comes directly from the local knowledge base; with the API, the model organises and synthesises the retrieved entries.)" if en else
+                     "\n(离线演示模式:回答直接来自本地知识库;接入 API 后由大模型基于检索结果组织语言、综合多个条目。)")
         text = "\n".join(lines)
     else:
-        text = ("这个问题在我的影视知识库里没有直接答案。我可以帮你:检查剧本漏洞、设计分镜、"
+        text = ("I don't have a direct answer in the film knowledge base. I can check a script, design a storyboard, "
+                "build a Rundown or shooting plan, or find references. Try a quick-action chip below, or paste a script."
+                if en else
+                "这个问题在我的影视知识库里没有直接答案。我可以帮你:检查剧本漏洞、设计分镜、"
                 "排拍摄 Rundown、规划拍摄日程、找参考案例。试试点击下方快捷按钮,或直接把剧本贴给我。")
     for chunk in chunk_text(text):
         yield "delta", {"text": chunk}
@@ -234,7 +244,10 @@ async def handle_qa(message: str, history: list, api_key: str, script_text: str 
         except Exception as exc:  # noqa: BLE001
             logger.warning("在线问答失败(%s)，回退离线检索", exc)
             yield "steps", {"steps": []}
-            yield "delta", {"text": "（模型暂时不可用：" + tools.llm_error_hint(exc) + "，先用本地知识库回答）\n\n"}
+            prefix = ("(The model is temporarily unavailable: " + tools.llm_error_hint(exc)
+                      + ". Answering from the local knowledge base.)\n\n") if tools._LANG == "en" else (
+                      "（模型暂时不可用：" + tools.llm_error_hint(exc) + "，先用本地知识库回答）\n\n")
+            yield "delta", {"text": prefix}
             async for ev in _qa_offline(message):
                 yield ev
             return
@@ -282,6 +295,9 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
     needs_script = tool in ("rundown",)
     if needs_script and len(content) < 40 and not re.search(r"第\s*\d+\s*[场幕景]", content):
         hint = (
+            "Upload a script first (PDF / DOCX / TXT), or paste the full script into the composer, then choose this tool.\n\n"
+            "Supported: PDF, DOCX, TXT, Markdown, Fountain; up to 15 MB."
+            if tools._LANG == "en" else
             "请先上传剧本文件（PDF / DOCX / TXT），或在输入框里粘贴剧本全文，再点这个功能。\n\n"
             "支持的格式：PDF、DOCX、TXT、Markdown、Fountain；单文件 ≤ 15 MB。"
         )
@@ -404,7 +420,7 @@ async def chat(req: Request):
         except Exception as e:  # noqa: BLE001
             logger.exception("请求处理失败")
             hint = tools.llm_error_hint(e)
-            friendly = "连接/模型出错了：" + hint
+            friendly = ("Connection/model error: " if tools._LANG == "en" else "连接/模型出错了：") + hint
             for chunk in chunk_text(friendly):
                 yield "delta", {"text": chunk}
                 await asyncio.sleep(0.01)
