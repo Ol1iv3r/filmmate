@@ -1727,7 +1727,7 @@ _SCRIPT_HEAD = re.compile(r"(第\s*\d+\s*[场幕]|^\s*\d+\s*[\.、]\s*(?:内|外
 
 
 def looks_like_script(text: str) -> bool:
-    if not text or len(text) < 120:
+    if not text or len(text) < 40:
         return False
     hits = 0
     if re.search(r"第\s*\d+\s*[场幕]", text):

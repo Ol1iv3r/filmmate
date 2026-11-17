@@ -385,7 +385,8 @@ async def chat(req: Request):
                 "mode": "online" if online else "offline",
             }
             if lang_only:
-                text = "好的，之后我都用英文回复。" if lang == "en" else "好的，之后我都用中文回复。"
+                text = ("Got it — I'll reply in English from now on."
+                        if lang == "en" else "好的，之后我都用中文回复。")
                 for chunk in chunk_text(text):
                     yield "delta", {"text": chunk}
                     await asyncio.sleep(0.015)

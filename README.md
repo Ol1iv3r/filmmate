@@ -1,638 +1,731 @@
-# 🎬 Filmmate · 影视创作 AI 助理
+# Filmmate
 
-> **更新日志**：[`CHANGELOG.md`](CHANGELOG.md)　｜　**📁 仓库导航**：本目录是 2026-11-05 的 Python 原型（FastAPI + 原生 HTML/JS）。
-> 团队正式栈（Tauri 2 + React + Vite + TS，Phase 1 聊天 UI + Phase 2 语音输入 + Phase 3 会话落盘 +
-> Phase 4 工具调用可视化）在 **[`filmmate-web/`](filmmate-web/README.md)**，前后端消息契约在
-> **[`filmmate-web/docs/CONTRACT.md`](filmmate-web/docs/CONTRACT.md)**。
-> Phase 2 / Phase 3 的 Python 后端模块（`voice_input_api.py`、`chat_storage*.py`）在本目录根部，
-> 由 `app.py` 一并注册。
+**A domain-specific AI assistant for film and video creators.**
+Inspiration → Script → Storyboard → Shooting plan → + Reference film.
 
-**COMP4431 Artificial Intelligence (2026/27) Group Project — Domain-specific Chatbot**
+[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0B0B0B)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![LLM](https://img.shields.io/badge/LLM-DeepSeek-4B32C3)](https://platform.deepseek.com/)
 
-一个面向影视/视频创作者的领域专属 AI 助理。定位是**辅助创作者做决策**,而不是替代创作:
-帮创作者 **检查剧本漏洞 → 设计分镜 → 排拍摄 Rundown → 规划拍摄日程 → 找灵感/参考短片**,并回答
-镜头语言、灯光、收音、剪辑等专业问题(中英双语)。
+Filmmate is a course project for **COMP4431 Artificial Intelligence (2026/27), Group 20**. It is a chatbot for the pre-production workflow of a small film team: find a reference, check or write a script, turn the script into a shot list, and schedule the shoot. The implementation is a Python/FastAPI backend plus a React/TypeScript frontend (Phase 1 chat UI, Phase 4 tool-call visualisation). It is deliberately **not** a general-purpose assistant. It stays inside film, television and video production, cites the knowledge or film record it used, and declines off-topic requests.
 
----
+The system works with **or without an API key**. Online, it uses a DeepSeek chat model with retrieval tools and structured prompts. Offline, each creative tool has a deterministic local fallback, so the demo still runs on a laptop with no network.
 
-## 👥 组员信息(提交前填写)
-
-| 姓名(Name) | 学号(Student ID) | 负责部分 |
-|---|---|---|
-| (你的名字) | (你的学号) | 后端 / LLM 集成 |
-| (组员 2) | (学号) | RAG 知识库与案例库 |
-| (组员 3) | (学号) | 前端 UI 与语音 |
-| (组员 4,可选) | (学号) | 演示与测试 |
+![Filmmate home screen](docs/screenshots/feature-home.png)
 
 ---
 
-## ✨ 功能清单
+## Contents
 
-### 基本功能(3/10)
-1. **领域内沟通**:只围绕影视创作领域回答,领域外问题礼貌拒答并引导回创作话题;
-2. **典型查询处理**:中英双语回答镜头语言(景别/机位/运镜)、灯光、收音、剪辑、拍摄流程、设备、香港取景地等专业问题;
-3. **领域核心任务**:剧本检查、分镜建议、Rundown、日程规划等辅助任务。
-
-### 附加功能(7/10)及实现方式
-
-#### 1. RAG 知识库检索增强(双库检索)
-- **专业知识库**(`knowledge/knowledge.json`,78 条):景别、机位、运镜、灯光、收音、剪辑、拍摄流程、香港取景、设备;
-- **真实短片库**(`data/library/films_real.json`,78 部):全部来自 Bilibili 公开 API 校验,含标题/时长/UP主/简介/封面/原片链接;不写臆造的制作数据;
-- 检索实现(`rag.py` / `case_store.py`):中文用 jieba 分词 + **Okapi BM25** 关键词检索;
-  安装 `sentence-transformers` 后自动升级为 **dense 向量 + 余弦相似度**检索(向量缓存到 `*/vectors/` 下);
-- 回答**附带来源引用**(知识条目 / 真实短片与剧本链接),不编造。
-
-#### 2. 模型自主工具调用(Agent / Function Calling)
-- 后端向 DeepSeek 声明两个检索工具 `search_knowledge` / `search_cases`(`llm.py` 的 `TOOLS_SCHEMA`);
-- **模型自己决定**何时调用哪个工具、用什么关键词,后端执行真实检索,结果回填后模型再生成最终回答;
-- 前端实时展示调用过程(🔧 search_cases(…)),演示时可直观看到 Agent 工作流;
-- 无 API 时由规则路由器等价降级(离线模式)。
-
-#### 3. 基于案例的生成(案例库 → 提示词)
-- 用户用"分镜/Rundown/日程/灵感/审稿"时,先检索相关案例,把案例作为**高质量样本注入提示词**,
-  模型借鉴其结构与经验、适配用户需求后输出(`tools.py` 中 case_ctx 注入);
-- 离线模式下同样把案例附在结果中,并据案例填充设备/地点。
-
-#### 4. 语音识别与合成
-- 语音输入:浏览器 **Web Speech API(SpeechRecognition)**,支持普通话/粤语/英语,点 🎤 说话输入;
-- 语音输出:**SpeechSynthesis** 朗读 AI 回答(每条回答带 🔊 按钮);
-- 完全免费、无需训练、无需第三方服务。
-
-#### 5. 结构化工具输出 + 友好界面
-- 剧本检查:评分 + 漏洞卡片(严重程度/类型/原文引用/修改建议)+ 优点 + 下一步建议;
-- 分镜建议:每个镜头一张 **SVG 简笔画草图**(按景别/机位自动生成构图)+ 景别/机位/运镜/时长标注;
-- Rundown / 日程:**表格化呈现 + 一键导出 CSV**(带 BOM,Excel 直接打开);
-- 灵感:概念卡片(梗概/钩子/反转);
-- 电影风格深色 UI、流式输出(SSE)、聊天历史上下文(最近 6 轮)。
-
-#### 6. 工程可靠性
-- **离线演示模式**:未配置 API Key 时全部功能仍可用(本地检索 + 启发式剧本检查 + 模板生成),现场断网不翻车;
-- JSON 输出自动校验/修复/重试;在线失败自动回退离线。
+1. [What Filmmate does](#1-what-filmmate-does)
+2. [Feature checklist](#2-feature-checklist)
+3. [The five workflows](#3-the-five-workflows)
+4. [Quick start](#4-quick-start)
+5. [Architecture](#5-architecture)
+6. [Interface and repository structure](#6-interface-and-repository-structure)
+7. [Data assets](#7-data-assets)
+8. [Configuration](#8-configuration)
+9. [API](#9-api)
+10. [Verification and tests](#10-verification-and-tests)
+11. [Troubleshooting](#11-troubleshooting)
+12. [Known limitations](#12-known-limitations)
+13. [Repository hygiene](#13-repository-hygiene)
+14. [Team and data credits](#14-team-and-data-credits)
 
 ---
 
-## 🧭 现状与下一步（Roadmap）
+## 1. What Filmmate does
 
-> 这一节只写「现在到哪、还差什么」，不把计划当成已完成功能。
-
-| 方向 | 现在 | 下一步 |
-|---|---|---|
-| **1. 电影数据库** | 16 部「scriptslug 剧本 + B 站原片」长片；78 部短片仅作样本；个人库可加 B 站链接 + 剧本 | 统一到**长片主库 + 用户自建库**；补 synopsis/导演/类型/年代，支持全方位筛选与剧本全文搜索 |
-| **2. 剧本理解** | PDF/DOCX 提取文本；在线 LLM coverage，离线启发式规则 | 场次/角色/对白/道具结构化，人物关系图、时间线校验，长剧本分块与跨块一致性 |
-| **3. Rundown 导出** | 页面 stripboard + CSV | 一键导出 **.xlsx**（合并单元格/配色/列宽/合计，可直接打印的通告单） |
-| **4. 日程规划** | 页面 + JSON/CSV | 生成 **.ics**，每个拍摄日/场次一个事件，双击导入 Apple/Google Calendar |
-| **5. 2D Avatar** | 只有文字 + TTS 朗读 | 2D 角色（表情/口型/状态）与语音联动，优先低成本 Live2D/CSS 方案 |
-
-### 1. 电影数据库：统一到长片 + 自建库
-
-- **现在**：16 部双源长片（每部都有 scriptslug 剧本 PDF 与 B 站原片）、78 部短片样本；
-  「我的库」可以粘贴 B 站链接、填情绪标签、附剧本。
-- **不够**：搜索仍以关键词 + 情绪为主，没有剧情简介、导演、类型、年代等结构化字段，
-  做不到「全方位搜索」；短片与长片两套库尚未真正合并。
-- **下一步**：以长片为主库，补 synopsis/导演/类型/年代与剧本全文索引；
-  支持按情绪/题材/年代/是否有剧本筛选；用户上传的剧本/影片作为「自建库」一等公民。
-
-### 2. 剧本理解：从「读文本」到「读结构」
-
-- **现在**：PDF/DOCX 提取纯文本；在线交给 LLM 做 coverage，离线用时间线/人物去向/对白长度等启发式规则。
-- **不够**：没有稳定的场次切分、人物表、关系图与时间线；长剧本会截断，模型容易漏掉人物动机与潜台词。
-- **下一步**：结构化解析（场景/角色/对白/动作/道具）、人物关系图、beat 与时间线校验；
-  长剧本分块处理并做跨块一致性检查。
-
-### 3. Rundown 一键导出 Excel
-
-- **现在**：页面能看 stripboard（场次/INT-EXT/页数 1/8/company move/meal/cast calls/合计），导出 CSV。
-- **下一步**：直接生成 `.xlsx`，保留合并单元格、配色、列宽与合计行，一键下载，
-  打印出来就是现场能用的通告单。
-
-### 4. 日程规划导出 .ics
-
-- **现在**：日程只存在页面、JSON 和 CSV 里。
-- **下一步**：生成 iCalendar（`.ics`），每个拍摄日/场次一个 `VEVENT`，带地点、时间、备注；
-  双击导入 Apple Calendar / Google Calendar。
-
-### 5. 2D Avatar
-
-- **现在**：文字回答 + 浏览器 TTS 朗读，没有形象。
-- **下一步**：2D 角色（表情、口型、状态）与语音输入/输出联动；优先做低成本的
-  Live2D / CSS 方案，保证演示现场能跑。
-
----
-
-## 🏗️ 架构
+Filmmate supports the creative loop that happens before a camera is booked:
 
 ```
-浏览器 (static/ HTML+CSS+JS)
-  ├─ 语音输入 SpeechRecognition · 语音合成 SpeechSynthesis
-  └─ POST /api/chat (SSE 流式)
-        │
-        ▼
-FastAPI 后端 (app.py)
-  ├─ 意图路由 (tools.detect_tool): 问答 / 剧本检查 / 分镜 / rundown / 日程 / 灵感 / 案例
-  ├─ Agent 循环 (llm.chat_with_tools): 模型自主调用检索工具
-  │     ├─ search_knowledge ──► rag.py  ──► knowledge.json (BM25 / dense 向量)
-  │     └─ search_cases     ──► case_store.py ──► cases.json   (BM25 / dense 向量)
-  ├─ 创作工具 (tools.py): 检索案例 → 注入提示词 → DeepSeek 结构化 JSON → 前端渲染
-  └─ 离线降级: 本地检索 + 启发式规则(时间线/人物去向/伏笔/对白检查) + 模板生成
-        │
-        ▼
-DeepSeek API (deepseek-chat, OpenAI 兼容接口;httpx 异步)
+Find inspiration → check / write a script → design a storyboard → plan the shoot
+        ↑                                                              │
+        └──────────────── + Reference film (taste profile) ────────────┘
 ```
+
+It also answers professional questions about shot sizes, camera positions, lens movement, lighting, sound, editing, production workflow, equipment, budgeting, Hong Kong locations and on-set safety.
+
+The interface is a dark, cinema-style chat application. The five entry chips are **Find inspiration**, **Script check / write**, **Storyboard**, **Shooting plan** and **+ Reference film**. The same flows are available through natural language, and the backend supports both the modern React client and the legacy HTML/JS client.
+
 
 ---
 
-## Installation and setup
+## 2. Feature checklist
 
-Use Python 3.12 and Node.js 22.12 or later with npm. Run these commands from the repository root unless a step says otherwise.
+Legend: **✅ implemented and exercised** · **— not implemented**
 
-### 1. Install the Python dependencies
+### 2.1 Basic requirements
 
-**macOS**
+| Requirement | Status | What is implemented |
+|---|---|---|
+| Domain-restricted conversation | ✅ | The system prompt restricts answers to film/TV/video production, and the assistant redirects programming, cooking and small-talk requests back to the domain. |
+| Typical domain queries | ✅ | Professional Q&A over shot language, lighting, sound, editing, workflow, equipment, budgeting, Hong Kong locations and safety. Answers cite the retrieved knowledge entries or film records. |
+| Domain core tasks | ✅ | Script review, script generation, storyboard, one-day Rundown, multi-day shooting plan, and genre-scoped inspiration. |
+
+### 2.2 Additional features requested
+
+| Feature | Status | How it is implemented |
+|---|---|---|
+| **Defined domain: Inspiration → Script → Storyboard → Shooting plan → + Reference film** | ✅ | Five entry chips share one conversation. Metadata carries the active tool, genre, latest script and latest storyboard between steps, so a result from one step becomes the input to the next. |
+| **English + Chinese** | ✅ | Chinese/English UI via `I18nProvider`; requests send `lang`; prompts generate in the selected language. Users can also type “switch to English” or “切换中文”; the interface and later answers follow, while film titles stay in their original form. |
+| **Voice recognition** | ✅ | Browser microphone records audio; the server transcribes it with Whisper through Vercel AI Gateway (v4 JSON/base64) or OpenAI (multipart). If no key or quota is available, the client falls back to browser `SpeechRecognition` (Chrome/Edge). The transcript is inserted into the composer, never sent automatically. Answers can be read aloud with `SpeechSynthesis`. |
+| **2D Avatar “Filmy”** | ✅ | A self-contained SVG/CSS character. Filmy moves next to the assistant while it thinks, points at available PDF/CSV/ICS downloads, greets the user, reacts to clicks, and can play rock-paper-scissors during generation. All copy follows the UI language. |
+| **LLM (domain-adapted, API-based)** | ✅ | Hosted DeepSeek chat model over an OpenAI-compatible API, with retrieval-augmented generation, case-based prompt context, structured JSON contracts and agent tool calling. |
+| **Weight fine-tuning / LoRA checkpoint** | — | Not implemented in this repository. The implemented domain adaptation is RAG + prompting + tools; see [§2.4](#24-a-note-on-the-fine-tuned-llm). |
+| **User-friendly interface** | ✅ | Streaming answers, tool-call cards with real elapsed time, typed result panels, Markdown/GFM tables, citations, copy/read-aloud/regenerate, sidebar conversations, keyboard shortcuts, responsive layout and a dark cinema theme. |
+| **RAG over a dual library** | ✅ | 198 professional knowledge entries, 16 script + film pairs, 78 verified short films, 40 scene patterns, 60 shot patterns, 7 stripboard templates, 50 annotated videos / 504 shot segments, and a 260-title catalog with 2,600 stills. BM25 by default; optional multilingual dense vectors. |
+| **Agent / function calling** | ✅ | Six tools: `search_knowledge`, `search_cases`, `search_scenes`, `search_shots`, `search_stripboards`, `search_samples`. The model chooses the tool and query, the backend executes real retrieval, and the result is fed back before the final answer. |
+| **Case-based generation** | ✅ | For script review and Rundown, retrieved cases and scene patterns are injected into the prompt; the model adapts their structure rather than copying them. Inspiration is restricted to real catalog titles, and any returned title not in the candidate list is dropped. |
+| **Structured output + export** | ✅ | Review findings, script reader, shot list, shooting days and inspiration stills each have a dedicated panel. Storyboard → CSV, script → PDF, shooting plan → `.ics`. |
+| **Offline / failure resilience** | ✅ | Each tool has a local twin where a meaningful one exists; model errors fall back automatically; JSON is repaired/retried; errors are translated into readable messages. Script generation and reformatting intentionally require the model. |
+| **Script upload** | ✅ | PDF / DOCX / TXT / Markdown / Fountain up to 15 MB; parsed server-side; 200,000-character cap; text is never written to disk as a file. Pressing Enter on an empty composer analyses the uploaded script. |
+| **Personal reference library** | ✅ | Add a Bilibili/YouTube link; Filmmate fetches title, cover, duration and owner, extracts stills where possible, and uses the saved films as a taste profile in later inspiration and script prompts. |
+| **Conversation persistence** | ✅ | One JSON file per conversation through the optional FastAPI store, with atomic writes, per-conversation locks, schema versioning and corrupt-file quarantine. The default client uses `localStorage`; set `VITE_REMOTE_CONVERSATIONS=1` to use the server store. |
+| **Context memory** | ✅ | The QA path receives up to 16 messages / ~7,000 characters, plus the current script (first 6,000 characters) and a compact storyboard summary (first 30 shots). Follow-ups such as “another batch” inherit the previous tool and genre. |
+| **Security and limits** | ✅ | Provider keys live in `.env` on the server and are not stored in the browser; CORS is restricted; uploads, transcripts and output length are capped; conversation ids are validated before they reach the filesystem. |
+
+### 2.3 Supporting features
+
+| Area | What is included |
+|---|---|
+| Script doctor | Score, issue cards (severity / type / location / quote / fix), strengths, production risks and next steps; detect whether the text is actually a screenplay; offer a reformat into standard screenplay format. |
+| Storyboard | Scene-by-scene shot list with shot size, angle, movement, lens, duration, frame, dialogue, lighting, sound, purpose and transition; validation against the uploaded script; rule-based fallback. |
+| Rundown | One-day stripboard with crew call, cast call, setups, scenes, company moves, meals, wrap, page eighths and totals. |
+| Shooting plan | Crew, equipment, locations, day blocks, risks and calendar events; supports preferences such as “avoid 20–22 November”, “three days”, “ten hours a day”, “night scenes together” or “one location”. |
+| Inspiration | Nine genres; style → theme → matching film; 2×2 real stills and original-film links; offers to write the script and then the storyboard. |
+| Catalog | A searchable gallery of 260 titles and 2,600 stills at `/catalog`. |
+| Language switch | UI toggle plus in-chat commands; the choice is remembered locally. |
+| Filmy | Thinking pose, download guide, greetings, reactions and rock-paper-scissors. |
+
+### 2.4 A note on the “fine-tuned LLM”
+
+The course brief mentions a “fine-tuned large language model”, so this repository states the position explicitly:
+
+- **What is implemented:** a hosted DeepSeek chat model, adapted at inference time through retrieval-augmented generation, case-based prompts, structured JSON contracts, six retrieval tools and deterministic fallbacks.
+- **What is not implemented:** weight fine-tuning, LoRA/PEFT adapters, a training dataset or a model checkpoint. There is no training pipeline in this repository, and the README does not claim one.
+- **Why:** fine-tuning a chat model needs a labelled dataset, GPU time and an evaluation protocol, none of which are part of the current course deliverable. The implemented adaptation is inspectable, cheap to update (edit the JSON data or prompts), and works offline.
+- **How to plug in a fine-tuned model:** the LLM client is provider-agnostic. Point `DEEPSEEK_BASE_URL` and `DEEPSEEK_MODEL` at any OpenAI-compatible endpoint (including a fine-tuned DeepSeek/OpenAI deployment). No application code needs to change. Document the checkpoint and evaluation in this section if you add one.
+
+> **Status:** this project implements domain adaptation through RAG and prompting, not weight fine-tuning. If the course brief requires a trained checkpoint, add the training/evaluation artefacts or present this as the implemented alternative, and state the difference clearly.
+
+---
+
+## 3. The five workflows
+
+| Step | Entry point | Input | Output | Main implementation |
+|---|---|---|---|---|
+| **Find inspiration** | `Find inspiration` chip → choose genre → describe a feeling | Genre + a place/mood/keywords (e.g. “Hong Kong, rainy night, loneliness”) | 2–3 “style → theme → matching film” sets, 2×2 stills, original-film link, then an offer to write the script | `tools.inspiration_films`, `catalog.semantic_candidates`, `PROMPT_INSPIRATION_FILMS` |
+| **Check / write a script** | `Script check / write` chip or paperclip | Uploaded script, or a theme | Coverage report, or a logline + standard-format screenplay; optional reformat and PDF | `tools.script_tool`, `PROMPT_REVIEW`, `PROMPT_SCRIPT_REFORMAT`, `PROMPT_SCRIPT_LOG_LINE`, `/api/script/pdf` |
+| **Storyboard** | `Storyboard` chip | A script (required) | Scene-by-scene shot list (3 shots per scene in the offline rule path; 8–20 in the online prompt), coverage notes, CSV | `tools.storyboard_tool`, `split_script_scenes`, `PROMPT_STORYBOARD_SCRIPT` |
+| **Shooting plan** | `Shooting plan` chip | The most recent storyboard + preferences | Crew, gear, locations, shooting days, risks, `.ics` calendar | `tools.schedule_tool`, `PROMPT_SHOOTING_PLAN`, `SchedulePanel` |
+| **+ Reference film** | `+ Reference film` | Bilibili/YouTube link, optional title and moods | Saved film with metadata, stills and a taste profile used by later prompts | `personal_library.py`, `/api/library/personal` |
+
+### A typical demo path
+
+1. **Find inspiration** → Film → “香港 雨夜 旧楼 孤独 身份流动”.
+2. Read the style/theme/matching film sets; reply **“写剧本”** to write the script for Theme 1.
+3. Upload the generated script (or your own) and choose **Script check / write** → review, then **“改成标准格式”** → download PDF.
+4. Choose **Storyboard** → inspect the shot list → download CSV.
+5. Choose **Shooting plan** → type “避开 11月20–22日，3 天内拍完，每天 10 小时” → download `.ics`.
+6. Add a favourite film with **+ Reference film**, then repeat step 1 and notice the recommendation shift toward that taste.
+
+---
+
+## 4. Quick start
+
+### 4.1 Prerequisites
+
+| Requirement | Version / notes |
+|---|---|
+| Python | **3.12+** recommended; tested on **3.14.7** in the development environment |
+| Node.js + npm | **Node 22.12+** (Vite 7 requirement); npm 10+ |
+| Browser | Chrome or Edge recommended for microphone and speech synthesis |
+| Disk | The repository includes about 130 MB of film stills and 2,600 catalog images; `node_modules` and the Python virtual environment add more |
+| Optional | `sentence-transformers` for dense retrieval; a DeepSeek key for online chat; an AI Gateway/OpenAI key for server-side Whisper |
+
+### 4.2 macOS / Linux
+
+From the repository root:
 
 ```bash
+# 1. Python environment
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-```
 
-**Windows**
-
-```bat
-python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
-
-### 2. Build the React frontend
-
-Run the same commands on either platform.
-
-```bash
+# 2. React frontend (FastAPI serves the built dist/)
 cd filmmate-web
 npm ci
 npm run build
 cd ..
+
+# 3. Optional configuration
+cp .env.example .env
+# edit .env and add DEEPSEEK_API_KEY if you want online generation
+
+# 4. Start
+# macOS (or double-click start.command in Finder):
+./start.command
+
+# Linux / manual:
+.venv/bin/python app.py
 ```
 
-The build writes to `filmmate-web/dist/`. Run `npm run build` inside `filmmate-web` again after changing the frontend.
+Open **http://127.0.0.1:8000**.
 
-### 3. Configure online chat and voice input (optional)
+`start.command` is the macOS launcher: it checks the virtual environment, the built frontend, whether the service is already running, and writes startup output to `start.log`. On Linux, use the manual command above.
 
-Copy `.env.example` to `.env` in the repository root. If you already have a `.env`, edit that file. Set `AI_GATEWAY_API_KEY` to use **Gemini 4 Hydrogen** for chat and **Whisper** for voice transcription through Vercel AI Gateway.
+### 4.3 Windows
+
+From the repository root (PowerShell or Command Prompt):
+
+```bat
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+cd filmmate-web
+npm ci
+npm run build
+cd ..
+
+copy .env.example .env
+rem edit .env and add DEEPSEEK_API_KEY if needed
+
+start.bat
+```
+
+Open **http://127.0.0.1:8000**.
+
+`start.bat` calls `start-filmmate.ps1`, which performs the same checks as the macOS launcher.
+
+### 4.4 Manual launch
+
+```bash
+.venv/bin/python app.py
+# Windows: .venv\Scripts\python.exe app.py
+```
+
+Useful options:
+
+```bash
+PORT=8080 .venv/bin/python app.py       # macOS/Linux
+set PORT=8080 && .venv\Scripts\python.exe app.py   # Windows CMD
+```
+
+The server binds to `127.0.0.1` by default. To expose it on a LAN, set `HOST=0.0.0.0` and open the port deliberately; the defaults are local-only.
+
+### 4.5 Run offline (no API key)
+
+Leave `DEEPSEEK_API_KEY`, `AI_GATEWAY_API_KEY` and `OPENAI_API_KEY` blank. The app starts in **offline demo mode**:
+
+- Domain Q&A, script review, storyboard, Rundown, shooting plan and inspiration all work from local data and rules.
+- Script upload, PDF export, conversation storage and the catalog work.
+- Script **generation** and **reformatting** require the model and will show a clear message instead of a fake result.
+- Server-side Whisper is unavailable; the microphone uses browser `SpeechRecognition` instead.
+
+This is the recommended mode for a live demo if the venue network is unreliable.
+
+### 4.6 Run online
+
+Edit `.env`:
+
+```ini
+DEEPSEEK_API_KEY=your_key_here
+DEEPSEEK_MODEL=deepseek-flash
+# DEEPSEEK_BASE_URL=https://api.deepseek.com
+```
+
+Restart the app after changing `.env`. `deepseek-flash` was the model used in the final regression; the provider only accepts the model names it currently publishes, so check the DeepSeek console before changing `DEEPSEEK_MODEL`.
+
+If you do not have a DeepSeek key, the same `.env` can use Vercel AI Gateway for chat:
 
 ```ini
 AI_GATEWAY_API_KEY=your_gateway_key
-# GATEWAY_CHAT_MODEL=google/gemini-4-hydrogen
+GATEWAY_CHAT_MODEL=google/gemini-4-hydrogen
 ```
 
-Chat can run offline using local retrieval and templates. The React microphone requires a gateway key or an `OPENAI_API_KEY` for transcription. If you set `DEEPSEEK_API_KEY`, direct DeepSeek takes priority for chat. Restart Filmmate after editing `.env`.
+The provider priority is: per-request key → direct DeepSeek → AI Gateway → offline.
 
-### 4. Launch Filmmate
+### 4.7 Voice input
 
-| Platform | Double-click | Run manually from the repository root |
-|---|---|---|
-| macOS | `start.command` | `.venv/bin/python app.py` |
-| Windows | `start.bat` | `.venv\Scripts\python.exe app.py` |
+Server transcription uses Whisper (`whisper-1`):
 
-Open [Filmmate](http://127.0.0.1:8000). FastAPI serves the React UI and API on the same port. The launchers open the browser automatically. Press **Ctrl+C** to stop the server. On macOS, the launcher writes startup output to `start.log`.
+```ini
+# Option A — Vercel AI Gateway
+AI_GATEWAY_API_KEY=your_gateway_key
+# TRANSCRIBE_MODEL=openai/whisper-1
 
-The original HTML/JavaScript interface is available at [`/legacy`](http://127.0.0.1:8000/legacy).
+# Option B — direct OpenAI
+OPENAI_API_KEY=your_openai_key
+# TRANSCRIBE_MODEL=whisper-1
 
-### Optional development setup
+# Optional
+# TRANSCRIBE_LANGUAGE=zh
+# TRANSCRIBE_PROMPT=以下是影视制作相关的内容,术语包括:分镜、场次、机位、景别、rundown、剧本、后期、调色、收音、打灯。
+```
 
-For React development, run `npm run dev` inside `filmmate-web` and open [Vite](http://localhost:5173). To use live chat in Vite, start the Python server and set `VITE_API_BASE=http://127.0.0.1:8000` in `filmmate-web/.env`. With no API base configured, the standalone Vite app uses mock chat.
+Without either key, the microphone button still works through the browser's `SpeechRecognition` (Chrome/Edge). On quota exhaustion (402) the client switches automatically and remembers the choice.
 
-### Multilingual video sample search
+### 4.8 Development mode
 
-Install `sentence-transformers` in the Python virtual environment to enable semantic sample search.
+Run the API and Vite separately:
 
 ```bash
-python -m pip install "sentence-transformers>=3,<6"
+# terminal 1
+.venv/bin/python app.py
+
+# terminal 2
+cd filmmate-web
+VITE_API_BASE=http://127.0.0.1:8000 npm run dev
 ```
 
-Activate `.venv` first or use its Python executable from step 4. On first startup, FastAPI downloads [Multilingual E5 Small](https://huggingface.co/intfloat/multilingual-e5-small) (about 470 MB) and caches the segment vectors in `data/sample-index/` before accepting requests. Later startups reuse the model and index. The default `EMBEDDING_MODE=auto` falls back to BM25 if initialization fails. Set `EMBEDDING_MODE=bm25` in the root `.env` to skip model loading.
+Open the Vite URL (usually `http://localhost:5173`). If `VITE_API_BASE` is empty, the standalone Vite app uses a local mock transport; this is useful for UI work without the backend.
 
-Live chat can call `search_samples`, and storyboard and inspiration requests look up sample segments automatically. Each search returns up to three matches, with one segment per video. The model embeds each segment's original description, segment keywords, and video tags. Each result includes the timestamp, a link to that moment, and neighboring shot descriptions. Try asking `请找有小鴨在人行道上行走的片段，然後用它的鏡頭順序為寵物短片設計分鏡。`
+To use the server conversation store during development, set in `filmmate-web/.env`:
 
-### 7 分钟演示脚本建议
-1. **剧本医生**(约 1.5 min):发送一段埋了 3 个漏洞的剧本(时间跳变、角色消失、伏笔未回收)
-   → AI 逐一找出,按严重程度分类 + 原文引用 + 修改建议(强调"辅助人决策"的定位);
-2. **分镜建议**(约 1.5 min):上传剧本 → 点"分镜建议" → 展示 shot list 与 SVG 分镜卡片;
-3. **语音问答**(约 1 min):点 🎤 说"拍夜景需要准备什么灯光?" → RAG 回答 + 知识库引用 + 🔊 朗读;
-4. **灵感/参考**(约 1 min):输入"孤独 暗恋" → 按情绪分组的真实电影静帧 + 剧本/原片链接;
-5. **Rundown/日程**(约 1 min):生成通告单 + 导出 CSV;
-6. 讲实现(RAG 双库、Agent 工具调用、提示词注入案例)+ 挑战与限制(约 1.5 min)。
+```ini
+VITE_API_BASE=http://127.0.0.1:8000
+VITE_REMOTE_CONVERSATIONS=1
+```
+
+### 4.9 URLs
+
+| URL | What it is |
+|---|---|
+| `http://127.0.0.1:8000/` | React chat application |
+| `http://127.0.0.1:8000/legacy` | Original HTML/JS chat interface |
+| `http://127.0.0.1:8000/catalog` | Searchable still-frame gallery |
+| `http://127.0.0.1:8000/docs` | FastAPI OpenAPI documentation |
+| `http://127.0.0.1:8000/api/health` | Online status and library counts |
 
 ---
 
-## 🎙️ Phase 2 · 语音输入(voice input)
+## 5. Architecture
 
-点麦克风 → 说话 → 再点一次停止 → whisper-1 转写 → **文字回填输入框,永不自动发送**。
+```
+Browser (React 19 + Vite + TypeScript; Tauri-ready)
+  ├─ SpeechRecognition / MediaRecorder / SpeechSynthesis
+  └─ POST /api/chat  (Vercel AI SDK UIMessage stream; legacy SSE also supported)
+        │
+        ▼
+FastAPI (app.py)
+  ├─ Intent routing (tools.guess_intent)
+  ├─ Question answering
+  │    └─ Agent loop (llm.chat_with_tools) ──► 6 retrieval tools
+  │         ├─ search_knowledge  ──► rag.py        ──► knowledge/*.json
+  │         ├─ search_cases      ──► case_store.py ──► data/library/films_*.json
+  │         ├─ search_scenes     ──► library.py    ──► scenes.json
+  │         ├─ search_shots      ──► library.py    ──► shots.json
+  │         ├─ search_stripboards──► library.py    ──► stripboards.json
+  │         └─ search_samples    ──► sample_search.py ──► _ref/*.json
+  └─ Creative tools (tools.py)
+       ├─ script review / generation
+       ├─ storyboard
+       ├─ Rundown
+       ├─ shooting plan
+       └─ inspiration (catalog.py + personal_library.py)
+        │
+        ▼
+DeepSeek chat completions (OpenAI-compatible, httpx)
+  └─ on failure: per-tool offline fallback + readable error
+        │
+        ▼
+SSE events: start · steps · citations · tool_data · delta · done/error
+        │
+        ▼
+React: tool cards → typed panels (Script / Storyboard / Schedule / Inspiration)
+        └─ downloads: CSV (client) · PDF (server) · ICS (client)
+```
 
-### 文件分工
+### Request lifecycle
 
-| 文件 | 角色 |
-|---|---|
-| `voice_input_api.py` | 后端 `POST /api/transcribe`:校验音频 → 转发上游 → 返回 `{"text": "..."}`;密钥只在服务端 |
-| `filmmate-web/src/hooks/useVoiceInput.ts` | 录音状态机 `idle → requesting → recording → transcribing`;持有 MediaRecorder,任何退出路径都释放麦克风 |
-| `filmmate-web/src/lib/voiceInput.ts` | 选择录音 MIME(webm/opus 优先)、检测环境支持、格式化计时 |
-| `filmmate-web/src/lib/voiceInputApi.ts` | 浏览器端上传音频,把 401/413/429/504 等错误翻译成用户可读文案 |
-| `filmmate-web/src/lib/voiceInputMerge.ts` | 把转写文本并入已有草稿(只补一个空格,不覆盖已输入内容) |
-| `filmmate-web/src/components/MicButton.tsx` | 麦克风按钮:idle / 录音中(显示计时)/ 转写中 |
-| `filmmate-web/src/components/Composer.tsx` | 接线:`onTranscript` → `mergeTranscript` → 写入输入框 |
+1. The client sends either a React `UIMessage[]` envelope with `metadata` or a legacy `{message, history}` body.
+2. `app.py` strips the `【上传剧本】` marker, detects in-chat language commands, and chooses question answering or a creative tool.
+3. Question answering builds a system prompt, a bounded history and optional script/storyboard context, then runs the agent loop (online) or `_qa_offline()`.
+4. Creative tools retrieve context, prompt the model for structured output, normalise it, and fall back to a local implementation on failure.
+5. The generator streams `start`, `steps`, `citations`, `tool_data`, `delta` and `done`/`error`; React maps `tool_data` to a tool card and the correct panel.
+6. `ChatPanel` saves the conversation after a 500 ms debounce and again when the stream finishes.
 
-### 工作流程
+### Online vs offline
 
-1. 点麦克风 → `getUserMedia` 申请权限 → `MediaRecorder` 以 32 kbps 开始录音(`webm/opus`);
-2. 再点一次 / 按 `Enter` → 停止录音,得到音频 `Blob`;
-3. `transcribeAudio()` → `POST {VITE_TRANSCRIBE_BASE}/api/transcribe`(multipart,`file=<audio>`);
-4. 后端检查空音频与 25 MB 上限 → 转发上游 → 返回 `{ "text": "..." }`;
-5. 前端 `mergeTranscript()` 把文字补到光标处,**不发送**,由用户自己按 Enter;
-6. 录音中按 `Esc` 取消;短于 400 ms 视为误触;最长 120 s 自动停止。
+| Capability | Online | Offline |
+|---|---|---|
+| Domain Q&A | DeepSeek + retrieval tools | Local knowledge retrieval + rule router |
+| Script review | LLM coverage + case context | Heuristic timeline / character / dialogue / Chekhov checks |
+| Script generation | LLM | Not available (clear message) |
+| Storyboard | LLM, validated against the script | Rule-based shots for every scene |
+| Rundown / plan | LLM with production constraints | Deterministic stripboard / default plan |
+| Inspiration | LLM over real catalog candidates | Three style templates over real candidates |
+| Voice | Gateway/OpenAI Whisper | Browser `SpeechRecognition` |
+| Conversation storage | Local or remote JSON | Local or remote JSON |
 
-### 使用的模型
-
-| 项 | 值 |
-|---|---|
-| 模型 | `openai/whisper-1`(Gateway 默认)/ `whisper-1`(直连 OpenAI) |
-| 默认上游 | Vercel AI Gateway `POST /v4/ai/transcription-model`(JSON + base64) |
-| 备选上游 | OpenAI `POST /v1/audio/transcriptions`(标准 multipart) |
-| 语言 | `TRANSCRIBE_LANGUAGE`(如 `zh` / `en` / `yue`),不填自动识别 |
-| 术语提示 | `TRANSCRIBE_PROMPT`(仅直连 OpenAI 生效) |
-| 限制 | 25 MB / 60 s 超时 |
-
-> ⚠️ AI Gateway 的 `/v1/audio/transcriptions` 不存在(会 404),转写必须走 v4 端点;
-> `MediaRecorder` 给的 `audio/webm;codecs=opus` 会先去掉 `;codecs=…` 再转发。
+The same payload shape is used in both modes, so the React panels do not branch on mode.
 
 ---
 
-## 💾 Phase 3 · 会话落盘(chat storage)
+## 6. Interface and repository structure
 
-聊天记录 → `UIMessage[]` → dict → **每个会话一个 JSON 文件**,刷新 / 重启后仍在。
+### 6.1 Interface gallery
 
-### 文件分工
+These screenshots are from the current React build with the English UI. They were captured without model calls for deterministic timing; the same panels render online. Generated text follows the request language, so a bilingual answer can contain Chinese content while the application chrome is English.
 
-| 文件 | 角色 |
+The home screen (above) exposes the five workflows: **Find inspiration**, **Script check / write**, **Storyboard**, **Shooting plan** and **+ Reference film**. Filmy sits at the bottom right.
+
+| Find inspiration | Storyboard |
 |---|---|
-| `chat_storage.py` | 存储核心:原子写入(`.tmp` + `os.replace`)、按会话 id 加锁、id 正则校验、损坏文件隔离、标题推导 |
-| `chat_storage_api.py` | 5 个 REST 路由 + Pydantic 校验,把存储异常翻译成 400 / 404 / 500 |
-| `chat_storage_langchain.py` | 预留:LangChain `BaseMessage.to_dict()` ↔ dict(未接线,未加入 requirements) |
-| `filmmate-web/src/lib/conversations.ts` | `ConversationRepository` 接口:`LocalRepository`(localStorage)/ `RemoteRepository`(REST),按环境变量选择 |
-| `app.py` | 注册 `/api/transcribe` 与 `/api/conversations` 两个 router |
+| ![A matching film with a 2x2 still grid](docs/screenshots/feature-inspiration.png) | ![A scene-by-scene storyboard table with a CSV button](docs/screenshots/feature-storyboard.png) |
+| *Each recommendation pairs a real film with a 2×2 still grid, mood tags and a link to the original.* | *The storyboard is a typed table with logline, shot size, angle, movement, duration, frame, sound and a CSV download.* |
 
-### 工作流程
+| Shooting plan | + Reference film |
+|---|---|
+| ![Shooting days with a calendar download](docs/screenshots/feature-shooting-plan.png) | ![The reference-film form](docs/screenshots/feature-reference-film.png) |
+| *The plan shows preferences, crew/gear context, shooting days and a one-click `.ics` calendar.* | *Saved Bilibili/YouTube films become a taste profile for later inspiration and script prompts.* |
 
-1. **新建会话** → `PUT /api/conversations/<id>`,body `{"messages": []}` → 生成 `<id>.json`,标题暂为「新对话」;
-2. **自动保存** → 发送消息后 500 ms debounce,以及回复结束(`ready` / `error`)时强制保存 → `PUT` 全量 `messages` → 原子重写文件;标题自动取第一条 user 消息(截 24 字);
-3. **侧栏列表** → `GET /api/conversations` → 读取目录下所有 JSON 的 `id / title / createdAt / updatedAt`,按 `updatedAt` 倒序;
-4. **打开会话** → `GET /api/conversations/<id>` → 返回 `{ messages }`;
-5. **重命名** → `PATCH /api/conversations/<id>`;**删除** → `DELETE /api/conversations/<id>`。
+### 6.2 Repository structure
 
-### 落盘格式
+Key files and directories:
 
-`data/conversations/<id>.json`:
+```text
+AI Chatbot/
+├── app.py                          # FastAPI entry: /api/chat, SSE/UIMessage encoding, routers
+├── config.py                       # .env loading, provider selection, limits, paths
+├── llm.py                          # DeepSeek client, JSON extraction/retry, agent loop, tool schema
+├── tools.py                        # intent routing, creative tools, offline implementations
+├── prompts.py                      # system prompts and JSON schemas for every tool
+├── rag.py                          # knowledge retrieval (BM25 / optional dense vectors)
+├── case_store.py                   # script+film and short-film case library
+├── library.py                      # scene, shot, stripboard and sample-pattern retrieval
+├── catalog.py                      # 260-title catalog, genre filter, inspiration candidates
+├── sample_search.py                # timestamped video-segment search (BM25 / E5 vectors)
+├── voice_input_api.py              # POST /api/transcribe (Gateway v4 / OpenAI adapter)
+├── script_api.py                   # PDF/DOCX/TXT parsing and screenplay PDF export
+├── chat_storage.py                 # atomic JSON conversation store
+├── chat_storage_api.py             # /api/conversations REST routes
+├── chat_storage_langchain.py       # reserved LangChain adapter; not imported
+├── personal_library.py             # saved reference films and taste context
+├── personal_api.py                 # /api/library/personal routes
+├── frames.py                       # Bilibili preview-frame extraction helper
+├── requirements.txt                # Python dependencies
+├── .env.example                    # backend configuration template
+├── start.command                   # macOS one-click launcher
+├── start.bat                       # Windows one-click launcher
+├── start-filmmate.ps1              # PowerShell implementation used by start.bat
+├── README.md                       # this document
+├── CHANGELOG.md                    # English release history
+│
+├── knowledge/
+│   └── knowledge.json              # 78 base knowledge entries
+│
+├── data/
+│   ├── library/
+│   │   ├── knowledge_extra.json    # 120 extended knowledge entries
+│   │   ├── films_scripted.json     # 16 script + film pairs
+│   │   ├── films_real.json         # 78 verified short films
+│   │   ├── scenes.json             # 40 scene patterns
+│   │   ├── shots.json              # 60 shot patterns
+│   │   ├── stripboards.json        # 7 professional stripboard templates
+│   │   ├── samples_enriched.json   # 50 annotated videos / 504 shot segments
+│   │   └── catalog.json            # 260 titles and 2,600 still paths
+│   ├── catalog_src/                # curated source lists used to rebuild catalog.json
+│   ├── personal/                   # user's reference films (local, gitignored)
+│   └── conversations/              # one JSON file per conversation (local, gitignored)
+│
+├── _ref/
+│   └── AI-Project/AI-Project/      # annotated sample-video source for sample_search
+│
+├── static/
+│   ├── index.html                  # legacy HTML/JS interface served at /legacy
+│   ├── style.css                   # legacy theme
+│   ├── app.js                      # legacy SSE/voice/panel logic
+│   ├── catalog.html                # searchable still-frame gallery
+│   └── frames/                     # film and catalog stills
+│
+├── filmmate-web/                   # React 19 + Vite + TypeScript client
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tsconfig*.json
+│   ├── .env.example                # VITE_API_BASE / VITE_REMOTE_CONVERSATIONS
+│   ├── README.md                   # frontend-specific guide
+│   ├── docs/CONTRACT.md            # message contract shared with the backend
+│   ├── src/
+│   │   ├── App.tsx                 # app shell, sidebar, language toggle, conversations
+│   │   ├── main.tsx
+│   │   ├── components/
+│   │   │   ├── ChatPanel.tsx       # useChat, transport, autosave, metadata hand-off
+│   │   │   ├── Composer.tsx        # input, tool chips, genre picker, upload, mic
+│   │   │   ├── MessageList.tsx     # scrolling, back-to-latest, skeletons
+│   │   │   ├── AssistantMessage.tsx # text/tool/reasoning, copy, read aloud, regenerate
+│   │   │   ├── Sidebar.tsx         # new chat, rename, delete, mode badge
+│   │   │   ├── EmptyState.tsx      # five home entry points
+│   │   │   ├── MicButton.tsx       # recording/transcribing states
+│   │   │   ├── Filmy.tsx           # 2D companion, walk/faces/download guide/RPS
+│   │   │   └── parts/
+│   │   │       ├── ToolCard.tsx    # tool status, timing, raw JSON, panel dispatch
+│   │   │       ├── ScriptPanel.tsx
+│   │   │       ├── StoryboardPanel.tsx
+│   │   │       ├── SchedulePanel.tsx
+│   │   │       └── InspirationPanel.tsx
+│   │   ├── hooks/useVoiceInput.ts  # recording state machine + browser fallback
+│   │   ├── lib/
+│   │   │   ├── contract.ts         # protocol normalisation and view models
+│   │   │   ├── transport.ts        # FastAPI transport vs local mock
+│   │   │   ├── conversations.ts    # localStorage / remote conversation repository
+│   │   │   ├── i18n.tsx            # Chinese/English UI and language commands
+│   │   │   ├── voiceInput*.ts      # MIME selection, upload, transcript merge
+│   │   │   └── utils.ts            # speech synthesis, copy, time formatting
+│   │   ├── mock/                   # standalone UI demo engine
+│   │   └── styles/                 # dark cinema theme and code highlighting
+│   ├── scripts/
+│   │   ├── build-samples.mjs       # rebuild mock sample data
+│   │   ├── smoke-current.mjs       # browser smoke test for the current UI
+│   │   └── capture-features.mjs    # regenerate README screenshots
+│   └── src-tauri/                  # optional Tauri 2 desktop shell
+│
+├── docs/
+│   ├── FEATURES_AND_IMPLEMENTATION.md                  # feature and integration report
+│   ├── Filmmate_Feature_Description_and_Implementation.docx
+│   ├── Filmmate_Feature_Description_and_Implementation.pdf
+│   ├── DATA_SCHEMA.md              # data fields and quality rules
+│   ├── FILM_CATALOG.md             # catalog documentation
+│   ├── FILM_DATABASE.md            # script+film database documentation
+│   ├── CATALOG_GUIDE.md            # how to rebuild/verify the catalog
+│   └── screenshots/                # README and report screenshots
+│
+└── scripts/
+    ├── validate_data.py            # schema/enum/totals validation
+    ├── eval_retrieval.py           # 19-query retrieval evaluation
+    ├── build_catalog.py            # catalog build/export pipeline
+    ├── build_scripted_films.py     # script+film matching and verification
+    ├── build_frames.py             # Bilibili preview-frame extraction
+    ├── build_real_films.py         # verified short-film metadata
+    ├── enrich_samples.py           # sample annotation enrichment
+    ├── export_film_database.py     # database exports
+    ├── strict_clean.py             # suspicious-link review
+    ├── add_catalog_rows.py         # merge extra catalog rows
+    └── build_feature_docx.py       # rebuild the feature report DOCX
+```
+
+The root Python directory is the production backend. The `static/` HTML/JS client is kept as a compatibility interface at `/legacy`; the React client is the main UI.
+
+---
+
+## 7. Data assets
+
+| Asset | Count | Notes |
+|---|---|---|
+| Knowledge entries | **198** | 78 base + 120 extended; filmmaking concepts, workflow, Hong Kong locations, safety |
+| Script + film pairs | **16** | Each has a scriptslug screenplay PDF and a playable Bilibili copy |
+| Verified short films | **78** | Bilibili metadata with `verified_at`; used as the case library fallback |
+| Catalog titles | **260** | Nine genres; 2,600 stills |
+| Scene patterns | **40** | Dramatic function, beats, staging, lighting, sound, page eighths, shoot minutes |
+| Shot patterns | **60** | Size, angle, movement, lens, purpose, pitfalls |
+| Stripboard templates | **7** | Single-day ad, product demo, MV, multi-day short, documentary, corporate, feature |
+| Annotated video samples | **50 / 504 shots** | Timestamped segments + neighbouring shots for storyboard references |
+
+### Provenance rules
+
+- **Film records** are metadata verified against Bilibili/YouTube; they include `bvid`, `url` and `verified_at`. The scripted library only contains titles for which both a screenplay and a playable copy were found. Unmatched candidates are recorded in `misses`, not forced into the library.
+- **Scene / shot / stripboard libraries** are editorial method libraries written by the team, not claims about a specific film.
+- **Generated content** (scripts, shot lists, schedules) is presented as a suggestion and is never merged into the verified library.
+- **Stills** are platform preview frames, not full-resolution screenshots. They are low resolution by design and are used for inspiration only.
+
+Full field definitions are in [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md). The feature report is in [`docs/FEATURES_AND_IMPLEMENTATION.md`](docs/FEATURES_AND_IMPLEMENTATION.md), with a Word/PDF version under [`docs/`](docs/).
+
+---
+
+## 8. Configuration
+
+Create `.env` from `.env.example` in the repository root. The frontend has its own `filmmate-web/.env` (also from `.env.example`).
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `DEEPSEEK_API_KEY` | empty | Direct DeepSeek key. If empty, the app tries Gateway, then offline. |
+| `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` | Any OpenAI-compatible chat endpoint, including a fine-tuned deployment. |
+| `DEEPSEEK_MODEL` | `deepseek-chat` in `config.py`; `deepseek-flash` in the submitted `.env` | Chat model id. Use a model the provider currently publishes. |
+| `AI_GATEWAY_API_KEY` | empty | Vercel AI Gateway key (chat fallback and Whisper). |
+| `GATEWAY_CHAT_MODEL` | `google/gemini-4-hydrogen` | Chat model when Gateway is used. |
+| `OPENAI_API_KEY` | empty | Direct OpenAI key for transcription. |
+| `TRANSCRIBE_MODEL` | auto | `openai/whisper-1` for Gateway; `whisper-1` for OpenAI. |
+| `TRANSCRIBE_LANGUAGE` | auto | Optional ISO code, e.g. `zh`, `en`. |
+| `TRANSCRIBE_PROMPT` | film terms | Whisper vocabulary hint (direct OpenAI only). |
+| `LLM_MAX_TOKENS` | `2000` in code; `6000` in the submitted `.env` | Hard output cap; prevents runaway generations. |
+| `RAG_TOP_K` | `3` | Number of knowledge hits. |
+| `EMBEDDING_MODE` | `auto` | `auto`, `bm25` or `dense`; `bm25` avoids loading a model. |
+| `HOST` / `PORT` | `127.0.0.1` / `8000` | Bind address and port. |
+| `CONVERSATIONS_DIR` | `data/conversations` | Server conversation store. |
+| `VITE_API_BASE` | empty | Frontend API base; empty in the FastAPI-served build means same origin. |
+| `VITE_REMOTE_CONVERSATIONS` | `0` | `1` = use `/api/conversations`; otherwise `localStorage`. |
+| `VITE_TRANSCRIBE_BASE` | `http://127.0.0.1:8000` | Voice endpoint base. |
+
+> **Secrets:** `.env` is gitignored. Never commit a real key. The browser never receives the provider key; it only calls the local backend.
+
+### Optional: dense retrieval
+
+```bash
+.venv/bin/python -m pip install "sentence-transformers>=3,<6"
+```
+
+With `EMBEDDING_MODE=auto`, the knowledge and case retrievers use multilingual embeddings and cache vectors under `vectors/`. The sample-video index uses `intfloat/multilingual-e5-small` (about 470 MB on first startup). If the model is unavailable, the system falls back to BM25. Set `EMBEDDING_MODE=bm25` to skip loading entirely.
+
+---
+
+## 9. API
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/api/health` | Online status, knowledge/case/library counts |
+| `POST` | `/api/chat` | Streaming chat (React `UIMessage` or legacy SSE) |
+| `POST` | `/api/transcribe` | Audio upload → transcript |
+| `GET` | `/api/transcribe/status` | Whether server transcription is configured |
+| `POST` | `/api/script/parse` | PDF/DOCX/TXT/MD/Fountain → plain text |
+| `POST` | `/api/script/pdf` | Generated script → PDF |
+| `GET` | `/api/library/personal` | List saved reference films |
+| `POST` | `/api/library/personal` | Add a Bilibili/YouTube reference |
+| `DELETE` | `/api/library/personal/{id}` | Remove a reference |
+| `GET` | `/api/conversations` | List conversation metadata |
+| `GET` | `/api/conversations/{id}` | Load messages |
+| `PUT` | `/api/conversations/{id}` | Save full message list |
+| `PATCH` | `/api/conversations/{id}` | Rename |
+| `DELETE` | `/api/conversations/{id}` | Delete |
+| `GET` | `/catalog` | Searchable still-frame gallery |
+| `GET` | `/legacy` | Legacy HTML/JS interface |
+
+Full interactive documentation: **http://127.0.0.1:8000/docs**.
+
+Minimal health check:
+
+```bash
+curl http://127.0.0.1:8000/api/health
+```
+
+Expected shape:
 
 ```json
-{
-  "version": 1,
-  "id": "conv-m3k2j1-a1b2c3",
-  "title": "第四場夜戲,先拍全景再切近景。",
-  "createdAt": 1762900000000,
-  "updatedAt": 1762900131000,
-  "messages": [
-    { "id": "m1", "role": "user",
-      "parts": [{ "type": "text", "text": "第四場夜戲,先拍全景再切近景。" }] },
-    { "id": "m2", "role": "assistant",
-      "parts": [{ "type": "text", "text": "收到,先 wide shot 再 close-up。" }] }
-  ]
-}
+{"ok":true,"online":true,"knowledge_entries":198,"case_count":16,
+ "library":{"scenes":40,"shots":60,"stripboards":7,"samples":50,"sample_shots":504}}
 ```
-
-- `messages` 就是前端 `UIMessage[]` 原样落盘(text / tool-call / reasoning 等 part 都保留);
-- `createdAt` / `updatedAt` 是**毫秒时间戳**(number),与前端 `ConversationMeta` 一致;
-- `version` 用于 schema 演进:未知版本只跳过,不擅自改写。
-
-### 存储位置
-
-| 项 | 值 |
-|---|---|
-| 默认目录 | 仓库根目录 `data/conversations/`(可用 `CONVERSATIONS_DIR` 覆盖) |
-| 文件命名 | `<conversation-id>.json`,一个会话一个文件 |
-| 是否进仓库 | 目录保留(`data/conversations/.gitkeep`),会话 JSON 不提交(`.gitignore`) |
-| 开启方式 | `filmmate-web/.env`:`VITE_API_BASE=http://127.0.0.1:8000` + `VITE_REMOTE_CONVERSATIONS=1` |
-| 关闭方式 | `VITE_REMOTE_CONVERSATIONS=0`(退回浏览器 localStorage,不产生文件) |
 
 ---
 
-## 🎭 灵感 = 参考案例（已合并）
+## 10. Verification and tests
 
-底部的「灵感」现在是唯一入口，不再有单独的「参考案例」：
-
-- 输入一个主题（如「孤独 暗恋」），会先给出 3 个概念，再按**情绪分组**列出真实电影静帧：
-  `孤独 → 爱尔兰人 / 小丑`、`温暖 → 绿皮书 / 小妇人`、`压抑 → 奥本海默 / 利益区域` …
-- 静帧不是封面：用 B 站官方 `videoshot` 帧拼图裁出**整部片均匀分布的 6 帧真实画面**，点卡片可看 6 帧大图；
-- 每张静帧都带 **▶ 原片（Bilibili）** 和 **📄 剧本（scriptslug PDF）**；
-- 情绪分组优先匹配你输入的情绪词，其余按库内该情绪的影片数量排序；
-- 点「我的库」可以粘贴 Bilibili 链接、填情绪标签，还可以**附一份剧本（PDF/DOCX）**；个人条目存本机 `data/personal/`（不进仓库），会自动混入情绪分组并标「我的」。
-
-> 逐帧来源：B 站播放器预览帧（`/x/player/videoshot`，10×10 拼图，480×270/帧），
-> 不下载整部影片；生成脚本 `python3 scripts/build_frames.py`，图片在 `static/frames/<bvid>/`。
-> 这不是原片全分辨率截图，画质有限；如需 1080p 帧，需要下载原片后用 ffmpeg 抽取（版权/体积另议）。
-
-![情绪分组灵感](docs/screenshots/moods.png)
-
-## 📎 剧本上传（PDF / DOCX / TXT）
-
-剧本检查、分镜建议、Rundown、日程规划都要求**先有剧本**：
-
-1. 点输入框左侧 **📎**，选择 PDF / DOCX / TXT / Markdown / Fountain（≤ 15 MB）；
-2. 服务端解析为纯文本（PDF 用 `pypdf`，DOCX 用 `python-docx`），页面显示「文件名 · 字数 · 已就绪」；
-3. 选择功能并发送。没有剧本时点这四个功能，会提示先上传；
-4. 灵感 / 参考案例不需要剧本，直接输入题材即可。
-
-> 扫描版 PDF 若没有文字层，会提示需要先 OCR；文件只在内存中解析，不落盘。
-
-## 🪟 极简界面
-
-界面只保留三样东西：**顶部的 Filmmate logo、中间对话区、底部功能栏 + 输入框**。
-原来的顶部导航、状态徽章、设置抽屉、示例剧本卡片全部移除；API Key 改由根目录 `.env` 配置。
-
-## 🗂️ 数据层 v2（2026-11-13 大幅扩充）
-
-原来的数据只有「50 个视频 + 78 条知识 + 10 个案例」，样本格式也只有 `time_start/time_end/description`，
-撑不起专业的剧本审阅、分镜和通告单。现在扩充为五类可检索资料：
-
-| 数据 | 数量 | 内容 |
-|---|---|---|
-| 专业知识库 | **198 条**（78 + 120 条扩充） | 剧本结构/审阅、人物、对白、类型片、场面调度、灯光、收音、剪辑、制片、通告单、场记、预算、勘景、香港拍摄、安全法规、后期交付 |
-| 剧本 + 原片双源库 | **15 部**（36 部候选，严格匹配片长/单 P） | 每部同时有 **scriptslug 剧本 PDF** 与 **Bilibili 原片**，人工按情绪标注（孤独/压抑/浪漫/荒诞…） |
-| 真实短片库 | **78 部** | Bilibili 公开 API 校验的短片/动画元数据（504 镜头解析）；目前作为独立样本保留，不混入「剧本+原片」情绪分组 |
-| 场面模式库 | **40 个** | 每类戏的戏剧功能、节拍结构、冲突/潜台词、走位调度、建议镜头、光线声音、页数与拍摄分钟估算 |
-| 镜头模式库 | **60 个** | 景别/机位/运镜/焦段/帧率/光线/声音/叙事用途/常见误用 |
-| 通告单模板 | **7 套** | 单日广告、产品 demo、MV、3 天短片、纪录访谈、企业宣传片、8 天长片；`crew_call → setup → scene → move → meal → wrap` + 页数/时长合计 |
-| 视频样本 | **50 个 / 504 镜头** | 在原时间码+描述基础上，自动解析出景别、机位、运镜、日夜、光线、节奏统计与场景分组（标注 `derived=true`，是推断而非原片分析） |
-
-> **数据真实性**：早期原型里的 10 部案例和后来生成的 9 部「合成教学案例」**已全部删除**，不再进入检索。
-> 「剧本 + 原片」库只收录 scriptslug 有剧本 PDF、且 Bilibili 有原片（时长与真实片长误差 ≤15 分钟、单 P）的电影；
-> 匹配不到的 21 部直接列在 `misses` 里，不硬凑。
-> 真实短片库的每条记录都带 `bvid`、`url`、`verified_at`，可用 `scripts/validate_data.py` 复核；
-> 场面/镜头/通告单模板属于**编辑整理的方法库/行业模板**，不是影片档案，UI 与文档均已标注。
-
-**完整字段规范见 [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md)。**
-
-### 这些数据怎么用
-
-- 问答 Agent 有 **6 个检索工具**：`search_knowledge` / `search_cases` / `search_scenes` / `search_shots` / `search_stripboards` / `search_samples`；
-- 五个创作工具在生成前会先检索对应资料（案例 + 场面 + 镜头 + 通告单模板）注入提示词；
-- **Rundown 输出升级为 stripboard**：场次号、INT/EXT、场景标题、日/夜、演员、地点、页数（1/8 页）、预计拍摄分钟、company move、meal、cast calls、收工合计；
-- **分镜输出升级为 shot list**：每场先给 coverage（master/OTS/singles/inserts），每个镜头带焦段、光线、声音、目的、转场；
-- **日程输出升级为 DOOD**：每天页数/时长/转场/用餐合计、演员档期、风险与备案；
-- 离线模式（没有 API Key）也能生成上述结构，数据全部来自本地资料库。
-
-### 维护脚本
+Run these from the repository root unless noted.
 
 ```bash
-python3 scripts/validate_data.py     # 校验 schema / 枚举 / totals 求和一致性
-python3 scripts/eval_retrieval.py    # 18 条代表性查询的检索命中率（当前 18/18）
-python3 scripts/enrich_samples.py    # 重新从 _ref 样本生成富化数据
+# 1. Python syntax / imports
+.venv/bin/python -m compileall -q app.py config.py llm.py tools.py rag.py case_store.py \
+  library.py catalog.py sample_search.py prompts.py voice_input_api.py script_api.py \
+  chat_storage.py chat_storage_api.py personal_library.py personal_api.py frames.py
+
+# 2. Data integrity (schema, enums, totals)
+.venv/bin/python scripts/validate_data.py
+
+# 3. Retrieval quality (19 queries across five indexes)
+.venv/bin/python scripts/eval_retrieval.py
+
+# 4. Frontend type-check + production build
+cd filmmate-web
+npm run build
+cd ..
+
+# 5. Browser smoke test against the running server
+cd filmmate-web
+FILMMATE_URL=http://127.0.0.1:8000/ node scripts/smoke-current.mjs
+
+# 6. Regenerate the README screenshots (optional)
+FILMMATE_URL=http://127.0.0.1:8000/ node scripts/capture-features.mjs
 ```
+
+Last verified on **17 November 2026**:
+
+- Python compile: passed.
+- `scripts/validate_data.py`: all checks passed.
+- `scripts/eval_retrieval.py`: **19/19 = 100%** in the local BM25 configuration.
+- `npm run build`: passed (Vite reports a large-chunk warning only; the bundle is about 935 KB / 282 KB gzip).
+- `scripts/smoke-current.mjs`: home screen + greeting round-trip, **0 console/page errors**.
+- Offline API checks: health, `/`, `/legacy`, `/catalog`, `/api/chat` (legacy + React), script parse, PDF, conversation CRUD, storyboard, inspiration, Rundown passed.
+
+The smoke test writes screenshots to `filmmate-web/.shots/` (gitignored); `capture-features.mjs` writes the `feature-*.png` images used in the interface gallery.
 
 ---
 
-## 📁 文件结构
+## 11. Troubleshooting
 
-```
-├── app.py               # FastAPI 入口,SSE 流式 /api/chat
-├── config.py            # 配置(读 .env / 环境变量)
-├── llm.py               # DeepSeek 客户端 + Agent 工具调用循环
-├── prompts.py           # 系统提示词与各工具 JSON 规范
-├── rag.py               # 专业知识库检索(BM25 / dense,合并扩充卷)
-├── case_store.py        # 案例库检索(v2 字段)+ 案例上下文构建
-├── library.py           # 场面/镜头/通告单/富化样本的统一加载与检索
-├── tools.py             # 意图识别 + 五个创作工具(在线/离线双实现)
-├── voice_input_api.py   # Phase 2:语音转写 /api/transcribe(whisper-1)
-├── chat_storage.py      # Phase 3:会话 JSON 存储(原子写/加锁/损坏隔离)
-├── chat_storage_api.py  # Phase 3:/api/conversations REST(5 个路由)
-├── chat_storage_langchain.py # Phase 3:LangChain 消息 ↔ dict(预留,未接线)
-├── requirements.txt
-├── .env.example
-├── start.command              # macOS 一键启动(FastAPI 提供 React 界面, 8000)
-├── start.bat                  # Windows 一键启动(FastAPI 提供 React 界面, 8000)
-├── start-filmmate.ps1         # start.bat 调用的 PowerShell 启动脚本
-├── knowledge/knowledge.json   # 专业知识库(基础 78 条)
-├── cases/                    # 已清空（虚构案例已移除，改用 data/library/films_real.json）
-├── data/library/              # 数据层 v2（见 docs/DATA_SCHEMA.md）
-│   ├── knowledge_extra.json   # 扩充知识 120 条
-│   ├── scenes.json            # 场面模式 40 个
-│   ├── shots.json             # 镜头模式 60 个
-│   ├── stripboards.json       # 通告单模板 7 套
-│   ├── films_real.json       # 真实短片库 78 部（Bilibili，含核验时间）
-│   └── samples_enriched.json  # 50 个视频样本的专业富化
-├── docs/DATA_SCHEMA.md        # 数据 schema 与质量规范
-├── scripts/validate_data.py   # 数据校验
-├── scripts/eval_retrieval.py  # 检索评测
-├── scripts/enrich_samples.py  # 样本富化
-├── scripts/build_scripted_films.py # 剧本+原片双源匹配（scriptslug × Bilibili）
-├── scripts/build_frames.py    # 从 B 站 videoshot 抽真实静帧
-├── static/frames/             # 每部电影 6 张真实静帧
-├── data/conversations/        # Phase 3 会话存储目录(目录保留,会话 JSON 已 .gitignore)
-├── filmmate-web/              # Tauri 2 + React 19 + Vite 前端(见其 README)
-└── static/
-    ├── index.html       # 聊天界面
-    ├── style.css        # 电影风深色主题
-    └── app.js           # SSE 渲染、语音、分镜 SVG、CSV 导出
-```
+| Symptom | Cause / fix |
+|---|---|
+| `/` returns **503** with “Build the React UI…” | `filmmate-web/dist/` is missing. Run `cd filmmate-web && npm ci && npm run build`. |
+| `Address already in use` | Another process is on port 8000. Stop it, or run `PORT=8080 .venv/bin/python app.py` and open the new port. |
+| Chat works but answers are generic | No key configured: you are in offline mode. Check `/api/health` → `"online": false`, then set `DEEPSEEK_API_KEY` and restart. |
+| **402 / 429 / invalid model** | Gateway quota, rate limit, or an unsupported model id. Use a valid DeepSeek model, add `OPENAI_API_KEY`, or continue offline. The UI shows a readable message. |
+| Voice button says unsupported | Use Chrome/Edge; grant microphone permission. Without a server key, browser `SpeechRecognition` is used. |
+| Voice transcription fails with 404 | The Gateway’s OpenAI-compatible `/v1/audio/transcriptions` does not exist; the backend already uses the v4 endpoint. Check that `AI_GATEWAY_API_KEY` is set and the service is restarted. |
+| Uploaded PDF has no text | It is probably a scanned PDF without a text layer. Run OCR first, or upload DOCX/TXT. |
+| CSV opens with garbled Chinese | Use Excel; the client writes a UTF-8 BOM. If a tool ignores it, import as UTF-8. |
+| `sentence-transformers` download is slow | Set `EMBEDDING_MODE=bm25` in `.env`; BM25 is the default fallback and needs no model. |
+| CORS error in Vite dev | Set `VITE_API_BASE=http://127.0.0.1:8000` in `filmmate-web/.env`, start FastAPI, and restart Vite. |
+| `start.command` says venv not found | Create it with `python3 -m venv .venv` and install `requirements.txt` from the repository root. |
+| `start.bat` cannot find Python | Create `.venv` on Windows; `start-filmmate.ps1` expects `.venv\Scripts\python.exe`. |
 
 ---
 
-## ⚠️ 已知限制
+## 12. Known limitations
 
-- **数据库**：当前是 16 部双源长片（剧本 + B 站原片）+ 78 部短片样本；
-  没有 synopsis/导演/类型/年代等结构化字段，搜索以关键词和情绪为主；
-- **剧本理解**：只做文本提取 + LLM/启发式检查，没有场次/角色/人物关系的结构化解析，
-  长剧本会截断，深层动机与潜台词仍可能漏判；
-- **导出**：Rundown 目前只导出 CSV，日程没有 `.ics`，都还没做成一键文件；
-- **2D Avatar**：尚未实现，目前只有文字 + TTS 朗读；
-- 离线模式的剧本检查基于启发式规则，无法做动机、潜台词层面的深度审阅；
-- 语音输入依赖浏览器支持（推荐 Chrome），首次使用需授权麦克风；
-- BM25 检索对同义词不敏感，安装 `sentence-transformers` 后可切换向量检索；
-- 聊天上下文保留最近 6 轮；B 站链接可能随平台下架失效，需重新跑
-  `scripts/build_scripted_films.py` 校验；
-- 航拍等法规信息以官方发布为准。
+- **Domain boundary is prompt-level**, not a separate classifier. A determined off-topic request may still receive a partial answer before being redirected.
+- **Script understanding is textual, not structural.** The parser recognises scene headings and dialogue, but does not build a character graph, beat map or timeline. Long scripts are truncated before review.
+- **Generated production data is a plan, not a guarantee.** Page eighths and shooting minutes are estimates; the system does not know permits, cast availability, travel time or weather.
+- **Memory is session-scoped.** A new conversation does not inherit the previous one; the reference library is the only long-term preference store.
+- **Retrieval is lexical by default.** BM25 is sensitive to wording and synonyms; dense retrieval is optional and depends on a local model download. The 19-query evaluation is a smoke test, not a benchmark.
+- **Voice depends on the browser/provider.** Server transcription needs a funded key; browser recognition is best in Chrome/Edge.
+- **Exports are functional, not styled.** CSV and `.ics` are correct; a styled `.xlsx` call sheet and richer PDF template are future work.
+- **Film data can go stale.** Links and platform metadata change outside the project; `verified_at` records when they were checked.
+- **No formal user study.** Evaluation is demo regression, retrieval evaluation and data validation.
+- **No weight fine-tuning.** See [§2.4](#24-a-note-on-the-fine-tuned-llm).
 
+The full discussion of technical challenges and remaining limitations is in [`docs/FEATURES_AND_IMPLEMENTATION.md`](docs/FEATURES_AND_IMPLEMENTATION.md) (Sections 6 and 7), and in the [DOCX report](docs/Filmmate_Feature_Description_and_Implementation.docx).
 
-## 🎞 影视灵感目录（Catalog：可看原片 + 每部 10 张静帧）
+---
 
-给「用户灵感 → 选题材 → LLM 生成创作思路 → 推荐相似作品」用的影片库：
+## 13. Repository hygiene
 
-- **规模**：261 部 / 9 类（电影、电视剧、长片、短片、竖屏短剧、广告/TVC、教程/产品演示、Vlog/美食、动画），每部 10 张代表性静帧，共 2610 张；
-- **链接**：每条原片链接生成时实测可播放（Bilibili view + storyboard 双校验；YouTube 走 yt-dlp + 官方 storyboard），表格带「链接可信度 / 匹配视频 / UP主 / 核验时间」便于复核；
-- **打开方式**：启动 Filmmate 后访问 http://127.0.0.1:8000/catalog（或 /static/catalog.html），支持按种类/情绪筛选、关键词搜索、点图放大、一键跳原片；
-- **文件**：
-  - data/library/catalog.json：机器可读总库（含 bvid、10 张静帧路径与时间码、标签、可信度）
-  - docs/film_catalog.xlsx / .csv / FILM_CATALOG.md：编号-种类-中文名-英文名-年份-时长-情绪-内容梗概-Tag-原片链接（+ 静帧列）
-  - docs/catalog.html + static/catalog.html：画廊
-  - static/frames/catalog/：2610 张静帧
-- **检索接口**：catalog.py 的 kind_options() / search() / suggest() / prompt_block()；tools.py 的灵感工具已接入，会基于真实作品生成创作思路；
-- **重建/复核**：scripts/build_catalog.py（resolve / frames / export）、scripts/strict_clean.py（错链复核）、scripts/add_catalog_rows.py（合并外部片单）。
+This repository contains a few large/generated directories. They are ignored by Git and are **not** required to be committed:
 
+| Path | Status | Action |
+|---|---|---|
+| `.venv/` | local Python environment | recreate with `python3 -m venv .venv` |
+| `filmmate-web/node_modules/` | local npm dependencies | recreate with `npm ci` |
+| `filmmate-web/dist/` | build output | recreate with `npm run build` |
+| `.env` | local secrets | copy from `.env.example`; never commit |
+| `data/personal/` | user's saved reference films | local data, gitignored |
+| `data/conversations/` | conversation JSON | local data, gitignored; `.gitkeep` kept |
+| `.npm-cache/` | old local npm cache | removed during cleanup |
+| `__pycache__/`, `scripts/__pycache__/` | bytecode | removed; regenerated automatically |
+| `filmmate-web/.shots/` | old Playwright screenshots | removed; current screenshots live in `docs/screenshots/` |
+| `start.log` | launcher log | removed; recreated on launch |
+| `cases/` | empty legacy directory | removed; no runtime code references it |
+| `Filmmate_GroupProject.zip` | old archive | ignored; safe to delete if you do not need the original archive |
+| `_ref/` | annotated sample-video source | **kept**; `sample_search.py` reads it |
+| `static/frames/` | 2,600 film stills | **kept**; required by the inspiration/catalog UI |
+| `data/catalog_build/` | catalog build intermediate | kept for `scripts/build_catalog.py` reruns |
+| `docs/catalog.html` | generated catalog archive | kept; referenced by `docs/CATALOG_GUIDE.md` |
+| `chat_storage_langchain.py` | reserved adapter | kept but **not imported**; documented as future work |
 
-## 🎯 找灵感 v2：先选题材 → 只在对应库里找片 → 风格 / 主题 / 电影 → 确认出分镜
+The cleanup above removed about 240 MB of caches and duplicate screenshots. The remaining large directories are either required to run the app or are local-only build/dependency folders.
 
-「找灵感」现在是入口第一个按钮，流程：
+---
 
-1. 点击 **找灵感** → 先选题材（电影 / 电视剧 / 长片 / 短片 / 竖屏短剧 / 广告/TVC / 教程 / Vlog / 动画）；
-2. 用一句话描述你想要的感觉（例：香港、雨夜、旧楼、孤独、身份流动）；
-3. 后端只在**你选的题材库**里检索真实作品（不会把短片/剧集的例子塞进电影灵感），再用模型生成：
-   - 风格 1（为什么契合「香港」）
-   - 主题 1（从零构思的可拍主题：人物 + 处境 + 冲突）
-   - 契合电影 1（内容 + 3 张静帧 + 原片链接）
-   - 风格 2 / 主题 2 / 电影 2（若有），最多到 3；
-4. 最后反问「要不要按主题 1 出完整分镜？」→ 回复 **出分镜**（或「出分镜：主题名」）→ 输出对应主题的完整分镜表（8–10 个镜头：景别/机位/运镜/时长/画面/声音）。
+## 14. Team and data credits
 
-实现位置：
+**COMP4431 Artificial Intelligence (2026/27) — Group 20.**
+The project is submitted for coursework. Add the final group member names and student IDs here before submission if your course requires them.
 
-- 前端：filmmate-web/src/components/Composer.tsx（题材选择 + 在消息前注入【题材：xxx】）
-- 后端：tools.py 的 inspiration_films / storyboard_from_theme、catalog.py 的 semantic_candidates（含城市/地点线索）、prompts.py 的 PROMPT_INSPIRATION_FILMS / PROMPT_STORYBOARD_THEME
-- 接口：POST /api/chat（React UIMessage 与旧版 SSE 两种格式都支持）；未选题材时会先返回「请先选题材」
-- 自测：
-  - 电影 + 香港 → 只会返回 电影 类目（甜蜜蜜 / 花样年华 / 重庆森林）
-  - 短片 + 孤独 → 只会返回 短片 类目（小城二月 / 她和她的猫 / 地方守护神）
-  - 回复「出分镜」→ 按上一轮「主题 1」生成 8–10 镜分镜
+Data and media:
 
+- Film metadata is sourced from public Bilibili and YouTube APIs; links are verified when the catalog is built.
+- Screenplays are linked from [scriptslug](https://www.scriptslug.com/) and remain the property of their authors.
+- Film stills are platform preview frames used for non-commercial inspiration and study.
+- Scene, shot and stripboard libraries are original editorial material written for this project.
 
-## 🧩 四个板块 v3：找灵感 / 剧本检查·生成 / 分镜建议·生成 / 拍摄计划
-
-输入区顺序与功能：
-
-1. **找灵感**（第一位）
-   - 先选题材（电影/电视剧/长片/短片/竖屏短剧/广告/TVC/教程/Vlog/动画），只在该题材库里检索；
-   - 输出：风格（为什么契合关键词）→ 主题 → 契合电影（内容 + 2x2 四格静帧，可点开放大 + 原片链接），最多 3 组；
-   - 结尾先问「要不要按主题 1 先写剧本？」（不再是直接问分镜）。
-
-2. **剧本检查/生成**
-   - 有上传剧本：先识别是否剧本 → 检查冲突/漏洞 → 反问「要不要改成标准电影剧本格式」→ 改完可下载 PDF；
-   - 没有剧本：按上一轮主题（或「写剧本：主题」）生成「梗要（片名+标题+主题+内容）+ 标准格式剧本」；
-   - 输出面板：梗要卡片 + 可滚动剧本区 + 「下载 PDF」按钮。
-
-3. **分镜建议/生成**
-   - 必须先上传剧本（回形针上传 PDF/DOCX/TXT/MD/Fountain，或粘贴剧本）；
-   - 自动生成梗要（片名+标题+主题+内容）+ 分镜表（镜号/场次/景别/机位/运镜/时长/画面/声音）；
-   - 输出面板：梗要卡片 + 可滚动分镜表 + 「下载 CSV」按钮。
-
-4. **拍摄计划**
-   - 原 Rundown/日程能力，保留。
-
-上传方式：输入区左侧回形针 → 上传后显示「已上传剧本：文件名（n 字）」，之后所有非找灵感的消息都会自动带上剧本原文，直到点「移除」。
-
-接口：POST /api/chat（两种流式协议都支持）、POST /api/script/parse（上传解析）、POST /api/script/pdf（剧本转 PDF）。
-
-## 🔧 v6 更新（2026-11-16 晚）：意图识别 / 板块模式 / 拍摄日历 / 参考片品味
-
-**1. 分镜严格按剧本（修 bug）**
-- 新增容错分场器 split_script_scenes：兼容「1. 内景 便利店 - 深夜」「第1场 内景 …」等格式；
-- 分镜提示词改为逐场覆盖，并做「镜头描述 vs 剧本场次关键词」校验，不匹配自动改用规则分镜；
-- 实测：便利店剧本 3 场 → 11 个镜头，逐场标题一致、剧本关键词命中 11/11。
-
-**2. 找灵感 / 剧本按题材（TVC≠短片）**
-- 每个题材都有独立的「灵感要求」与「剧本格式要求」：广告/TVC 输出 15/30/60 秒广告脚本表（镜头/画面/旁白/字幕/音效/slogan），不是电影剧本；
-- 剧本生成会从历史里识别题材（或「写剧本：主题」+ 题材前缀），输出对应片种格式。
-
-**3. 模糊意图识别**
-- 现在输入「帮我做一个关于香港的短片」「寫一個關於香港的TVC劇本」「根据分镜生成拍摄计划」「检查一下我的剧本」都能猜中对应功能；
-- 并从自然语言里抽出题材（短片/TVC/剧集…）与关键词（香港）。
-
-**4. 板块模式（不再往输入框写「找灵感：」）**
-- 点击「找灵感 / 剧本检查·生成 / 分镜建议·生成 / 拍摄计划」= 进入该功能模式，输入框不再插入任何字样；
-- 当前功能显示在输入框上方提示条，可点「退出该功能」回到自动识别；
-- 前端通过消息 metadata 把 tool/kind/最近剧本/最近分镜带给后端，跨板块衔接不丢上下文。
-
-**5. 每个题材的提示语不同**
-- 选「电影」提示：地点/人物/情绪；「广告/TVC」提示：产品/卖点/人群/想给的感受；「教程」提示：产品与功能；「Vlog/美食」提示：生活切片或美食；「竖屏短剧」提示：强钩子/爽点；「动画」提示：画风与世界观。
-
-**6. 拍摄计划：一键按最近分镜生成 + 下载日历**
-- 点「拍摄计划」直接用对话里最近一版分镜生成：概述 / 人员 / 器材 / 场景 / 拍摄日（call-wrap、场次、要点）/ 风险预案；
-- 前端 SchedulePanel 支持「下载日历（.ics）」，可导入系统日历。
-
-**7. 参考片库（用户自己的电影 + 链接）**
-- 输入区「＋参考片」：填 Bilibili / YouTube 链接（片名可留空），后端自动抓标题/封面/时长，并用模型分析风格标签；
-- 收藏后，找灵感与写剧本的提示词会自动带上「用户已收藏的参考片（代表他的品味）」，推荐更贴近用户口味；
-- 接口：GET/POST/DELETE /api/library/personal。
-
-
-## 🧰 v7 更新（2026-11-16 深夜）：面板位置 / 耗时 / 静帧过滤 / 回车分析 / 额度兜底
-
-- **工具板块移到回答最后**：文字回答在前，灵感/剧本/分镜/拍摄计划卡片统一显示在正文之后。
-- **真实耗时**：后端在 tool_data 里回传 ms，卡片不再永远显示 0ms（实测灵感 ~0.8–1.0s、分镜 ms>0）。
-- **静帧过滤**：新增「黑底字幕卡」检测（画面>60% 纯黑 + 几乎无肤色 + 边缘为文字），抽帧时剔除；若一个上传大部分帧都是字幕卡则判定无效、重新匹配或从目录移除。已重配《三傻大闹宝莱坞》《绿皮书》，移除无合适画面的《初代iPhone使用导览》。当前目录：260 部 / 2600 张静帧（Bilibili 230 + YouTube 30，可信度 高 148 / 中 112）。
-- **上传剧本后回车即分析**：输入框为空也可以直接 Enter，按当前板块执行默认动作（剧本检查 / 出分镜 / 拍摄方案）。
-- **模型额度不足的兜底**：
-  - 问答：自动回退本地知识库并提示原因；
-  - 找灵感：回退规则版（仍按题材划库、带静帧与链接）；
-  - 分镜：回退规则分镜（严格按剧本场次）；
-  - 拍摄计划：回退规则版拍摄日；
-  - 写剧本：明确提示「模型额度已用尽，请更换 AI_GATEWAY_API_KEY / DEEPSEEK_API_KEY」。
-  - 之前出现的 "The chat request failed" 现在会变成可读的原因提示，不会白屏。
-
-
-## v8 更新（2026-11-17）：切换 DeepSeek 官方 API
-
-- .env 改为使用 DEEPSEEK_API_KEY 直连 https://api.deepseek.com，provider 自动切到 deepseek；
-- DeepSeek 官方支持的模型名只有 deepseek-flash / deepseek-v4-pro（deepseek-v4.1-flash 不存在，会报 invalid_request_error）；当前使用 deepseek-flash；
-- 回归实测（全部 online）：
-  - 找灵感（电影+香港）：18.6s，重庆森林 / 甜蜜蜜 / 色，戒；
-  - 找灵感（广告/TVC）：19.7s，梦骑士 / 真美画像 / 雇佣车手；
-  - 写剧本（TVC）：19.8s，film_kind=广告/TVC，《最热的一单》1887 字广告脚本；
-  - 分镜：24.5s，3 场 13 镜，剧本关键词命中 13/13；
-  - 拍摄计划：30.2s，2 个拍摄日 + 2 条日历事件；
-  - 工具耗时显示真实毫秒（不再 0ms）。
-
-
-## 🗓️ v9 更新（2026-11-17）：拍摄计划偏好 + 语音识别兜底
-
-**拍摄计划支持用户偏好**
-- 点「拍摄计划」不再直接开跑，而是进入偏好模式：输入例如「避开 11月20-22日，3天内拍完，每天10小时」「夜戏集中」「场地固定在一个地方」，回车后按偏好排期；
-- 输入框下方提供快捷偏好 chips：3天内拍完 / 避开周末 / 每天10小时 / 夜戏集中 / 日戏为主 / 场地固定；
-- 直接回车 = 按默认排期；生成后可继续提「改成避开周三」「压缩到2天」等，会按最近一版分镜重排；
-- 后端把偏好写进提示词并回传 preferences，面板顶部显示「已按你的偏好安排：…」；
-- 实测：避开 11/20–22、3 天内、每天 10 小时 → 2 个拍摄日（11/17、11/18，17:00–03:00），日历事件日期一致。
-
-**语音转写兜底（DeepSeek 没有语音转写接口）**
-- 服务端 whisper 走的是 AI Gateway，额度用尽会 402；DeepSeek 官方 API 不提供 STT，所以不能再走 DeepSeek；
-- 新增浏览器原生 SpeechRecognition 兜底（Chrome / Edge）：服务端转写遇到 402/未配置时，自动切换到浏览器识别并记住选择，无需任何 API Key；
-- 想恢复服务端高质量转写：在 .env 配置 OPENAI_API_KEY（或给 AI Gateway 充值），也可以继续用浏览器识别；
-- MicButton 会显示「浏览器识别」来源；实测 /api/transcribe 402 已返回可读提示，前端自动切换。
-
-## v10 更新（2026-11-17）：小屏体验 / 中英切换 / 首页改版 / Filmy 小跟班
-
-- 修复生成时「底部颤动」：去掉 .chat-scroll 的全局 smooth 滚动，改成 rAF 节流的 scrollTop 更新，并关闭浏览器滚动锚定（overflow-anchor: none）；用户往上翻时不再强制拉回底部。
-- 中英切换：顶栏右上角 EN / 中文 按钮，UI 文案（首页、输入区、面板、工具卡、按钮）即时切换并记住选择；请求会带 lang，后端提示词让生成内容用英文（梗要/风格/分镜/拍摄计划标题等），片名等专有名词保留原文。
-- 首页改版：删除三张示例卡；改为 5 个板块 chip（找灵感 / 剧本检查·生成 / 分镜建议·生成 / 拍摄计划 / ＋参考片），点任意 chip 显示极短介绍 + 一行操作说明 + 「开始」按钮。
-- Filmy 2D 小跟班（纯 SVG + CSS，极简风，类似 Google 小恐龙）：
-  - 模型思考时移动到中间摆思考姿势，显示三点动画；点它可玩石头剪刀布，生成完成前都能玩；
-  - 点击任意板块会弹出 10 字内可爱提示（中英同步）；
-  - 平时点它有跳跃/挥手反馈 + 一句随机问候；
-  - 页面上出现可下载文件时，会跑到「下载 PDF / CSV / .ics」按钮上趴着，提示下载位置；
-  - 中英文案随语言切换。
-
-## v12 更新（2026-11-17）：聊天里切换语言
-
-- 支持在聊天里输入「切换英文」「用英文回答」「switch to English」「用中文回答」「切换中文」等指令：
-  - 立即切换整个界面语言（并记住选择）；
-  - 后续剧本/分镜/找灵感/问答都按新语言生成；
-  - 如果这条消息只是切换语言，会直接回一句确认，不消耗模型调用。
-- 英文剧本生成改为「先出正文纯文本，再单独出梗要」，避免长 JSON 被截断；并加入空响应重试。
-- 实测：切换英文 → “好的，之后我都用英文回复。”；英文剧本返回英文标题与 English screenplay。
-
-## v13 更新（2026-11-17）：上下文记忆增强
-
-- 结论：chatbot 有「同一会话内」的上下文记忆（前端保存整段会话并每轮上传；后端把历史传给问答与工具），但没有跨会话/跨设备的长期记忆。
-- 之前「感觉没记忆」的原因：
-  1) 问答只带最近 6 条历史；
-  2) 「再换一批 / 继续」这类追问没有继承上一轮的题材，被当成普通问答；
-  3) 含「剧本」二字的提问会被误判成找灵感；
-  4) 问答时看不到当前剧本/分镜内容。
-- 修复：
-  - 问答历史窗口扩大到最近 16 条 / 约 7000 字，并在 system 里注入当前剧本与分镜上下文；
-  - 「再换一批 / 继续 / 再来几个」自动沿用上一轮工具 + 题材/关键词（实测：再换一批 → 电影 · 香港雨夜孤独 → 重庆森林/花样年华/甜蜜蜜）；
-  - 含「剧本」的提问（第一场发生了什么？）改为问答并引用剧本；
-  - 前端在剧本/分镜相关追问时自动附上最近剧本与镜头表。
-- 限制：新建会话不共享记忆；超长对话超出窗口会丢最早内容；参考片库是单独持久化的长期偏好。
+If you reuse this project, keep the data attribution and check the platform terms for any linked film or still.
