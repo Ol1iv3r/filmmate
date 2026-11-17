@@ -183,30 +183,59 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   }
 
   const addReferenceFilm = async () => {
-    if (!refUrl.trim() && !refTitle.trim()) {
-      setRefMsg(t('至少填链接或片名', 'Enter a link or title'))
+    const urls = refUrl
+      .split(/[\s,，、;；]+/)
+      .map((x) => x.trim())
+      .filter(Boolean)
+    if (!urls.length) {
+      setRefMsg(t('至少贴一个 Bilibili / YouTube 链接', 'Paste at least one Bilibili / YouTube link'))
       return
     }
     setRefBusy(true)
     setRefMsg('')
+    const controller = new AbortController()
+    const timer = window.setTimeout(() => controller.abort(), 75_000)
     try {
       const res = await fetch((API_BASE ?? '') + '/api/library/personal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
-          url: refUrl.trim(), title: refTitle.trim(),
+          urls,
+          title: urls.length === 1 ? refTitle.trim() : '',
           moods: refMoods.split(/[,，、]/).map((x) => x.trim()).filter(Boolean),
+          lang,
         }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.detail || t('加入失败', 'Failed'))
-      setRefMsg(t('已加入参考片：', 'Added: ') + (data.film?.title ?? refTitle ?? refUrl) + (data.film?.style_summary ? ' · ' + data.film.style_summary : ''))
+      const films: Array<{ title?: string; style_summary?: string }> = data.films || (data.film ? [data.film] : [])
+      const errors: Array<{ url?: string; error?: string }> = data.errors || []
+      if (!films.length) throw new Error(errors[0]?.error || t('加入失败', 'Failed'))
+      const first = films[0]
+      let message = t(
+        `已加入 ${films.length} 部参考片，并完成风格分析`,
+        `Added ${films.length} reference film${films.length === 1 ? '' : 's'} and analysed the style`,
+      )
+      if (first?.style_summary) message += ` · ${first.style_summary}`
+      if (errors.length) {
+        message += t(
+          `；${errors.length} 条失败：${errors[0]?.error ?? ''}`,
+          `; ${errors.length} failed: ${errors[0]?.error ?? ''}`,
+        )
+      }
+      setRefMsg(message)
       setRefUrl('')
       setRefTitle('')
       setRefMoods('')
     } catch (err) {
-      setRefMsg(err instanceof Error ? err.message : t('加入失败', 'Failed'))
+      if (err instanceof Error && err.name === 'AbortError') {
+        setRefMsg(t('加入超时，请稍后重试', 'Adding timed out; please retry'))
+      } else {
+        setRefMsg(err instanceof Error ? err.message : t('加入失败', 'Failed'))
+      }
     } finally {
+      window.clearTimeout(timer)
       setRefBusy(false)
     }
   }
@@ -341,12 +370,18 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             {t('加入你想参考的电影（AI 会分析风格，并在后续推荐里贴近你的品味）',
               'Add reference films (AI learns the style and tailors recommendations)')}
           </div>
-          <input className="ref-input" placeholder={t('链接（Bilibili / YouTube）', 'Link (Bilibili / YouTube)')} value={refUrl} onChange={(e) => setRefUrl(e.target.value)} />
-          <input className="ref-input" placeholder={t('片名（可不填，会自动抓取）', 'Title (optional, auto-fetched)')} value={refTitle} onChange={(e) => setRefTitle(e.target.value)} />
+          <textarea
+            className="ref-input ref-urls"
+            rows={3}
+            placeholder={t('链接（Bilibili / YouTube），一行一个，可批量粘贴', 'Links (Bilibili / YouTube), one per line — batch paste supported')}
+            value={refUrl}
+            onChange={(e) => setRefUrl(e.target.value)}
+          />
+          <input className="ref-input" placeholder={t('片名（单条链接时可选，会自动抓取）', 'Title (optional for a single link, auto-fetched)')} value={refTitle} onChange={(e) => setRefTitle(e.target.value)} />
           <input className="ref-input" placeholder={t('情绪/标签（逗号分隔，可选）：压抑、长镜头、北欧', 'Moods/tags (optional): bleak, long take, Nordic')} value={refMoods} onChange={(e) => setRefMoods(e.target.value)} />
           <div className="ref-form-actions">
             <button className="panel-btn" onClick={() => void addReferenceFilm()} disabled={refBusy}>
-              {refBusy ? t('分析中…', 'Analyzing…') : t('加入参考片', 'Add reference')}
+              {refBusy ? t('加入并分析中…', 'Adding & analyzing…') : t('加入参考片', 'Add reference film(s)')}
             </button>
             <button className="link-btn" onClick={() => setRefOpen(false)}>{t('收起', 'Close')}</button>
           </div>

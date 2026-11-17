@@ -1445,7 +1445,7 @@ def llm_error_hint(exc: Exception) -> str:
 def _taste_block():
     try:
         import personal_library
-        return personal_library.taste_context()
+        return personal_library.taste_context(lang=_LANG)
     except Exception:  # noqa: BLE001
         return ""
 
@@ -1514,7 +1514,7 @@ def parse_inspiration_kind(message: str):
 
 def _kind_ask_text():
     if _LANG == "en":
-        return ("Pick a genre first: " + " / ".join(KIND_CHOICES) + "\n\n"
+        return ("Pick a genre first: " + " / ".join(KIND_EN.get(k, k) for k in KIND_CHOICES) + "\n\n"
                 "Then describe the feeling in one line (e.g. Hong Kong, rainy night, old buildings, loneliness). "
                 "I will only search real works in that genre and return style → theme → matching film (story + stills + link).")
     return (
@@ -1589,7 +1589,12 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
         return {"text": _kind_ask_text(), "need_kind": True,
                 "kind_options": KIND_CHOICES, "mode": "offline"}
     idea = (text or "").strip()
-    cands = _catalog.semantic_candidates(idea, kind, k=8, lang=_LANG)
+    try:
+        import personal_library
+        taste_profile = personal_library.taste_profile()
+    except Exception:  # noqa: BLE001
+        taste_profile = {}
+    cands = _catalog.semantic_candidates(idea, kind, k=8, lang=_LANG, taste=taste_profile)
     if not cands:
         return {"text": f"「{kind}」题材库里暂时没有可用作品，换一类试试？",
                 "need_kind": True, "kind_options": KIND_CHOICES, "mode": "offline"}
@@ -1625,6 +1630,13 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
                 + ("【TVC 额外要求】每个 style 的 theme 必须点名：产品/品牌、目标人群、一句 slogan 方向；"
                    "why_fits 要说明视觉钩子如何服务产品卖点。\n\n" if kind == "广告/TVC" else "")
                 + (taste + "\n\n" if taste else "")
+                + (("REFERENCE PRIORITY: The saved reference films above are the strongest style anchor. "
+                    "Every style, theme and film choice must stay consistent with their texture, mood and themes; "
+                    "if the user's wording conflicts, follow the references and explain the synthesis.\n\n")
+                   if taste and _LANG == "en" else
+                   ("参考片优先级：以上收藏参考片是最强的风格锚点；每个风格、主题和选片都必须与其影像质感、情绪和母题一致；"
+                    "如果用户描述冲突，优先参考片并说明如何融合。\n\n")
+                   if taste else "")
                 + ("\n\n" + history_block(history) if history else "")
                 + "\n\n候选影片（只能从这里挑，片名必须逐字一致）：\n" + "\n".join(film_lines)
                 + lang_hint())

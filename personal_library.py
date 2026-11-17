@@ -54,20 +54,20 @@ def _fetch_bili(bvid: str):
     opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
     try:
         req0 = urllib.request.Request("https://www.bilibili.com/", headers=UA)
-        with opener.open(req0, timeout=10) as resp0:
+        with opener.open(req0, timeout=5) as resp0:
             resp0.read(2048)
     except Exception:  # noqa: BLE001
         pass
     import time as _time
     data = {}
-    for attempt in range(3):
+    for attempt in range(2):
         try:
             req = urllib.request.Request(api, headers=UA)
-            with opener.open(req, timeout=15) as resp:
+            with opener.open(req, timeout=8) as resp:
                 data = json.loads(resp.read().decode("utf-8")).get("data") or {}
             break
         except Exception:  # noqa: BLE001
-            _time.sleep(2 + attempt * 2)
+            _time.sleep(1 + attempt * 2)
     if not data.get("bvid"):
         return None
     secs = int(data.get("duration", 0))
@@ -163,7 +163,7 @@ def _fetch_youtube(vid: str):
     oembed = "https://www.youtube.com/oembed?" + urllib.parse.urlencode(
         {"url": f"https://www.youtube.com/watch?v={vid}", "format": "json"})
     req = urllib.request.Request(oembed, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=15) as resp:
+    with urllib.request.urlopen(req, timeout=10) as resp:
         data = _json.loads(resp.read().decode("utf-8"))
     return {
         "title": data.get("title", ""),
@@ -184,22 +184,50 @@ def update_style(film_id: str, summary: str = "", tags=None):
     return False
 
 
-def taste_context(limit: int = 10) -> str:
+def taste_profile(limit: int = 10) -> dict:
+    """Return structured taste signals from the most recent saved films."""
+    films = list_films()[-limit:]
+    titles = [str(f.get("title") or "").strip() for f in films if f.get("title")]
+    moods: list[str] = []
+    tags: list[str] = []
+    summaries: list[str] = []
+    for f in films:
+        for value in f.get("moods") or []:
+            value = str(value).strip()
+            if value and value not in moods and value != "未分类":
+                moods.append(value)
+        for value in f.get("style_tags") or []:
+            value = str(value).strip()
+            if value and value not in tags:
+                tags.append(value)
+        if f.get("style_summary"):
+            summaries.append(str(f["style_summary"]).strip())
+    return {"titles": titles, "moods": moods, "tags": tags, "summaries": summaries}
+
+
+def taste_context(limit: int = 10, lang: str = "zh") -> str:
     """把用户收藏的参考片整理成给模型看的「品味上下文」。"""
     films = list_films()[-limit:]
     if not films:
         return ""
-    lines = ["【用户已收藏的参考片（代表他的电影品味，创作时尽量贴近这些片的气质）】"]
+    en = lang == "en"
+    lines = [("【用户已收藏的参考片：这是本次创作最强的风格约束，必须优先贴近】" if not en else
+              "【User's saved reference films — the strongest style constraint for this task】")]
     for f in films:
         parts = [f.get("title") or "", f.get("platform") or ""]
         if f.get("style_tags"):
-            parts.append("标签：" + "、".join(f["style_tags"]))
+            parts.append(("标签：" if not en else "Tags: ") + ("、".join(f["style_tags"]) if not en else ", ".join(f["style_tags"])))
         if f.get("moods"):
-            parts.append("情绪：" + "/".join(f["moods"]))
+            parts.append(("情绪：" if not en else "Moods: ") + ("/".join(f["moods"])))
         if f.get("style_summary"):
             parts.append(f["style_summary"])
         if f.get("url"):
-            parts.append("链接：" + f["url"])
-        lines.append("- " + " ｜ ".join([p for p in parts if p]))
+            parts.append(("链接：" if not en else "Link: ") + f["url"])
+        lines.append("- " + (" | ".join([p for p in parts if p]) if en else " ｜ ".join([p for p in parts if p])))
+    if en:
+        lines.append("Treat these references as hard style anchors: match their texture, mood, themes and pacing. "
+                     "If the user's wording conflicts with them, prioritise the references and explain the synthesis.")
+    else:
+        lines.append("把以上参考片当作硬性风格锚点：贴近其影像质感、情绪、母题与节奏；"
+                     "如果用户描述与参考片冲突，优先参考片并说明如何融合。")
     return "\n".join(lines)
-

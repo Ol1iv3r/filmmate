@@ -303,12 +303,33 @@ def _haystack(t):
     ]).lower()
 
 
-def semantic_candidates(idea="", kind=None, k=8, lang="zh"):
-    """按用户的关键词/感觉，在指定题材（kind）里挑真实作品；不够时用同题材作品补足。"""
+def _norm_title(value: str) -> str:
+    return re.sub(r"[^\w\u4e00-\u9fff]+", "", (value or "").lower())
+
+
+def semantic_candidates(idea="", kind=None, k=8, lang="zh", taste=None):
+    """按用户的关键词/感觉，在指定题材（kind）里挑真实作品；不够时用同题材作品补足。
+
+    ``taste`` is an optional structured profile from the user's saved reference
+    films. It acts as a strong re-ranking signal, not just prompt decoration.
+    """
     idea = (idea or "").strip()
     low = idea.lower()
     tokens = [t for t in rag.tokenize(idea) if len(t) >= 2]
     titles = [t for t in _load(lang) if (not kind or t["kind"] == kind)]
+    taste = taste or {}
+    taste_titles = [_norm_title(x) for x in (taste.get("titles") or []) if _norm_title(x)]
+    taste_terms = []
+    for value in (taste.get("moods") or []) + (taste.get("tags") or []):
+        value = str(value).strip().lower()
+        if len(value) >= 2 and value not in taste_terms:
+            taste_terms.append(value)
+    for summary in (taste.get("summaries") or []):
+        for token in rag.tokenize(str(summary)):
+            token = token.lower()
+            if len(token) >= 2 and token not in taste_terms:
+                taste_terms.append(token)
+    taste_terms = taste_terms[:40]
     scored = []
     for t in titles:
         hay = _haystack(t)
@@ -329,6 +350,16 @@ def semantic_candidates(idea="", kind=None, k=8, lang="zh"):
         for mood in t.get("moods") or []:
             if len(mood) >= 2 and mood in idea:
                 score += 2.0
+        if taste_titles:
+            hay_norm = _norm_title(hay)
+            for preferred in taste_titles:
+                if preferred and (preferred in hay_norm or hay_norm in preferred):
+                    score += 40.0
+                    break
+        if taste_terms:
+            for term in taste_terms:
+                if term in hay:
+                    score += 2.5
         if score > 0:
             scored.append((score, t))
     scored.sort(key=lambda item: (-item[0], item[1].get("id", "")))
