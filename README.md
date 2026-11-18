@@ -1,3 +1,8 @@
+COMP4431 Artificial Intelligence Group 20
+| Student name | Student ID |
+|---|---|
+| CHAN Chi Kit (Jacky) | 24029821D |
+
 # Filmmate
 
 **A domain-specific AI assistant for film and video creators.**
@@ -751,16 +756,10 @@ The cleanup above removed about 240 MB of caches and duplicate screenshots. The 
 
 ---
 
-## 14. Team and data credits
-
-**COMP4431 Artificial Intelligence (2026/27) — Group 20.**
-The project is submitted for coursework. Add the final group member names and student IDs here before submission if your course requires them.
+## 14. data credits
 
 Data and media:
-
 - Film metadata is sourced from public Bilibili and YouTube APIs; links are verified when the catalog is built.
 - Screenplays are linked from [scriptslug](https://www.scriptslug.com/) and remain the property of their authors.
 - Film stills are platform preview frames used for non-commercial inspiration and study.
 - Scene, shot and stripboard libraries are original editorial material written for this project.
-
-If you reuse this project, keep the data attribution and check the platform terms for any linked film or still.
