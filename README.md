@@ -2,7 +2,7 @@ COMP4431 Artificial Intelligence Group 20
 | Student name | Student ID |
 |---|---|
 | CHAN Chi Kit (Jacky) | 24029821D |
-| LI Xiang (Oliver) | 231025876d |
+| LI Xiang (Oliver) | 23102587d |
 | ZHAO Allen | 22108077d |
 
 # Filmmate
