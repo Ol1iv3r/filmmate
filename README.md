@@ -4,7 +4,7 @@ COMP4431 Artificial Intelligence Group 20
 | CHAN Chi Kit (Jacky) | 24029821D |
 | LI Xiang (Oliver) | 23102587d |
 | ZHAO Allen | 22108077d |
-
+| CHOY Siu Man (Oscar) | 23089466d |
 # Filmmate
 
 **A domain-specific AI assistant for film and video creators.**
