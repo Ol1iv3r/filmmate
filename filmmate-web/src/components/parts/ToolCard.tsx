@@ -74,8 +74,10 @@ export function ToolCard({
   if (output && typeof output === 'object') {
     const o = output as Record<string, any>
     if (typeof o.script_text === 'string' && o.script_text) custom = <ScriptPanel payload={o} />
-    else if (Array.isArray(o.shots) && o.shots.length) custom = <StoryboardPanel payload={o} />
+    // Schedule payloads also carry a shot-level table; render the plan first so
+    // the .ics download is not mistaken for the storyboard CSV export.
     else if (Array.isArray(o.days) && o.days.length) custom = <SchedulePanel payload={o} />
+    else if (Array.isArray(o.shots) && o.shots.length) custom = <StoryboardPanel payload={o} />
     else if (Array.isArray(o.films) && o.films.length) custom = <InspirationPanel payload={o} />
   }
 
