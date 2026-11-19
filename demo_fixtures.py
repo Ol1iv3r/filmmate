@@ -18,7 +18,7 @@ import config
 import personal_library
 
 FIXTURE_FILE = config.BASE_DIR / "data" / "demo" / "demo_fixtures.json"
-_state: dict = {"variant": None, "fixtures": None, "demo_refs": set()}
+_state: dict = {"set_index": None, "theme_index": 0, "fixtures": None, "demo_refs": set()}
 
 
 def enabled() -> bool:
@@ -38,24 +38,34 @@ def _variants(key: str) -> list:
     return _load().get(key) or []
 
 
-def _variant(key: str) -> int:
-    variants = _variants(key)
-    if not variants:
-        return 0
-    current = _state.get("variant")
-    if current is None:
-        current = random.randrange(len(variants))
-        _state["variant"] = current
-    return current % len(variants)
+def _ensure_set() -> int:
+    if _state.get("set_index") is None:
+        _state["set_index"] = random.randrange(3)
+        _state["theme_index"] = 0
+    return int(_state["set_index"]) % 3
 
 
-def _next_variant(key: str) -> int:
-    variants = _variants(key)
-    if not variants:
-        return 0
-    current = random.randrange(len(variants))
-    _state["variant"] = current
-    return current
+def _script_index() -> int:
+    set_i = _ensure_set()
+    theme_i = int(_state.get("theme_index") or 0) % 3
+    return set_i * 3 + theme_i
+
+
+def _select_theme(message: str = "") -> None:
+    text = message or ""
+    m = re.search(r"(?:theme|主题)\s*([123])", text, re.I)
+    if m:
+        _state["theme_index"] = int(m.group(1)) - 1
+        return
+    # Also allow the title of one of the current set's themes.
+    variants = _variants("scripts")
+    set_i = _ensure_set()
+    for theme_i in range(3):
+        item = variants[set_i * 3 + theme_i] if set_i * 3 + theme_i < len(variants) else None
+        title = ((item or {}).get("logline") or {}).get("title", "")
+        if title and title.lower() in text.lower():
+            _state["theme_index"] = theme_i
+            return
 
 
 async def _timed(payload: dict, low: int = 1100, high: int = 3800) -> dict:
@@ -91,7 +101,8 @@ def _render_inspiration(payload: dict, idea: str) -> str:
             lines.append(f"  - Reference point: {style['film_reason']}")
         lines.append("")
     lines.append("---")
-    lines.append("Want me to write the script based on **Theme 1**? Reply 'write script'.")
+    lines.append("Want me to write the script based on **Theme 1**? Reply 'write script'. "
+                 "For another theme in this set, reply 'write script: theme 2' or 'theme 3'.")
     return "\n".join(lines)
 
 
@@ -99,35 +110,39 @@ async def inspiration(idea: str, kind: str | None = None, history: list | None =
     if not enabled():
         return None
     if reference_ready():
-        payload = copy.deepcopy(_variants("reference_inspiration")[_next_variant("reference_inspiration")])
+        ref_variants = _variants("reference_inspiration")
+        payload = copy.deepcopy(ref_variants[random.randrange(len(ref_variants))])
         payload["idea"] = idea
         payload["text"] = _render_inspiration(payload, idea)
         return await _timed(payload, 1000, 3000)
-    payload = copy.deepcopy(_variants("inspiration")[_next_variant("inspiration")])
+    _state["set_index"] = random.randrange(3)
+    _state["theme_index"] = 0
+    payload = copy.deepcopy(_variants("inspiration")[_state["set_index"]])
     payload["kind"] = "Film"
     payload["idea"] = idea
     payload["text"] = _render_inspiration(payload, idea)
     return await _timed(payload, 1100, 3400)
 
 
-async def script() -> dict | None:
+async def script(message: str = "") -> dict | None:
     if not enabled():
         return None
-    payload = copy.deepcopy(_variants("scripts")[_variant("scripts")])
+    _select_theme(message)
+    payload = copy.deepcopy(_variants("scripts")[_script_index()])
     return await _timed(payload, 1600, 3900)
 
 
 async def storyboard() -> dict | None:
     if not enabled():
         return None
-    payload = copy.deepcopy(_variants("storyboards")[_variant("storyboards")])
+    payload = copy.deepcopy(_variants("storyboards")[_script_index()])
     return await _timed(payload, 1200, 3300)
 
 
 async def schedule() -> dict | None:
     if not enabled():
         return None
-    payload = copy.deepcopy(_variants("schedules")[_variant("schedules")])
+    payload = copy.deepcopy(_variants("schedules")[_script_index()])
     return await _timed(payload, 900, 2800)
 
 

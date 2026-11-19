@@ -2057,7 +2057,7 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
 
     try:
         import demo_fixtures
-        demo = await demo_fixtures.script()
+        demo = await demo_fixtures.script(msg)
         if demo is not None:
             return demo
     except Exception:  # noqa: BLE001
