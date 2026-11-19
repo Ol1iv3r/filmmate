@@ -41,65 +41,127 @@ interface SchedulePayload {
   text?: string
 }
 
-function csvCell(value: unknown): string {
-  return '"' + String(value ?? '').replace(/"/g, '""') + '"'
+function icsEscape(value: unknown): string {
+  return String(value ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\r?\n/g, '\\n')
 }
 
-/** Download the shooting plan as CSV (no .ics). */
-function buildPlanCsv(payload: SchedulePayload, lang: 'zh' | 'en'): string {
-  const en = lang === 'en'
-  const rows: unknown[][] = []
-  const days = payload.days ?? []
-  const dayDate = new Map<number, string>()
-  for (const d of days) if (d.day != null && d.date) dayDate.set(d.day, d.date)
-  rows.push([en ? 'Filmmate shooting plan' : 'Filmmate 拍摄计划', payload.summary ?? ''])
-  rows.push([en ? 'Preferences' : '偏好', payload.preferences ?? ''])
-  rows.push([])
-  rows.push([en ? 'Day' : '天', en ? 'Date' : '日期', en ? 'Call' : '集合', en ? 'Wrap' : '收工', en ? 'Scenes' : '场次', en ? 'Notes' : '要点'])
-  for (const d of days) {
-    rows.push([d.day ?? '', d.date ?? '', d.call ?? '', d.wrap ?? '', (d.scenes ?? []).join('; '), d.notes ?? ''])
-  }
-  rows.push([])
-  if (payload.shots?.length) {
-    rows.push([en ? 'Shot' : '镜号', en ? 'Day' : '天', en ? 'Date' : '日期', en ? 'Scene' : '场次', en ? 'Size' : '景别', en ? 'Angle' : '机位', en ? 'Movement' : '运镜', en ? 'Duration' : '时长', en ? 'Frame' : '画面'])
-    for (const shot of payload.shots) {
-      rows.push([shot.id ?? '', shot.day ?? '', shot.day != null ? (dayDate.get(shot.day) ?? '') : '', shot.scene ?? '', shot.shot_type ?? '', shot.angle ?? '', shot.movement ?? '', shot.duration ?? '', shot.description ?? ''])
+function icsFold(line: string): string {
+  const encoder = new TextEncoder()
+  if (encoder.encode(line).length <= 75) return line
+  const chunks: string[] = []
+  let current = ''
+  let bytes = 0
+  for (const char of line) {
+    const size = encoder.encode(char).length
+    if (bytes + size > 73) {
+      chunks.push(current)
+      current = ' ' + char
+      bytes = 1 + size
+    } else {
+      current += char
+      bytes += size
     }
-    rows.push([])
   }
-  if (payload.crew?.length) {
-    rows.push([en ? 'Crew' : '人员', en ? 'Role' : '职位', en ? 'Count' : '人数', en ? 'Note' : '备注'])
-    for (const c of payload.crew) rows.push(['', c.role ?? '', c.count ?? 1, c.note ?? ''])
-    rows.push([])
-  }
-  if (payload.equipment?.length) {
-    rows.push([en ? 'Equipment' : '器材', payload.equipment.join('; ')])
-    rows.push([])
-  }
-  if (payload.locations?.length) {
-    rows.push([en ? 'Locations' : '场景', en ? 'Name' : '名称', en ? 'Note' : '备注'])
-    for (const l of payload.locations) rows.push(['', l.name ?? '', l.note ?? ''])
-    rows.push([])
-  }
-  if (payload.risks?.length) {
-    rows.push([en ? 'Risks' : '风险', en ? 'Risk' : '风险', en ? 'Mitigation' : '预案'])
-    for (const r of payload.risks) rows.push(['', r.risk ?? '', r.mitigation ?? ''])
-  }
-  return rows.map((row) => row.map(csvCell).join(',')).join('\r\n')
+  if (current) chunks.push(current)
+  return chunks.join('\r\n')
 }
 
-/** 拍摄计划：详细方案 + 拍摄日 + shot schedule + 下载 CSV。 */
+function icsStamp(): string {
+  return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+}
+
+function icsDateTime(date: string | undefined, time: string | undefined, fallback: string): string {
+  const day = (date || '').slice(0, 10) || new Date().toISOString().slice(0, 10)
+  const clock = (time || fallback).slice(0, 5) || fallback
+  return day.replace(/-/g, '') + 'T' + clock.replace(':', '') + '00'
+}
+
+function nextDay(date: string | undefined): string {
+  const base = new Date(((date || '').slice(0, 10) || new Date().toISOString().slice(0, 10)) + 'T00:00:00')
+  base.setDate(base.getDate() + 1)
+  return base.toISOString().slice(0, 10)
+}
+
+/** Build a calendar file whose day descriptions contain the whole shooting plan. */
+function buildIcs(payload: SchedulePayload): string {
+  const days = payload.days ?? []
+  const shots = payload.shots ?? []
+  const crew = (payload.crew ?? []).map((c) => `${c.role ?? ''} x${c.count ?? 1}${c.note ? ' (' + c.note + ')' : ''}`).join('; ')
+  const equipment = (payload.equipment ?? []).join('; ')
+  const locations = (payload.locations ?? []).map((l) => l.name ?? '').filter(Boolean).join('; ')
+  const risks = (payload.risks ?? []).map((r) => `${r.risk ?? ''} -> ${r.mitigation ?? ''}`).join('; ')
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Filmmate//Shooting Plan//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:Filmmate Shooting Plan',
+  ]
+  const stamp = icsStamp()
+  days.forEach((day, index) => {
+    const date = day.date
+    const start = icsDateTime(date, day.call, '08:00')
+    let end = icsDateTime(date, day.wrap, '19:00')
+    if (end <= start) end = icsDateTime(nextDay(date), day.wrap, '19:00')
+    const dayShots = shots.filter((s) => s.day === (day.day ?? index + 1))
+    const shotLines = (dayShots.length ? dayShots : shots).map((s) =>
+      `#${s.id ?? ''} | Scene ${s.scene ?? ''} | ${s.shot_type ?? ''} | ${s.angle ?? ''} | ${s.movement ?? ''} | ${s.duration ?? ''} | ${s.description ?? ''}`
+    )
+    const description = [
+      `Shooting plan: ${payload.summary ?? ''}`,
+      `Preferences: ${payload.preferences ?? ''}`,
+      `Day: ${day.day ?? index + 1} | Date: ${date ?? ''} | Call: ${day.call ?? ''} | Wrap: ${day.wrap ?? ''}`,
+      `Scenes: ${(day.scenes ?? []).join(', ')}`,
+      `Notes: ${day.notes ?? ''}`,
+      '',
+      'Shot schedule:',
+      ...shotLines,
+      '',
+      `Crew: ${crew}`,
+      `Equipment: ${equipment}`,
+      `Locations: ${locations}`,
+      `Risks: ${risks}`,
+    ].join('\n')
+    const summary = `Day ${day.day ?? index + 1} — Filmmate shooting plan`
+    lines.push('BEGIN:VEVENT')
+    lines.push(`UID:filmmate-${stamp}-day-${day.day ?? index + 1}@filmmate.local`)
+    lines.push(`DTSTAMP:${stamp}`)
+    lines.push(`DTSTART:${start}`)
+    lines.push(`DTEND:${end}`)
+    lines.push(icsFold(`SUMMARY:${icsEscape(summary)}`))
+    if (locations) lines.push(icsFold(`LOCATION:${icsEscape(locations)}`))
+    lines.push(icsFold(`DESCRIPTION:${icsEscape(description)}`))
+    lines.push('END:VEVENT')
+  })
+  if (!days.length) {
+    lines.push('BEGIN:VEVENT')
+    lines.push(`UID:filmmate-${stamp}@filmmate.local`)
+    lines.push(`DTSTAMP:${stamp}`)
+    lines.push(icsFold(`SUMMARY:${icsEscape('Filmmate shooting plan')}`))
+    lines.push(icsFold(`DESCRIPTION:${icsEscape(payload.summary ?? 'Shooting plan')}`))
+    lines.push('END:VEVENT')
+  }
+  lines.push('END:VCALENDAR')
+  return lines.join('\r\n')
+}
+
+/** 拍摄计划：详细方案 + 拍摄日 + shot schedule + 下载日历（.ics）。 */
 export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
   const { t, lang } = useI18n()
   const days = payload.days ?? []
   if (!days.length && !payload.summary) return null
 
-  const downloadCsv = () => {
-    const blob = new Blob(['\ufeff' + buildPlanCsv(payload, lang)], { type: 'text/csv;charset=utf-8' })
+  const downloadIcs = () => {
+    const blob = new Blob([buildIcs(payload)], { type: 'text/calendar;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = lang === 'en' ? 'shooting-plan.csv' : '拍摄计划.csv'
+    a.download = lang === 'en' ? 'shooting-plan.ics' : '拍摄计划.ics'
     document.body.appendChild(a)
     a.click()
     a.remove()
@@ -119,7 +181,7 @@ export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
       ) : null}
       <div className="panel-head">
         <span>{t('拍摄日', 'Shoot days')}（{days.length} {t('天', 'days')} · {payload.shots_count ?? 0} {t('个镜头', 'shots')}）</span>
-        <button className="panel-btn" data-filmy-download onClick={downloadCsv}>{t('下载 CSV', 'Download CSV')}</button>
+        <button className="panel-btn" data-filmy-download onClick={downloadIcs}>{t('下载日历（.ics）', 'Download calendar (.ics)')}</button>
       </div>
       <div className="table-scroll">
         <table className="sb-table">

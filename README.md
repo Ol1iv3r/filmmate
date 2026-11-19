@@ -86,7 +86,7 @@ Legend: **✅ implemented and exercised** · **— not implemented**
 | **RAG over a dual library** | ✅ | 198 professional knowledge entries, 16 script + film pairs, 78 verified short films, 40 scene patterns, 60 shot patterns, 7 stripboard templates, 50 annotated videos / 504 shot segments, and a 260-title catalog with 2,600 stills. BM25 by default; optional multilingual dense vectors. |
 | **Agent / function calling** | ✅ | Six tools: `search_knowledge`, `search_cases`, `search_scenes`, `search_shots`, `search_stripboards`, `search_samples`. The model chooses the tool and query, the backend executes real retrieval, and the result is fed back before the final answer. |
 | **Case-based generation** | ✅ | For script review and Rundown, retrieved cases and scene patterns are injected into the prompt; the model adapts their structure rather than copying them. Inspiration is restricted to real catalog titles, and any returned title not in the candidate list is dropped. |
-| **Structured output + export** | ✅ | Review findings, script reader, shot list, shooting days and inspiration stills each have a dedicated panel. Storyboard → CSV, script → PDF, shooting plan → CSV. |
+| **Structured output + export** | ✅ | Review findings, script reader, shot list, shooting days and inspiration stills each have a dedicated panel. Storyboard → CSV, script → PDF, shooting plan → `.ics` calendar with the full plan in the event description. |
 | **Offline / failure resilience** | ✅ | Each tool has a local twin where a meaningful one exists; model errors fall back automatically; JSON is repaired/retried; errors are translated into readable messages. Script generation and reformatting intentionally require the model. |
 | **Script upload** | ✅ | PDF / DOCX / TXT / Markdown / Fountain up to 15 MB; parsed server-side; 200,000-character cap; text is never written to disk as a file. Pressing Enter on an empty composer analyses the uploaded script. |
 | **Personal reference library** | ✅ | Add one or multiple Bilibili/YouTube links; Filmmate fetches metadata, extracts real stills (Bilibili preview sprites, or a sampled video for YouTube), and runs a Vercel AI Gateway vision model over the frames to describe what happens. Saved references become a strong taste profile and the first matching films in later inspiration. |
@@ -147,7 +147,7 @@ This is deliberately **frame-based** rather than full-video ingestion: it is che
 | **Find inspiration** | `Find inspiration` chip → choose genre → describe a feeling | Genre + a place/mood/keywords (e.g. “Hong Kong, rainy night, loneliness”) | “Style → theme → matching film” sets, 2×2 stills and links; saved reference films are guaranteed as matching films 1..N (and matching film 1 is always the newest saved reference) | `tools.inspiration_films`, `catalog.semantic_candidates`, `PROMPT_INSPIRATION_FILMS` |
 | **Check / write a script** | `Script check / write` chip or paperclip | Uploaded script, or a theme | Coverage report, or a logline + standard-format screenplay; optional reformat and PDF | `tools.script_tool`, `PROMPT_REVIEW`, `PROMPT_SCRIPT_REFORMAT`, `PROMPT_SCRIPT_LOG_LINE`, `/api/script/pdf` |
 | **Storyboard** | `Storyboard` chip | A script (required) | Scene-by-scene shot list (3 shots per scene in the offline rule path; 8–20 in the online prompt), coverage notes, CSV | `tools.storyboard_tool`, `split_script_scenes`, `PROMPT_STORYBOARD_SCRIPT` |
-| **Shooting plan** | `Shooting plan` chip | The most recent storyboard + preferences | Crew, gear, locations, shooting days, risks, shot-level schedule and CSV export | `tools.schedule_tool`, `PROMPT_SHOOTING_PLAN`, `SchedulePanel` |
+| **Shooting plan** | `Shooting plan` chip | The most recent storyboard + preferences | Crew, gear, locations, shooting days, risks, shot-level schedule and a rich `.ics` calendar | `tools.schedule_tool`, `PROMPT_SHOOTING_PLAN`, `SchedulePanel` |
 | **+ Reference film** | `+ Reference film` | One or more Bilibili/YouTube links, optional title and moods | Saved films with metadata, extracted stills, a vision description and a taste profile; inspiration puts these films first | `personal_library.py`, `frames.py`, `/api/library/personal` |
 
 ### A typical demo path
@@ -156,7 +156,7 @@ This is deliberately **frame-based** rather than full-video ingestion: it is che
 2. Read the style/theme/matching film sets; reply **“写剧本”** to write the script for Theme 1.
 3. Upload the generated script (or your own) and choose **Script check / write** → review, then **“改成标准格式”** → download PDF.
 4. Choose **Storyboard** → inspect the shot list → download CSV.
-5. Choose **Shooting plan** → type “避开 11月20–22日，3 天内拍完，每天 10 小时” → download the plan `.csv`.
+5. Choose **Shooting plan** → type “避开 11月20–22日，3 天内拍完，每天 10 小时” → download the plan `.ics`.
 6. Add a favourite film with **+ Reference film**, then repeat step 1 and notice the recommendation shift toward that taste.
 
 ---
@@ -409,7 +409,7 @@ The home screen (above) exposes the five workflows: **Find inspiration**, **Scri
 | Shooting plan | + Reference film |
 |---|---|
 | ![Shooting days with a calendar download](docs/screenshots/feature-shooting-plan.png) | ![The reference-film form](docs/screenshots/feature-reference-film.png) |
-| *The plan shows preferences, crew/gear context, shooting days and a shot-level CSV export.* | *Saved Bilibili/YouTube films become a taste profile for later inspiration and script prompts.* |
+| *The plan shows preferences, crew/gear context, shooting days and a rich `.ics` calendar.* | *Saved Bilibili/YouTube films become a taste profile for later inspiration and script prompts.* |
 
 ### 6.2 Repository structure
 
@@ -721,7 +721,7 @@ The smoke test writes screenshots to `filmmate-web/.shots/` (gitignored); `captu
 - **Memory is session-scoped.** A new conversation does not inherit the previous one; the reference library is the only long-term preference store.
 - **Retrieval is lexical by default.** BM25 is sensitive to wording and synonyms; dense retrieval is optional and depends on a local model download. The 19-query evaluation is a smoke test, not a benchmark.
 - **Voice depends on the browser/provider.** Server transcription needs a funded key; browser recognition is best in Chrome/Edge.
-- **Exports are functional, not styled.** CSV exports are correct; a styled `.xlsx` call sheet and richer PDF template are future work.
+- **Exports are functional, not styled.** CSV and `.ics` exports are correct; a styled `.xlsx` call sheet and richer PDF template are future work.
 - **Film data can go stale.** Links and platform metadata change outside the project; `verified_at` records when they were checked.
 - **No formal user study.** Evaluation is demo regression, retrieval evaluation and data validation.
 - **No weight fine-tuning.** See [§2.4](#24-a-note-on-the-fine-tuned-llm).
