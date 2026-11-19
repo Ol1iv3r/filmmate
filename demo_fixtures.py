@@ -18,7 +18,7 @@ import config
 import personal_library
 
 FIXTURE_FILE = config.BASE_DIR / "data" / "demo" / "demo_fixtures.json"
-_state: dict = {"set_index": None, "theme_index": 0, "fixtures": None, "demo_refs": set(), "demo_flow": False}
+_state: dict = {"set_index": None, "theme_index": 0, "fixtures": None, "demo_refs": set(), "demo_flow": False, "genre_mode": False}
 
 
 def enabled() -> bool:
@@ -129,6 +129,7 @@ async def inspiration(idea: str, kind: str | None = None, history: list | None =
         return None
     if _is_hong_kong(idea):
         _state["demo_flow"] = True
+        _state["genre_mode"] = False
         _state["set_index"] = random.randrange(3)
         _state["theme_index"] = 0
         payload = copy.deepcopy(_variants("inspiration")[_state["set_index"]])
@@ -138,35 +139,79 @@ async def inspiration(idea: str, kind: str | None = None, history: list | None =
         return await _timed(payload, 1100, 3400)
     if reference_ready() and _is_reference_trigger(idea):
         _state["demo_flow"] = False
+        _state["genre_mode"] = False
         ref_variants = _variants("reference_inspiration")
         payload = copy.deepcopy(ref_variants[random.randrange(len(ref_variants))])
         payload["idea"] = idea
         payload["text"] = _render_inspiration(payload, idea)
         return await _timed(payload, 1000, 3000)
     _state["demo_flow"] = False
+    _state["genre_mode"] = False
     return None
 
 
-async def script(message: str = "") -> dict | None:
-    if not enabled() or not _state.get("demo_flow"):
+def _is_review_request(text: str) -> bool:
+    return bool(re.search(r"\b(check|review|analy[sz]e|analyse|feedback)\b|检查|分析|审阅|漏洞", text or "", re.I))
+
+
+def _is_vlog(kind: str | None) -> bool:
+    return str(kind or "").strip() in ("Vlog/美食", "Vlog / Food", "Vlog", "Food", "美食")
+
+
+def _genre_payload(kind: str, key: str) -> dict | None:
+    sets = _load().get("genre_sets") or {}
+    return copy.deepcopy((sets.get(kind) or {}).get(key))
+
+
+async def script(message: str = "", script_text: str = "", kind: str | None = None) -> dict | None:
+    if not enabled():
+        return None
+    if script_text and _is_review_request(message):
+        payload = copy.deepcopy(_load().get("review") or {})
+        if not payload:
+            return None
+        payload["script_text"] = script_text
+        payload["text"] = str(payload.get("text") or "").replace(
+            "~310 characters", f"~{len(script_text)} characters"
+        )
+        return await _timed(payload, 8800, 9800)
+    if _is_vlog(kind) and personal_library.list_films():
+        payload = _genre_payload("Vlog/美食", "script")
+        if payload is not None:
+            _state["genre_mode"] = True
+            _state["demo_flow"] = False
+            return await _timed(payload, 8800, 9800)
+    if not _state.get("demo_flow"):
         return None
     _select_theme(message)
     payload = copy.deepcopy(_variants("scripts")[_script_index()])
-    return await _timed(payload, 1600, 3900)
+    return await _timed(payload, 8800, 9800)
 
 
 async def storyboard() -> dict | None:
-    if not enabled() or not _state.get("demo_flow"):
+    if not enabled():
+        return None
+    if _state.get("genre_mode"):
+        payload = _genre_payload("Vlog/美食", "storyboard")
+        if payload is not None:
+            return await _timed(payload, 8800, 9800)
+    if not _state.get("demo_flow"):
         return None
     payload = copy.deepcopy(_variants("storyboards")[_script_index()])
-    return await _timed(payload, 1200, 3300)
+    return await _timed(payload, 8800, 9800)
 
 
 async def schedule() -> dict | None:
-    if not enabled() or not _state.get("demo_flow"):
+    if not enabled():
+        return None
+    if _state.get("genre_mode"):
+        payload = _genre_payload("Vlog/美食", "schedule")
+        if payload is not None:
+            return await _timed(payload, 8800, 9800)
+    if not _state.get("demo_flow"):
         return None
     payload = copy.deepcopy(_variants("schedules")[_script_index()])
-    return await _timed(payload, 900, 2800)
+    return await _timed(payload, 8800, 9800)
 
 
 # --------------------------------------------------------------------------

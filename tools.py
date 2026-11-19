@@ -1354,13 +1354,25 @@ def is_continuation(message: str) -> bool:
 
 
 def _kind_from_history(history):
+    """Recover the genre the user picked in the previous inspiration turn."""
     for turn in reversed(history or []):
         if turn.get("role") != "assistant":
             continue
         content = str(turn.get("content", ""))
-        m = re.search(r"题材\*{0,2}\s*[:：]\s*([^\s｜|\n]+)", content)
+        m = re.search(r"(?:题材|Genre)\*{0,2}\s*[:：]\s*([^｜|\n]+)", content, re.I)
         if m:
-            return kind_from_text(m.group(1)) or m.group(1).strip()
+            value = m.group(1).strip()
+            direct = kind_from_text(value)
+            if direct:
+                return direct
+            for key, label in KIND_EN.items():
+                if label.lower() == value.lower():
+                    return key
+            # English labels with spaces: Vlog / Food, Ad / TVC
+            for key, label in KIND_EN.items():
+                if label.replace(" / ", "/").lower() == value.replace(" / ", "/").lower():
+                    return key
+            return value
     return None
 
 
@@ -2057,7 +2069,7 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
 
     try:
         import demo_fixtures
-        demo = await demo_fixtures.script(msg)
+        demo = await demo_fixtures.script(msg, script, kind)
         if demo is not None:
             return demo
     except Exception:  # noqa: BLE001

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type WheelEvent } from 'react'
 import type { UIMessage } from 'ai'
 import { ArrowDown } from 'lucide-react'
 import { cn } from '../lib/utils'
@@ -20,19 +20,40 @@ export function MessageList({
   const { t } = useI18n()
   const scrollRef = useRef<HTMLDivElement>(null)
   const stickRef = useRef(true)
+  const lastTopRef = useRef(0)
   const rafRef = useRef<number | null>(null)
   const [showJump, setShowJump] = useState(false)
 
   const nearBottom = () => {
     const el = scrollRef.current
     if (!el) return true
-    return el.scrollHeight - el.scrollTop - el.clientHeight < 140
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 56
   }
 
   const onScroll = () => {
-    const near = nearBottom()
-    stickRef.current = near
-    setShowJump(!near)
+    const el = scrollRef.current
+    if (!el) return
+    const top = el.scrollTop
+    // A deliberate scroll up must break "stick to bottom" immediately,
+    // even while the page is still within the near-bottom threshold.
+    if (top < lastTopRef.current - 2) stickRef.current = false
+    else if (nearBottom()) stickRef.current = true
+    lastTopRef.current = top
+    setShowJump(!stickRef.current)
+  }
+
+  const onWheel = (event: WheelEvent<HTMLDivElement>) => {
+    if (event.deltaY < 0) {
+      stickRef.current = false
+      setShowJump(true)
+    }
+  }
+
+  const onTouchMove = () => {
+    if (!nearBottom()) {
+      stickRef.current = false
+      setShowJump(true)
+    }
   }
 
   useEffect(() => {
@@ -64,7 +85,13 @@ export function MessageList({
   }
 
   return (
-    <div className="chat-scroll" ref={scrollRef} onScroll={onScroll}>
+    <div
+      className="chat-scroll"
+      ref={scrollRef}
+      onScroll={onScroll}
+      onWheel={onWheel}
+      onTouchMove={onTouchMove}
+    >
       <div className="chat-inner">
         {messages.map((m, i) => {
           const isLast = i === messages.length - 1

@@ -174,6 +174,12 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         chars: Number(data.chars ?? (data.text ?? '').length),
         text: String(data.text ?? ''),
       })
+      // Uploading a script promises "Enter to analyze"; make that true even
+      // if the user was still on the Inspiration tab.
+      if (activeTool === null || activeTool === 'inspiration') {
+        setActiveTool('review')
+        setInspOpen(false)
+      }
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : t('剧本上传失败', 'Upload failed'))
     } finally {

@@ -164,6 +164,7 @@ button {
   position: relative;
   scroll-behavior: auto;
   overflow-anchor: none;
+  overscroll-behavior: contain;
 }
 
 .chat-inner {

@@ -5560,5 +5560,453 @@
     }
    ]
   }
- ]
+ ],
+ "genre_sets": {
+  "Vlog/美食": {
+   "script": {
+    "kind": "script",
+    "film_kind": "Vlog / Food",
+    "logline": {
+     "title": "A Bowl After Midnight",
+     "title_en": "",
+     "theme": "A late-night Hong Kong wonton stall becomes a portrait of craft, patience and the city after midnight.",
+     "summary": "A Vlog / Food script in six segments: cold open, the street, the hands, the fire, the bowl, and the quiet after midnight."
+    },
+    "script_text": "A BOWL AFTER MIDNIGHT\nA Vlog / Food script — Hong Kong, late night\n\nSEGMENT 1 — COLD OPEN\n\nVISUAL: Macro of amber broth trembling in a white bowl. Steam curls into the frame. A spoon breaks the surface; a wonton turns over.\nVOICEOVER (V.O.): At 1:12 a.m., most of Hong Kong is deciding whether to go home. One stall is just getting warm.\nSOUND: Low city hum, the hiss of a gas burner, a tram bell far away.\nON-SCREEN TEXT: Hong Kong — 01:12\n\nSEGMENT 2 — THE STREET\n\nVISUAL: Wide shot of a narrow street. Neon reflects in puddles. A queue of six people stands under a plastic awning. The camera drifts past them to the stall.\nVOICEOVER (V.O.): This is not a famous restaurant. It is a corner, a folding table, and a grandmother who has been making the same wonton for thirty years.\nSOUND: Traffic, cutlery, conversation in Cantonese.\nON-SCREEN TEXT: Wonton noodles — made to order\n\nSEGMENT 3 — THE HANDS\n\nVISUAL: Close-ups: flour on a wooden board; a thumb pressing a wrapper; pork and prawn filling; the wrapper folded into a small purse. The grandmother's hands move faster than the camera can follow.\nVOICEOVER (V.O.): The recipe is simple. The timing is not. The wrapper has to be thin enough to see the filling, strong enough to survive the boil.\nSOUND: Knife on wood, water boiling, the soft slap of dough.\nON-SCREEN TEXT: 30 years of practice\n\nSEGMENT 4 — THE FIRE\n\nVISUAL: The wok flares. Noodles are blanched in a metal basket. The cook lifts the basket, shakes it once, and drops the noodles into the bowl. Broth follows. A spoon of lard, a pinch of spring onion.\nVOICEOVER (V.O.): Everything happens in the last ninety seconds. The broth is ready. The noodles are not. The bowl waits.\nSOUND: Gas, water, metal, the clink of a bowl on the counter.\nON-SCREEN TEXT: Broth: 6 hours. Noodles: 90 seconds.\n\nSEGMENT 5 — THE BOWL\n\nVISUAL: The bowl lands in front of the camera. Steam fogs the lens. The first bite: noodles lifted, broth clinging. The grandmother watches from behind the counter.\nVOICEOVER (V.O.): The first bite is always too hot. That is part of it. You wait. You blow on it. The city keeps moving behind you.\nSOUND: Slurping, rain starting, a radio playing an old song.\nON-SCREEN TEXT: Eat it while it is hot\n\nSEGMENT 6 — AFTER MIDNIGHT\n\nVISUAL: The bowl is empty. The queue is gone. The grandmother wipes the counter. The camera pulls back to the empty street; the stall light is the last one on.\nVOICEOVER (V.O.): By two, the street is quiet. The broth is still warm. Somewhere, someone is already thinking about tomorrow's bowl.\nSOUND: Distant traffic, a shutter rolling down, rain.\nON-SCREEN TEXT: See you tomorrow\n\nEND CARD\nVISUAL: The stall name in white on black. A single steam curl.\nVOICEOVER (V.O.): If you are in Hong Kong, follow the light.\n",
+    "characters": [],
+    "mode": "online",
+    "text": "### Logline\n**Title**: A Bowl After Midnight\n**Theme**: A late-night Hong Kong wonton stall becomes a portrait of craft, patience and the city after midnight.\n\nA Vlog / Food script in six segments: cold open, the street, the hands, the fire, the bowl, and the quiet after midnight.\n\nThe full script is in the scrollable area below; click \"Download PDF\" for the formatted screenplay.\n\nYour script is ready. Tell me which scene to change, or reply **storyboard** for a shot list."
+   },
+   "storyboard": {
+    "kind": "storyboard",
+    "logline": {
+     "title": "A Bowl After Midnight",
+     "title_en": "",
+     "theme": "A late-night Hong Kong wonton stall becomes a portrait of craft, patience and the city after midnight.",
+     "summary": "A Vlog / Food script in six segments: cold open, the street, the hands, the fire, the bowl, and the quiet after midnight."
+    },
+    "shots": [
+     {
+      "id": 1,
+      "scene_no": 1,
+      "scene": "SEGMENT 1 — COLD OPEN",
+      "shot_type": "Wide",
+      "angle": "Eye-level",
+      "movement": "Handheld drift",
+      "lens": "35mm",
+      "duration": "4s",
+      "description": "Macro of amber broth and steam; a spoon breaks the surface.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Gas hiss, city hum.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 2,
+      "scene_no": 1,
+      "scene": "SEGMENT 1 — COLD OPEN",
+      "shot_type": "Medium",
+      "angle": "Low angle",
+      "movement": "Static",
+      "lens": "50mm",
+      "duration": "5s",
+      "description": "The first wonton turns over in the bowl.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Gas hiss, city hum.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 3,
+      "scene_no": 1,
+      "scene": "SEGMENT 1 — COLD OPEN",
+      "shot_type": "Close-up",
+      "angle": "High angle",
+      "movement": "Slow pull out",
+      "lens": "65mm",
+      "duration": "6s",
+      "description": "The grandmother lifts the lid; steam fills the frame.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Gas hiss, city hum.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 4,
+      "scene_no": 2,
+      "scene": "SEGMENT 2 — THE STREET",
+      "shot_type": "Medium",
+      "angle": "Low angle",
+      "movement": "Static",
+      "lens": "50mm",
+      "duration": "5s",
+      "description": "Wide of the narrow street; neon in puddles; queue under awning.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Traffic, Cantonese conversation.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 5,
+      "scene_no": 2,
+      "scene": "SEGMENT 2 — THE STREET",
+      "shot_type": "Close-up",
+      "angle": "High angle",
+      "movement": "Slow pull out",
+      "lens": "65mm",
+      "duration": "6s",
+      "description": "Medium of the stall; grandmother behind steam.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Traffic, Cantonese conversation.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 6,
+      "scene_no": 2,
+      "scene": "SEGMENT 2 — THE STREET",
+      "shot_type": "Extreme Close-up",
+      "angle": "Eye-level",
+      "movement": "Slow push in",
+      "lens": "85mm",
+      "duration": "3s",
+      "description": "Over-the-shoulder of a customer waiting.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Traffic, Cantonese conversation.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 7,
+      "scene_no": 3,
+      "scene": "SEGMENT 3 — THE HANDS",
+      "shot_type": "Close-up",
+      "angle": "High angle",
+      "movement": "Slow pull out",
+      "lens": "65mm",
+      "duration": "6s",
+      "description": "Close-up of flour and a thumb pressing a wrapper.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Dough, knife on wood.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 8,
+      "scene_no": 3,
+      "scene": "SEGMENT 3 — THE HANDS",
+      "shot_type": "Extreme Close-up",
+      "angle": "Eye-level",
+      "movement": "Slow push in",
+      "lens": "85mm",
+      "duration": "3s",
+      "description": "Insert of pork and prawn filling folded into a purse.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Dough, knife on wood.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 9,
+      "scene_no": 3,
+      "scene": "SEGMENT 3 — THE HANDS",
+      "shot_type": "Medium Close-up",
+      "angle": "Low angle",
+      "movement": "Handheld drift",
+      "lens": "100mm",
+      "duration": "4s",
+      "description": "Medium close-up of the grandmother's hands moving fast.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Dough, knife on wood.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 10,
+      "scene_no": 4,
+      "scene": "SEGMENT 4 — THE FIRE",
+      "shot_type": "Extreme Close-up",
+      "angle": "Eye-level",
+      "movement": "Slow push in",
+      "lens": "85mm",
+      "duration": "3s",
+      "description": "Wide of the wok flaring; cook silhouetted.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Water, metal, gas.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 11,
+      "scene_no": 4,
+      "scene": "SEGMENT 4 — THE FIRE",
+      "shot_type": "Medium Close-up",
+      "angle": "Low angle",
+      "movement": "Handheld drift",
+      "lens": "100mm",
+      "duration": "4s",
+      "description": "Close-up of noodles lifted in a metal basket.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Water, metal, gas.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 12,
+      "scene_no": 4,
+      "scene": "SEGMENT 4 — THE FIRE",
+      "shot_type": "Macro",
+      "angle": "High angle",
+      "movement": "Static",
+      "lens": "24mm",
+      "duration": "5s",
+      "description": "Insert of broth poured; lard and spring onion.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Water, metal, gas.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 13,
+      "scene_no": 5,
+      "scene": "SEGMENT 5 — THE BOWL",
+      "shot_type": "Medium Close-up",
+      "angle": "Low angle",
+      "movement": "Handheld drift",
+      "lens": "100mm",
+      "duration": "4s",
+      "description": "The bowl lands; steam fogs the lens.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Slurp, rain, radio.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 14,
+      "scene_no": 5,
+      "scene": "SEGMENT 5 — THE BOWL",
+      "shot_type": "Macro",
+      "angle": "High angle",
+      "movement": "Static",
+      "lens": "24mm",
+      "duration": "5s",
+      "description": "First bite: noodles lifted, broth clinging.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Slurp, rain, radio.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 15,
+      "scene_no": 5,
+      "scene": "SEGMENT 5 — THE BOWL",
+      "shot_type": "Wide",
+      "angle": "Eye-level",
+      "movement": "Slow pull out",
+      "lens": "35mm",
+      "duration": "6s",
+      "description": "Reaction: eyes close; a small nod.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Slurp, rain, radio.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 16,
+      "scene_no": 6,
+      "scene": "SEGMENT 6 — AFTER MIDNIGHT",
+      "shot_type": "Macro",
+      "angle": "High angle",
+      "movement": "Static",
+      "lens": "24mm",
+      "duration": "5s",
+      "description": "Empty bowl; queue gone; grandmother wipes counter.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Distant traffic, shutter, rain.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 17,
+      "scene_no": 6,
+      "scene": "SEGMENT 6 — AFTER MIDNIGHT",
+      "shot_type": "Wide",
+      "angle": "Eye-level",
+      "movement": "Slow pull out",
+      "lens": "35mm",
+      "duration": "6s",
+      "description": "Wide of empty street; stall light last one on.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Distant traffic, shutter, rain.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     },
+     {
+      "id": 18,
+      "scene_no": 6,
+      "scene": "SEGMENT 6 — AFTER MIDNIGHT",
+      "shot_type": "Medium",
+      "angle": "Low angle",
+      "movement": "Slow push in",
+      "lens": "50mm",
+      "duration": "3s",
+      "description": "Close-up of empty bowl; signature end card.",
+      "dialogue": "",
+      "lighting": "Motivated stall light; keep warm highlights and cool street shadows.",
+      "sound": "Distant traffic, shutter, rain.",
+      "purpose": "Carry the sensory and narrative beat of the segment.",
+      "transition": "Cut"
+     }
+    ],
+    "coverage_notes": "Vlog/food coverage: shoot the cold open and signature first, then the process in one continuous pass. Keep the grandmother's hands and the steam as the visual anchors.",
+    "mode": "online",
+    "scene_count": 6,
+    "text": "The storyboard (18 shots covering 6 segments) is below; click \"Download CSV\" to get the table."
+   },
+   "schedule": {
+    "kind": "schedule",
+    "summary": "A 2-day Vlog/Food shoot at a late-night wonton stall: Day 1 captures the street, process and interview; Day 2 picks up the bowl, after-midnight mood and voiceover.",
+    "crew": [
+     {
+      "role": "Director",
+      "count": 1
+     },
+     {
+      "role": "Camera",
+      "count": 1
+     },
+     {
+      "role": "Gaffer",
+      "count": 1
+     },
+     {
+      "role": "Sound",
+      "count": 1
+     },
+     {
+      "role": "PA",
+      "count": 1
+     }
+    ],
+    "equipment": [
+     "Sony FX3",
+     "24mm / 50mm / 85mm primes",
+     "100mm macro",
+     "small LED panel",
+     "bounce board",
+     "lav mic",
+     "handheld recorder"
+    ],
+    "locations": [
+     {
+      "name": "Late-night wonton stall, Sham Shui Po",
+      "note": "Corner stall, awning, wet street; permission and power for practicals."
+     }
+    ],
+    "days": [
+     {
+      "day": 1,
+      "date": "2026-10-09",
+      "call": "18:30",
+      "wrap": "01:30",
+      "scenes": [
+       "1",
+       "2",
+       "3",
+       "4"
+      ],
+      "notes": "Street and queue at blue hour; process and wok after dark; interview at the counter."
+     },
+     {
+      "day": 2,
+      "date": "2026-10-10",
+      "call": "19:00",
+      "wrap": "02:00",
+      "scenes": [
+       "5",
+       "6"
+      ],
+      "notes": "Bowl and first bite; after-midnight empties; voiceover in a quiet room."
+     }
+    ],
+    "risks": [
+     {
+      "risk": "Steam fogs lens",
+      "mitigation": "Keep a dry cloth and a second lens; shoot the bowl twice."
+     },
+     {
+      "risk": "Street noise",
+      "mitigation": "Record wild ambience and lav the grandmother; keep a backup take."
+     }
+    ],
+    "calendar": [
+     {
+      "title": "Day 1 — A Bowl After Midnight",
+      "start": "2026-10-09T18:30:00",
+      "end": "2026-10-10T01:30:00",
+      "location": "Sham Shui Po",
+      "description": "Street, process, wok, interview."
+     },
+     {
+      "title": "Day 2 — A Bowl After Midnight",
+      "start": "2026-10-10T19:00:00",
+      "end": "2026-10-11T02:00:00",
+      "location": "Sham Shui Po",
+      "description": "Bowl, after-midnight, voiceover."
+     }
+    ],
+    "shots_count": 18,
+    "preferences": "2 nights; shoot the stall after 21:00; keep gear minimal.",
+    "mode": "online",
+    "text": "The shooting plan is below; download the .ics calendar for the demo dates."
+   }
+  }
+ },
+ "review": {
+  "kind": "script_check",
+  "logline": null,
+  "script_text": "THE LAST TRAM\n\nFADE IN:\n\nEXT. HONG KONG TRAM DEPOT - NIGHT\n\nRain needles the corrugated roof. A single green tram waits under a sodium lamp.\n\nINT. TRAM - NIGHT\n\nMEI, a conductor, finds a dry envelope on the last seat.\n\nEXT. TRAM STOP - NIGHT\n\nA MAN waits in the rain.\n\nMEI\nYou're late.\n\nMAN\nI know.\n\nShe does not open the door.\n\nFADE OUT.",
+  "findings": [
+   {
+    "type": "Structure",
+    "severity": "High",
+    "location": "Scene 2",
+    "problem": "The envelope appears without enough setup; the audience has no reason to care before it is opened.",
+    "suggestion": "Plant the envelope earlier or show Mei noticing it on a previous round."
+   },
+   {
+    "type": "Character motivation",
+    "severity": "Medium",
+    "location": "Scene 3",
+    "problem": "Mei's refusal to open the door is strong, but the reason is unclear.",
+    "suggestion": "Add one line or action that shows what opening the door would cost her."
+   },
+   {
+    "type": "Dialogue",
+    "severity": "Low",
+    "location": "Scene 3",
+    "problem": "The final exchange is effective but slightly too neat.",
+    "suggestion": "Let the last line land on an image instead of a symmetrical reply."
+   }
+  ],
+  "mode": "online",
+  "text": "Script recognised (~310 characters). First, a conflict and issue check:\n\n**Overall**: A strong, restrained premise with a clear visual world. The rain, tram and envelope give the story a precise atmosphere, but the emotional stakes need one more concrete detail before the final refusal.\n\n**Issues found**:\n- [High] Scene 2: The envelope appears without enough setup; plant it earlier or show Mei noticing it on a previous round.\n- [Medium] Scene 3: Mei's refusal is strong, but the reason is unclear; add one action or line that shows what opening the door would cost her.\n- [Low] Scene 3: The final exchange is effective but slightly too neat; let the last line land on an image.\n\n**Strengths**: The premise is clear; the tram and rain create a coherent visual world; the ending has a quiet turn.\n\n**Next steps**: Add one setup beat for the envelope, one concrete cost for Mei, then reformat in standard screenplay layout.\n\nWould you like me to reformat this script into **standard screenplay format** (scene headings / action / character and dialogue on separate lines)? Reply **reformat**; the result can be downloaded as a PDF."
+ }
 }
