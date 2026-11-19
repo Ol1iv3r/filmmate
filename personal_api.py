@@ -89,7 +89,7 @@ async def add_personal(body: AddFilm):
 
     try:
         import demo_fixtures
-        if demo_fixtures.enabled():
+        if demo_fixtures.enabled() and demo_fixtures.all_demo_urls(urls):
             demo = await demo_fixtures.add_references(urls, body.lang)
             if demo is not None:
                 return demo

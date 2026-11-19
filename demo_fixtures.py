@@ -18,7 +18,7 @@ import config
 import personal_library
 
 FIXTURE_FILE = config.BASE_DIR / "data" / "demo" / "demo_fixtures.json"
-_state: dict = {"set_index": None, "theme_index": 0, "fixtures": None, "demo_refs": set()}
+_state: dict = {"set_index": None, "theme_index": 0, "fixtures": None, "demo_refs": set(), "demo_flow": False}
 
 
 def enabled() -> bool:
@@ -36,6 +36,21 @@ def _load() -> dict:
 
 def _variants(key: str) -> list:
     return _load().get(key) or []
+
+
+def _is_hong_kong(text: str) -> bool:
+    return bool(re.search(r"\bhong\s*kong\b|香港", text or "", re.I))
+
+
+def _is_reference_trigger(text: str) -> bool:
+    return bool(re.search(
+        r"life\s*of\s*riza|cinematic\s*everyday|everyday\s*life|slow\s*living|vlog",
+        text or "", re.I,
+    ))
+
+
+def all_demo_urls(urls: list[str]) -> bool:
+    return bool(urls) and all(_find_ref(str(u or "")) is not None for u in urls)
 
 
 def _ensure_set() -> int:
@@ -109,23 +124,31 @@ def _render_inspiration(payload: dict, idea: str) -> str:
 async def inspiration(idea: str, kind: str | None = None, history: list | None = None) -> dict | None:
     if not enabled():
         return None
-    if reference_ready():
+    if kind not in (None, "电影", "Film"):
+        _state["demo_flow"] = False
+        return None
+    if _is_hong_kong(idea):
+        _state["demo_flow"] = True
+        _state["set_index"] = random.randrange(3)
+        _state["theme_index"] = 0
+        payload = copy.deepcopy(_variants("inspiration")[_state["set_index"]])
+        payload["kind"] = "Film"
+        payload["idea"] = idea
+        payload["text"] = _render_inspiration(payload, idea)
+        return await _timed(payload, 1100, 3400)
+    if reference_ready() and _is_reference_trigger(idea):
+        _state["demo_flow"] = False
         ref_variants = _variants("reference_inspiration")
         payload = copy.deepcopy(ref_variants[random.randrange(len(ref_variants))])
         payload["idea"] = idea
         payload["text"] = _render_inspiration(payload, idea)
         return await _timed(payload, 1000, 3000)
-    _state["set_index"] = random.randrange(3)
-    _state["theme_index"] = 0
-    payload = copy.deepcopy(_variants("inspiration")[_state["set_index"]])
-    payload["kind"] = "Film"
-    payload["idea"] = idea
-    payload["text"] = _render_inspiration(payload, idea)
-    return await _timed(payload, 1100, 3400)
+    _state["demo_flow"] = False
+    return None
 
 
 async def script(message: str = "") -> dict | None:
-    if not enabled():
+    if not enabled() or not _state.get("demo_flow"):
         return None
     _select_theme(message)
     payload = copy.deepcopy(_variants("scripts")[_script_index()])
@@ -133,14 +156,14 @@ async def script(message: str = "") -> dict | None:
 
 
 async def storyboard() -> dict | None:
-    if not enabled():
+    if not enabled() or not _state.get("demo_flow"):
         return None
     payload = copy.deepcopy(_variants("storyboards")[_script_index()])
     return await _timed(payload, 1200, 3300)
 
 
 async def schedule() -> dict | None:
-    if not enabled():
+    if not enabled() or not _state.get("demo_flow"):
         return None
     payload = copy.deepcopy(_variants("schedules")[_script_index()])
     return await _timed(payload, 900, 2800)
