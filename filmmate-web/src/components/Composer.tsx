@@ -299,7 +299,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     : activeTool === 'schedule'
       ? t('拍摄计划：可先说偏好（避开哪些日期 / 几天拍完 / 每天工时 / 地点限制），回车生成；直接回车 = 按默认排期',
         'Shooting plan: state preferences (dates to avoid / days / hours / locations), then Enter; empty Enter = default plan')
-      : activeTool
+      : activeTool === 'review' && inspTheme !== null
+        ? t(`已选 Theme ${inspTheme + 1}，回车生成这一套的剧本`, `Theme ${inspTheme + 1} selected — press Enter to write that script`)
+        : activeTool
         ? t('当前功能：', 'Active tool: ') + (TOOL_CHIPS.find((c) => c.tool === activeTool)?.labelZh ?? '') + t('（可先上传剧本）', ' (upload a script first)')
         : ''
 
