@@ -2073,7 +2073,8 @@ def _format_review(report) -> str:
     return "\n".join(lines)
 
 
-async def script_tool(message: str, api_key: str = None, script_text: str = "", history: list = None, kind: str = None):
+async def script_tool(message: str, api_key: str = None, script_text: str = "", history: list = None,
+                      kind: str = None, theme_index: int | None = None):
     """剧本检查/生成：有剧本查冲突并问是否改标准格式；没剧本按主题生成。"""
     msg = (message or "").strip()
     script = (script_text or "").strip()
@@ -2081,7 +2082,7 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
 
     try:
         import demo_fixtures
-        demo = await demo_fixtures.script(msg, script, kind)
+        demo = await demo_fixtures.script(msg, script, kind, theme_index=theme_index)
         if demo is not None:
             if demo.get("script_text"):
                 demo["script_text"] = _clean_script_text(demo["script_text"])
@@ -2157,7 +2158,10 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
         film_kind = kind or _kind_from_history(history) or kind_from_text(msg) or "短片"
         guide = KIND_GUIDE["script"].get(film_kind, KIND_GUIDE["script"]["短片"])
         taste = _taste_block()
+        theme_note = (f"用户已选中的灵感方向：Theme {theme_index + 1}。请严格写这一套主题。\n"
+                      if isinstance(theme_index, int) and theme_index >= 0 else "")
         user_prompt = (
+            f"{theme_note}"
             f"主题：{theme}\n输出类型：{film_kind}\n类型与格式要求（必须遵守）：{guide}\n"
             + (("用户收藏的参考片（贴近其品味）：\n" + taste + "\n") if taste else "")
             + "请只输出这个类型该有的剧本/脚本格式，不要写成别的片种。"

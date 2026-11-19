@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef, useState, type KeyboardEvent, type FormEvent } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type KeyboardEvent, type FormEvent } from 'react'
 import { ArrowUp, Loader2, Paperclip, Square } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { API_BASE } from '../lib/transport'
@@ -17,6 +17,7 @@ export interface ComposerHandle {
 export interface SendMeta {
   tool?: string | null
   kind?: string | null
+  themeIndex?: number | null
 }
 
 interface ComposerProps {
@@ -78,6 +79,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const [activeTool, setActiveTool] = useState<string | null>(null)
   const [inspOpen, setInspOpen] = useState(false)
   const [inspKind, setInspKind] = useState<string | null>(null)
+  const [inspTheme, setInspTheme] = useState<number | null>(null)
   const [scriptFile, setScriptFile] = useState<{ name: string; chars: number; text: string } | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
@@ -91,6 +93,22 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const say = (zh: string, en: string) => {
     window.dispatchEvent(new CustomEvent('filmy:say', { detail: { zh, en } }))
   }
+
+  useEffect(() => {
+    const handler = (raw: Event) => {
+      const detail = (raw as CustomEvent<{ index?: number; styleName?: string }>).detail
+      const index = Number(detail?.index)
+      if (!Number.isFinite(index)) return
+      setInspTheme(index)
+      setActiveTool('review')
+      setInspOpen(false)
+      onChange(t(`根据 Theme ${index + 1} 写一版剧本`, `Write a script for Theme ${index + 1}`))
+      say(`已选 Theme ${index + 1}，接下来写这一套的剧本`, `Theme ${index + 1} selected — write the script next`)
+      requestAnimationFrame(() => taRef.current?.focus())
+    }
+    window.addEventListener('filmmate:select-theme', handler)
+    return () => window.removeEventListener('filmmate:select-theme', handler)
+  }, [onChange, t])
 
   useImperativeHandle(ref, () => ({
     fill: (text: string) => {
@@ -134,7 +152,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         ? t('根据最近的分镜生成拍摄方案', 'Generate a shooting plan from the latest storyboard')
         : t('检查这份剧本，并告诉我冲突和修改建议', 'Check this script and tell me the conflicts'))
     if (activeTool !== 'inspiration' && scriptFile) outgoing += '\n\n【上传剧本】\n' + scriptFile.text
-    onSend(outgoing, { tool: activeTool, kind: inspKind })
+    onSend(outgoing, { tool: activeTool, kind: inspKind, themeIndex: inspTheme })
     onChange('')
     const ta = taRef.current
     if (ta) ta.style.height = 'auto'
@@ -311,6 +329,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
               className={cn('quick-chip', inspKind === k.value && 'active')}
               onClick={() => {
                 setInspKind(k.value)
+                setInspTheme(null)
                 setInspOpen(false)
                 taRef.current?.focus()
               }}
@@ -355,6 +374,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             onClick={() => {
               setActiveTool(null)
               setInspKind(null)
+              setInspTheme(null)
               setInspOpen(false)
             }}
           >

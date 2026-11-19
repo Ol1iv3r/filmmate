@@ -138,7 +138,7 @@ def react_chat_body(body):
         if turns[index]["role"] == "user":
             meta = turns[index].get("metadata") or {}
             body = {"message": turns[index]["content"], "history": turns[:index]}
-            for key in ("tool", "kind", "storyboard", "script_text", "lang"):
+            for key in ("tool", "kind", "storyboard", "script_text", "theme_index", "lang"):
                 if meta.get(key) is not None:
                     body[key] = meta[key]
             return body
@@ -287,7 +287,7 @@ async def handle_qa(message: str, history: list, api_key: str, script_text: str 
 
 
 async def handle_tool(tool: str, message: str, api_key: str, script_text: str = "", script_name: str = "",
-                      history: list = None, kind: str = None, storyboard: dict = None):
+                      history: list = None, kind: str = None, storyboard: dict = None, theme_index: int | None = None):
     _tool_t0 = time.time()
     # 只有剧本类任务才用上传文件覆盖输入；灵感/案例仍按用户当前输入检索
     script_tools = ("review", "storyboard", "rundown", "schedule")
@@ -307,7 +307,7 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
         return
 
     if tool == "review":
-        payload = await tools.script_tool(message, api_key, script_text, history, kind=kind)
+        payload = await tools.script_tool(message, api_key, script_text, history, kind=kind, theme_index=theme_index)
     elif tool == "storyboard":
         payload = await tools.storyboard_tool(message, api_key, script_text, history)
     elif tool == "schedule":
@@ -351,6 +351,10 @@ async def chat(req: Request):
     history = body.get("history") or []
     kind_hint = (body.get("kind") or "").strip() or None
     storyboard_payload = body.get("storyboard") if isinstance(body.get("storyboard"), dict) else None
+    try:
+        theme_index = int(body.get("theme_index")) if body.get("theme_index") is not None else None
+    except (TypeError, ValueError):
+        theme_index = None
     # React 前端上传剧本后，会把它附在消息末尾（【上传剧本】+ 原文）
     if "【上传剧本】" in message:
         head, _, uploaded = message.partition("【上传剧本】")
@@ -414,7 +418,8 @@ async def chat(req: Request):
                     yield ev
             else:
                 async for ev in handle_tool(tool, message, api_key, script_text, script_name, history,
-                                             kind=kind_hint, storyboard=storyboard_payload):
+                                             kind=kind_hint, storyboard=storyboard_payload,
+                                             theme_index=theme_index):
                     yield ev
             yield "done", {}
         except Exception as e:  # noqa: BLE001

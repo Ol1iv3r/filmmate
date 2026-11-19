@@ -1449,6 +1449,7 @@ button {
   font-size: 11px;
 }
 .insp-film-head { font-size: 13px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.insp-film-head .panel-btn { margin-left: auto; }
 .insp-idx { color: #5eead4; font-weight: 600; }
 .insp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
 .insp-grid img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; cursor: zoom-in; background: #0a0e15; }

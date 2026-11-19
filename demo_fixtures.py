@@ -69,7 +69,7 @@ def _script_index() -> int:
 
 def _select_theme(message: str = "") -> None:
     text = message or ""
-    m = re.search(r"(?:theme|主题)\s*([123])", text, re.I)
+    m = re.search(r"(?:theme|style|主题|风格)\s*([123])", text, re.I)
     if m:
         _state["theme_index"] = int(m.group(1)) - 1
         return
@@ -164,9 +164,12 @@ def _genre_payload(kind: str, key: str) -> dict | None:
     return copy.deepcopy((sets.get(kind) or {}).get(key))
 
 
-async def script(message: str = "", script_text: str = "", kind: str | None = None) -> dict | None:
+async def script(message: str = "", script_text: str = "", kind: str | None = None,
+                 theme_index: int | None = None) -> dict | None:
     if not enabled():
         return None
+    if isinstance(theme_index, int) and 0 <= theme_index <= 2:
+        _state["theme_index"] = theme_index
     if script_text and _is_review_request(message):
         payload = copy.deepcopy(_load().get("review") or {})
         if not payload:

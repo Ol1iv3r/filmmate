@@ -149,6 +149,7 @@ function ChatInner({
       const metadata: Record<string, unknown> = {
         tool: meta?.tool ?? null,
         kind: meta?.kind ?? null,
+        theme_index: meta?.themeIndex ?? null,
         lang: targetLang ?? lang,
       }
       if (meta?.tool === 'storyboard' || meta?.tool === 'review' || (!meta?.tool && /剧本|场次|角色|台词|梗要/.test(text))) {

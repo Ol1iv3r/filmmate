@@ -14,18 +14,31 @@ interface InspiredFilm {
   source?: string
 }
 
+interface InspirationStyle {
+  style_name?: string
+  why_fits?: string
+  theme?: string
+}
+
 interface InspirationPayload {
   kind?: string
   idea?: string
   films?: InspiredFilm[]
-  styles?: unknown[]
+  styles?: InspirationStyle[]
 }
 
 /** 找灵感结果：每部契合电影用 2x2 四格静帧展示，点击可放大。 */
 export function InspirationPanel({ payload }: { payload: InspirationPayload }) {
   const { t, lang } = useI18n()
   const films = payload.films ?? []
+  const styles = payload.styles ?? []
   const [zoom, setZoom] = useState<string | null>(null)
+
+  const useTheme = (index: number) => {
+    window.dispatchEvent(new CustomEvent('filmmate:select-theme', {
+      detail: { index, styleName: styles[index]?.style_name ?? '' },
+    }))
+  }
   if (!films.length) return null
   return (
     <div className="insp-panel">
@@ -50,6 +63,11 @@ export function InspirationPanel({ payload }: { payload: InspirationPayload }) {
               <a className="link-btn" href={f.url} target="_blank" rel="noreferrer">
                 {t('原片链接', 'Watch link')}
               </a>
+            )}
+            {styles[i]?.theme && (
+              <button className="panel-btn" onClick={() => useTheme(i)}>
+                {t('用这个主题写剧本', 'Use this theme for the script')}
+              </button>
             )}
           </div>
           <div className="insp-grid">

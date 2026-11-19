@@ -18,9 +18,10 @@ Set `DEMO_MODE=1` in `.env`, then restart the app.
 ## Notes
 
 - The three inspiration sets are coherent: inspiration → script → storyboard → plan stay in the same set/theme. Calling inspiration again **with Hong Kong** can switch to another set. Each set has three themes, so there are 9 full script/storyboard/plan combinations.
+- To choose a theme, click **Use this theme for the script** on any matching-film card, or type `write script: theme 2` / `theme 3`. The Script, Storyboard and Plan then all use that theme.
 - A non-Hong Kong inspiration resets the demo flow. Script/storyboard/plan then use the normal model path again.
 - Timings are randomized per feature; Script, Storyboard, Plan and Script check are 8.8–9.8s, not a fixed 5s.
-- The shooting plan is generated from the current storyboard, not a fixed static plan. With 18 shots it uses 2 days; with 21–27 shots it uses 3 days. A typed start/end date overrides the built-in demo dates.
+- The shooting plan is generated from the current storyboard, not a fixed static plan. With 18 shots it uses 2 days; with 21–27 shots it uses 3 days. A typed start/end date overrides the built-in demo dates (e.g. `start 2026-12-01 end 2026-12-03`).
 - The reference-film step only accepts the three Life Of Riza links in demo mode.
 - To leave demo mode, set `DEMO_MODE=0` and restart.
 
