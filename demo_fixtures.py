@@ -11,11 +11,12 @@ import copy
 import json
 import random
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import config
 import personal_library
+from schedule_dates import date_sequence, parse_range, range_days
 
 FIXTURE_FILE = config.BASE_DIR / "data" / "demo" / "demo_fixtures.json"
 _state: dict = {"set_index": None, "theme_index": 0, "fixtures": None, "demo_refs": set(), "demo_flow": False, "genre_mode": False}
@@ -201,17 +202,105 @@ async def storyboard() -> dict | None:
     return await _timed(payload, 8800, 9800)
 
 
-async def schedule() -> dict | None:
+def _plan_locations(shots: list) -> list[str]:
+    out = []
+    for shot in shots:
+        heading = str(shot.get("scene") or "")
+        clean = re.sub(r"^(?:INT\.|EXT\.|INT\./EXT\.)\s*", "", heading, flags=re.I)
+        clean = re.split(r"\s+-\s+", clean)[0].strip().title()
+        if clean and clean not in out:
+            out.append(clean)
+    return out[:6]
+
+
+def _build_plan(storyboard: dict, message: str = "", genre: bool = False) -> dict:
+    """Analyse the current shot list and write a dated shooting plan."""
+    shots = (storyboard or {}).get("shots") or []
+    logline = (storyboard or {}).get("logline") or {}
+    title = logline.get("title") or "Untitled shoot"
+    # Scene order comes from the actual storyboard, not from a fixed fixture.
+    scene_order = []
+    seen = set()
+    for shot in shots:
+        key = shot.get("scene_no") if shot.get("scene_no") is not None else shot.get("scene")
+        if key not in seen:
+            seen.add(key)
+            scene_order.append(key)
+    scene_count = max(1, len(scene_order))
+    # Roughly 9-11 setups per day; long boards get 3 days, not a fixed 2.
+    target_days = max(2, min(4, (len(shots) + 9) // 10))
+    start, end = parse_range(message)
+    requested_days = range_days(start, end)
+    if requested_days:
+        target_days = requested_days
+    target_days = max(1, min(5, target_days))
+    if start is None:
+        start = date(2026, 11, 24)  # built-in demo start date
+    dates = date_sequence(start, target_days)
+    if end and start and end < start:
+        dates = [start.isoformat()] * target_days
+
+    per_day = max(1, (scene_count + target_days - 1) // target_days)
+    groups = [scene_order[i:i + per_day] for i in range(0, scene_count, per_day)]
+    if len(groups) < target_days:
+        # Keep the requested number of days even when the board is short.
+        groups += [[] for _ in range(target_days - len(groups))]
+    groups = groups[:target_days]
+    days = []
+    for index, group in enumerate(groups, 1):
+        days.append({
+            "day": index, "date": dates[index - 1],
+            "call": "08:00", "wrap": "19:00",
+            "scenes": [str(x) for x in group if x != ""],
+            "notes": "Masters first, then coverage; protect the final quiet beat.",
+        })
+    locations = _plan_locations(shots)
+    if genre:
+        crew = [{"role": "Director", "count": 1}, {"role": "Camera", "count": 1},
+                {"role": "Gaffer", "count": 1}, {"role": "Sound", "count": 1},
+                {"role": "PA", "count": 1}]
+        equipment = ["Sony FX3", "24mm / 50mm / 85mm primes", "100mm macro",
+                     "small LED panel", "bounce board", "lav mic", "handheld recorder"]
+    else:
+        crew = [{"role": "Director", "count": 1}, {"role": "Producer", "count": 1},
+                {"role": "Camera", "count": 2}, {"role": "Gaffer", "count": 1},
+                {"role": "Sound", "count": 1}, {"role": "PA", "count": 1}]
+        equipment = ["Sony FX3", "24mm / 50mm / 85mm primes", "1x1 LED panel",
+                     "bounce board", "rain cover", "boom mic"]
+    calendar = [
+        {"title": f"Day {d['day']} — {title}", "start": d["date"] + "T08:00:00",
+         "end": d["date"] + "T19:00:00", "location": locations[0] if locations else "Hong Kong",
+         "description": f"Scenes {', '.join(d['scenes']) or '—'} — plan analysed from the storyboard."}
+        for d in days
+    ]
+    summary = (
+        f"A {len(days)}-day plan for \"{title}\": {len(scene_order)} scenes, "
+        f"{len(shots)} shots. Scenes are grouped by the actual shot list, with masters first "
+        f"and the close-ups on the final pass."
+    )
+    return {
+        "kind": "schedule", "summary": summary,
+        "crew": crew, "equipment": equipment,
+        "locations": [{"name": name, "note": "Practical location; check access and power."} for name in locations],
+        "days": days,
+        "risks": [{"risk": "Light / weather continuity", "mitigation": "Shoot the wide before the light changes; keep continuity stills."},
+                  {"risk": "Company move", "mitigation": "Do the location move in the middle of the day."}],
+        "calendar": calendar, "shots_count": len(shots),
+        "preferences": (message or "").strip() or f"{len(days)} days; built-in demo dates.",
+        "mode": "online",
+        "text": "The shooting plan is below; download the .ics calendar for the dates shown.",
+    }
+
+
+async def schedule(message: str = "", storyboard: dict | None = None) -> dict | None:
     if not enabled():
         return None
-    if _state.get("genre_mode"):
-        payload = _genre_payload("Vlog/美食", "schedule")
-        if payload is not None:
-            return await _timed(payload, 8800, 9800)
-    if not _state.get("demo_flow"):
+    if not (_state.get("demo_flow") or _state.get("genre_mode")):
         return None
-    payload = copy.deepcopy(_variants("schedules")[_script_index()])
-    return await _timed(payload, 8800, 9800)
+    if not isinstance(storyboard, dict) or not (storyboard.get("shots") or []):
+        return None
+    plan = _build_plan(storyboard, message, genre=bool(_state.get("genre_mode")))
+    return await _timed(plan, 8800, 9800)
 
 
 # --------------------------------------------------------------------------

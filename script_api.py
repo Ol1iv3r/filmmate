@@ -3,6 +3,7 @@
 前端只上传文件字节，解析在服务端完成（浏览器无需装 PDF 库）。
 安全限制：单文件 ≤ 15 MB、解析后 ≤ 200,000 字符；不落盘、不记录内容。
 """
+import html
 import io
 import re
 
@@ -188,7 +189,11 @@ async def script_pdf(payload: dict = Body(...)):
         raise HTTPException(status_code=503, detail="服务端缺少 reportlab，无法导出 PDF")
     from urllib.parse import quote
 
-    # Light cleanup: screenplay text may arrive with markdown emphasis.
+    # Light cleanup: screenplay text may arrive with markdown/HTML wrappers.
+    text = html.unescape(text)
+    text = re.sub(r"<\s*/?\s*(?:center|div|span|p|br|strong|em|b|i|u|font)\b[^>]*>", "", text, flags=re.I)
+    text = re.sub(r"<[^>]{1,120}>", "", text)
+    text = re.sub(r"^\s*>\s?", "", text, flags=re.M)
     text = text.replace("**", "").replace("__", "").replace("`", "")
     text = re.sub(r"^\s{0,3}#{1,6}\s*", "", text, flags=re.M)
     lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")

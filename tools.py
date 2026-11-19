@@ -6,6 +6,7 @@
 两个模式的输出结构完全一致,前端无需区分。
 """
 import asyncio
+import html
 import logging
 import math
 import random
@@ -22,6 +23,17 @@ logger = logging.getLogger("tools")
 def _t(zh: str, en: str) -> str:
     """Pick a user-facing string for the active UI language."""
     return en if _LANG == "en" else zh
+
+
+def _clean_script_text(text: str) -> str:
+    """Strip HTML-ish tags the model sometimes wraps around character cues."""
+    value = html.unescape(str(text or ""))
+    value = re.sub(r"<\s*/?\s*(?:center|div|span|p|br|strong|em|b|i|u|font)\b[^>]*>", "", value, flags=re.I)
+    value = re.sub(r"<[^>]{1,120}>", "", value)
+    value = re.sub(r"^\s*>\s?", "", value, flags=re.M)
+    value = re.sub(r"[ \t]+>\s*$", "", value, flags=re.M)
+    value = re.sub(r"\n{3,}", "\n\n", value)
+    return value.strip()
 
 # --------------------------------------------------------------------------
 # 意图识别(关键词规则,零延迟;前端快捷按钮可强制指定工具)
@@ -2071,6 +2083,8 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
         import demo_fixtures
         demo = await demo_fixtures.script(msg, script, kind)
         if demo is not None:
+            if demo.get("script_text"):
+                demo["script_text"] = _clean_script_text(demo["script_text"])
             return demo
     except Exception:  # noqa: BLE001
         pass
@@ -2093,7 +2107,7 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
                     [{"role": "system", "content": prompts.PROMPT_SCRIPT_REFORMAT},
                      {"role": "user", "content": script[:12000]}], api_key=api_key)
                 logline = _norm_logline(data.get("logline"))
-                text = str(data.get("script_text") or "").strip() or script
+                text = _clean_script_text(str(data.get("script_text") or "").strip()) or script
                 return {"kind": "script", "logline": logline, "script_text": text,
                         "text": _script_intro(logline) + _t("\n\n已按标准电影剧本格式整理。", "\n\nReformatted in standard screenplay layout."),
                         "mode": "online"}
@@ -2166,6 +2180,7 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
                 break
         if not text:
             raise ValueError("模型没有返回剧本正文（已重试）")
+        text = _clean_script_text(text)
         logline = await _logline_for_script(text, api_key)
         if not logline or not logline.get("title"):
             logline = _norm_logline({"title": theme[:24] or ("Untitled" if _LANG == "en" else "未命名"),
@@ -2478,10 +2493,11 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
     """拍摄计划：根据最近一版分镜生成详细拍摄方案 + 可下载的日历事件。"""
     import datetime as _dt
     from datetime import timedelta
+    import schedule_dates
 
     try:
         import demo_fixtures
-        demo = await demo_fixtures.schedule()
+        demo = await demo_fixtures.schedule(message, storyboard)
         if demo is not None:
             return demo
     except Exception:  # noqa: BLE001
@@ -2505,12 +2521,21 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
     pref = (message or "").strip()
     if re.fullmatch(r"根据最近的分镜[，,]?\s*生成(详细)?的?拍摄(方案|计划)", pref):
         pref = ""
+    start_date, end_date = schedule_dates.parse_range(pref)
+    requested_days = schedule_dates.range_days(start_date, end_date)
     summary, crew, equipment, locations, days, risks, calendar = "", [], [], [], [], [], []
     mode = "offline"
     if llm.available(api_key):
         try:
+            date_instruction = (
+                f"拍摄日期：{start_date.isoformat()} 到 {end_date.isoformat()}（共 {requested_days} 天，必须使用这些日期）\n"
+                if start_date and end_date else
+                f"拍摄开始日期：{start_date.isoformat()}（请从这一天开始排期）\n"
+                if start_date else ""
+            )
             user_prompt = (
                 f"当前日期：{today.date().isoformat()}\n"
+                f"{date_instruction}"
                 f"用户偏好/限制（必须优先满足）：{pref or '（未特别说明，按常规安排）'}\n"
                 f"分镜表（共 {len(shots)} 镜）：\n" + "\n".join(shot_lines) + lang_hint())
             data = await llm.complete_json(
@@ -2525,28 +2550,57 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
             calendar = data.get("calendar") or []
             if days:
                 mode = "online"
+            if days and start_date:
+                ordered_dates = schedule_dates.date_sequence(start_date, len(days))
+                for idx, day in enumerate(days):
+                    if isinstance(day, dict) and idx < len(ordered_dates):
+                        day["date"] = ordered_dates[idx]
+                for idx, event in enumerate(calendar):
+                    if isinstance(event, dict) and idx < len(ordered_dates):
+                        event["start"] = ordered_dates[idx] + "T09:00:00"
+                        event["end"] = ordered_dates[idx] + "T18:00:00"
         except Exception as e:  # noqa: BLE001
             logger.warning("在线拍摄计划失败(%s),回退规则版", e)
     if not days:
-        d1 = (today.date() + timedelta(days=1)).isoformat()
-        scenes = [s for s in dict.fromkeys(x.get("scene") for x in shots) if s]
-        days = [{
-            "day": 1, "date": d1, "call": "08:00", "wrap": "18:00",
-            "scenes": scenes,
-            "blocks": [
-                {"start": "08:00", "end": "09:00", "activity": _t("crew call / 器材与场景准备", "Crew call / equipment and location prep")},
-                {"start": "09:00", "end": "13:00", "activity": _t("上午：按场次拍 master + 主要 coverage", "Morning: shoot masters + main coverage by scene")},
-                {"start": "13:00", "end": "14:00", "activity": _t("午饭", "Lunch")},
-                {"start": "14:00", "end": "18:00", "activity": _t("下午：补近景/特写与插入镜头", "Afternoon: close-ups, inserts and pickups")},
-            ],
-            "notes": _t("按场次分组拍摄，夜戏留到傍晚抢天光", "Group by scene; keep night scenes for the late-afternoon light"),
-        }]
-        calendar = [{
-            "title": _t("Day 1 拍摄", "Day 1 shoot"), "start": d1 + "T09:00:00", "end": d1 + "T18:00:00",
-            "location": _t("待定", "TBD"), "description": _t("根据分镜生成的拍摄日", "Shooting day generated from the storyboard"),
-        }]
-        summary = summary or (_t(f"共 {len(shots)} 个镜头，集中在 1 天完成；先 master 后 coverage。",
-                                f"{len(shots)} shots in one day; masters first, then coverage."))
+        scene_keys, scene_labels = [], {}
+        for shot in shots:
+            key = shot.get("scene_no") if shot.get("scene_no") is not None else shot.get("scene")
+            if key not in scene_labels:
+                scene_keys.append(key)
+                heading = str(shot.get("scene") or key)
+                scene_labels[key] = f"Scene {key}: {heading}" if key is not None else heading
+        scenes = [scene_labels[key] for key in scene_keys if key is not None]
+        target_days = requested_days or max(2, min(4, (len(shots) + 9) // 10))
+        target_days = max(1, min(5, target_days))
+        first_day = start_date or (today.date() + timedelta(days=1))
+        dates = schedule_dates.date_sequence(first_day, target_days)
+        per_day = max(1, (len(scenes) + target_days - 1) // target_days) if scenes else 1
+        groups = [scenes[i:i + per_day] for i in range(0, len(scenes), per_day)] if scenes else []
+        groups += [[] for _ in range(max(0, target_days - len(groups)))]
+        days = []
+        for index, group in enumerate(groups[:target_days], 1):
+            days.append({
+                "day": index, "date": dates[index - 1], "call": "08:00", "wrap": "19:00",
+                "scenes": group,
+                "blocks": [
+                    {"start": "08:00", "end": "09:00", "activity": _t("crew call / 器材与场景准备", "Crew call / equipment and location prep")},
+                    {"start": "09:00", "end": "13:00", "activity": _t("上午：按场次拍 master + 主要 coverage", "Morning: shoot masters + main coverage by scene")},
+                    {"start": "13:00", "end": "14:00", "activity": _t("午饭", "Lunch")},
+                    {"start": "14:00", "end": "19:00", "activity": _t("下午：补近景/特写与插入镜头", "Afternoon: close-ups, inserts and pickups")},
+                ],
+                "notes": _t("按场次分组拍摄，先 master 后 coverage", "Group by scene; masters first, then coverage"),
+            })
+        calendar = [
+            {"title": _t(f"Day {d['day']} 拍摄", f"Day {d['day']} shoot"),
+             "start": d["date"] + "T08:00:00", "end": d["date"] + "T19:00:00",
+             "location": _t("待定", "TBD"),
+             "description": _t("根据分镜生成的拍摄日", "Shooting day generated from the storyboard")}
+            for d in days
+        ]
+        summary = summary or _t(
+            f"共 {len(shots)} 个镜头、{len(scenes)} 场，按分镜分析排为 {len(days)} 天；先 master 后 coverage。",
+            f"{len(shots)} shots across {len(scenes)} scenes, analysed into {len(days)} shooting days; masters first, then coverage.",
+        )
 
     if _LANG == "en":
         lines = ["### Detailed shooting plan", "", f"**Overview**: {summary or 'Schedule based on the storyboard'}"]
