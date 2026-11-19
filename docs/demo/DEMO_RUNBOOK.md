@@ -7,7 +7,8 @@ Set `DEMO_MODE=1` in `.env`, then restart the app.
 | Step | What you do | What the demo returns |
 |---|---|---|
 | 1. Inspiration | **Find inspiration** → Film → type `a film about Hong Kong` | One of 3 fixed Hong Kong sets; each contains **3 themes** (9 themes total), with real frames. Takes 1–4s, not exactly 5s. |
-| 2. Script | **Script** → type `write a short film about Hong Kong` | A **full-length** script for Theme 1 of the current set (6–9 scenes, 5–8 PDF pages). Type `write script: theme 2` or `theme 3` to use one of the other 2 themes — 9 scripts in total. Takes 8.8–9.8s. |
+| 2. Script | **Script** → type `write a short film about Hong Kong` | A **full-length** script for Theme 1 of the current set (6–9 scenes, 5–8 PDF pages). Type `write script: theme 2` or `theme 3` to use one of the other 2 themes. Takes 8.8–9.8s. |
+| 2b. Modify script | After a script, type `modify the script` / `修改剧本` | A revised draft of the same theme: adds a concrete detail in the first scene and a stronger final beat. 9 original + 9 revised = **18 scripts**. Takes 8.8–9.8s. |
 | 3. Storyboard | **Storyboard** → upload the PDF you just downloaded | A full storyboard for the same theme: 18–27 shots across all scenes. Takes 8.8–9.8s. |
 | 4. Shooting plan | **Shooting plan** → type dates if you want (e.g. `start 2026-12-01 end 2026-12-03`), then Enter | A plan **analysed from the current shot list**: 2–3 days depending on 18–27 shots, all scenes, crew, gear, locations, risks and calendar. Built-in demo start date is 2026-11-24. Takes 8.8–9.8s. |
 | 5. Reference films | **+ Reference film** → paste the three Life Of Riza links from `Life_Of_Riza_References.txt` | Each add takes exactly 5s. |
@@ -17,7 +18,7 @@ Set `DEMO_MODE=1` in `.env`, then restart the app.
 
 ## Notes
 
-- The three inspiration sets are coherent: inspiration → script → storyboard → plan stay in the same set/theme. Calling inspiration again **with Hong Kong** can switch to another set. Each set has three themes, so there are 9 full script/storyboard/plan combinations.
+- The three inspiration sets are coherent: inspiration → script → storyboard → plan stay in the same set/theme. Calling inspiration again **with Hong Kong** can switch to another set. Each set has three themes, so there are 9 full script/storyboard/plan combinations, plus a revised version of each script: **18 scripts** in total.
 - To choose a theme, click **Use this theme for the script** on any matching-film card, or type `write script: theme 2` / `theme 3`. The Script, Storyboard and Plan then all use that theme.
 - A non-Hong Kong inspiration resets the demo flow. Script/storyboard/plan then use the normal model path again.
 - Timings are randomized per feature; Script, Storyboard, Plan and Script check are 8.8–9.8s, not a fixed 5s.

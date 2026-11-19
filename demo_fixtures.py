@@ -155,6 +155,10 @@ def _is_review_request(text: str) -> bool:
     return bool(re.search(r"\b(check|review|analy[sz]e|analyse|feedback)\b|检查|分析|审阅|漏洞", text or "", re.I))
 
 
+def _is_revision_request(text: str) -> bool:
+    return bool(re.search(r"\b(modify|revise|revision|rewrite|change|edit)\b|修改|调整|重写|修订|改一|改剧本", text or "", re.I))
+
+
 def _is_vlog(kind: str | None) -> bool:
     return str(kind or "").strip() in ("Vlog/美食", "Vlog / Food", "Vlog", "Food", "美食")
 
@@ -188,6 +192,12 @@ async def script(message: str = "", script_text: str = "", kind: str | None = No
     if not _state.get("demo_flow"):
         return None
     _select_theme(message)
+    if _is_revision_request(message):
+        revisions = _variants("script_revisions")
+        if revisions:
+            _state["revised"] = True
+            return await _timed(copy.deepcopy(revisions[_script_index()]), 8800, 9800)
+    _state["revised"] = False
     payload = copy.deepcopy(_variants("scripts")[_script_index()])
     return await _timed(payload, 8800, 9800)
 
