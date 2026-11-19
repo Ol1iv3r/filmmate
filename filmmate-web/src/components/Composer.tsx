@@ -18,6 +18,7 @@ export interface SendMeta {
   tool?: string | null
   kind?: string | null
   themeIndex?: number | null
+  storyboard?: Record<string, unknown>
 }
 
 interface ComposerProps {
@@ -81,6 +82,12 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const [inspKind, setInspKind] = useState<string | null>(null)
   const [inspTheme, setInspTheme] = useState<number | null>(null)
   const [scriptFile, setScriptFile] = useState<{ name: string; chars: number; text: string } | null>(null)
+  const [storyboardFile, setStoryboardFile] = useState<{
+    name: string
+    shots: unknown[]
+    scene_count: number
+    payload: Record<string, unknown>
+  } | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [refOpen, setRefOpen] = useState(false)
@@ -146,6 +153,16 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     const text = (value || '').trim()
     if (streaming || voiceInput.status === 'recording') return
     if (!text && !scriptFile && activeTool !== 'schedule') return
+    if (storyboardFile && activeTool === 'storyboard') {
+      const outgoing = text || t('分析这份分镜表，指出覆盖和节奏问题', 'Analyze this storyboard for coverage and pacing')
+      onSend(outgoing, {
+        tool: 'storyboard',
+        kind: inspKind,
+        themeIndex: inspTheme,
+        storyboard: storyboardFile.payload,
+      })
+      return
+    }
     let outgoing = text || (activeTool === 'storyboard'
       ? t('根据这份剧本出分镜', 'Generate a storyboard from this script')
       : activeTool === 'schedule'
@@ -179,6 +196,29 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     setUploadError('')
     setUploading(true)
     try {
+      if (file.name.toLowerCase().endsWith('.csv')) {
+        const form = new FormData()
+        form.append('file', file)
+        const csvRes = await fetch((API_BASE ?? '') + '/api/storyboard/parse', { method: 'POST', body: form })
+        const csvData = await csvRes.json().catch(() => ({}))
+        if (!csvRes.ok) throw new Error(csvData.detail || t('分镜 CSV 解析失败', 'Storyboard CSV parse failed'))
+        const payload = {
+          kind: 'storyboard',
+          shots: csvData.shots ?? [],
+          scene_count: csvData.scene_count ?? 0,
+          logline: null,
+        }
+        setStoryboardFile({
+          name: csvData.filename ?? file.name,
+          shots: payload.shots,
+          scene_count: payload.scene_count,
+          payload,
+        })
+        setScriptFile(null)
+        setActiveTool('storyboard')
+        setInspOpen(false)
+        return
+      }
       const form = new FormData()
       form.append('file', file)
       const res = await fetch((API_BASE ?? '') + '/api/script/parse', { method: 'POST', body: form })
@@ -187,6 +227,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         throw new Error(t('解析失败：', 'Parse failed: ') + detail.slice(0, 140))
       }
       const data = await res.json()
+      setStoryboardFile(null)
       setScriptFile({
         name: data.filename ?? file.name,
         chars: Number(data.chars ?? (data.text ?? '').length),
@@ -277,7 +318,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
       taRef.current?.focus()
       return
     }
-    if (tool === 'storyboard' && !scriptFile) {
+    if (tool === 'storyboard' && !scriptFile && !storyboardFile) {
       setUploadError(t('分镜需要先上传剧本：点左侧回形针上传 PDF/DOCX/TXT；或用「剧本检查/生成」先写一版。',
         'Storyboard needs a script: upload PDF/DOCX/TXT with the paperclip, or write one first.'))
     }
@@ -391,6 +432,12 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           <button className="link-btn" onClick={() => setScriptFile(null)}>{t('移除', 'Remove')}</button>
         </div>
       )}
+      {storyboardFile && (
+        <div className="composer-mode">
+          {t('已上传分镜 CSV：', 'Storyboard CSV: ')}{storyboardFile.name}（{storyboardFile.shots.length} {t('个镜头', 'shots')}）· {t('回车分析分镜', 'Enter to analyze')}
+          <button className="link-btn" onClick={() => setStoryboardFile(null)}>{t('移除', 'Remove')}</button>
+        </div>
+      )}
 
       {refOpen && (
         <div className="ref-form">
@@ -423,7 +470,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         <input
           ref={fileRef}
           type="file"
-          accept=".pdf,.docx,.txt,.md,.markdown,.fountain"
+          accept=".pdf,.docx,.txt,.md,.markdown,.fountain,.csv"
           style={{ display: 'none' }}
           onChange={(e) => void onPickFile(e.target.files?.[0])}
         />

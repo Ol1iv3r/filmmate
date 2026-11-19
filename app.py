@@ -32,6 +32,7 @@ import prompts
 import rag
 import sample_search
 import script_api
+import storyboard_api
 import tools
 import voice_input_api
 
@@ -66,6 +67,7 @@ app.add_middleware(
 app.include_router(voice_input_api.router)
 app.include_router(chat_storage_api.router)
 app.include_router(script_api.router)
+app.include_router(storyboard_api.router)
 app.include_router(personal_api.router)
 
 
@@ -308,6 +310,8 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
 
     if tool == "review":
         payload = await tools.script_tool(message, api_key, script_text, history, kind=kind, theme_index=theme_index)
+    elif tool == "storyboard" and storyboard_payload:
+        payload = await tools.storyboard_review_tool(storyboard_payload, message, api_key)
     elif tool == "storyboard":
         payload = await tools.storyboard_tool(message, api_key, script_text, history)
     elif tool == "schedule":

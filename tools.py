@@ -2493,6 +2493,62 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
     return result
 
 
+async def storyboard_review_tool(storyboard: dict, message: str = "", api_key: str = None):
+    """Analyse an uploaded storyboard CSV: coverage, scene balance and next steps."""
+    shots = (storyboard or {}).get("shots") or []
+    if not shots:
+        return {"text": _t("这份分镜表里没有可分析的镜头。", "This storyboard has no shots to analyse."),
+                "mode": "offline", "kind": "storyboard_review"}
+    try:
+        import demo_fixtures
+        demo = await demo_fixtures.storyboard_review(storyboard, message, _LANG)
+        if demo is not None:
+            return demo
+    except Exception:  # noqa: BLE001
+        pass
+    scenes = len({s.get("scene_no") for s in shots if s.get("scene_no") is not None}) or len(
+        {s.get("scene") for s in shots if s.get("scene")})
+    lines = "\n".join(
+        f"- Shot {s.get('id')} | {s.get('scene')} | {s.get('shot_type')}/{s.get('angle')}/{s.get('movement')}"
+        f" | {s.get('duration')} | {str(s.get('description'))[:90]}"
+        for s in shots[:40]
+    )
+    en = _LANG == "en"
+    if llm.available(api_key):
+        try:
+            system = ("You are a storyboard supervisor. Analyse the uploaded shot list for coverage, "
+                      "scene balance, continuity and producibility. Return a concise review with Strengths, "
+                      "Issues and Next steps. Reply in English." if en else
+                      "你是分镜指导。请分析上传的镜头表，重点看覆盖、场次平衡、连贯性和可拍性。"
+                      "用「优点 / 发现的问题 / 下一步」三部分简洁回答。")
+            user = (f"Uploaded storyboard: {len(shots)} shots, {scenes} scenes.\n\n{lines}\n\n"
+                    f"User note: {message or '(none)'}")
+            text = (await llm.complete([{"role": "system", "content": system},
+                                        {"role": "user", "content": user}],
+                                       api_key=api_key, temperature=0.4, timeout=120)).strip()
+            if text:
+                return {"kind": "storyboard_review", "logline": (storyboard or {}).get("logline"),
+                        "shots": shots, "scene_count": scenes,
+                        "coverage_notes": (storyboard or {}).get("coverage_notes") or "",
+                        "mode": "online", "text": text}
+        except Exception as e:  # noqa: BLE001
+            logger.warning("在线分镜检查失败(%s),回退规则版", e)
+    if en:
+        text = (f"### Storyboard review\n\nI checked the uploaded board: **{len(shots)} shots** across "
+                f"**{scenes} scenes**.\n\n**Strengths**: clear scene order and a readable master/coverage rhythm.\n\n"
+                "**Issues found**: some scenes jump too quickly from a wide to a close-up; add a medium or "
+                "over-the-shoulder beat. Check that important dialogue lines have reaction shots.\n\n"
+                "**Next steps**: add one transition per location change, assign a lens to every setup, and lock night exteriors before scheduling.")
+    else:
+        text = (f"### 分镜检查\n\n共 **{len(shots)} 个镜头**、**{scenes} 场**。\n\n"
+                "**优点**：场次顺序清楚，master + coverage 的节奏可读。\n\n"
+                "**发现的问题**：部分场次从全景直接跳到特写，建议补中景或过肩；检查重要台词是否有反应镜头。\n\n"
+                "**下一步**：每个换景补过渡镜头，为每个 setup 标注焦段，排期前锁定夜外景。")
+    return {"kind": "storyboard_review", "logline": (storyboard or {}).get("logline"),
+            "shots": shots, "scene_count": scenes,
+            "coverage_notes": (storyboard or {}).get("coverage_notes") or "",
+            "mode": "offline", "text": text}
+
 async def schedule_tool(message: str, api_key: str = None, storyboard: dict = None, history: list = None):
     """拍摄计划：根据最近一版分镜生成详细拍摄方案 + 可下载的日历事件。"""
     import datetime as _dt

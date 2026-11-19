@@ -131,6 +131,7 @@ async def inspiration(idea: str, kind: str | None = None, history: list | None =
     if _is_hong_kong(idea):
         _state["demo_flow"] = True
         _state["genre_mode"] = False
+        _state["storyboard_ready"] = False
         _state["set_index"] = random.randrange(3)
         _state["theme_index"] = 0
         payload = copy.deepcopy(_variants("inspiration")[_state["set_index"]])
@@ -141,6 +142,7 @@ async def inspiration(idea: str, kind: str | None = None, history: list | None =
     if reference_ready() and _is_reference_trigger(idea):
         _state["demo_flow"] = False
         _state["genre_mode"] = False
+        _state["storyboard_ready"] = False
         ref_variants = _variants("reference_inspiration")
         payload = copy.deepcopy(ref_variants[random.randrange(len(ref_variants))])
         payload["idea"] = idea
@@ -199,6 +201,49 @@ async def script(message: str = "", script_text: str = "", kind: str | None = No
             return await _timed(copy.deepcopy(revisions[_script_index()]), 8800, 9800)
     _state["revised"] = False
     payload = copy.deepcopy(_variants("scripts")[_script_index()])
+    return await _timed(payload, 8800, 9800)
+
+
+async def storyboard_review(storyboard: dict, message: str = "", lang: str = "en") -> dict | None:
+    if not enabled() or not isinstance(storyboard, dict):
+        return None
+    shots = storyboard.get("shots") or []
+    if not shots:
+        return None
+    scenes = sorted({s.get("scene_no") for s in shots if s.get("scene_no") is not None})
+    en = (lang or "en").lower().startswith("en")
+    if en:
+        text = (
+            f"### Storyboard review\n\nI checked the uploaded board: **{len(shots)} shots** across "
+            f"**{len(scenes) or storyboard.get('scene_count', '—')} scenes**.\n\n"
+            "**Strengths**: The board has a clear master/coverage rhythm, and the scene order is readable. "
+            "The close-ups are doing specific emotional work rather than decoration.\n\n"
+            "**Issues found**:\n"
+            "- Some scenes jump from a wide directly to a close-up; add a medium or over-the-shoulder beat when the geography changes.\n"
+            "- The dialogue coverage is thinner in the middle scenes; check whether every important line has a reaction shot.\n"
+            "- A few descriptions are visual but not actionable; add the subject, action and light direction for the camera team.\n\n"
+            "**Next steps**: Add one transition shot per location change, assign a lens to every setup, and mark the night exteriors before the schedule is locked.\n\n"
+            "The shot list stays in the panel below; reply **shooting plan** when you want to schedule it."
+        )
+    else:
+        text = (
+            f"### 分镜检查\n\n我已检查上传的分镜表：共 **{len(shots)} 个镜头**，"
+            f"**{len(scenes) or storyboard.get('scene_count', '—')} 场**。\n\n"
+            "**优点**：master + coverage 的节奏清楚，场次顺序可读，特写承担了具体的情绪功能，而不是装饰。\n\n"
+            "**发现的问题**：\n"
+            "- 部分场次从全景直接跳到特写；空间变化时建议补一个中景或过肩镜头。\n"
+            "- 中间场次的对白覆盖偏薄；检查每句重要台词是否都有反应镜头。\n"
+            "- 少量画面描述偏视觉、不够可执行；补充主体、动作和光线方向。\n\n"
+            "**下一步**：每个换景补一个过渡镜头，为每个 setup 标注焦段，并在排期前标出夜外景。\n\n"
+            "分镜表保留在下方；需要排期时回复「拍摄计划」。"
+        )
+    _state["storyboard_ready"] = True
+    payload = {
+        "kind": "storyboard_review", "logline": storyboard.get("logline"),
+        "shots": shots, "scene_count": len(scenes) or storyboard.get("scene_count", 0),
+        "coverage_notes": storyboard.get("coverage_notes") or "",
+        "mode": "online", "text": text,
+    }
     return await _timed(payload, 8800, 9800)
 
 
@@ -323,7 +368,7 @@ def _build_plan(storyboard: dict, message: str = "", genre: bool = False) -> dic
 async def schedule(message: str = "", storyboard: dict | None = None) -> dict | None:
     if not enabled():
         return None
-    if not (_state.get("demo_flow") or _state.get("genre_mode")):
+    if not (_state.get("demo_flow") or _state.get("genre_mode") or _state.get("storyboard_ready")):
         return None
     if not isinstance(storyboard, dict) or not (storyboard.get("shots") or []):
         return None

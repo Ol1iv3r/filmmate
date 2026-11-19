@@ -2,7 +2,7 @@
 
 Set `DEMO_MODE=1` in `.env`, then restart the app.
 
-**Demo mode is opt-in by trigger.** Only the Hong Kong inspiration flow, the three Life Of Riza reference links, an uploaded-script check, and the Vlog/Food script after references use fixtures. Any other genre, script, uploaded file, reference link or chat request goes through the normal model path.
+**Demo mode is opt-in by trigger.** Storyboard CSV upload is parsed for both Chinese and English headers, and the analysis text follows the current UI language. Only the Hong Kong inspiration flow, the three Life Of Riza reference links, an uploaded-script check, and the Vlog/Food script after references use fixtures. Any other genre, script, uploaded file, reference link or chat request goes through the normal model path.
 
 | Step | What you do | What the demo returns |
 |---|---|---|
@@ -10,6 +10,7 @@ Set `DEMO_MODE=1` in `.env`, then restart the app.
 | 2. Script | **Script** → type `write a short film about Hong Kong` | A **full-length** script for Theme 1 of the current set (6–9 scenes, 5–8 PDF pages). Type `write script: theme 2` or `theme 3` to use one of the other 2 themes. Takes 8.8–9.8s. |
 | 2b. Modify script | After a script, type `modify the script` / `修改剧本` | A revised draft of the same theme: adds a concrete detail in the first scene and a stronger final beat. 9 original + 9 revised = **18 scripts**. Takes 8.8–9.8s. |
 | 3. Storyboard | **Storyboard** → upload the PDF you just downloaded | A full storyboard for the same theme: 18–27 shots across all scenes. Takes 8.8–9.8s. |
+| 3b. Storyboard CSV check | Upload the downloaded `storyboard.csv` (English or Chinese headers) | Parses all shots and runs a storyboard analysis (coverage / scene balance / next steps), then keeps the shots for the shooting plan. Takes 8.8–9.8s in demo. |
 | 4. Shooting plan | **Shooting plan** → type dates if you want (e.g. `start 2026-12-01 end 2026-12-03`), then Enter | A plan **analysed from the current shot list**: 2–3 days depending on 18–27 shots, plus a shot-level schedule table showing every shot and its day, crew, gear, locations, risks and calendar. Built-in demo start date is 2026-11-24. Takes 8.8–9.8s. |
 | 5. Reference films | **+ Reference film** → paste the three Life Of Riza links from `Life_Of_Riza_References.txt` | Each add takes exactly 5s. |
 | 5b. Script check | Upload a script → **Script** → Enter / type `check this script` | One fixed review report (Overall / Issues / Strengths / Next steps). Takes 8.8–9.8s. |

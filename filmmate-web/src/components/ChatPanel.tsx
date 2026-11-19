@@ -152,6 +152,7 @@ function ChatInner({
         theme_index: meta?.themeIndex ?? null,
         lang: targetLang ?? lang,
       }
+      if (meta?.storyboard) metadata.storyboard = meta.storyboard
       if (meta?.tool === 'storyboard' || meta?.tool === 'review' || (!meta?.tool && /剧本|场次|角色|台词|梗要/.test(text))) {
         if (lastScript?.script_text) metadata.script_text = lastScript.script_text
       }
