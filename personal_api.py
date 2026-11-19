@@ -87,6 +87,15 @@ async def add_personal(body: AddFilm):
     if len(urls) > 20:
         raise HTTPException(status_code=400, detail="Add at most 20 reference films at a time.")
 
+    try:
+        import demo_fixtures
+        if demo_fixtures.enabled():
+            demo = await demo_fixtures.add_references(urls, body.lang)
+            if demo is not None:
+                return demo
+    except Exception:  # noqa: BLE001
+        pass
+
     semaphore = asyncio.Semaphore(3)
     single_title = body.title.strip() if len(urls) == 1 else ""
 

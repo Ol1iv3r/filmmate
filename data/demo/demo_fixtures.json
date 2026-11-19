@@ -1,0 +1,1990 @@
+{
+ "mode": "en-demo",
+ "inspiration": [
+  {
+   "kind": "Film",
+   "styles": [
+    {
+     "style_name": "Rain-slick neon and restrained longing",
+     "why_fits": "Hong Kong at night becomes a pressure chamber: wet pavements, narrow corridors and two people who never quite say what they mean. The style fits a story where the city keeps them close but convention keeps them apart.",
+     "theme": "A night-shift tram conductor receives a letter from a passenger who never came back; when he appears at the last stop, she must decide whether to open the door.",
+     "film_reason": "In the Mood for Love is the clearest reference for this texture: the cheongsams, the stairwells, the unspoken desire and the city as an emotional corridor.",
+     "film": {
+      "id": "D022",
+      "kind": "Film",
+      "title_zh": "In the Mood for Love",
+      "title_en": "In the Mood for Love",
+      "year": 2000,
+      "duration": "1h 38m",
+      "genre": [
+       "Romance",
+       "Drama"
+      ],
+      "moods": [
+       "Melancholy",
+       "Romantic",
+       "Poignant"
+      ],
+      "tags": [
+       "Wong Kar-wai",
+       "Cheongsam",
+       "1960s",
+       "Ambiguous Romance",
+       "Maggie Cheung",
+       "Tony Leung"
+      ],
+      "synopsis": "In 1960s Hong Kong, newspaper editor Chow Mo-wan and his neighbor Su Li-zhen gradually discover their respective spouses are having an affair. They repeatedly cross paths on staircases, at noodle stalls, and in hallways, subtly exploring what 'they' might do if they were in the same situation. Cheongsams change, but the unspoken words linger.",
+      "url": "https://www.bilibili.com/video/BV1PaXQYtEKQ",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV1PaXQYtEKQ/01.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/02.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/03.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    },
+    {
+     "style_name": "Crowded night streets, accidental intimacy",
+     "why_fits": "The story can use the density of Hong Kong — crowds, late-night shops, moving lights — to make two isolated people keep brushing past each other. The style is fast, dry and quietly romantic rather than sentimental.",
+     "theme": "A tram conductor and a stranger keep meeting on the same route; neither knows the other has been leaving messages in the same lost-property box.",
+     "film_reason": "Chungking Express gives the exact rhythm of urban loneliness: handheld energy, pop music, missed timing and intimate details inside a crowded city.",
+     "film": {
+      "id": "D032",
+      "kind": "Film",
+      "title_zh": "Chungking Express",
+      "title_en": "Chungking Express",
+      "year": 1994,
+      "duration": "1h 42m",
+      "genre": [
+       "Romance",
+       "Drama",
+       "Comedy"
+      ],
+      "moods": [
+       "Loneliness",
+       "Romantic",
+       "Melancholy"
+      ],
+      "tags": [
+       "Wong Kar-wai",
+       "Urban",
+       "Fast Food",
+       "Pineapple Cans",
+       "Handheld Camera",
+       "Brigitte Lin"
+      ],
+      "synopsis": "After a breakup, police officer 223 buys a can of expiring pineapple every day, waiting for a woman named May. Meanwhile, Faye, a girl from a fast-food stand, secretly gets a key to police officer 663's apartment. While he's at work, she cleans his place, changes his goldfish, and listens to 'California Dreamin',' moving her secret crush into his home.",
+      "url": "https://www.bilibili.com/video/BV11AdnBTEuT",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV11AdnBTEuT/01.jpg",
+       "/static/frames/catalog/BV11AdnBTEuT/02.jpg",
+       "/static/frames/catalog/BV11AdnBTEuT/03.jpg",
+       "/static/frames/catalog/BV11AdnBTEuT/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    },
+    {
+     "style_name": "Migration, missed timing and pop songs",
+     "why_fits": "For Hong Kong, migration is part of the love story. The style lets the city feel like a place people are always arriving in or leaving, with songs and small objects carrying the memory of someone else.",
+     "theme": "Two former classmates meet again at a tram depot before one of them emigrates; they have one night to decide whether to say the thing they avoided for ten years.",
+     "film_reason": "Comrades: Almost a Love Story is the reference for a Hong Kong romance shaped by distance, class and timing rather than a single grand gesture.",
+     "film": {
+      "id": "D014",
+      "kind": "Film",
+      "title_zh": "Comrades: Almost a Love Story",
+      "title_en": "Comrades: Almost a Love Story",
+      "year": 1996,
+      "duration": "1h 56m",
+      "genre": [
+       "Romance",
+       "Drama"
+      ],
+      "moods": [
+       "Romantic",
+       "Nostalgic",
+       "Bittersweet"
+      ],
+      "tags": [
+       "Peter Chan",
+       "Hong Kong",
+       "Immigration",
+       "Teresa Teng",
+       "Maggie Cheung",
+       "Decade-Spanning"
+      ],
+      "synopsis": "In the late 1980s, Li Xiaojun arrives in Hong Kong from Wuxi to join his aunt and marry his fiancée, Xiaoting. Li Qiao comes from mainland China, determined to make her fortune. These two strangers find solace in each other amidst the bustling city, from McDonald's to flower shops. As Teresa Teng's songs play, their paths diverge and converge over a decade, bringing them back to the same street corner.",
+      "url": "https://www.bilibili.com/video/BV13NoUBYEz8",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV13NoUBYEz8/01.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/02.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/03.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    }
+   ],
+   "films": [
+    {
+     "id": "D022",
+     "kind": "Film",
+     "title_zh": "In the Mood for Love",
+     "title_en": "In the Mood for Love",
+     "year": 2000,
+     "duration": "1h 38m",
+     "genre": [
+      "Romance",
+      "Drama"
+     ],
+     "moods": [
+      "Melancholy",
+      "Romantic",
+      "Poignant"
+     ],
+     "tags": [
+      "Wong Kar-wai",
+      "Cheongsam",
+      "1960s",
+      "Ambiguous Romance",
+      "Maggie Cheung",
+      "Tony Leung"
+     ],
+     "synopsis": "In 1960s Hong Kong, newspaper editor Chow Mo-wan and his neighbor Su Li-zhen gradually discover their respective spouses are having an affair. They repeatedly cross paths on staircases, at noodle stalls, and in hallways, subtly exploring what 'they' might do if they were in the same situation. Cheongsams change, but the unspoken words linger.",
+     "url": "https://www.bilibili.com/video/BV1PaXQYtEKQ",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV1PaXQYtEKQ/01.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/02.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/03.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/04.jpg"
+     ],
+     "source": "catalog"
+    },
+    {
+     "id": "D032",
+     "kind": "Film",
+     "title_zh": "Chungking Express",
+     "title_en": "Chungking Express",
+     "year": 1994,
+     "duration": "1h 42m",
+     "genre": [
+      "Romance",
+      "Drama",
+      "Comedy"
+     ],
+     "moods": [
+      "Loneliness",
+      "Romantic",
+      "Melancholy"
+     ],
+     "tags": [
+      "Wong Kar-wai",
+      "Urban",
+      "Fast Food",
+      "Pineapple Cans",
+      "Handheld Camera",
+      "Brigitte Lin"
+     ],
+     "synopsis": "After a breakup, police officer 223 buys a can of expiring pineapple every day, waiting for a woman named May. Meanwhile, Faye, a girl from a fast-food stand, secretly gets a key to police officer 663's apartment. While he's at work, she cleans his place, changes his goldfish, and listens to 'California Dreamin',' moving her secret crush into his home.",
+     "url": "https://www.bilibili.com/video/BV11AdnBTEuT",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV11AdnBTEuT/01.jpg",
+      "/static/frames/catalog/BV11AdnBTEuT/02.jpg",
+      "/static/frames/catalog/BV11AdnBTEuT/03.jpg",
+      "/static/frames/catalog/BV11AdnBTEuT/04.jpg"
+     ],
+     "source": "catalog"
+    },
+    {
+     "id": "D014",
+     "kind": "Film",
+     "title_zh": "Comrades: Almost a Love Story",
+     "title_en": "Comrades: Almost a Love Story",
+     "year": 1996,
+     "duration": "1h 56m",
+     "genre": [
+      "Romance",
+      "Drama"
+     ],
+     "moods": [
+      "Romantic",
+      "Nostalgic",
+      "Bittersweet"
+     ],
+     "tags": [
+      "Peter Chan",
+      "Hong Kong",
+      "Immigration",
+      "Teresa Teng",
+      "Maggie Cheung",
+      "Decade-Spanning"
+     ],
+     "synopsis": "In the late 1980s, Li Xiaojun arrives in Hong Kong from Wuxi to join his aunt and marry his fiancée, Xiaoting. Li Qiao comes from mainland China, determined to make her fortune. These two strangers find solace in each other amidst the bustling city, from McDonald's to flower shops. As Teresa Teng's songs play, their paths diverge and converge over a decade, bringing them back to the same street corner.",
+     "url": "https://www.bilibili.com/video/BV13NoUBYEz8",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV13NoUBYEz8/01.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/02.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/03.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/04.jpg"
+     ],
+     "source": "catalog"
+    }
+   ]
+  },
+  {
+   "kind": "Film",
+   "styles": [
+    {
+     "style_name": "Old rooms and inherited gestures",
+     "why_fits": "A Hong Kong story can live in a small tailor shop, in the sound of scissors and the inherited habit of not saying too much. The style is warm, tactile and restrained, with the city entering through windows and radio.",
+     "theme": "An ageing Sham Shui Po tailor prepares a suit for his daughter, who is leaving Hong Kong; the fitting becomes the last honest conversation they will have.",
+     "film_reason": "In the Mood for Love is the reference for emotion held inside rooms, fabrics and repetitive gestures rather than declared outright.",
+     "film": {
+      "id": "D022",
+      "kind": "Film",
+      "title_zh": "In the Mood for Love",
+      "title_en": "In the Mood for Love",
+      "year": 2000,
+      "duration": "1h 38m",
+      "genre": [
+       "Romance",
+       "Drama"
+      ],
+      "moods": [
+       "Melancholy",
+       "Romantic",
+       "Poignant"
+      ],
+      "tags": [
+       "Wong Kar-wai",
+       "Cheongsam",
+       "1960s",
+       "Ambiguous Romance",
+       "Maggie Cheung",
+       "Tony Leung"
+      ],
+      "synopsis": "In 1960s Hong Kong, newspaper editor Chow Mo-wan and his neighbor Su Li-zhen gradually discover their respective spouses are having an affair. They repeatedly cross paths on staircases, at noodle stalls, and in hallways, subtly exploring what 'they' might do if they were in the same situation. Cheongsams change, but the unspoken words linger.",
+      "url": "https://www.bilibili.com/video/BV1PaXQYtEKQ",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV1PaXQYtEKQ/01.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/02.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/03.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    },
+    {
+     "style_name": "Desire held behind a measuring tape",
+     "why_fits": "The style turns ordinary professional intimacy — measuring, touching, fitting — into something charged and dangerous. Hong Kong’s crowded interiors make every small physical distance feel significant.",
+     "theme": "A tailor recognises the woman who once betrayed his family; she has come to collect a suit, and he has one afternoon to decide what the fitting is really for.",
+     "film_reason": "Lust, Caution is the reference for desire compressed by performance, secrecy and a city where private rooms are never completely safe.",
+     "film": {
+      "id": "D028",
+      "kind": "Film",
+      "title_zh": "Lust, Caution",
+      "title_en": "Lust, Caution",
+      "year": 2007,
+      "duration": "2h 38m",
+      "genre": [
+       "Drama",
+       "Romance",
+       "Thriller"
+      ],
+      "moods": [
+       "Suspenseful",
+       "Oppressive",
+       "Heartbreaking"
+      ],
+      "tags": [
+       "Ang Lee",
+       "Eileen Chang",
+       "Spy Thriller",
+       "Republican Era",
+       "Erotic",
+       "Shanghai"
+      ],
+      "synopsis": "During the Sino-Japanese War, in Hong Kong and Shanghai, college student Wang Jiazhi is drawn into an assassination plot by her classmates. She uses her body and a false identity to get close to Mr. Yee, a Japanese collaborator. As the mission drags on, she struggles to distinguish whether she is an actress, a lover, or someone who has crossed a point of no return.",
+      "url": "https://www.bilibili.com/video/BV1uxzVBnEfs",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV1uxzVBnEfs/01.jpg",
+       "/static/frames/catalog/BV1uxzVBnEfs/02.jpg",
+       "/static/frames/catalog/BV1uxzVBnEfs/03.jpg",
+       "/static/frames/catalog/BV1uxzVBnEfs/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    },
+    {
+     "style_name": "A city seen through a window",
+     "why_fits": "The story can keep the city at one remove: reflections, glass, ferry lights and a character who watches Hong Kong change from inside a shop. The style is observational and quietly melancholic.",
+     "theme": "A tailor watches his neighbourhood disappear from his window while preparing a wedding suit for a customer he has never met.",
+     "film_reason": "Comrades: Almost a Love Story is the reference for Hong Kong as a place of transit, where ordinary work and private longing share the same frame.",
+     "film": {
+      "id": "D014",
+      "kind": "Film",
+      "title_zh": "Comrades: Almost a Love Story",
+      "title_en": "Comrades: Almost a Love Story",
+      "year": 1996,
+      "duration": "1h 56m",
+      "genre": [
+       "Romance",
+       "Drama"
+      ],
+      "moods": [
+       "Romantic",
+       "Nostalgic",
+       "Bittersweet"
+      ],
+      "tags": [
+       "Peter Chan",
+       "Hong Kong",
+       "Immigration",
+       "Teresa Teng",
+       "Maggie Cheung",
+       "Decade-Spanning"
+      ],
+      "synopsis": "In the late 1980s, Li Xiaojun arrives in Hong Kong from Wuxi to join his aunt and marry his fiancée, Xiaoting. Li Qiao comes from mainland China, determined to make her fortune. These two strangers find solace in each other amidst the bustling city, from McDonald's to flower shops. As Teresa Teng's songs play, their paths diverge and converge over a decade, bringing them back to the same street corner.",
+      "url": "https://www.bilibili.com/video/BV13NoUBYEz8",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV13NoUBYEz8/01.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/02.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/03.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    }
+   ],
+   "films": [
+    {
+     "id": "D022",
+     "kind": "Film",
+     "title_zh": "In the Mood for Love",
+     "title_en": "In the Mood for Love",
+     "year": 2000,
+     "duration": "1h 38m",
+     "genre": [
+      "Romance",
+      "Drama"
+     ],
+     "moods": [
+      "Melancholy",
+      "Romantic",
+      "Poignant"
+     ],
+     "tags": [
+      "Wong Kar-wai",
+      "Cheongsam",
+      "1960s",
+      "Ambiguous Romance",
+      "Maggie Cheung",
+      "Tony Leung"
+     ],
+     "synopsis": "In 1960s Hong Kong, newspaper editor Chow Mo-wan and his neighbor Su Li-zhen gradually discover their respective spouses are having an affair. They repeatedly cross paths on staircases, at noodle stalls, and in hallways, subtly exploring what 'they' might do if they were in the same situation. Cheongsams change, but the unspoken words linger.",
+     "url": "https://www.bilibili.com/video/BV1PaXQYtEKQ",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV1PaXQYtEKQ/01.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/02.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/03.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/04.jpg"
+     ],
+     "source": "catalog"
+    },
+    {
+     "id": "D028",
+     "kind": "Film",
+     "title_zh": "Lust, Caution",
+     "title_en": "Lust, Caution",
+     "year": 2007,
+     "duration": "2h 38m",
+     "genre": [
+      "Drama",
+      "Romance",
+      "Thriller"
+     ],
+     "moods": [
+      "Suspenseful",
+      "Oppressive",
+      "Heartbreaking"
+     ],
+     "tags": [
+      "Ang Lee",
+      "Eileen Chang",
+      "Spy Thriller",
+      "Republican Era",
+      "Erotic",
+      "Shanghai"
+     ],
+     "synopsis": "During the Sino-Japanese War, in Hong Kong and Shanghai, college student Wang Jiazhi is drawn into an assassination plot by her classmates. She uses her body and a false identity to get close to Mr. Yee, a Japanese collaborator. As the mission drags on, she struggles to distinguish whether she is an actress, a lover, or someone who has crossed a point of no return.",
+     "url": "https://www.bilibili.com/video/BV1uxzVBnEfs",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV1uxzVBnEfs/01.jpg",
+      "/static/frames/catalog/BV1uxzVBnEfs/02.jpg",
+      "/static/frames/catalog/BV1uxzVBnEfs/03.jpg",
+      "/static/frames/catalog/BV1uxzVBnEfs/04.jpg"
+     ],
+     "source": "catalog"
+    },
+    {
+     "id": "D014",
+     "kind": "Film",
+     "title_zh": "Comrades: Almost a Love Story",
+     "title_en": "Comrades: Almost a Love Story",
+     "year": 1996,
+     "duration": "1h 56m",
+     "genre": [
+      "Romance",
+      "Drama"
+     ],
+     "moods": [
+      "Romantic",
+      "Nostalgic",
+      "Bittersweet"
+     ],
+     "tags": [
+      "Peter Chan",
+      "Hong Kong",
+      "Immigration",
+      "Teresa Teng",
+      "Maggie Cheung",
+      "Decade-Spanning"
+     ],
+     "synopsis": "In the late 1980s, Li Xiaojun arrives in Hong Kong from Wuxi to join his aunt and marry his fiancée, Xiaoting. Li Qiao comes from mainland China, determined to make her fortune. These two strangers find solace in each other amidst the bustling city, from McDonald's to flower shops. As Teresa Teng's songs play, their paths diverge and converge over a decade, bringing them back to the same street corner.",
+     "url": "https://www.bilibili.com/video/BV13NoUBYEz8",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV13NoUBYEz8/01.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/02.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/03.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/04.jpg"
+     ],
+     "source": "catalog"
+    }
+   ]
+  },
+  {
+   "kind": "Film",
+   "styles": [
+    {
+     "style_name": "A voice in the dark, a city listening",
+     "why_fits": "Hong Kong after midnight is a city of signals: radio, neon, phone screens and late-night voices. The style is intimate and nocturnal, built around what people say when they think no one is listening.",
+     "theme": "A late-night radio host takes one last call from a listener who has been trying to reach him for years; the city becomes the only witness to their conversation.",
+     "film_reason": "Chungking Express is the reference for late-night Hong Kong intimacy: music, repetition, missed calls and strangers who briefly become each other’s whole world.",
+     "film": {
+      "id": "D032",
+      "kind": "Film",
+      "title_zh": "Chungking Express",
+      "title_en": "Chungking Express",
+      "year": 1994,
+      "duration": "1h 42m",
+      "genre": [
+       "Romance",
+       "Drama",
+       "Comedy"
+      ],
+      "moods": [
+       "Loneliness",
+       "Romantic",
+       "Melancholy"
+      ],
+      "tags": [
+       "Wong Kar-wai",
+       "Urban",
+       "Fast Food",
+       "Pineapple Cans",
+       "Handheld Camera",
+       "Brigitte Lin"
+      ],
+      "synopsis": "After a breakup, police officer 223 buys a can of expiring pineapple every day, waiting for a woman named May. Meanwhile, Faye, a girl from a fast-food stand, secretly gets a key to police officer 663's apartment. While he's at work, she cleans his place, changes his goldfish, and listens to 'California Dreamin',' moving her secret crush into his home.",
+      "url": "https://www.bilibili.com/video/BV11AdnBTEuT",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV11AdnBTEuT/01.jpg",
+       "/static/frames/catalog/BV11AdnBTEuT/02.jpg",
+       "/static/frames/catalog/BV11AdnBTEuT/03.jpg",
+       "/static/frames/catalog/BV11AdnBTEuT/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    },
+    {
+     "style_name": "Neon reflections and late-night confessions",
+     "why_fits": "The style uses the visual language of Hong Kong at night — reflected signs, rain, cramped studios — to make a private conversation feel cinematic. It is romantic without losing the edge of the city.",
+     "theme": "A radio producer and a caller discover they have been living in the same building for years without ever meeting.",
+     "film_reason": "In the Mood for Love is the reference for glances, corridors and the feeling that the most important thing is always just out of frame.",
+     "film": {
+      "id": "D022",
+      "kind": "Film",
+      "title_zh": "In the Mood for Love",
+      "title_en": "In the Mood for Love",
+      "year": 2000,
+      "duration": "1h 38m",
+      "genre": [
+       "Romance",
+       "Drama"
+      ],
+      "moods": [
+       "Melancholy",
+       "Romantic",
+       "Poignant"
+      ],
+      "tags": [
+       "Wong Kar-wai",
+       "Cheongsam",
+       "1960s",
+       "Ambiguous Romance",
+       "Maggie Cheung",
+       "Tony Leung"
+      ],
+      "synopsis": "In 1960s Hong Kong, newspaper editor Chow Mo-wan and his neighbor Su Li-zhen gradually discover their respective spouses are having an affair. They repeatedly cross paths on staircases, at noodle stalls, and in hallways, subtly exploring what 'they' might do if they were in the same situation. Cheongsams change, but the unspoken words linger.",
+      "url": "https://www.bilibili.com/video/BV1PaXQYtEKQ",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV1PaXQYtEKQ/01.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/02.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/03.jpg",
+       "/static/frames/catalog/BV1PaXQYtEKQ/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    },
+    {
+     "style_name": "Missed connections across the harbour",
+     "why_fits": "The story can use the geography of Hong Kong — harbour, ferry, tram, tunnel — to keep two people almost connected. The style is spacious and bittersweet rather than claustrophobic.",
+     "theme": "A host plans to leave Hong Kong, but a final caller gives him a reason to miss the last ferry.",
+     "film_reason": "Comrades: Almost a Love Story is the reference for a city romance shaped by migration and the timing of public transport.",
+     "film": {
+      "id": "D014",
+      "kind": "Film",
+      "title_zh": "Comrades: Almost a Love Story",
+      "title_en": "Comrades: Almost a Love Story",
+      "year": 1996,
+      "duration": "1h 56m",
+      "genre": [
+       "Romance",
+       "Drama"
+      ],
+      "moods": [
+       "Romantic",
+       "Nostalgic",
+       "Bittersweet"
+      ],
+      "tags": [
+       "Peter Chan",
+       "Hong Kong",
+       "Immigration",
+       "Teresa Teng",
+       "Maggie Cheung",
+       "Decade-Spanning"
+      ],
+      "synopsis": "In the late 1980s, Li Xiaojun arrives in Hong Kong from Wuxi to join his aunt and marry his fiancée, Xiaoting. Li Qiao comes from mainland China, determined to make her fortune. These two strangers find solace in each other amidst the bustling city, from McDonald's to flower shops. As Teresa Teng's songs play, their paths diverge and converge over a decade, bringing them back to the same street corner.",
+      "url": "https://www.bilibili.com/video/BV13NoUBYEz8",
+      "platform": "Bilibili",
+      "frames": [
+       "/static/frames/catalog/BV13NoUBYEz8/01.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/02.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/03.jpg",
+       "/static/frames/catalog/BV13NoUBYEz8/04.jpg"
+      ],
+      "source": "catalog"
+     }
+    }
+   ],
+   "films": [
+    {
+     "id": "D032",
+     "kind": "Film",
+     "title_zh": "Chungking Express",
+     "title_en": "Chungking Express",
+     "year": 1994,
+     "duration": "1h 42m",
+     "genre": [
+      "Romance",
+      "Drama",
+      "Comedy"
+     ],
+     "moods": [
+      "Loneliness",
+      "Romantic",
+      "Melancholy"
+     ],
+     "tags": [
+      "Wong Kar-wai",
+      "Urban",
+      "Fast Food",
+      "Pineapple Cans",
+      "Handheld Camera",
+      "Brigitte Lin"
+     ],
+     "synopsis": "After a breakup, police officer 223 buys a can of expiring pineapple every day, waiting for a woman named May. Meanwhile, Faye, a girl from a fast-food stand, secretly gets a key to police officer 663's apartment. While he's at work, she cleans his place, changes his goldfish, and listens to 'California Dreamin',' moving her secret crush into his home.",
+     "url": "https://www.bilibili.com/video/BV11AdnBTEuT",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV11AdnBTEuT/01.jpg",
+      "/static/frames/catalog/BV11AdnBTEuT/02.jpg",
+      "/static/frames/catalog/BV11AdnBTEuT/03.jpg",
+      "/static/frames/catalog/BV11AdnBTEuT/04.jpg"
+     ],
+     "source": "catalog"
+    },
+    {
+     "id": "D022",
+     "kind": "Film",
+     "title_zh": "In the Mood for Love",
+     "title_en": "In the Mood for Love",
+     "year": 2000,
+     "duration": "1h 38m",
+     "genre": [
+      "Romance",
+      "Drama"
+     ],
+     "moods": [
+      "Melancholy",
+      "Romantic",
+      "Poignant"
+     ],
+     "tags": [
+      "Wong Kar-wai",
+      "Cheongsam",
+      "1960s",
+      "Ambiguous Romance",
+      "Maggie Cheung",
+      "Tony Leung"
+     ],
+     "synopsis": "In 1960s Hong Kong, newspaper editor Chow Mo-wan and his neighbor Su Li-zhen gradually discover their respective spouses are having an affair. They repeatedly cross paths on staircases, at noodle stalls, and in hallways, subtly exploring what 'they' might do if they were in the same situation. Cheongsams change, but the unspoken words linger.",
+     "url": "https://www.bilibili.com/video/BV1PaXQYtEKQ",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV1PaXQYtEKQ/01.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/02.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/03.jpg",
+      "/static/frames/catalog/BV1PaXQYtEKQ/04.jpg"
+     ],
+     "source": "catalog"
+    },
+    {
+     "id": "D014",
+     "kind": "Film",
+     "title_zh": "Comrades: Almost a Love Story",
+     "title_en": "Comrades: Almost a Love Story",
+     "year": 1996,
+     "duration": "1h 56m",
+     "genre": [
+      "Romance",
+      "Drama"
+     ],
+     "moods": [
+      "Romantic",
+      "Nostalgic",
+      "Bittersweet"
+     ],
+     "tags": [
+      "Peter Chan",
+      "Hong Kong",
+      "Immigration",
+      "Teresa Teng",
+      "Maggie Cheung",
+      "Decade-Spanning"
+     ],
+     "synopsis": "In the late 1980s, Li Xiaojun arrives in Hong Kong from Wuxi to join his aunt and marry his fiancée, Xiaoting. Li Qiao comes from mainland China, determined to make her fortune. These two strangers find solace in each other amidst the bustling city, from McDonald's to flower shops. As Teresa Teng's songs play, their paths diverge and converge over a decade, bringing them back to the same street corner.",
+     "url": "https://www.bilibili.com/video/BV13NoUBYEz8",
+     "platform": "Bilibili",
+     "frames": [
+      "/static/frames/catalog/BV13NoUBYEz8/01.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/02.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/03.jpg",
+      "/static/frames/catalog/BV13NoUBYEz8/04.jpg"
+     ],
+     "source": "catalog"
+    }
+   ]
+  }
+ ],
+ "scripts": [
+  {
+   "kind": "script",
+   "film_kind": "Short",
+   "logline": {
+    "title": "The Last Tram",
+    "title_en": "",
+    "theme": "A night-shift tram conductor receives a letter from a passenger who never came back; when he appears at the last stop, she must decide whether to open the door.",
+    "summary": "Mei, a Hong Kong tram conductor, finds an envelope on the last tram of the night. The man who left it is waiting at the final stop, soaked by rain, and the film ends on the decision she does not make aloud."
+   },
+   "script_text": "THE LAST TRAM\n\nFADE IN:\n\nEXT. HONG KONG TRAM DEPOT - NIGHT\n\nRain needles the corrugated roof. A single green tram waits under a sodium lamp. MEI (30s), a conductor in a faded uniform, wipes fog from its windows with her sleeve.\n\nINT. TRAM - NIGHT\n\nMei walks the empty aisle, punching holes in the air. At the back row, a dry envelope lies on the seat.\n\nInside is a photograph of a man on a ferry, his back to the camera. On the reverse, one line: \"Last tram. 11:40. If you still remember.\"\n\nEXT. TRAM STOP - NIGHT\n\nMei stands at the open door. The city blinks past in wet neon. A MAN (40s), soaked through, runs toward the tram.\n\nTheir eyes meet through the glass.\n\nMEI\nYou're late.\n\nMAN\nI know.\n\nShe does not open the door.\n\nMEI\nSo am I.\n\nFADE OUT.",
+   "characters": [],
+   "mode": "online",
+   "text": "### Logline\n**Title**: The Last Tram\n**Theme**: A night-shift tram conductor receives a letter from a passenger who never came back; when he appears at the last stop, she must decide whether to open the door.\n\nMei, a Hong Kong tram conductor, finds an envelope on the last tram of the night. The man who left it is waiting at the final stop, soaked by rain, and the film ends on the decision she does not make aloud.\n\nThe full script is in the scrollable area below; click \"Download PDF\" for the formatted screenplay.\n\nYour script is ready. Tell me which scene to change, or reply **storyboard** for a shot list."
+  },
+  {
+   "kind": "script",
+   "film_kind": "Short",
+   "logline": {
+    "title": "The Blue Hour",
+    "title_en": "",
+    "theme": "An ageing Sham Shui Po tailor prepares a suit for his daughter, who is leaving Hong Kong; the fitting becomes the last honest conversation they will have.",
+    "summary": "Kam, a tailor in Sham Shui Po, fits a suit for a daughter who has already decided to leave. Through measurements, an old photograph and a final mirror check, they say what they have avoided for years."
+   },
+   "script_text": "THE BLUE HOUR\n\nFADE IN:\n\nINT. TAILOR SHOP - SHAM SHUI PO - DUSK\n\nBlue evening light falls through the shop window. KAM (60s) works at a sewing machine, surrounded by bolts of cloth and a radio playing an old Cantonese song.\n\nThe bell above the door rings. A WOMAN (30s), his daughter, enters carrying a suit bag.\n\nKAM\nYou came back.\n\nWOMAN\nI needed a fitting.\n\nHe does not look up.\n\nKAM\nStand still.\n\nHe measures her shoulders. The tape is cold. Neither speaks.\n\nWOMAN\nI'm leaving on Friday.\n\nKAM\nI know.\n\nHe cuts a loose thread.\n\nKAM\nLift your arms.\n\nShe does. In the mirror, their eyes meet.\n\nWOMAN\nWill you come to the airport?\n\nKAM\nThe shop doesn't close for anyone.\n\nShe lowers her arms. The radio song ends.\n\nWOMAN\nThen don't come.\n\nHe holds out his hand for the tape. She gives it to him.\n\nFADE OUT.",
+   "characters": [],
+   "mode": "online",
+   "text": "### Logline\n**Title**: The Blue Hour\n**Theme**: An ageing Sham Shui Po tailor prepares a suit for his daughter, who is leaving Hong Kong; the fitting becomes the last honest conversation they will have.\n\nKam, a tailor in Sham Shui Po, fits a suit for a daughter who has already decided to leave. Through measurements, an old photograph and a final mirror check, they say what they have avoided for years.\n\nThe full script is in the scrollable area below; click \"Download PDF\" for the formatted screenplay.\n\nYour script is ready. Tell me which scene to change, or reply **storyboard** for a shot list."
+  },
+  {
+   "kind": "script",
+   "film_kind": "Short",
+   "logline": {
+    "title": "The Last Booth",
+    "title_en": "",
+    "theme": "A late-night radio host takes one last call from a listener who has been trying to reach him for years; the city becomes the only witness to their conversation.",
+    "summary": "Lok, a Hong Kong late-night radio host, is about to leave the city. A caller he has never met tells him a story that makes the studio feel smaller and the city outside suddenly personal."
+   },
+   "script_text": "THE LAST BOOTH\n\nFADE IN:\n\nINT. RADIO STATION - NIGHT\n\nA narrow studio. LOK (30s) sits behind the microphone, headphones around his neck. The ON AIR sign glows red.\n\nLOK\nLast call before we close.\n\nThe phone line blinks. He presses it.\n\nCALLER (V.O.)\nI've called you every night for three years.\n\nLok looks at the timer. 3:12 AM.\n\nLOK\nWhy tonight?\n\nCALLER (V.O.)\nBecause I'm leaving Hong Kong tomorrow.\n\nOutside the window, neon reflects on wet concrete. Lok leans toward the mic.\n\nLOK\nWhere are you going?\n\nCALLER (V.O.)\nSomewhere without a harbour.\n\nLok smiles, then stops.\n\nLOK\nWhat do you want me to say?\n\nCALLER (V.O.)\nThat you remember me.\n\nLok looks at the empty chair opposite him.\n\nLOK\nI don't.\n\nCALLER (V.O.)\nLiar.\n\nShe hangs up. The studio falls silent. The ON AIR sign blinks out.\n\nFADE OUT.",
+   "characters": [],
+   "mode": "online",
+   "text": "### Logline\n**Title**: The Last Booth\n**Theme**: A late-night radio host takes one last call from a listener who has been trying to reach him for years; the city becomes the only witness to their conversation.\n\nLok, a Hong Kong late-night radio host, is about to leave the city. A caller he has never met tells him a story that makes the studio feel smaller and the city outside suddenly personal.\n\nThe full script is in the scrollable area below; click \"Download PDF\" for the formatted screenplay.\n\nYour script is ready. Tell me which scene to change, or reply **storyboard** for a shot list."
+  }
+ ],
+ "storyboards": [
+  {
+   "kind": "storyboard",
+   "logline": {
+    "title": "The Last Tram",
+    "title_en": "",
+    "theme": "A night-shift tram conductor receives a letter from a passenger who never came back; when he appears at the last stop, she must decide whether to open the door.",
+    "summary": "Mei, a Hong Kong tram conductor, finds an envelope on the last tram of the night. The man who left it is waiting at the final stop, soaked by rain, and the film ends on the decision she does not make aloud."
+   },
+   "shots": [
+    {
+     "id": 1,
+     "scene_no": 1,
+     "scene": "EXT. HONG KONG TRAM DEPOT - NIGHT",
+     "shot_type": "Full Shot",
+     "angle": "High angle",
+     "movement": "Slow push in",
+     "lens": "24mm",
+     "duration": "6s",
+     "description": "A single green tram under a sodium lamp; rain needles the depot roof.",
+     "dialogue": "",
+     "lighting": "Sodium practicals, wet reflections; keep the tram silhouette clean.",
+     "sound": "Rain on metal, distant city hum.",
+     "purpose": "Establish the depot, the last tram and the rain.",
+     "transition": "Cut"
+    },
+    {
+     "id": 2,
+     "scene_no": 1,
+     "scene": "EXT. HONG KONG TRAM DEPOT - NIGHT",
+     "shot_type": "Medium Shot",
+     "angle": "Eye-level",
+     "movement": "Static",
+     "lens": "50mm",
+     "duration": "4s",
+     "description": "Mei wipes the fog from the tram window with her sleeve; her face appears and disappears in the glass.",
+     "dialogue": "",
+     "lighting": "Soft side light through rain; let the reflection carry her expression.",
+     "sound": "Cloth on glass, rain.",
+     "purpose": "Introduce Mei and the physical intimacy of the tram.",
+     "transition": "Cut"
+    },
+    {
+     "id": 3,
+     "scene_no": 2,
+     "scene": "INT. TRAM - NIGHT",
+     "shot_type": "Close-up",
+     "angle": "High angle",
+     "movement": "Static",
+     "lens": "85mm",
+     "duration": "3s",
+     "description": "The dry envelope on the wet seat; Mei's hand enters frame and lifts it.",
+     "dialogue": "",
+     "lighting": "Practical strip light from the aisle; envelope texture warm against cold seats.",
+     "sound": "Paper, rain outside.",
+     "purpose": "Plant the letter and the unanswered question.",
+     "transition": "Cut"
+    },
+    {
+     "id": 4,
+     "scene_no": 3,
+     "scene": "EXT. TRAM STOP - NIGHT",
+     "shot_type": "Over-the-shoulder",
+     "angle": "Eye-level",
+     "movement": "Handheld follow",
+     "lens": "35mm",
+     "duration": "5s",
+     "description": "Over Mei's shoulder: a soaked man runs toward the open door through neon reflections.",
+     "dialogue": "",
+     "lighting": "Backlight the rain; keep the man small at first.",
+     "sound": "Footsteps in water, tram bell.",
+     "purpose": "Bring the past into the present.",
+     "transition": "Cut"
+    },
+    {
+     "id": 5,
+     "scene_no": 3,
+     "scene": "EXT. TRAM STOP - NIGHT",
+     "shot_type": "Medium Close-up",
+     "angle": "Eye-level",
+     "movement": "Static",
+     "lens": "65mm",
+     "duration": "4s",
+     "description": "Mei and the man face each other through the glass; neither moves.",
+     "dialogue": "MEI: You're late.",
+     "lighting": "Soft key on Mei, rain light on the man.",
+     "sound": "Rain, breathing, a distant tram.",
+     "purpose": "Hold the unspoken history between them.",
+     "transition": "Cut"
+    },
+    {
+     "id": 6,
+     "scene_no": 3,
+     "scene": "EXT. TRAM STOP - NIGHT",
+     "shot_type": "Close-up",
+     "angle": "Low angle",
+     "movement": "Static",
+     "lens": "85mm",
+     "duration": "3s",
+     "description": "Mei's hand rests on the door lever but does not pull it. The man waits.",
+     "dialogue": "MEI: So am I.",
+     "lighting": "One practical behind Mei; the man almost a silhouette.",
+     "sound": "Rain, then the tram bell.",
+     "purpose": "End on the decision she withholds.",
+     "transition": "Fade out"
+    }
+   ],
+   "coverage_notes": "Keep the 180-degree line in the tram/shop/studio; shoot masters first, then the close-ups.",
+   "mode": "online",
+   "scene_count": 3,
+   "text": "The storyboard (6 shots covering 3 scenes) is below; click \"Download CSV\" to get the table."
+  },
+  {
+   "kind": "storyboard",
+   "logline": {
+    "title": "The Blue Hour",
+    "title_en": "",
+    "theme": "An ageing Sham Shui Po tailor prepares a suit for his daughter, who is leaving Hong Kong; the fitting becomes the last honest conversation they will have.",
+    "summary": "Kam, a tailor in Sham Shui Po, fits a suit for a daughter who has already decided to leave. Through measurements, an old photograph and a final mirror check, they say what they have avoided for years."
+   },
+   "shots": [
+    {
+     "id": 1,
+     "scene_no": 1,
+     "scene": "INT. TAILOR SHOP - SHAM SHUI PO - DUSK",
+     "shot_type": "Full Shot",
+     "angle": "Eye-level",
+     "movement": "Slow push in",
+     "lens": "24mm",
+     "duration": "7s",
+     "description": "The tailor shop in blue dusk: bolts of cloth, sewing machine, radio; Kam works alone.",
+     "dialogue": "",
+     "lighting": "Blue window light with a warm practical lamp on the machine.",
+     "sound": "Sewing machine, radio, street traffic.",
+     "purpose": "Establish the shop as both workplace and emotional prison.",
+     "transition": "Cut"
+    },
+    {
+     "id": 2,
+     "scene_no": 1,
+     "scene": "INT. TAILOR SHOP - SHAM SHUI PO - DUSK",
+     "shot_type": "Close-up",
+     "angle": "High angle",
+     "movement": "Static",
+     "lens": "85mm",
+     "duration": "3s",
+     "description": "Kam's hands guide fabric under the needle; his fingers are precise and tired.",
+     "dialogue": "",
+     "lighting": "Warm practical on the hands; no fill.",
+     "sound": "Needle, fabric.",
+     "purpose": "Show craft, routine and the body that has stayed.",
+     "transition": "Cut"
+    },
+    {
+     "id": 3,
+     "scene_no": 1,
+     "scene": "INT. TAILOR SHOP - SHAM SHUI PO - DUSK",
+     "shot_type": "Medium Shot",
+     "angle": "Eye-level",
+     "movement": "Static",
+     "lens": "50mm",
+     "duration": "4s",
+     "description": "The woman enters with a suit bag; Kam keeps working. The door bell rings.",
+     "dialogue": "WOMAN: I needed a fitting.",
+     "lighting": "Blue dusk on her, warm lamp on him.",
+     "sound": "Door bell, traffic, radio.",
+     "purpose": "Introduce the daughter without a warm greeting.",
+     "transition": "Cut"
+    },
+    {
+     "id": 4,
+     "scene_no": 2,
+     "scene": "INT. TAILOR SHOP - SHAM SHUI PO - DUSK",
+     "shot_type": "Over-the-shoulder",
+     "angle": "Eye-level",
+     "movement": "Static",
+     "lens": "35mm",
+     "duration": "5s",
+     "description": "Over Kam's shoulder in the mirror: the daughter raises her arms as he measures her.",
+     "dialogue": "WOMAN: I'm leaving on Friday.",
+     "lighting": "Mirror practical; split faces between warm and cool.",
+     "sound": "Tape measure, radio song.",
+     "purpose": "Make the fitting a negotiation.",
+     "transition": "Cut"
+    },
+    {
+     "id": 5,
+     "scene_no": 2,
+     "scene": "INT. TAILOR SHOP - SHAM SHUI PO - DUSK",
+     "shot_type": "Close-up",
+     "angle": "Eye-level",
+     "movement": "Slow push in",
+     "lens": "85mm",
+     "duration": "4s",
+     "description": "The tape measure around the daughter's shoulders; Kam holds both ends.",
+     "dialogue": "KAM: I know.",
+     "lighting": "Soft key on the tape; background falls off.",
+     "sound": "Breathing, radio ending.",
+     "purpose": "Hold the fact they both avoid.",
+     "transition": "Cut"
+    },
+    {
+     "id": 6,
+     "scene_no": 2,
+     "scene": "INT. TAILOR SHOP - SHAM SHUI PO - DUSK",
+     "shot_type": "Wide Shot",
+     "angle": "Eye-level",
+     "movement": "Static",
+     "lens": "24mm",
+     "duration": "5s",
+     "description": "The shop from the doorway: father and daughter separated by a mirror and a suit bag.",
+     "dialogue": "WOMAN: Then don't come.",
+     "lighting": "Blue dusk and one warm lamp; no fill.",
+     "sound": "Radio off, traffic, distant door.",
+     "purpose": "End on the space between them.",
+     "transition": "Fade out"
+    }
+   ],
+   "coverage_notes": "Keep the 180-degree line in the tram/shop/studio; shoot masters first, then the close-ups.",
+   "mode": "online",
+   "scene_count": 2,
+   "text": "The storyboard (6 shots covering 2 scenes) is below; click \"Download CSV\" to get the table."
+  },
+  {
+   "kind": "storyboard",
+   "logline": {
+    "title": "The Last Booth",
+    "title_en": "",
+    "theme": "A late-night radio host takes one last call from a listener who has been trying to reach him for years; the city becomes the only witness to their conversation.",
+    "summary": "Lok, a Hong Kong late-night radio host, is about to leave the city. A caller he has never met tells him a story that makes the studio feel smaller and the city outside suddenly personal."
+   },
+   "shots": [
+    {
+     "id": 1,
+     "scene_no": 1,
+     "scene": "INT. RADIO STATION - NIGHT",
+     "shot_type": "Wide Shot",
+     "angle": "Eye-level",
+     "movement": "Static",
+     "lens": "24mm",
+     "duration": "6s",
+     "description": "The narrow studio: microphone, console, red ON AIR sign, one empty chair.",
+     "dialogue": "",
+     "lighting": "Red practical from the ON AIR sign; cool desk lamp.",
+     "sound": "Low studio hum, distant city.",
+     "purpose": "Establish the booth as a small island at night.",
+     "transition": "Cut"
+    },
+    {
+     "id": 2,
+     "scene_no": 1,
+     "scene": "INT. RADIO STATION - NIGHT",
+     "shot_type": "Medium Shot",
+     "angle": "Eye-level",
+     "movement": "Slow push in",
+     "lens": "50mm",
+     "duration": "5s",
+     "description": "Lok behind the microphone, headphones loose around his neck; he looks tired and present.",
+     "dialogue": "LOK: Last call before we close.",
+     "lighting": "Soft key from the console; red rim from the sign.",
+     "sound": "Breath, console hum.",
+     "purpose": "Introduce the host and the ritual of the last call.",
+     "transition": "Cut"
+    },
+    {
+     "id": 3,
+     "scene_no": 1,
+     "scene": "INT. RADIO STATION - NIGHT",
+     "shot_type": "Close-up",
+     "angle": "High angle",
+     "movement": "Static",
+     "lens": "85mm",
+     "duration": "3s",
+     "description": "The phone line blinks; Lok's finger presses it.",
+     "dialogue": "",
+     "lighting": "Red sign reflected in the phone panel.",
+     "sound": "Phone click, line hiss.",
+     "purpose": "Open the door to the caller.",
+     "transition": "Cut"
+    },
+    {
+     "id": 4,
+     "scene_no": 2,
+     "scene": "INT. RADIO STATION - NIGHT",
+     "shot_type": "Over-the-shoulder",
+     "angle": "Eye-level",
+     "movement": "Handheld",
+     "lens": "35mm",
+     "duration": "5s",
+     "description": "Over Lok's shoulder: the empty chair and the window full of wet neon.",
+     "dialogue": "CALLER (V.O.): Because I'm leaving Hong Kong tomorrow.",
+     "lighting": "Neon spill on the empty chair; Lok in silhouette.",
+     "sound": "Caller's voice, rain outside.",
+     "purpose": "Make the city present without showing it directly.",
+     "transition": "Cut"
+    },
+    {
+     "id": 5,
+     "scene_no": 2,
+     "scene": "INT. RADIO STATION - NIGHT",
+     "shot_type": "Medium Close-up",
+     "angle": "Eye-level",
+     "movement": "Static",
+     "lens": "65mm",
+     "duration": "4s",
+     "description": "Lok leans toward the microphone, then stops; his expression changes.",
+     "dialogue": "CALLER (V.O.): That you remember me.",
+     "lighting": "Red sign edge on his face; eyes in soft shadow.",
+     "sound": "Studio silence, line noise.",
+     "purpose": "Put him on the spot.",
+     "transition": "Cut"
+    },
+    {
+     "id": 6,
+     "scene_no": 2,
+     "scene": "INT. RADIO STATION - NIGHT",
+     "shot_type": "Close-up",
+     "angle": "Eye-level",
+     "movement": "Pull out slowly",
+     "lens": "85mm",
+     "duration": "4s",
+     "description": "The ON AIR sign blinks out; Lok sits alone in the dark studio.",
+     "dialogue": "LOK: I don't.",
+     "lighting": "Red sign dies; only console glow remains.",
+     "sound": "Click, room tone, distant traffic.",
+     "purpose": "End on the cost of the lie.",
+     "transition": "Fade out"
+    }
+   ],
+   "coverage_notes": "Keep the 180-degree line in the tram/shop/studio; shoot masters first, then the close-ups.",
+   "mode": "online",
+   "scene_count": 2,
+   "text": "The storyboard (6 shots covering 2 scenes) is below; click \"Download CSV\" to get the table."
+  }
+ ],
+ "schedules": [
+  {
+   "kind": "schedule",
+   "summary": "A one-day shoot for The Last Tram; masters first, then the close-ups. The plan keeps the rain/neon/dusk look consistent and protects the final quiet beat.",
+   "crew": [
+    {
+     "role": "Director",
+     "count": 1
+    },
+    {
+     "role": "Producer",
+     "count": 1
+    },
+    {
+     "role": "Camera",
+     "count": 2
+    },
+    {
+     "role": "Gaffer",
+     "count": 1
+    },
+    {
+     "role": "Sound",
+     "count": 1
+    },
+    {
+     "role": "PA",
+     "count": 1
+    }
+   ],
+   "equipment": [
+    "Sony FX3",
+    "24-70mm f/2.8",
+    "35mm prime",
+    "rain tower",
+    "1x1 LED panel",
+    "boom mic"
+   ],
+   "locations": [
+    {
+     "name": "Tram depot",
+     "note": "Exterior, wet-down, night practicals"
+    },
+    {
+     "name": "Heritage tram",
+     "note": "Interior, controlled aisle light"
+    }
+   ],
+   "days": [
+    {
+     "day": 1,
+     "date": "2026-09-12",
+     "call": "07:30",
+     "wrap": "17:30",
+     "scenes": [
+      "1",
+      "2",
+      "3"
+     ],
+     "notes": "Tram depot exterior first; rain tower on standby; night scenes after 18:30 if needed."
+    }
+   ],
+   "risks": [
+    {
+     "risk": "Rain continuity",
+     "mitigation": "Shoot wet-down before the rain tower; keep a continuity still."
+    },
+    {
+     "risk": "Long dusk window",
+     "mitigation": "Rehearse the mirror setup before blue hour."
+    }
+   ],
+   "calendar": [
+    {
+     "title": "Day 1 — The Last Tram",
+     "start": "2026-09-12T09:00:00",
+     "end": "2026-09-12T18:00:00",
+     "location": "Tram depot",
+     "description": "Demo shooting day generated from the storyboard."
+    }
+   ],
+   "shots_count": 6,
+   "preferences": "One-day shoot; keep the company move to one location.",
+   "mode": "online",
+   "text": "The shooting plan is below; download the .ics calendar for the demo date."
+  },
+  {
+   "kind": "schedule",
+   "summary": "A one-day shoot for The Blue Hour; masters first, then the close-ups. The plan keeps the rain/neon/dusk look consistent and protects the final quiet beat.",
+   "crew": [
+    {
+     "role": "Director",
+     "count": 1
+    },
+    {
+     "role": "Producer",
+     "count": 1
+    },
+    {
+     "role": "Camera",
+     "count": 1
+    },
+    {
+     "role": "Gaffer",
+     "count": 1
+    },
+    {
+     "role": "Sound",
+     "count": 1
+    }
+   ],
+   "equipment": [
+    "Sony FX3",
+    "24mm / 50mm / 85mm primes",
+    "softbox",
+    "bounce board",
+    "lav mic"
+   ],
+   "locations": [
+    {
+     "name": "Sham Shui Po tailor shop",
+     "note": "Window dusk, practical radio, mirror"
+    }
+   ],
+   "days": [
+    {
+     "day": 1,
+     "date": "2026-09-19",
+     "call": "09:00",
+     "wrap": "18:00",
+     "scenes": [
+      "1",
+      "2"
+     ],
+     "notes": "Shoot the shop in blue hour first; mirror setup needs 45 minutes."
+    }
+   ],
+   "risks": [
+    {
+     "risk": "Rain continuity",
+     "mitigation": "Shoot wet-down before the rain tower; keep a continuity still."
+    },
+    {
+     "risk": "Long dusk window",
+     "mitigation": "Rehearse the mirror setup before blue hour."
+    }
+   ],
+   "calendar": [
+    {
+     "title": "Day 1 — The Blue Hour",
+     "start": "2026-09-19T09:00:00",
+     "end": "2026-09-19T18:00:00",
+     "location": "Sham Shui Po tailor shop",
+     "description": "Demo shooting day generated from the storyboard."
+    }
+   ],
+   "shots_count": 6,
+   "preferences": "One-day shoot; keep the company move to one location.",
+   "mode": "online",
+   "text": "The shooting plan is below; download the .ics calendar for the demo date."
+  },
+  {
+   "kind": "schedule",
+   "summary": "A one-day shoot for The Last Booth; masters first, then the close-ups. The plan keeps the rain/neon/dusk look consistent and protects the final quiet beat.",
+   "crew": [
+    {
+     "role": "Director",
+     "count": 1
+    },
+    {
+     "role": "Producer",
+     "count": 1
+    },
+    {
+     "role": "Camera",
+     "count": 1
+    },
+    {
+     "role": "Gaffer",
+     "count": 1
+    },
+    {
+     "role": "Sound",
+     "count": 1
+    }
+   ],
+   "equipment": [
+    "Sony FX3",
+    "35mm / 65mm / 85mm primes",
+    "red practical",
+    "desk lamp",
+    "boom mic"
+   ],
+   "locations": [
+    {
+     "name": "Community radio studio",
+     "note": "Night access, ON AIR practical, empty chair"
+    }
+   ],
+   "days": [
+    {
+     "day": 1,
+     "date": "2026-09-26",
+     "call": "18:00",
+     "wrap": "01:00",
+     "scenes": [
+      "1",
+      "2"
+     ],
+     "notes": "Studio night: ON AIR sign, phone practical, no outside light after midnight."
+    }
+   ],
+   "risks": [
+    {
+     "risk": "Rain continuity",
+     "mitigation": "Shoot wet-down before the rain tower; keep a continuity still."
+    },
+    {
+     "risk": "Long dusk window",
+     "mitigation": "Rehearse the mirror setup before blue hour."
+    }
+   ],
+   "calendar": [
+    {
+     "title": "Day 1 — The Last Booth",
+     "start": "2026-09-26T09:00:00",
+     "end": "2026-09-26T18:00:00",
+     "location": "Community radio studio",
+     "description": "Demo shooting day generated from the storyboard."
+    }
+   ],
+   "shots_count": 6,
+   "preferences": "One-day shoot; keep the company move to one location.",
+   "mode": "online",
+   "text": "The shooting plan is below; download the .ics calendar for the demo date."
+  }
+ ],
+ "reference_films": [
+  {
+   "id": "demo-riza-film",
+   "url": "https://www.youtube.com/watch?v=j4aoo1qbGoE",
+   "title": "How To Film Your Life Like A Movie",
+   "moods": [
+    "Life of Riza"
+   ],
+   "frames": [
+    "/static/frames/yt-j4aoo1qbGoE/frame-01.jpg",
+    "/static/frames/yt-j4aoo1qbGoE/frame-02.jpg",
+    "/static/frames/yt-j4aoo1qbGoE/frame-03.jpg",
+    "/static/frames/yt-j4aoo1qbGoE/frame-04.jpg"
+   ],
+   "visual_summary": "A practical, personal video essay about filming everyday life cinematically: direct address, behind-the-scenes shots, warm room light and handheld detail.",
+   "style_summary": "Practical, warm and diaristic; the camera is both a tool and part of the story.",
+   "style_tags": [
+    "filmmaking",
+    "video diary",
+    "warm",
+    "direct address"
+   ],
+   "platform": "YouTube",
+   "duration": "10:00",
+   "owner": "Life Of Riza"
+  },
+  {
+   "id": "demo-riza-lessons",
+   "url": "https://www.youtube.com/watch?v=VHS8VT6ycYI",
+   "title": "Lessons I Learned From My 20s",
+   "moods": [
+    "Life of Riza"
+   ],
+   "frames": [
+    "/static/frames/yt-VHS8VT6ycYI/frame-01.jpg",
+    "/static/frames/yt-VHS8VT6ycYI/frame-02.jpg",
+    "/static/frames/yt-VHS8VT6ycYI/frame-03.jpg",
+    "/static/frames/yt-VHS8VT6ycYI/frame-04.jpg"
+   ],
+   "visual_summary": "A quiet, reflective video essay about lessons from the twenties, built from personal footage, warm interiors and direct-to-camera narration.",
+   "style_summary": "Reflective, intimate and gently paced, with natural interiors and a personal voiceover.",
+   "style_tags": [
+    "reflective",
+    "personal essay",
+    "twenties",
+    "natural light"
+   ],
+   "platform": "YouTube",
+   "duration": "10:00",
+   "owner": "Life Of Riza"
+  },
+  {
+   "id": "demo-riza-20s",
+   "url": "https://www.youtube.com/watch?v=cJ1SZAXeWEo",
+   "title": "What they don't tell you about your 20s",
+   "moods": [
+    "Lifestyle"
+   ],
+   "frames": [
+    "/static/frames/yt-cJ1SZAXeWEo/frame-01.jpg",
+    "/static/frames/yt-cJ1SZAXeWEo/frame-02.jpg",
+    "/static/frames/yt-cJ1SZAXeWEo/frame-03.jpg",
+    "/static/frames/yt-cJ1SZAXeWEo/frame-04.jpg"
+   ],
+   "visual_summary": "A personal lifestyle essay about expectations in your twenties, with intimate framing, natural light and reflective voiceover.",
+   "style_summary": "Honest, warm and observational; everyday spaces become the emotional set.",
+   "style_tags": [
+    "lifestyle",
+    "twenties",
+    "intimate",
+    "reflective"
+   ],
+   "platform": "YouTube",
+   "duration": "10:00",
+   "owner": "Life Of Riza"
+  }
+ ],
+ "reference_inspiration": [
+  {
+   "kind": "Film",
+   "styles": [
+    {
+     "style_name": "Soft window light and small rituals",
+     "why_fits": "The frames are built from ordinary surfaces — windows, hands, tea — in soft available light. That texture fits a Hong Kong story that stays intimate rather than spectacular. The saved reference is the primary style anchor.",
+     "theme": "A woman documents one last ordinary morning in her flat before leaving Hong Kong; the camera makes the room feel like a person.",
+     "film_reason": "This is one of your saved references; its extracted frames are shown directly below.",
+     "film": {
+      "id": "personal:demo-riza-film",
+      "kind": "Saved reference",
+      "title_zh": "How To Film Your Life Like A Movie",
+      "title_en": "How To Film Your Life Like A Movie",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Life of Riza"
+      ],
+      "tags": [
+       "filmmaking",
+       "video diary",
+       "warm",
+       "direct address"
+      ],
+      "synopsis": "A practical, personal video essay about filming everyday life cinematically: direct address, behind-the-scenes shots, warm room light and handheld detail.",
+      "url": "https://www.youtube.com/watch?v=j4aoo1qbGoE",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-j4aoo1qbGoE/frame-01.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-02.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-03.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    },
+    {
+     "style_name": "Sun-bleached memory and handheld intimacy",
+     "why_fits": "The handheld closeness and warm, sun-bleached colour can turn a Hong Kong memory into something tactile rather than nostalgic. The city can be present through reflections and small gestures. The saved reference is the primary style anchor.",
+     "theme": "Two friends meet for one afternoon before one of them emigrates; they film each other as a way of postponing goodbye.",
+     "film_reason": "This is one of your saved references; the frames carry its warm, observational texture.",
+     "film": {
+      "id": "personal:demo-riza-lessons",
+      "kind": "Saved reference",
+      "title_zh": "Lessons I Learned From My 20s",
+      "title_en": "Lessons I Learned From My 20s",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Life of Riza"
+      ],
+      "tags": [
+       "reflective",
+       "personal essay",
+       "twenties",
+       "natural light"
+      ],
+      "synopsis": "A quiet, reflective video essay about lessons from the twenties, built from personal footage, warm interiors and direct-to-camera narration.",
+      "url": "https://www.youtube.com/watch?v=VHS8VT6ycYI",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-VHS8VT6ycYI/frame-01.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-02.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-03.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    },
+    {
+     "style_name": "A camera as a diary",
+     "why_fits": "Direct address and close, warm framing make the city feel personal instead of touristic. The style is ideal for a character who records their own life while the city changes around them. The saved reference is the primary style anchor.",
+     "theme": "A young filmmaker keeps a video diary of Hong Kong while preparing to leave; the camera becomes the only place she tells the truth.",
+     "film_reason": "This is one of your saved references; its visual rhythm informs this direction.",
+     "film": {
+      "id": "personal:demo-riza-20s",
+      "kind": "Saved reference",
+      "title_zh": "What they don't tell you about your 20s",
+      "title_en": "What they don't tell you about your 20s",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Lifestyle"
+      ],
+      "tags": [
+       "lifestyle",
+       "twenties",
+       "intimate",
+       "reflective"
+      ],
+      "synopsis": "A personal lifestyle essay about expectations in your twenties, with intimate framing, natural light and reflective voiceover.",
+      "url": "https://www.youtube.com/watch?v=cJ1SZAXeWEo",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-cJ1SZAXeWEo/frame-01.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-02.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-03.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    }
+   ],
+   "films": [
+    {
+     "id": "personal:demo-riza-film",
+     "kind": "Saved reference",
+     "title_zh": "How To Film Your Life Like A Movie",
+     "title_en": "How To Film Your Life Like A Movie",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Life of Riza"
+     ],
+     "tags": [
+      "filmmaking",
+      "video diary",
+      "warm",
+      "direct address"
+     ],
+     "synopsis": "A practical, personal video essay about filming everyday life cinematically: direct address, behind-the-scenes shots, warm room light and handheld detail.",
+     "url": "https://www.youtube.com/watch?v=j4aoo1qbGoE",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-j4aoo1qbGoE/frame-01.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-02.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-03.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-04.jpg"
+     ],
+     "source": "personal"
+    },
+    {
+     "id": "personal:demo-riza-lessons",
+     "kind": "Saved reference",
+     "title_zh": "Lessons I Learned From My 20s",
+     "title_en": "Lessons I Learned From My 20s",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Life of Riza"
+     ],
+     "tags": [
+      "reflective",
+      "personal essay",
+      "twenties",
+      "natural light"
+     ],
+     "synopsis": "A quiet, reflective video essay about lessons from the twenties, built from personal footage, warm interiors and direct-to-camera narration.",
+     "url": "https://www.youtube.com/watch?v=VHS8VT6ycYI",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-VHS8VT6ycYI/frame-01.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-02.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-03.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-04.jpg"
+     ],
+     "source": "personal"
+    },
+    {
+     "id": "personal:demo-riza-20s",
+     "kind": "Saved reference",
+     "title_zh": "What they don't tell you about your 20s",
+     "title_en": "What they don't tell you about your 20s",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Lifestyle"
+     ],
+     "tags": [
+      "lifestyle",
+      "twenties",
+      "intimate",
+      "reflective"
+     ],
+     "synopsis": "A personal lifestyle essay about expectations in your twenties, with intimate framing, natural light and reflective voiceover.",
+     "url": "https://www.youtube.com/watch?v=cJ1SZAXeWEo",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-cJ1SZAXeWEo/frame-01.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-02.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-03.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-04.jpg"
+     ],
+     "source": "personal"
+    }
+   ]
+  },
+  {
+   "kind": "Film",
+   "styles": [
+    {
+     "style_name": "Slow living, deliberate frames",
+     "why_fits": "The pacing is unhurried and the frames are deliberate, with attention to light and small objects. That fits a Hong Kong story about choosing one quiet room over the noise outside. The saved reference is the primary style anchor.",
+     "theme": "A Hong Kong cook spends one day making a familiar meal before the restaurant closes; every task becomes a small act of memory.",
+     "film_reason": "This is one of your saved references; its extracted frames are shown directly below.",
+     "film": {
+      "id": "personal:demo-riza-20s",
+      "kind": "Saved reference",
+      "title_zh": "What they don't tell you about your 20s",
+      "title_en": "What they don't tell you about your 20s",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Lifestyle"
+      ],
+      "tags": [
+       "lifestyle",
+       "twenties",
+       "intimate",
+       "reflective"
+      ],
+      "synopsis": "A personal lifestyle essay about expectations in your twenties, with intimate framing, natural light and reflective voiceover.",
+      "url": "https://www.youtube.com/watch?v=cJ1SZAXeWEo",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-cJ1SZAXeWEo/frame-01.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-02.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-03.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    },
+    {
+     "style_name": "Summer as a feeling, not a plot",
+     "why_fits": "The summer texture is made of light, skin, water and time rather than plot. It can hold a Hong Kong story that is about a feeling rather than an event. The saved reference is the primary style anchor.",
+     "theme": "Two teenagers spend one last summer afternoon on the harbour before one of them moves away.",
+     "film_reason": "This is one of your saved references; the frames carry its warm, observational texture.",
+     "film": {
+      "id": "personal:demo-riza-film",
+      "kind": "Saved reference",
+      "title_zh": "How To Film Your Life Like A Movie",
+      "title_en": "How To Film Your Life Like A Movie",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Life of Riza"
+      ],
+      "tags": [
+       "filmmaking",
+       "video diary",
+       "warm",
+       "direct address"
+      ],
+      "synopsis": "A practical, personal video essay about filming everyday life cinematically: direct address, behind-the-scenes shots, warm room light and handheld detail.",
+      "url": "https://www.youtube.com/watch?v=j4aoo1qbGoE",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-j4aoo1qbGoE/frame-01.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-02.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-03.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    },
+    {
+     "style_name": "Everyday objects, cinematic attention",
+     "why_fits": "The camera treats ordinary objects as worthy of close attention, which is exactly how a Hong Kong interior can become cinematic without being stylised. The saved reference is the primary style anchor.",
+     "theme": "A sound recordist collects the small sounds of a Hong Kong apartment before it is demolished.",
+     "film_reason": "This is one of your saved references; its visual rhythm informs this direction.",
+     "film": {
+      "id": "personal:demo-riza-lessons",
+      "kind": "Saved reference",
+      "title_zh": "Lessons I Learned From My 20s",
+      "title_en": "Lessons I Learned From My 20s",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Life of Riza"
+      ],
+      "tags": [
+       "reflective",
+       "personal essay",
+       "twenties",
+       "natural light"
+      ],
+      "synopsis": "A quiet, reflective video essay about lessons from the twenties, built from personal footage, warm interiors and direct-to-camera narration.",
+      "url": "https://www.youtube.com/watch?v=VHS8VT6ycYI",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-VHS8VT6ycYI/frame-01.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-02.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-03.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    }
+   ],
+   "films": [
+    {
+     "id": "personal:demo-riza-20s",
+     "kind": "Saved reference",
+     "title_zh": "What they don't tell you about your 20s",
+     "title_en": "What they don't tell you about your 20s",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Lifestyle"
+     ],
+     "tags": [
+      "lifestyle",
+      "twenties",
+      "intimate",
+      "reflective"
+     ],
+     "synopsis": "A personal lifestyle essay about expectations in your twenties, with intimate framing, natural light and reflective voiceover.",
+     "url": "https://www.youtube.com/watch?v=cJ1SZAXeWEo",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-cJ1SZAXeWEo/frame-01.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-02.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-03.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-04.jpg"
+     ],
+     "source": "personal"
+    },
+    {
+     "id": "personal:demo-riza-film",
+     "kind": "Saved reference",
+     "title_zh": "How To Film Your Life Like A Movie",
+     "title_en": "How To Film Your Life Like A Movie",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Life of Riza"
+     ],
+     "tags": [
+      "filmmaking",
+      "video diary",
+      "warm",
+      "direct address"
+     ],
+     "synopsis": "A practical, personal video essay about filming everyday life cinematically: direct address, behind-the-scenes shots, warm room light and handheld detail.",
+     "url": "https://www.youtube.com/watch?v=j4aoo1qbGoE",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-j4aoo1qbGoE/frame-01.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-02.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-03.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-04.jpg"
+     ],
+     "source": "personal"
+    },
+    {
+     "id": "personal:demo-riza-lessons",
+     "kind": "Saved reference",
+     "title_zh": "Lessons I Learned From My 20s",
+     "title_en": "Lessons I Learned From My 20s",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Life of Riza"
+     ],
+     "tags": [
+      "reflective",
+      "personal essay",
+      "twenties",
+      "natural light"
+     ],
+     "synopsis": "A quiet, reflective video essay about lessons from the twenties, built from personal footage, warm interiors and direct-to-camera narration.",
+     "url": "https://www.youtube.com/watch?v=VHS8VT6ycYI",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-VHS8VT6ycYI/frame-01.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-02.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-03.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-04.jpg"
+     ],
+     "source": "personal"
+    }
+   ]
+  },
+  {
+   "kind": "Film",
+   "styles": [
+    {
+     "style_name": "A quiet voiceover over ordinary rooms",
+     "why_fits": "The reflective voiceover and quiet rooms create a Hong Kong that feels remembered rather than explained. It suits a story about leaving and the things you notice too late. The saved reference is the primary style anchor.",
+     "theme": "A woman returns to her childhood flat in Hong Kong and records a voice note for the new tenants.",
+     "film_reason": "This is one of your saved references; its extracted frames are shown directly below.",
+     "film": {
+      "id": "personal:demo-riza-lessons",
+      "kind": "Saved reference",
+      "title_zh": "Lessons I Learned From My 20s",
+      "title_en": "Lessons I Learned From My 20s",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Life of Riza"
+      ],
+      "tags": [
+       "reflective",
+       "personal essay",
+       "twenties",
+       "natural light"
+      ],
+      "synopsis": "A quiet, reflective video essay about lessons from the twenties, built from personal footage, warm interiors and direct-to-camera narration.",
+      "url": "https://www.youtube.com/watch?v=VHS8VT6ycYI",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-VHS8VT6ycYI/frame-01.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-02.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-03.jpg",
+       "/static/frames/yt-VHS8VT6ycYI/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    },
+    {
+     "style_name": "Warm film texture and intimate close-ups",
+     "why_fits": "The warm texture and close framing make the city feel held rather than observed. It suits a Hong Kong story where the emotional scale is a single room, a window, a face. The saved reference is the primary style anchor.",
+     "theme": "A tailor and an old customer share one final fitting; the close-ups carry the history neither of them says.",
+     "film_reason": "This is one of your saved references; the frames carry its warm, observational texture.",
+     "film": {
+      "id": "personal:demo-riza-20s",
+      "kind": "Saved reference",
+      "title_zh": "What they don't tell you about your 20s",
+      "title_en": "What they don't tell you about your 20s",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Lifestyle"
+      ],
+      "tags": [
+       "lifestyle",
+       "twenties",
+       "intimate",
+       "reflective"
+      ],
+      "synopsis": "A personal lifestyle essay about expectations in your twenties, with intimate framing, natural light and reflective voiceover.",
+      "url": "https://www.youtube.com/watch?v=cJ1SZAXeWEo",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-cJ1SZAXeWEo/frame-01.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-02.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-03.jpg",
+       "/static/frames/yt-cJ1SZAXeWEo/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    },
+    {
+     "style_name": "The self filmed without performance",
+     "why_fits": "The direct-to-camera mode is honest and unglamorous, which lets a Hong Kong story admit uncertainty instead of performing it. The saved reference is the primary style anchor.",
+     "theme": "A radio host records a final video diary in an empty studio before leaving Hong Kong.",
+     "film_reason": "This is one of your saved references; its visual rhythm informs this direction.",
+     "film": {
+      "id": "personal:demo-riza-film",
+      "kind": "Saved reference",
+      "title_zh": "How To Film Your Life Like A Movie",
+      "title_en": "How To Film Your Life Like A Movie",
+      "year": "",
+      "duration": "10:00",
+      "genre": [],
+      "moods": [
+       "Life of Riza"
+      ],
+      "tags": [
+       "filmmaking",
+       "video diary",
+       "warm",
+       "direct address"
+      ],
+      "synopsis": "A practical, personal video essay about filming everyday life cinematically: direct address, behind-the-scenes shots, warm room light and handheld detail.",
+      "url": "https://www.youtube.com/watch?v=j4aoo1qbGoE",
+      "platform": "YouTube",
+      "frames": [
+       "/static/frames/yt-j4aoo1qbGoE/frame-01.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-02.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-03.jpg",
+       "/static/frames/yt-j4aoo1qbGoE/frame-04.jpg"
+      ],
+      "source": "personal"
+     }
+    }
+   ],
+   "films": [
+    {
+     "id": "personal:demo-riza-lessons",
+     "kind": "Saved reference",
+     "title_zh": "Lessons I Learned From My 20s",
+     "title_en": "Lessons I Learned From My 20s",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Life of Riza"
+     ],
+     "tags": [
+      "reflective",
+      "personal essay",
+      "twenties",
+      "natural light"
+     ],
+     "synopsis": "A quiet, reflective video essay about lessons from the twenties, built from personal footage, warm interiors and direct-to-camera narration.",
+     "url": "https://www.youtube.com/watch?v=VHS8VT6ycYI",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-VHS8VT6ycYI/frame-01.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-02.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-03.jpg",
+      "/static/frames/yt-VHS8VT6ycYI/frame-04.jpg"
+     ],
+     "source": "personal"
+    },
+    {
+     "id": "personal:demo-riza-20s",
+     "kind": "Saved reference",
+     "title_zh": "What they don't tell you about your 20s",
+     "title_en": "What they don't tell you about your 20s",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Lifestyle"
+     ],
+     "tags": [
+      "lifestyle",
+      "twenties",
+      "intimate",
+      "reflective"
+     ],
+     "synopsis": "A personal lifestyle essay about expectations in your twenties, with intimate framing, natural light and reflective voiceover.",
+     "url": "https://www.youtube.com/watch?v=cJ1SZAXeWEo",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-cJ1SZAXeWEo/frame-01.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-02.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-03.jpg",
+      "/static/frames/yt-cJ1SZAXeWEo/frame-04.jpg"
+     ],
+     "source": "personal"
+    },
+    {
+     "id": "personal:demo-riza-film",
+     "kind": "Saved reference",
+     "title_zh": "How To Film Your Life Like A Movie",
+     "title_en": "How To Film Your Life Like A Movie",
+     "year": "",
+     "duration": "10:00",
+     "genre": [],
+     "moods": [
+      "Life of Riza"
+     ],
+     "tags": [
+      "filmmaking",
+      "video diary",
+      "warm",
+      "direct address"
+     ],
+     "synopsis": "A practical, personal video essay about filming everyday life cinematically: direct address, behind-the-scenes shots, warm room light and handheld detail.",
+     "url": "https://www.youtube.com/watch?v=j4aoo1qbGoE",
+     "platform": "YouTube",
+     "frames": [
+      "/static/frames/yt-j4aoo1qbGoE/frame-01.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-02.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-03.jpg",
+      "/static/frames/yt-j4aoo1qbGoE/frame-04.jpg"
+     ],
+     "source": "personal"
+    }
+   ]
+  }
+ ]
+}

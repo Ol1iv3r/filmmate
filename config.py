@@ -29,6 +29,9 @@ GATEWAY_CHAT_MODEL = os.environ.get("GATEWAY_CHAT_MODEL", "google/gemini-4-hydro
 GATEWAY_VISION_MODEL = (os.environ.get("GATEWAY_VISION_MODEL", "").strip()
                         or GATEWAY_CHAT_MODEL)
 
+# Deterministic presentation mode: fixed fixtures, random 3 variants, <5s
+DEMO_MODE = os.environ.get("DEMO_MODE", "0").strip().lower() in ("1", "true", "yes", "on")
+
 # 语音转写配置(Phase 2):whisper-1,走 Vercel AI Gateway 或直连 OpenAI
 AI_GATEWAY_API_KEY = os.environ.get("AI_GATEWAY_API_KEY", "").strip()
 AI_GATEWAY_BASE_URL = os.environ.get(

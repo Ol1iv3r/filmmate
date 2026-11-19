@@ -26,6 +26,9 @@ data/library/_draft_*.json
 # 影视目录的策展源片单（脚本可据此复现 catalog.json）
 !data/catalog_src/
 !data/catalog_src/*.json
+# Deterministic demo fixtures (small, no secrets)
+!data/demo/
+!data/demo/*
 
 # 系统文件
 .DS_Store

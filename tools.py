@@ -1644,6 +1644,13 @@ async def inspiration_films(text: str, api_key: str = None, kind: str = None, hi
         return {"text": _kind_ask_text(), "need_kind": True,
                 "kind_options": KIND_CHOICES, "mode": "offline"}
     idea = (text or "").strip()
+    try:
+        import demo_fixtures
+        demo = await demo_fixtures.inspiration(idea, kind, history)
+        if demo is not None:
+            return demo
+    except Exception:  # noqa: BLE001
+        pass
     refs = []
     try:
         import personal_library
@@ -2048,6 +2055,14 @@ async def script_tool(message: str, api_key: str = None, script_text: str = "", 
     script = (script_text or "").strip()
     msg = re.sub(r"^(?:剧本检查[/／]?生成|剧本检查|剧本生成|写剧本)\s*[:：]?\s*", "", msg)
 
+    try:
+        import demo_fixtures
+        demo = await demo_fixtures.script()
+        if demo is not None:
+            return demo
+    except Exception:  # noqa: BLE001
+        pass
+
     if script:
         if not looks_like_script(script):
             return {
@@ -2367,6 +2382,14 @@ async def storyboard_tool(message: str, api_key: str = None, script_text: str = 
                 "(If you do not have a script yet, use **Find inspiration** for a theme, then **Script check / write** to draft one.)"),
             "needs_script": True, "mode": "offline",
         }
+    try:
+        import demo_fixtures
+        demo = await demo_fixtures.storyboard()
+        if demo is not None:
+            return demo
+    except Exception:  # noqa: BLE001
+        pass
+
     if not looks_like_script(script):
         return {"text": _t("上传的内容看起来不像分场剧本（没找到场次/对白/场景标题），先确认一下剧本文件。",
                            "The upload does not look like a scene-based screenplay (no scene headings, dialogue or scene titles); please check the file."),
@@ -2443,6 +2466,14 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
     """拍摄计划：根据最近一版分镜生成详细拍摄方案 + 可下载的日历事件。"""
     import datetime as _dt
     from datetime import timedelta
+
+    try:
+        import demo_fixtures
+        demo = await demo_fixtures.schedule()
+        if demo is not None:
+            return demo
+    except Exception:  # noqa: BLE001
+        pass
 
     shots = []
     if isinstance(storyboard, dict):

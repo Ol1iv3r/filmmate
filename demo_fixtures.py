@@ -1,0 +1,210 @@
+"""Deterministic demo fixtures for the live presentation.
+
+Enable with DEMO_MODE=1 in .env. All demo responses are fixed; the only
+randomness is which of the three prepared variants is shown, and how long the
+UI reports the generation took (always < 5 seconds).
+"""
+from __future__ import annotations
+
+import asyncio
+import copy
+import json
+import random
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+
+import config
+import personal_library
+
+FIXTURE_FILE = config.BASE_DIR / "data" / "demo" / "demo_fixtures.json"
+_state: dict = {"variant": None, "fixtures": None, "demo_refs": set()}
+
+
+def enabled() -> bool:
+    return bool(getattr(config, "DEMO_MODE", False))
+
+
+def _load() -> dict:
+    if _state["fixtures"] is None:
+        try:
+            _state["fixtures"] = json.loads(FIXTURE_FILE.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            _state["fixtures"] = {}
+    return _state["fixtures"]
+
+
+def _variants(key: str) -> list:
+    return _load().get(key) or []
+
+
+def _variant(key: str) -> int:
+    variants = _variants(key)
+    if not variants:
+        return 0
+    current = _state.get("variant")
+    if current is None:
+        current = random.randrange(len(variants))
+        _state["variant"] = current
+    return current % len(variants)
+
+
+def _next_variant(key: str) -> int:
+    variants = _variants(key)
+    if not variants:
+        return 0
+    current = random.randrange(len(variants))
+    _state["variant"] = current
+    return current
+
+
+async def _timed(payload: dict, low: int = 1100, high: int = 3800) -> dict:
+    """Sleep for a natural-looking, non-fixed delay under five seconds."""
+    ms = random.randint(low, high)
+    await asyncio.sleep(ms / 1000)
+    out = copy.deepcopy(payload)
+    out["ms"] = ms
+    out["mode"] = "online"
+    return out
+
+
+def _render_inspiration(payload: dict, idea: str) -> str:
+    films = payload.get("films") or []
+    styles = payload.get("styles") or []
+    lines = [f"**Genre**: Film　｜　**Keywords**: {idea or '(not given)'}", ""]
+    for i, style in enumerate(styles):
+        film = films[i] if i < len(films) else {}
+        personal = film.get("source") == "personal"
+        title = film.get("title_zh") or film.get("title_en") or "Untitled"
+        lines.append(f"### Style {i + 1}: {style.get('style_name', '')}")
+        lines.append(f"- **Why it fits there**: {style.get('why_fits', '')}")
+        lines.append(f"- **Theme {i + 1}**: {style.get('theme', '')}")
+        if personal:
+            lines.append(f"- **Matching film {i + 1}**: *{title}* — **your saved reference**")
+        else:
+            lines.append(f"- **Matching film {i + 1}**: *{title}* ({film.get('year', '')})")
+        if film.get("synopsis"):
+            lines.append(f"  - Story: {film.get('synopsis')}")
+        if film.get("url"):
+            lines.append(f"  - Watch: [{film.get('platform') or 'link'}]({film['url']})")
+        if style.get("film_reason"):
+            lines.append(f"  - Reference point: {style['film_reason']}")
+        lines.append("")
+    lines.append("---")
+    lines.append("Want me to write the script based on **Theme 1**? Reply 'write script'.")
+    return "\n".join(lines)
+
+
+async def inspiration(idea: str, kind: str | None = None, history: list | None = None) -> dict | None:
+    if not enabled():
+        return None
+    if reference_ready():
+        payload = copy.deepcopy(_variants("reference_inspiration")[_next_variant("reference_inspiration")])
+        payload["idea"] = idea
+        payload["text"] = _render_inspiration(payload, idea)
+        return await _timed(payload, 1000, 3000)
+    payload = copy.deepcopy(_variants("inspiration")[_next_variant("inspiration")])
+    payload["kind"] = "Film"
+    payload["idea"] = idea
+    payload["text"] = _render_inspiration(payload, idea)
+    return await _timed(payload, 1100, 3400)
+
+
+async def script() -> dict | None:
+    if not enabled():
+        return None
+    payload = copy.deepcopy(_variants("scripts")[_variant("scripts")])
+    return await _timed(payload, 1600, 3900)
+
+
+async def storyboard() -> dict | None:
+    if not enabled():
+        return None
+    payload = copy.deepcopy(_variants("storyboards")[_variant("storyboards")])
+    return await _timed(payload, 1200, 3300)
+
+
+async def schedule() -> dict | None:
+    if not enabled():
+        return None
+    payload = copy.deepcopy(_variants("schedules")[_variant("schedules")])
+    return await _timed(payload, 900, 2800)
+
+
+# --------------------------------------------------------------------------
+# Reference films
+# --------------------------------------------------------------------------
+def _refs() -> list[dict]:
+    return _load().get("reference_films") or []
+
+
+def _youtube_id(url: str) -> str | None:
+    m = re.search(r"(?:[?&]v=|youtu\.be/|youtube\.com/shorts/)([A-Za-z0-9_-]{11})", url or "")
+    return m.group(1) if m else None
+
+
+def _find_ref(url: str) -> dict | None:
+    video_id = _youtube_id(url)
+    if not video_id:
+        return None
+    return next((r for r in _refs() if _youtube_id(r.get("url", "")) == video_id), None)
+
+
+def _entry(ref: dict) -> dict:
+    now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+    return {
+        "id": ref["id"], "title": ref["title"], "url": ref["url"],
+        "cover": "", "duration": ref.get("duration", ""), "duration_sec": 0,
+        "owner": ref.get("owner", "Life Of Riza"), "platform": "YouTube",
+        "moods": ref.get("moods") or [], "frames": ref.get("frames") or [],
+        "script_name": "", "script_text": "", "source": "personal",
+        "added_at": now, "style_summary": ref.get("style_summary", ""),
+        "style_tags": ref.get("style_tags") or [],
+        "visual_summary": ref.get("visual_summary", ""),
+        "visual_tags": ref.get("style_tags") or [], "visual_beats": [],
+    }
+
+
+def reference_ready() -> bool:
+    if not enabled():
+        return False
+    saved = {(_youtube_id(f.get("url", "")) or "") for f in personal_library.list_films()}
+    wanted = {(_youtube_id(r.get("url", "")) or "") for r in _refs()}
+    added = _state.get("demo_refs") or set()
+    return bool(wanted) and wanted.issubset(saved) and wanted.issubset(added)
+
+
+async def add_references(urls: list[str], lang: str = "en") -> dict | None:
+    """Demo path: each Life Of Riza link takes exactly five seconds and is stored."""
+    if not enabled():
+        return None
+    urls = [str(u or "").strip() for u in urls if str(u or "").strip()]
+    if not urls:
+        return None
+    films, errors = [], []
+    for url in urls:
+        ref = _find_ref(url)
+        if ref is None:
+            errors.append({"url": url, "error": "Demo mode only supports the three Life Of Riza links."})
+            continue
+        await asyncio.sleep(5.0)
+        existing = next((f for f in personal_library.list_films()
+                         if f.get("url") == ref.get("url")), None)
+        if existing is not None:
+            entry = existing
+            # Keep the user's saved entry and frames; only fill missing demo fields.
+            if not entry.get("frames"):
+                entry = _entry(ref)
+                personal_library.save_entry(entry)
+        else:
+            entry = _entry(ref)
+            personal_library.save_entry(entry)
+        _state.setdefault("demo_refs", set()).add(_youtube_id(ref.get("url", "")) or "")
+        entry["analyzed"] = True
+        entry["visual_analyzed"] = True
+        films.append(entry)
+    if not films:
+        return {"ok": False, "films": [], "errors": errors,
+                "detail": errors[0]["error"] if errors else "No demo references added."}
+    return {"ok": True, "films": films, "errors": errors,
+            "film": films[0] if len(films) == 1 else None}

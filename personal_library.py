@@ -150,6 +150,17 @@ def add_film(url: str, title: str = "", moods=None, script_text: str = "", scrip
     return entry
 
 
+def save_entry(entry: dict):
+    """Upsert a demo reference entry by URL/ID without touching the network."""
+    data = _load()
+    films = [f for f in data.get("films", [])
+             if f.get("id") != entry.get("id") and f.get("url") != entry.get("url")]
+    films.append(entry)
+    data["films"] = films
+    _save(data)
+    return entry
+
+
 def remove_film(film_id: str):
     data = _load()
     films = [f for f in data.get("films", []) if f.get("id") != film_id]
