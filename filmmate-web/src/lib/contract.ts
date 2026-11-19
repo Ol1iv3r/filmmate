@@ -439,7 +439,7 @@ export const TOOL_META: Record<string, ToolMeta> = {
   },
   schedule: {
     label: '拍摄计划',
-    labelEn: 'Schedule',
+    labelEn: 'Shooting plan',
     isSearch: false,
     queryOf: () => '',
   },
