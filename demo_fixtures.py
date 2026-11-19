@@ -213,9 +213,11 @@ async def storyboard_review(storyboard: dict, message: str = "", lang: str = "en
     scenes = sorted({s.get("scene_no") for s in shots if s.get("scene_no") is not None})
     en = (lang or "en").lower().startswith("en")
     if en:
+        scene_count = len(scenes) or storyboard.get("scene_count", 0)
+        scene_word = "scene" if scene_count == 1 else "scenes"
         text = (
             f"### Storyboard review\n\nI checked the uploaded board: **{len(shots)} shots** across "
-            f"**{len(scenes) or storyboard.get('scene_count', '—')} scenes**.\n\n"
+            f"**{scene_count} {scene_word}**.\n\n"
             "**Strengths**: The board has a clear master/coverage rhythm, and the scene order is readable. "
             "The close-ups are doing specific emotional work rather than decoration.\n\n"
             "**Issues found**:\n"

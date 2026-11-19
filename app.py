@@ -310,8 +310,8 @@ async def handle_tool(tool: str, message: str, api_key: str, script_text: str = 
 
     if tool == "review":
         payload = await tools.script_tool(message, api_key, script_text, history, kind=kind, theme_index=theme_index)
-    elif tool == "storyboard" and storyboard_payload:
-        payload = await tools.storyboard_review_tool(storyboard_payload, message, api_key)
+    elif tool == "storyboard" and storyboard:
+        payload = await tools.storyboard_review_tool(storyboard, message, api_key)
     elif tool == "storyboard":
         payload = await tools.storyboard_tool(message, api_key, script_text, history)
     elif tool == "schedule":
