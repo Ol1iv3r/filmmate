@@ -16,7 +16,7 @@ from pathlib import Path
 
 import config
 import personal_library
-from schedule_dates import date_sequence, parse_range, range_days
+from schedule_dates import date_sequence, parse_day_count, parse_range, range_days
 
 FIXTURE_FILE = config.BASE_DIR / "data" / "demo" / "demo_fixtures.json"
 _state: dict = {"set_index": None, "theme_index": 0, "fixtures": None, "demo_refs": set(), "demo_flow": False, "genre_mode": False}
@@ -373,6 +373,13 @@ async def schedule(message: str = "", storyboard: dict | None = None) -> dict | 
     if not (_state.get("demo_flow") or _state.get("genre_mode") or _state.get("storyboard_ready")):
         return None
     if not isinstance(storyboard, dict) or not (storyboard.get("shots") or []):
+        return None
+    shots = storyboard.get("shots") or []
+    requested_count = parse_day_count(message)
+    baseline_days = max(2, min(4, (len(shots) + 9) // 10))
+    # A request for an unusual number of days is outside the prepared demo;
+    # hand it to the normal AI planner (or its deterministic fallback).
+    if requested_count and requested_count != baseline_days:
         return None
     plan = _build_plan(storyboard, message, genre=bool(_state.get("genre_mode")))
     return await _timed(plan, 8800, 9800)

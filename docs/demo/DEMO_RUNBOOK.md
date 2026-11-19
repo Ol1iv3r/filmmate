@@ -24,6 +24,7 @@ Set `DEMO_MODE=1` in `.env`, then restart the app.
 - A non-Hong Kong inspiration resets the demo flow. Script/storyboard/plan then use the normal model path again.
 - Timings are randomized per feature; Script, Storyboard, Plan and Script check are 8.8–9.8s, not a fixed 5s.
 - The shooting plan is generated from the current storyboard, not a fixed static plan. With 18 shots it uses 2 days; with 21–27 shots it uses 3 days. A typed start/end date overrides the built-in demo dates (e.g. `start 2026-12-01 end 2026-12-03`).
+- If the user asks for something outside the prepared demo, such as `8 days`, demo mode hands the request to the normal AI planner; if the model is unavailable, the deterministic fallback still produces exactly 8 shooting days.
 - The reference-film step only accepts the three Life Of Riza links in demo mode.
 - To leave demo mode, set `DEMO_MODE=0` and restart.
 

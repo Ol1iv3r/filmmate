@@ -79,3 +79,29 @@ def date_sequence(start: date | None, count: int) -> list[str]:
     if not start:
         return []
     return [(start + timedelta(days=i)).isoformat() for i in range(max(0, count))]
+
+
+_WORD_DAYS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+}
+_CN_DAYS = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
+            "六": 6, "七": 7, "八": 8, "九": 9, "十": 10,
+            "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15}
+
+
+def parse_day_count(text: str) -> int | None:
+    """Read an explicit shooting-day count such as '8 days' / '八天'."""
+    value = text or ""
+    m = re.search(r"(\d{1,2})\s*(?:days?|天)", value, re.I)
+    if m:
+        number = int(m.group(1))
+        if 1 <= number <= 30:
+            return number
+    m = re.search(r"\b(" + "|".join(_WORD_DAYS) + r")\s+days?\b", value, re.I)
+    if m:
+        return _WORD_DAYS[m.group(1).lower()]
+    m = re.search(r"([一二三四五六七八九十]{1,2})\s*天", value)
+    if m and m.group(1) in _CN_DAYS:
+        return _CN_DAYS[m.group(1)]
+    return None

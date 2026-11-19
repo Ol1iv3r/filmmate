@@ -2583,6 +2583,7 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
         pref = ""
     start_date, end_date = schedule_dates.parse_range(pref)
     requested_days = schedule_dates.range_days(start_date, end_date)
+    requested_day_count = schedule_dates.parse_day_count(pref)
     summary, crew, equipment, locations, days, risks, calendar = "", [], [], [], [], [], []
     mode = "offline"
     if llm.available(api_key):
@@ -2592,7 +2593,8 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
                 if start_date and end_date else
                 f"拍摄开始日期：{start_date.isoformat()}（请从这一天开始排期）\n"
                 if start_date else ""
-            )
+            ) + (f"用户明确要求拍摄 {requested_day_count} 天，必须输出 {requested_day_count} 个 shoot days，禁止压缩成 2–3 天。\n"
+                 if requested_day_count else "")
             user_prompt = (
                 f"当前日期：{today.date().isoformat()}\n"
                 f"{date_instruction}"
@@ -2610,6 +2612,10 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
             calendar = data.get("calendar") or []
             if days:
                 mode = "online"
+            if requested_day_count and days and len(days) != requested_day_count:
+                logger.warning("模型返回 %s 天，但用户要求 %s 天，改用分镜规则排期", len(days), requested_day_count)
+                days = []
+                calendar = []
             if days and start_date:
                 ordered_dates = schedule_dates.date_sequence(start_date, len(days))
                 for idx, day in enumerate(days):
@@ -2630,8 +2636,8 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
                 heading = str(shot.get("scene") or key)
                 scene_labels[key] = f"Scene {key}: {heading}" if key is not None else heading
         scenes = [scene_labels[key] for key in scene_keys if key is not None]
-        target_days = requested_days or max(2, min(4, (len(shots) + 9) // 10))
-        target_days = max(1, min(5, target_days))
+        target_days = requested_days or requested_day_count or max(2, min(4, (len(shots) + 9) // 10))
+        target_days = max(1, min(30, target_days))
         first_day = start_date or (today.date() + timedelta(days=1))
         dates = schedule_dates.date_sequence(first_day, target_days)
         per_day = max(1, (len(scenes) + target_days - 1) // target_days) if scenes else 1
