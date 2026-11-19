@@ -1503,6 +1503,7 @@ button {
 .ref-msg { font-size: 12px; color: #5eead4; line-height: 1.5; }
 .schedule-panel { margin: 8px 0; }
 .schedule-meta { font-size: 12px; color: #a9b8cf; display: flex; flex-direction: column; gap: 4px; margin: 6px 0 10px; }
+.shot-schedule { margin-top: 12px; }
 .schedule-risks { font-size: 12px; color: #f5b8a8; margin-top: 8px; line-height: 1.6; }
 
 

@@ -2635,10 +2635,28 @@ async def schedule_tool(message: str, api_key: str = None, storyboard: dict = No
                  else "确认档期后，点下方「下载日历（.ics）」可直接导入系统日历。")]
     if pref:
         lines.insert(2, (f"**Your preferences**: {pref}\n" if _LANG == "en" else f"**你的偏好**：{pref}\n"))
+    scene_day = {}
+    for day in days:
+        if not isinstance(day, dict):
+            continue
+        for scene_key in day.get("scenes") or []:
+            scene_day[str(scene_key)] = day.get("day")
+    plan_shots = []
+    for shot in shots:
+        key = str(shot.get("scene_no") if shot.get("scene_no") is not None else shot.get("scene"))
+        plan_shots.append({
+            "id": shot.get("id"),
+            "day": scene_day.get(key, 1),
+            "scene": shot.get("scene"),
+            "shot_type": shot.get("shot_type"),
+            "duration": shot.get("duration"),
+            "description": shot.get("description"),
+        })
     return {
         "kind": "schedule", "summary": summary, "crew": crew, "equipment": equipment,
         "locations": locations, "days": days, "risks": risks, "calendar": calendar,
-        "shots_count": len(shots), "preferences": pref, "mode": mode, "text": "\n".join(lines),
+        "shots_count": len(shots), "shots": plan_shots,
+        "preferences": pref, "mode": mode, "text": "\n".join(lines),
     }
 
 

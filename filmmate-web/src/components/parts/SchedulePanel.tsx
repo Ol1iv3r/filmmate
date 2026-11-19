@@ -25,6 +25,15 @@ interface DayPlan {
   blocks?: DayBlock[]
 }
 
+interface ShotScheduleRow {
+  id?: number
+  day?: number
+  scene?: string
+  shot_type?: string
+  duration?: string
+  description?: string
+}
+
 interface SchedulePayload {
   summary?: string
   crew?: { role?: string; count?: number; note?: string }[]
@@ -34,6 +43,7 @@ interface SchedulePayload {
   risks?: { risk?: string; mitigation?: string }[]
   calendar?: CalendarEvent[]
   shots_count?: number
+  shots?: ShotScheduleRow[]
   preferences?: string
   text?: string
 }
@@ -138,6 +148,31 @@ export function SchedulePanel({ payload }: { payload: SchedulePayload }) {
           </tbody>
         </table>
       </div>
+      {payload.shots?.length ? (
+        <div className="shot-schedule">
+          <div className="panel-head">
+            <span>{t('镜头排期', 'Shot schedule')}（{payload.shots.length} {t('个镜头', 'shots')}）</span>
+          </div>
+          <div className="table-scroll">
+            <table className="sb-table">
+              <thead>
+                <tr><th>#</th><th>Day</th><th>{t('场次', 'Scene')}</th><th>{t('景别', 'Size')}</th><th>{t('画面', 'Frame')}</th></tr>
+              </thead>
+              <tbody>
+                {payload.shots.map((shot, i) => (
+                  <tr key={shot.id ?? i}>
+                    <td>{shot.id ?? i + 1}</td>
+                    <td>{shot.day ?? '—'}</td>
+                    <td>{shot.scene}</td>
+                    <td>{shot.shot_type}</td>
+                    <td>{shot.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
       {payload.risks?.length ? (
         <div className="schedule-risks"><b>{t('风险与预案', 'Risks')}</b>：{payload.risks.map((r) => (r.risk || '') + '→' + (r.mitigation || '')).join(t('；', '; '))}</div>
       ) : null}

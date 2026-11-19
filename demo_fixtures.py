@@ -286,6 +286,21 @@ def _build_plan(storyboard: dict, message: str = "", genre: bool = False) -> dic
          "description": f"Scenes {', '.join(d['scenes']) or '—'} — plan analysed from the storyboard."}
         for d in days
     ]
+    scene_day = {}
+    for day in days:
+        for scene_key in day.get("scenes") or []:
+            scene_day[str(scene_key)] = day["day"]
+    plan_shots = []
+    for shot in shots:
+        key = str(shot.get("scene_no") if shot.get("scene_no") is not None else shot.get("scene"))
+        plan_shots.append({
+            "id": shot.get("id"),
+            "day": scene_day.get(key, 1),
+            "scene": shot.get("scene"),
+            "shot_type": shot.get("shot_type"),
+            "duration": shot.get("duration"),
+            "description": shot.get("description"),
+        })
     summary = (
         f"A {len(days)}-day plan for \"{title}\": {len(scene_order)} scenes, "
         f"{len(shots)} shots. Scenes are grouped by the actual shot list, with masters first "
@@ -298,7 +313,7 @@ def _build_plan(storyboard: dict, message: str = "", genre: bool = False) -> dic
         "days": days,
         "risks": [{"risk": "Light / weather continuity", "mitigation": "Shoot the wide before the light changes; keep continuity stills."},
                   {"risk": "Company move", "mitigation": "Do the location move in the middle of the day."}],
-        "calendar": calendar, "shots_count": len(shots),
+        "calendar": calendar, "shots_count": len(shots), "shots": plan_shots,
         "preferences": (message or "").strip() or f"{len(days)} days; built-in demo dates.",
         "mode": "online",
         "text": "The shooting plan is below; download the .ics calendar for the dates shown.",
